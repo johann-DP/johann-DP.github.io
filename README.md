@@ -1,10 +1,10 @@
-# Datapredict
+# datapredict
 
-Site vitrine de Datapredict, publie avec GitHub Pages.
+Site vitrine de datapredict, publie avec GitHub Pages.
 
 ## Positionnement
 
-Datapredict intervient sur les projets Data, BI, reporting et IA qui doivent etre recadres, securises, documentes et transmis au RUN.
+datapredict intervient sur les projets Data, BI, reporting et IA qui doivent etre recadres, securises, documentes et transmis au RUN.
 
 ## Contenu du depot
 
