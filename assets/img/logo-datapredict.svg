@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="180" viewBox="0 0 920 180">
+<rect width="920" height="180" fill="white"/>
+<circle cx="110" cy="90" r="70" fill="none" stroke="#11b3bf" stroke-width="28"/>
+<rect x="20" y="70" width="24" height="24" fill="#11b3bf"/>
+<rect x="60" y="70" width="24" height="24" fill="#40647c"/>
+<rect x="60" y="110" width="24" height="24" fill="#40647c"/>
+<text x="230" y="112" font-family="Arial" font-size="82" font-weight="700"><tspan fill="#11b3bf">data</tspan><tspan fill="#40647c">predict</tspan></text>
+</svg>
