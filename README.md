@@ -1,18 +1,23 @@
 # datapredict
 
-Site vitrine de datapredict, publie avec GitHub Pages.
+Site vitrine statique de datapredict, publie avec GitHub Pages.
 
 ## Positionnement
 
 datapredict intervient sur les projets Data, BI, reporting et IA qui doivent etre recadres, securises, documentes et transmis au RUN.
 
-## Contenu du depot
+## Architecture du depot
 
 - CNAME : configuration du domaine.
-- index.html : page commerciale principale.
-- cas-clients.html : references anonymisees.
-- assets/css/site.css : feuille de style commune.
 - .nojekyll : publication statique directe par GitHub Pages.
+- index.html : page d'accueil.
+- offres.html : offres d'intervention.
+- methode.html : methode de travail.
+- cas-clients.html : references anonymisees et reformulees.
+- contact.html : page de contact.
+- assets/css/site.css : feuille de style commune.
+- assets/img/logo-datapredict.png : logo principal.
+- assets/img/logo-datapredict.svg : fallback du logo.
 
 ## Architecture retenue
 
@@ -20,16 +25,17 @@ Le site reste volontairement statique : HTML et CSS uniquement. Ce choix limite 
 
 ## Regles de publication
 
+- Toujours ecrire datapredict en minuscules.
+- Utiliser les couleurs de marque : turquoise #11b3bf et gris bleu #40647c.
 - Ne jamais publier de donnees client nominatives.
 - Ne jamais publier de livrable client brut.
 - Anonymiser les contextes et reformuler les resultats.
 - Garder le site compatible mobile.
 - Eviter tout framework inutile tant que le contenu commercial n'est pas stabilise.
 
-## Backlog court
+## Verification avant publication
 
-1. Ajouter une page detaillee par offre.
-2. Ajouter une page demonstration IA quand le PoC est presentable.
-3. Ajouter des captures publiques non confidentielles.
-4. Ajouter une page mentions legales.
-5. Verifier accessibilite, SEO et performance.
+1. Verifier que tous les liens internes pointent vers une page existante.
+2. Verifier que le nom de marque est toujours en minuscules.
+3. Verifier que CNAME et .nojekyll sont conserves.
+4. Verifier que le rendu mobile reste lisible.

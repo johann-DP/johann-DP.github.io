@@ -1,18 +1,83 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>datapredict - Cas clients anonymises</title>
-<meta name="description" content="Cas clients anonymises datapredict : cadrage data, BI, IA, reporting, gouvernance et passage au RUN.">
-<link rel="stylesheet" href="assets/css/site.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>datapredict - Cas clients anonymises</title>
+  <meta name="description" content="Cas clients anonymises datapredict : cadrage data, BI, IA, reporting, gouvernance et passage au RUN.">
+  <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
-<header class="top"><div class="wrap"><div class="brand"><img src="assets/img/logo-datapredict.svg" alt="datapredict" style="height:42px"></div><nav class="nav"><a href="index.html">Accueil</a><a href="index.html#offres">Offres</a><a href="index.html#contact">Contact</a></nav></div></header>
-<main>
-<section class="hero"><div class="wrap"><div class="kicker">References anonymisees</div><h1>Cas clients : cadrage, architecture, gouvernance et passage au RUN.</h1><p class="lead">Version publique : aucun nom de client, aucune donnee source, aucun nom de personne. Les cas sont volontairement synthétiques pour proteger les contextes d'intervention.</p></div></section>
-<section class="section"><div class="wrap"><div class="grid"><div class="card"><h3>Retail alimentaire et industrie</h3><p>Cadrage d'un socle data et reporting pour des usages marketing, commerce et pilotage operationnel. Travaux : gouvernance, qualite, securite, lineage, documentation MOA/MOE et conditions de RUN.</p></div><div class="card"><h3>Operateur technique multi-sites</h3><p>Reprise sous controle de reportings BI et automatisation de bilans a partir de plusieurs bases on-premise. Travaux : gabarits documentaires, logs, workflows auditables et clarification des responsabilites.</p></div><div class="card"><h3>Collectivite territoriale</h3><p>Cadrage d'une macro-architecture Data / IA / geodata. Travaux : diagnostic DSI, scenarios, matrice d'arbitrage, trajectoire, risques et chiffrage.</p></div><div class="card"><h3>IoT et LLM on-premise</h3><p>Cadrage d'une architecture IoT et LLM local : serveur GPU, vector store, RAG, planning, chiffrage, trajectoire et conditions d'exploitation.</p></div><div class="card"><h3>CRM analytique</h3><p>Audit d'un dispositif CRM analytique : qualite des donnees, segmentation, clients a potentiel, anomalies et recommandations de pilotage commercial.</p></div><div class="card"><h3>Sante et donnees sensibles</h3><p>Gouvernance de donnees sensibles, qualite, documentation, acces, contraintes HDS / PIA et restitution decisionnelle pour le pilotage regional.</p></div></div></div></section>
-</main>
-<footer><div class="wrap">Johann Grisel - datapredict - johann.grisel@datapredict.org</div></footer>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="datapredict - accueil">
+        <picture>
+          <source srcset="assets/img/logo-datapredict.png" type="image/png">
+          <img src="assets/img/logo-datapredict.svg" alt="datapredict">
+        </picture>
+      </a>
+      <nav class="site-nav" aria-label="Navigation principale">
+        <a href="index.html">Accueil</a>
+        <a href="offres.html">Offres</a>
+        <a href="methode.html">Methode</a>
+        <a href="cas-clients.html" aria-current="page">Cas clients</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <p class="kicker">References anonymisees</p>
+        <h1>Cas clients reformules pour lecture publique.</h1>
+        <p class="lead">Aucun nom de client, aucune donnee source, aucun nom de personne et aucun livrable brut. Les cas sont volontairement synthetiques pour proteger les contextes d'intervention.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="grid">
+          <article class="card">
+            <h3>Retail alimentaire et industrie</h3>
+            <p>Cadrage d'un socle data et reporting pour des usages marketing, commerce et pilotage operationnel.</p>
+            <p class="small">Axes : gouvernance, qualite, securite, lineage, documentation et conditions de RUN.</p>
+          </article>
+          <article class="card">
+            <h3>Operateur technique multi-sites</h3>
+            <p>Reprise sous controle de reportings BI et automatisation de bilans a partir de plusieurs sources internes.</p>
+            <p class="small">Axes : gabarits documentaires, logs, workflows auditables et clarification des responsabilites.</p>
+          </article>
+          <article class="card">
+            <h3>Collectivite territoriale</h3>
+            <p>Cadrage d'une macro-architecture Data, IA et geodata pour aider une direction technique a arbitrer.</p>
+            <p class="small">Axes : diagnostic, scenarios, matrice d'arbitrage, trajectoire, risques et chiffrage.</p>
+          </article>
+          <article class="card">
+            <h3>IoT et LLM on-premise</h3>
+            <p>Cadrage d'une architecture locale combinant collecte terrain, moteur de recherche documentaire et exploitation securisee.</p>
+            <p class="small">Axes : infrastructure, donnees, planning, couts, trajectoire et conditions d'exploitation.</p>
+          </article>
+          <article class="card">
+            <h3>CRM analytique</h3>
+            <p>Audit d'un dispositif CRM analytique pour fiabiliser les donnees et ameliorer le pilotage commercial.</p>
+            <p class="small">Axes : qualite, segmentation, anomalies, indicateurs et recommandations de pilotage.</p>
+          </article>
+          <article class="card">
+            <h3>Donnees sensibles</h3>
+            <p>Structuration de la gouvernance et de la restitution decisionnelle dans un contexte contraint.</p>
+            <p class="small">Axes : acces, qualite, documentation, risques, contraintes reglementaires et exploitation.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>datapredict - Conseil operationnel Data, BI, Reporting et IA</p>
+      <p><a href="contact.html">Contact</a></p>
+    </div>
+  </footer>
 </body>
 </html>
