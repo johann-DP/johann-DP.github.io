@@ -1,41 +1,60 @@
 # datapredict
 
-Site vitrine statique de datapredict, publié avec GitHub Pages.
+Dépôt du site institutionnel de [datapredict](https://www.datapredict.org/), entreprise de conseil et de réalisation Data, IA et BI.
 
 ## Positionnement
 
-datapredict intervient sur les projets Data, BI, reporting et IA qui doivent être recadrés, sécurisés, documentés et transmis au RUN.
+datapredict intervient de la stratégie au RUN pour cadrer les décisions, structurer les dispositifs et préparer leur exploitation selon trois axes complémentaires :
 
-## Architecture du dépôt
+- management de transition et PMO Data / IA / BI ;
+- architecture et Tech Lead Data / IA / BI ;
+- expertise industrielle Seine–Paris–Normandie : instrumentation, capteurs, mesures physiques et physico-chimiques, séries temporelles, IoT industriel et procédés.
 
-- CNAME : configuration du domaine.
-- .nojekyll : publication statique directe par GitHub Pages.
-- index.html : page d'accueil.
-- offres.html : offres d'intervention.
-- methode.html : méthode de travail.
-- cas-clients.html : références anonymisées et reformulées.
-- contact.html : page de contact.
-- assets/css/site.css : feuille de style commune.
-- assets/img/logo-datapredict.png : logo principal.
-- assets/img/logo-datapredict.svg : fallback du logo.
+Les réalisations présentées sur le site sont anonymisées et reformulées afin de préserver la confidentialité des organisations concernées.
 
-## Architecture retenue
+## Pages du site
 
-Le site reste volontairement statique : HTML et CSS uniquement. Ce choix limite les points de rupture, accélère la publication et garde un dépôt lisible par un prospect technique.
+- [Accueil](index.html) : positionnement et champs d’intervention ;
+- [Offres](offres.html) : détail des trois axes datapredict ;
+- [Méthode](methode.html) : clarifier, diagnostiquer, arbitrer et transmettre ;
+- [Réalisations](cas-clients.html) : sélection de contextes et d’interventions anonymisés ;
+- [Contact](contact.html) : qualification d’un besoin et prise de contact.
 
-## Règles de publication
+Le nom de fichier historique `cas-clients.html` est conservé ; son libellé public est « Réalisations ».
 
-- Toujours écrire datapredict en minuscules.
-- Utiliser les couleurs de marque : turquoise #11b3bf et gris bleu #40647c.
-- Ne jamais publier de données client nominatives.
-- Ne jamais publier de livrable client brut.
-- Anonymiser les contextes et reformuler les résultats.
-- Garder le site compatible mobile.
-- Éviter tout framework inutile tant que le contenu commercial n'est pas stabilisé.
+## Socle technique
 
-## Vérification avant publication
+- HTML5 et CSS natifs, sans framework, JavaScript, dépendance ni étape de compilation ;
+- publication statique avec GitHub Pages ;
+- interface fluide conçue pour les largeurs de référence de 320 à 1 920 pixels ;
+- dispositions d’accessibilité intégrées : structure sémantique, navigation au clavier, contrastes et réduction des animations ;
+- logo officiel datapredict au format PNG uniquement ;
+- couleurs principales `#11b3bf` et `#40647c`.
 
-1. Vérifier que tous les liens internes pointent vers une page existante.
-2. Vérifier que le nom de marque est toujours en minuscules.
-3. Vérifier que CNAME et .nojekyll sont conservés.
-4. Vérifier que le rendu mobile reste lisible.
+## Structure du dépôt
+
+```text
+.
+├── .nojekyll
+├── CNAME
+├── README.md
+├── index.html
+├── offres.html
+├── methode.html
+├── cas-clients.html
+├── contact.html
+└── assets/
+    ├── css/site.css
+    └── img/logo-datapredict.png
+```
+
+`CNAME` configure le domaine public et `.nojekyll` assure la publication directe des fichiers statiques.
+
+## Principes éditoriaux et de publication
+
+- écrire `datapredict` en minuscules ;
+- préserver l’anonymat des organisations et des missions ;
+- ne publier ni nom client non autorisé, ni chiffre inventé ou non validé, ni livrable client brut ;
+- exclure tout visuel, média ou métadonnée confidentiels ;
+- vérifier les liens, les métadonnées, la navigation au clavier et le rendu responsive avant publication ;
+- n’introduire du JavaScript que pour répondre à un besoin fonctionnel démontré.
