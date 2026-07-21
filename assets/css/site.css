@@ -2752,6 +2752,20 @@ p {
   box-shadow: var(--shadow-md);
 }
 
+.contact-portrait {
+  position: relative;
+  z-index: 1;
+  width: clamp(112px, 11vw, 144px);
+  height: auto;
+  aspect-ratio: 1;
+  margin: 0 0 28px;
+  border: 3px solid rgba(134, 227, 231, 0.72);
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 14px 36px rgba(5, 22, 31, 0.28);
+  object-fit: cover;
+}
+
 .contact-card::after {
   position: absolute;
   right: -58px;
@@ -3687,6 +3701,7 @@ p {
 
   .contact-hero-note,
   .contact-card,
+  .contact-portrait,
   .contact-email,
   .qualification-list li,
   .contact-scope-grid article {

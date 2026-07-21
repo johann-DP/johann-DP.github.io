@@ -51,6 +51,7 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
     └── img/
         ├── favicon-datapredict.png
         ├── logo-datapredict.png
+        ├── portrait-johann-grisel.webp
         └── social-datapredict.png
 ```
 
