@@ -38,6 +38,8 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
 ├── .nojekyll
 ├── CNAME
 ├── README.md
+├── robots.txt
+├── sitemap.xml
 ├── index.html
 ├── offres.html
 ├── methode.html
@@ -48,7 +50,7 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
     └── img/logo-datapredict.png
 ```
 
-`CNAME` configure le domaine public et `.nojekyll` assure la publication directe des fichiers statiques.
+`CNAME` configure le domaine public, `.nojekyll` assure la publication directe des fichiers statiques et `robots.txt` déclare le sitemap des cinq pages canoniques.
 
 ## Principes éditoriaux et de publication
 
