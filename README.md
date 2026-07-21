@@ -50,7 +50,8 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
     │   └── site.css
     └── img/
         ├── favicon-datapredict.png
-        └── logo-datapredict.png
+        ├── logo-datapredict.png
+        └── social-datapredict.png
 ```
 
 `CNAME` configure le domaine public, `.nojekyll` assure la publication directe des fichiers statiques et `robots.txt` déclare le sitemap des cinq pages canoniques.
