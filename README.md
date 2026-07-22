@@ -15,8 +15,8 @@ Les réalisations présentées sur le site sont anonymisées et reformulées afi
 ## Pages du site
 
 - [Accueil](index.html) : positionnement et champs d’intervention ;
-- [Offres](offres.html) : détail des trois axes datapredict ;
-- [Méthode](methode.html) : clarifier, diagnostiquer, arbitrer et transmettre ;
+- [Offres](offres.html) : détail des trois axes, technologies, référentiels, formats et tarifs indicatifs ;
+- [Méthode](methode.html) : clarifier, diagnostiquer, arbitrer et transmettre, avec une représentation visuelle de la séquence ;
 - [Réalisations](cas-clients.html) : sélection de contextes et d’interventions anonymisés ;
 - [Contact](contact.html) : qualification d’un besoin et prise de contact.
 
@@ -53,9 +53,11 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
         ├── case-sante-pilotage-capacitaire.png
         ├── case-sante-previsions-hospitalieres.png
         ├── favicon-datapredict.png
+        ├── illustration-*.webp
         ├── logo-datapredict.png
         ├── portrait-johann-grisel.webp
-        └── social-datapredict.png
+        ├── social-datapredict.png
+        └── tech-*.webp
 ```
 
 `CNAME` configure le domaine public, `.nojekyll` assure la publication directe des fichiers statiques et `robots.txt` déclare le sitemap des cinq pages canoniques.
