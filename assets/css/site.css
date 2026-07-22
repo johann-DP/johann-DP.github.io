@@ -1678,67 +1678,74 @@ p {
   font-size: clamp(1rem, 1.45vw, 1.14rem);
 }
 
-.offers-page .offers-page__tooling-grid {
+.offers-page .offers-page__tooling-groups {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 12px;
-  margin: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.offers-page .offers-page__tooling-group {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 250px;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background:
+    radial-gradient(circle at 100% 0, rgba(17, 179, 191, 0.09), transparent 34%),
+    #ffffff;
+  padding: clamp(24px, 3vw, 32px);
+  box-shadow: var(--shadow-sm);
+}
+
+.offers-page .offers-page__tooling-group::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--turquoise), rgba(17, 179, 191, 0));
+  content: "";
+}
+
+.offers-page .offers-page__tooling-kind {
+  margin-bottom: 12px;
+  color: var(--turquoise-strong);
+  font-size: 0.65rem;
+  font-weight: 820;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.offers-page .offers-page__tooling-group h3 {
+  max-width: 23ch;
+  margin-bottom: 22px;
+  color: var(--blue-grey-deep);
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  line-height: 1.2;
+}
+
+.offers-page .offers-page__tooling-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: auto 0 0;
   padding: 0;
   list-style: none;
 }
 
-.offers-page .offers-page__tool {
-  display: flex;
-  min-width: 0;
-  min-height: 188px;
-  flex-direction: column;
-  align-items: flex-start;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: #ffffff;
-  padding: 18px;
-  box-shadow: var(--shadow-sm);
-}
-
-.offers-page .offers-page__tool-logo {
-  display: flex;
-  width: 100%;
-  height: 66px;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 18px;
-}
-
-.offers-page .offers-page__tool-logo img {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  max-height: 66px;
-  object-fit: contain;
-}
-
-.offers-page .offers-page__tool-kind {
-  margin-bottom: 5px;
-  color: var(--turquoise-strong);
-  font-size: 0.62rem;
-  font-weight: 820;
-  letter-spacing: 0.075em;
-  line-height: 1.35;
-  text-transform: uppercase;
-}
-
-.offers-page .offers-page__tool strong {
-  color: var(--blue-grey-deep);
-  font-size: 0.95rem;
+.offers-page .offers-page__tooling-list li {
+  border: 1px solid rgba(64, 100, 124, 0.16);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--blue-grey-dark);
+  padding: 7px 10px;
+  font-size: 0.76rem;
+  font-weight: 720;
   line-height: 1.3;
-}
-
-.offers-page .offers-page__tool small {
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 0.72rem;
-  line-height: 1.35;
 }
 
 .offers-page .offers-page__framework {
@@ -1910,11 +1917,17 @@ p {
   line-height: 1.15;
 }
 
-.offers-page .offers-page__pricing-amount span {
+.offers-page .offers-page__pricing-range-end {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.offers-page .offers-page__pricing-tax {
   display: inline;
   color: var(--blue-grey);
   font-size: 0.67em;
   letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .offers-page .offers-page__pricing-rate {
@@ -3378,8 +3391,8 @@ p {
     gap: 48px;
   }
 
-  .offers-page .offers-page__tooling-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .offers-page .offers-page__tooling-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .method-page .method-page__process-layout {
@@ -3457,8 +3470,8 @@ p {
     gap: 18px;
   }
 
-  .offers-page .offers-page__tooling-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .offers-page .offers-page__tooling-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .offers-page .offers-page__pricing-grid {
@@ -3642,8 +3655,8 @@ p {
     gap: 38px;
   }
 
-  .offers-page .offers-page__tooling-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .offers-page .offers-page__tooling-groups {
+    grid-template-columns: 1fr;
   }
 
   .offers-page .offers-page__cta-layout {
