@@ -1649,14 +1649,6 @@ p {
   font-size: clamp(1.05rem, 2vw, 1.35rem);
 }
 
-.offers-page .offers-page__tooling {
-  border-bottom: 1px solid var(--line);
-  background:
-    radial-gradient(circle at 92% 10%, rgba(17, 179, 191, 0.1), transparent 28%),
-    var(--surface-soft);
-}
-
-.offers-page .offers-page__tooling-heading,
 .offers-page .offers-page__pricing-heading {
   display: grid;
   grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
@@ -1665,87 +1657,15 @@ p {
   margin-bottom: clamp(36px, 5vw, 58px);
 }
 
-.offers-page .offers-page__tooling-heading h2,
 .offers-page .offers-page__pricing-heading h2 {
   max-width: 17ch;
 }
 
-.offers-page .offers-page__tooling-heading > p,
 .offers-page .offers-page__pricing-heading > p {
   max-width: 70ch;
   margin-bottom: 0;
   color: var(--muted);
   font-size: clamp(1rem, 1.45vw, 1.14rem);
-}
-
-.offers-page .offers-page__tooling-groups {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.offers-page .offers-page__tooling-group {
-  position: relative;
-  display: flex;
-  min-width: 0;
-  min-height: 250px;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background:
-    radial-gradient(circle at 100% 0, rgba(17, 179, 191, 0.09), transparent 34%),
-    #ffffff;
-  padding: clamp(24px, 3vw, 32px);
-  box-shadow: var(--shadow-sm);
-}
-
-.offers-page .offers-page__tooling-group::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, var(--turquoise), rgba(17, 179, 191, 0));
-  content: "";
-}
-
-.offers-page .offers-page__tooling-kind {
-  margin-bottom: 12px;
-  color: var(--turquoise-strong);
-  font-size: 0.65rem;
-  font-weight: 820;
-  letter-spacing: 0.1em;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
-.offers-page .offers-page__tooling-group h3 {
-  max-width: 23ch;
-  margin-bottom: 22px;
-  color: var(--blue-grey-deep);
-  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
-  line-height: 1.2;
-}
-
-.offers-page .offers-page__tooling-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: auto 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.offers-page .offers-page__tooling-list li {
-  border: 1px solid rgba(64, 100, 124, 0.16);
-  border-radius: 999px;
-  background: var(--surface-soft);
-  color: var(--blue-grey-dark);
-  padding: 7px 10px;
-  font-size: 0.76rem;
-  font-weight: 720;
-  line-height: 1.3;
 }
 
 .offers-page .offers-page__framework {
@@ -2264,6 +2184,178 @@ p {
   font-size: 0.88rem;
   font-weight: 680;
   line-height: 1.5;
+}
+
+.method-page .method-page__tooling {
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(17, 179, 191, 0.12), transparent 28%),
+    linear-gradient(120deg, rgba(64, 100, 124, 0.045), transparent 44%),
+    var(--surface-soft);
+}
+
+.method-page .method-page__tooling-heading {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(42px, 7vw, 96px);
+  align-items: end;
+  margin-bottom: clamp(36px, 5vw, 58px);
+}
+
+.method-page .method-page__tooling-heading h2 {
+  max-width: 17ch;
+}
+
+.method-page .method-page__tooling-heading > p {
+  max-width: 70ch;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.45vw, 1.14rem);
+}
+
+.method-page .method-page__tooling-groups {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.method-page .method-page__tooling-group {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background:
+    radial-gradient(circle at 100% 0, rgba(17, 179, 191, 0.08), transparent 34%),
+    #ffffff;
+  padding: clamp(22px, 2.5vw, 30px);
+  box-shadow: var(--shadow-sm);
+}
+
+.method-page .method-page__tooling-group::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--turquoise), rgba(17, 179, 191, 0));
+  content: "";
+}
+
+.method-page .method-page__tooling-group--ai {
+  border-color: rgba(17, 179, 191, 0.34);
+  background:
+    radial-gradient(circle at 100% 0, rgba(17, 179, 191, 0.14), transparent 36%),
+    linear-gradient(145deg, #ffffff, rgba(227, 247, 248, 0.72));
+}
+
+.method-page .method-page__tooling-kind {
+  margin-bottom: 11px;
+  color: var(--turquoise-strong);
+  font-size: 0.65rem;
+  font-weight: 820;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.method-page .method-page__tooling-group h3 {
+  max-width: 24ch;
+  margin-bottom: 22px;
+  color: var(--blue-grey-deep);
+  font-size: clamp(1.18rem, 1.7vw, 1.48rem);
+  line-height: 1.2;
+}
+
+.method-page .method-page__tooling-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.method-page .method-page__tooling-list li {
+  display: grid;
+  min-width: 0;
+  min-height: 62px;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 9px;
+  align-items: center;
+  border: 1px solid rgba(64, 100, 124, 0.16);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--blue-grey-dark);
+  padding: 8px 10px;
+  font-size: 0.75rem;
+  font-weight: 740;
+  line-height: 1.28;
+}
+
+.method-page .method-page__tooling-list li > span:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.method-page .method-page__tooling-list small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 660;
+  line-height: 1.25;
+}
+
+.method-page .method-page__tool-logo {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(64, 100, 124, 0.13);
+  border-radius: 9px;
+  background: #ffffff;
+  padding: 5px;
+}
+
+.method-page .method-page__tool-logo img {
+  display: block;
+  width: 100%;
+  max-width: 34px;
+  height: 100%;
+  max-height: 32px;
+  object-fit: contain;
+}
+
+.method-page .method-page__tool-logo--mark {
+  background:
+    linear-gradient(145deg, rgba(17, 179, 191, 0.14), rgba(64, 100, 124, 0.09)),
+    #ffffff;
+  color: var(--blue-grey-deep);
+  font-size: 0.68rem;
+  font-weight: 840;
+  letter-spacing: -0.02em;
+}
+
+.method-page .method-page__tool-logo--method {
+  font-size: 0.53rem;
+  letter-spacing: -0.045em;
+}
+
+.method-page .method-page__tool-logo--symbol {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.method-page .method-page__tool-logo--pair {
+  gap: 2px;
+  padding: 4px;
+}
+
+.method-page .method-page__tool-logo--pair img {
+  width: 16px;
+  height: 24px;
 }
 
 .method-page .method-page__principles {
@@ -2866,6 +2958,20 @@ p {
   justify-self: center;
 }
 
+.cases-page .cases-page__case--chart {
+  grid-template-columns: minmax(0, 0.78fr) minmax(500px, 1.22fr);
+}
+
+.cases-page .cases-page__case-media--chart {
+  max-width: 760px;
+}
+
+.cases-page .cases-page__case-media--chart a {
+  display: block;
+  overflow: hidden;
+  border-radius: calc(var(--radius-sm) - 5px);
+}
+
 .cases-page .cases-page__field--dark {
   border-bottom-color: rgba(17, 179, 191, 0.24);
   background:
@@ -3391,7 +3497,7 @@ p {
     gap: 48px;
   }
 
-  .offers-page .offers-page__tooling-groups {
+  .method-page .method-page__tooling-groups {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -3460,18 +3566,17 @@ p {
   .offers-page .offers-page__axis-heading,
   .offers-page .offers-page__axis-content,
   .offers-page .offers-page__framework-layout,
-  .offers-page .offers-page__tooling-heading,
   .offers-page .offers-page__pricing-heading {
     grid-template-columns: 1fr;
   }
 
-  .offers-page .offers-page__tooling-heading,
   .offers-page .offers-page__pricing-heading {
     gap: 18px;
   }
 
-  .offers-page .offers-page__tooling-groups {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .method-page .method-page__tooling-heading {
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .offers-page .offers-page__pricing-grid {
@@ -3655,7 +3760,7 @@ p {
     gap: 38px;
   }
 
-  .offers-page .offers-page__tooling-groups {
+  .method-page .method-page__tooling-groups {
     grid-template-columns: 1fr;
   }
 
