@@ -49,6 +49,9 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
     ├── css/
     │   └── site.css
     └── img/
+        ├── case-immobilier-typologie-panel.jpg
+        ├── case-sante-pilotage-capacitaire.png
+        ├── case-sante-previsions-hospitalieres.png
         ├── favicon-datapredict.png
         ├── logo-datapredict.png
         ├── portrait-johann-grisel.webp
