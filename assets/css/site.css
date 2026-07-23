@@ -3626,6 +3626,47 @@ p {
   color: var(--muted);
 }
 
+/* Restauration ciblée des couleurs sur fonds clairs */
+
+.home-intro .axis-card,
+.industrial-section .data-flow li,
+.method-section .method-grid li,
+.offers-page .offers-page__framework-points,
+.method-page .method-page__tooling-group,
+.cases-page .cases-page__field:not(.cases-page__field--dark) .cases-page__case:not(.cases-page__case--programme),
+.cases-page .cases-page__panorama-grid li,
+.contact-scope-grid article,
+.contact-legal-grid details {
+  background: linear-gradient(145deg, #e6edf2 0%, #dff6f8 115%);
+}
+
+.home-intro .axis-card--accent,
+.method-page .method-page__tooling-group--ai {
+  background: linear-gradient(145deg, #dff6f8 0%, #e6edf2 100%);
+}
+
+.home-intro :is(h2, h3),
+.industrial-section :is(h2, h3),
+.method-section :is(h2, h3),
+.home-cta h2,
+.offers-page .offers-page__hero h1,
+.offers-page .offers-page__axis:not(.offers-page__axis--dark) .offers-page__axis-heading h2,
+.offers-page .offers-page__axis:not(.offers-page__axis--dark) .offers-page__axis-scope h3,
+.offers-page .offers-page__framework :is(h2, h3),
+.offers-page .offers-page__cta h2,
+.method-page .method-page__process :is(h2, h3),
+.method-page .method-page__tooling :is(h2, h3),
+.method-page .method-page__cta h2,
+.cases-page .cases-page__field:not(.cases-page__field--dark) .cases-page__field-heading h2,
+.cases-page .cases-page__field:not(.cases-page__field--dark) .cases-page__case:not(.cases-page__case--programme) h3,
+.cases-page .cases-page__panorama :is(h2, h3),
+.cases-page .cases-page__cta h2,
+.contact-page .contact-hero-layout > div :is(h1, h2, h3),
+.contact-main .qualification-block :is(h2, h3),
+.contact-scope-section :is(h2, h3) {
+  color: var(--blue-grey);
+}
+
 .site-footer {
   border-top: 1px solid rgba(17, 179, 191, 0.2);
   background: #091f2a;
