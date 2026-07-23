@@ -192,13 +192,17 @@
                   <span>Cadres d’accès, documentation, supports de pilotage et conditions de continuité.</span>
                 </li>
               </ul>
-              <div class="cases-page__case-media cases-page__case-media--pair" aria-label="Exemples de restitutions anonymisées">
+              <div class="cases-page__case-media cases-page__case-media--pair" role="group" aria-label="Exemples de restitutions anonymisées">
                 <figure>
-                  <img src="assets/img/case-sante-previsions-hospitalieres.png" width="605" height="340" alt="Série temporelle anonymisée montrant les valeurs observées, les estimations et les prévisions d’un flux hospitalier." loading="lazy" decoding="async">
+                  <a href="assets/img/case-sante-previsions-hospitalieres.png" aria-label="Afficher en pleine résolution la prévision anonymisée de flux hospitaliers">
+                    <img src="assets/img/case-sante-previsions-hospitalieres.png" width="605" height="340" alt="Série temporelle anonymisée montrant les valeurs observées, les estimations et les prévisions d’un flux hospitalier." loading="lazy" decoding="async">
+                  </a>
                   <figcaption>Prévision de flux hospitaliers</figcaption>
                 </figure>
                 <figure>
-                  <img src="assets/img/case-sante-pilotage-capacitaire.png" width="603" height="309" alt="Quatre jauges anonymisées de charge hospitalière pour la médecine, la chirurgie et les soins critiques." loading="lazy" decoding="async">
+                  <a href="assets/img/case-sante-pilotage-capacitaire.png" aria-label="Afficher en pleine résolution le pilotage capacitaire anonymisé">
+                    <img src="assets/img/case-sante-pilotage-capacitaire.png" width="603" height="309" alt="Quatre jauges anonymisées de charge hospitalière pour la médecine, la chirurgie et les soins critiques." loading="lazy" decoding="async">
+                  </a>
                   <figcaption>Pilotage capacitaire</figcaption>
                 </figure>
               </div>
@@ -527,7 +531,9 @@
                 </ul>
               </div>
               <figure class="cases-page__case-media cases-page__case-media--single">
-                <img src="assets/img/case-immobilier-typologie-panel.jpg" width="899" height="476" alt="Répartition anonymisée d’un panel immobilier entre achat, syndic et location, avec zones de chevauchement." loading="lazy" decoding="async">
+                <a href="assets/img/case-immobilier-typologie-panel.jpg" aria-label="Afficher en pleine résolution la typologie anonymisée du panel immobilier">
+                  <img src="assets/img/case-immobilier-typologie-panel.jpg" width="899" height="476" alt="Répartition anonymisée d’un panel immobilier entre achat, syndic et location, avec zones de chevauchement." loading="lazy" decoding="async">
+                </a>
                 <figcaption>Typologie anonymisée du panel étudié</figcaption>
               </figure>
             </article>
@@ -657,7 +663,11 @@
   <footer class="site-footer">
     <div class="wrap footer-inner">
       <p>datapredict — Conseil et réalisation Data, IA &amp; BI</p>
-      <p><a href="contact.html">Contact</a></p>
+      <nav class="footer-links" aria-label="Informations complémentaires">
+        <a href="contact.html">Contact</a>
+        <a href="contact.html#mentions-legales">Mentions légales</a>
+        <a href="contact.html#donnees-personnelles">Données personnelles</a>
+      </nav>
     </div>
   </footer>
 </body>
