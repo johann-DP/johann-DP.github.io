@@ -20,7 +20,7 @@ concurrency:
 jobs:
   validate:
     name: Valider le site statique
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
 
     steps:
@@ -32,7 +32,7 @@ jobs:
       - name: Vérifier la structure et les références
         shell: bash
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           from html.parser import HTMLParser
           from pathlib import Path
           from urllib.parse import unquote, urlsplit
@@ -51,6 +51,9 @@ jobs:
               "cas-clients.html",
               "contact.html",
               "assets/css/site.css",
+              "assets/img/favicon-datapredict.png",
+              "assets/img/logo-datapredict.png",
+              "assets/img/social-datapredict.png",
               "robots.txt",
               "sitemap.xml",
           }
@@ -93,7 +96,9 @@ jobs:
               def _handle_tag(self, tag, attrs):
                   attributes = dict(attrs)
                   identifier = attributes.get("id")
-                  if identifier:
+                  if identifier is not None and not identifier.strip():
+                      errors.append(f"{self.path}: identifiant vide")
+                  elif identifier:
                       if identifier in self.ids:
                           errors.append(f"{self.path}: identifiant dupliqué #{identifier}")
                       self.ids.add(identifier)
@@ -107,7 +112,9 @@ jobs:
 
                   for attribute in ("href", "src"):
                       value = attributes.get(attribute)
-                      if value:
+                      if value is not None and not value.strip():
+                          errors.append(f"{self.path}: attribut {attribute} vide")
+                      elif value:
                           self.references.append(value.strip())
 
           documents = {}
