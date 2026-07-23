@@ -3932,7 +3932,6 @@ p {
 
   .method-page .method-page__tooling-groups {
     grid-template-columns: 1fr;
-    grid-auto-rows: auto;
   }
 
   .offers-page .offers-page__cta-layout {
