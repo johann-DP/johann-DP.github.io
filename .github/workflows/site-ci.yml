@@ -1,0 +1,201 @@
+name: CI du site
+
+on:
+  push:
+    branches:
+      - main
+      - "codex/**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Valider le site statique
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Vérifier la structure et les références
+        shell: bash
+        run: |
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from urllib.parse import unquote, urlsplit
+          import re
+          import sys
+          import xml.etree.ElementTree as ET
+
+          root = Path.cwd().resolve()
+          errors = []
+          required = {
+              ".nojekyll",
+              "CNAME",
+              "index.html",
+              "offres.html",
+              "methode.html",
+              "cas-clients.html",
+              "contact.html",
+              "assets/css/site.css",
+              "robots.txt",
+              "sitemap.xml",
+          }
+
+          for relative_path in sorted(required):
+              if not (root / relative_path).is_file():
+                  errors.append(f"fichier obligatoire absent : {relative_path}")
+
+          cname = root / "CNAME"
+          if cname.is_file() and cname.read_text(encoding="utf-8").strip() != "www.datapredict.org":
+              errors.append("CNAME doit contenir exactement www.datapredict.org")
+
+          robots = root / "robots.txt"
+          if robots.is_file() and "Sitemap: https://www.datapredict.org/sitemap.xml" not in robots.read_text(encoding="utf-8"):
+              errors.append("robots.txt ne référence pas le sitemap canonique")
+
+          sitemap = root / "sitemap.xml"
+          if sitemap.is_file():
+              try:
+                  ET.parse(sitemap)
+              except ET.ParseError as exc:
+                  errors.append(f"sitemap.xml invalide : {exc}")
+
+          class Document(HTMLParser):
+              def __init__(self, path):
+                  super().__init__(convert_charrefs=True)
+                  self.path = path
+                  self.ids = set()
+                  self.references = []
+                  self.h1_count = 0
+                  self.title_count = 0
+                  self.lang = ""
+
+              def handle_starttag(self, tag, attrs):
+                  self._handle_tag(tag, attrs)
+
+              def handle_startendtag(self, tag, attrs):
+                  self._handle_tag(tag, attrs)
+
+              def _handle_tag(self, tag, attrs):
+                  attributes = dict(attrs)
+                  identifier = attributes.get("id")
+                  if identifier:
+                      if identifier in self.ids:
+                          errors.append(f"{self.path}: identifiant dupliqué #{identifier}")
+                      self.ids.add(identifier)
+
+                  if tag == "html":
+                      self.lang = attributes.get("lang", "").strip()
+                  elif tag == "h1":
+                      self.h1_count += 1
+                  elif tag == "title":
+                      self.title_count += 1
+
+                  for attribute in ("href", "src"):
+                      value = attributes.get(attribute)
+                      if value:
+                          self.references.append(value.strip())
+
+          documents = {}
+          html_paths = sorted(
+              path for path in root.rglob("*.html")
+              if not any(part.startswith(".") for part in path.relative_to(root).parts)
+          )
+
+          for path in html_paths:
+              relative = path.relative_to(root)
+              document = Document(relative)
+              try:
+                  document.feed(path.read_text(encoding="utf-8"))
+                  document.close()
+              except (OSError, UnicodeError) as exc:
+                  errors.append(f"{relative}: lecture impossible : {exc}")
+                  continue
+
+              documents[path.resolve()] = document
+              if not document.lang:
+                  errors.append(f"{relative}: attribut lang absent sur <html>")
+              if document.title_count != 1:
+                  errors.append(f"{relative}: {document.title_count} élément(s) <title>, attendu : 1")
+              if document.h1_count != 1:
+                  errors.append(f"{relative}: {document.h1_count} élément(s) <h1>, attendu : 1")
+
+          def local_target(source, raw_reference):
+              parsed = urlsplit(raw_reference)
+              if parsed.scheme or parsed.netloc or raw_reference.startswith("//"):
+                  return None, None
+
+              decoded_path = unquote(parsed.path)
+              if decoded_path.startswith("/"):
+                  candidate = root / decoded_path.lstrip("/")
+              elif decoded_path:
+                  candidate = source.parent / decoded_path
+              else:
+                  candidate = source
+
+              candidate = candidate.resolve()
+              try:
+                  candidate.relative_to(root)
+              except ValueError:
+                  errors.append(f"{source.relative_to(root)}: référence hors dépôt : {raw_reference}")
+                  return None, None
+
+              if decoded_path.endswith("/") or candidate.is_dir():
+                  candidate /= "index.html"
+              return candidate, unquote(parsed.fragment)
+
+          for source, document in documents.items():
+              for reference in document.references:
+                  target, fragment = local_target(source, reference)
+                  if target is None:
+                      continue
+                  if not target.is_file():
+                      errors.append(
+                          f"{source.relative_to(root)}: cible locale absente : {reference}"
+                      )
+                      continue
+                  if fragment and target.suffix.lower() in {".html", ".htm"}:
+                      target_document = documents.get(target.resolve())
+                      if target_document is None or fragment not in target_document.ids:
+                          errors.append(
+                              f"{source.relative_to(root)}: ancre absente : {reference}"
+                          )
+
+          css_url = re.compile(r"url\(\s*(['\"]?)(.*?)\1\s*\)", re.IGNORECASE)
+          for css_path in sorted(root.rglob("*.css")):
+              if any(part.startswith(".") for part in css_path.relative_to(root).parts):
+                  continue
+              css = css_path.read_text(encoding="utf-8")
+              for _, reference in css_url.findall(css):
+                  reference = reference.strip()
+                  if not reference or reference.startswith(("#", "data:")):
+                      continue
+                  target, _ = local_target(css_path, reference)
+                  if target is not None and not target.is_file():
+                      errors.append(
+                          f"{css_path.relative_to(root)}: ressource locale absente : {reference}"
+                      )
+
+          if errors:
+              print("\n".join(f"ERREUR : {error}" for error in errors))
+              sys.exit(1)
+
+          print(
+              f"Validation réussie : {len(documents)} page(s) HTML, "
+              f"{sum(len(document.references) for document in documents.values())} référence(s)."
+          )
+          PY
