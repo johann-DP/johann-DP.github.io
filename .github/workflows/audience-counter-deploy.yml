@@ -1,0 +1,134 @@
+name: Déploiement du compteur
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audience-counter-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Déployer le compteur
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: analytics-counter
+    env:
+      CLOUDFLARE_ACCOUNT_ID: 41fd12807604676346b91e3dd0eeaf02
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      D1_DATABASE_ID: 2920ae71-d68b-4b26-99f8-2389b2980997
+
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Préparer Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: analytics-counter/package-lock.json
+
+      - name: Vérifier les secrets de déploiement
+        env:
+          COUNTER_ADMIN_PASSWORD: ${{ secrets.COUNTER_ADMIN_PASSWORD }}
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test "${#COUNTER_ADMIN_PASSWORD}" -ge 32
+
+      - name: Installer et tester
+        run: |
+          npm ci
+          npm run check
+
+      - name: Générer la configuration de production
+        run: |
+          [[ "$D1_DATABASE_ID" =~ ^[0-9a-fA-F-]{36}$ ]]
+          sed "s/__D1_DATABASE_ID__/$D1_DATABASE_ID/" wrangler.toml.template > wrangler.toml
+
+      - name: Appliquer les migrations
+        run: npx wrangler d1 migrations apply datapredict-audience-counter --remote --config wrangler.toml
+
+      - name: Déployer le Worker
+        run: npx wrangler deploy --config wrangler.toml
+
+      - name: Configurer le mot de passe privé
+        env:
+          COUNTER_ADMIN_PASSWORD: ${{ secrets.COUNTER_ADMIN_PASSWORD }}
+        run: |
+          test "${#COUNTER_ADMIN_PASSWORD}" -ge 32
+          printf '%s' "$COUNTER_ADMIN_PASSWORD" | npx wrangler secret put ADMIN_PASSWORD --config wrangler.toml
+
+      - name: Résoudre l’adresse du Worker
+        id: worker
+        working-directory: .
+        shell: bash
+        run: |
+          response="$(
+            curl --fail --silent --show-error \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain"
+          )"
+          account_subdomain="$(
+            RESPONSE="$response" node - <<'NODE'
+          const body = JSON.parse(process.env.RESPONSE);
+          if (!body.success || !body.result?.subdomain) {
+            throw new Error("sous-domaine workers.dev introuvable");
+          }
+          process.stdout.write(body.result.subdomain);
+          NODE
+          )"
+          worker_url="https://datapredict-audience-counter.${account_subdomain}.workers.dev"
+          [[ "$worker_url" =~ ^https://[a-z0-9.-]+\.workers\.dev$ ]]
+          echo "url=$worker_url" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Worker déployé"
+            echo
+            echo "\`$worker_url\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Vérifier le service déployé
+        working-directory: .
+        env:
+          COUNTER_ADMIN_PASSWORD: ${{ secrets.COUNTER_ADMIN_PASSWORD }}
+          COUNTER_WORKER_URL: ${{ steps.worker.outputs.url }}
+        run: |
+          [[ "$COUNTER_WORKER_URL" =~ ^https://[a-z0-9.-]+\.workers\.dev/?$ ]]
+          node - <<'NODE'
+          (async () => {
+            const baseUrl = process.env.COUNTER_WORKER_URL.replace(/\/$/, "");
+            const health = await fetch(`${baseUrl}/health`);
+            if (!health.ok) throw new Error(`health HTTP ${health.status}`);
+            const body = await health.json();
+            if (body.status !== "ok") throw new Error("health invalide");
+
+            const refused = await fetch(`${baseUrl}/stats`);
+            if (refused.status !== 401) {
+              throw new Error(`stats non protégées : HTTP ${refused.status}`);
+            }
+
+            const credentials = Buffer.from(
+              `datapredict:${process.env.COUNTER_ADMIN_PASSWORD}`,
+            ).toString("base64");
+            const accepted = await fetch(`${baseUrl}/stats`, {
+              headers: { Authorization: `Basic ${credentials}` },
+            });
+            if (!accepted.ok) throw new Error(`stats HTTP ${accepted.status}`);
+            const html = await accepted.text();
+            if (!html.includes("Audience datapredict")) {
+              throw new Error("tableau de statistiques invalide");
+            }
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
