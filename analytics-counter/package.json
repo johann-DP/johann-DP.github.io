@@ -2,7 +2,7 @@
   "name": "datapredict-audience-counter",
   "version": "1.0.0",
   "private": true,
-  "description": "Compteur minimal de pages vues pour datapredict.org.",
+  "description": "Mesure d’audience agrégée et privée pour datapredict.org.",
   "type": "module",
   "scripts": {
     "check": "node --check src/worker.js && node --test",

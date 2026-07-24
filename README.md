@@ -24,9 +24,9 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
 
 ## Socle technique
 
-- HTML5 et CSS natifs, sans framework ; JavaScript limité au compteur de pages vues ;
+- HTML5 et CSS natifs, sans framework ; JavaScript limité à la mesure d’audience agrégée ;
 - publication statique avec GitHub Pages ;
-- compteur propriétaire agrégé, sans identifiant ni suivi individuel, exécuté sur Cloudflare Workers et D1 en offre gratuite ;
+- mesure d’audience propriétaire agrégée, sans identifiant ni suivi individuel, exécutée sur Cloudflare Workers et D1 en offre gratuite ;
 - interface fluide conçue pour les largeurs de référence de 320 à 1 920 pixels ;
 - dispositions d’accessibilité intégrées : structure sémantique, navigation au clavier, contrastes et réduction des animations ;
 - logo officiel datapredict au format PNG uniquement ;
@@ -69,9 +69,21 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
 
 `CNAME` configure le domaine public, `.nojekyll` assure la publication directe des fichiers statiques et `robots.txt` déclare le sitemap des cinq pages canoniques.
 
-## Compteur de pages vues
+## Mesure d’audience agrégée
 
-Le compteur est développé dans `analytics-counter/`. Il stocke uniquement un total journalier par page et expose une page `/stats` protégée par authentification HTTP. Il ne conserve aucun événement brut ni identifiant. Les chiffres sont indicatifs : ils ne cherchent ni à identifier une personne, ni à distinguer un visiteur d’un robot.
+Le système est développé dans `analytics-counter/`. Le script du site envoie au même endpoint `/hit` un payload fermé contenant :
+
+- le chemin canonique de la page ;
+- un événement parmi `pageview`, `engaged_30s` et `scroll_75` ;
+- un booléen de nouvelle visite estimée ;
+- une provenance parmi `direct`, `search`, `linkedin`, `other-social`, `other-site` et `internal` ;
+- un appareil parmi `mobile`, `tablet` et `desktop`.
+
+Une visite est comptée au plus une fois par session d’onglet grâce à un booléen `sessionStorage`, sans création d’identifiant. `engaged_30s` mesure trente secondes cumulées pendant lesquelles la page est visible ; `scroll_75` signale que le bas de la fenêtre a atteint 75 % de la hauteur du document. La provenance est classée dans le navigateur : aucune URL référente ni aucun paramètre UTM ne sont envoyés. L’appareil est également classé localement ; le User-Agent n’est pas stocké. Le pays approximatif est dérivé côté Worker à partir des informations Cloudflare.
+
+Le Worker conserve pendant vingt-quatre mois des agrégats séparés par jour et par dimension, puis expose une page `/stats` protégée par authentification HTTP. Il ne stocke aucun événement brut, identifiant, adresse IP, User-Agent, URL complète, paramètre UTM ou donnée de formulaire. Ses journaux applicatifs sont désactivés. Les chiffres restent indicatifs : ils ne cherchent ni à identifier une personne, ni à distinguer un visiteur d’un robot.
+
+Le script respecte le cookie d’opposition propre au site, Global Privacy Control et Do Not Track. Si `sessionStorage` est indisponible, la page vue reste mesurée mais n’est pas comptée comme une nouvelle visite, afin de ne pas surévaluer les visites.
 
 Le déploiement utilise l’offre gratuite Cloudflare Workers/D1. Il reste désactivé tant que la variable GitHub `COUNTER_DEPLOY_ENABLED` ne vaut pas `true`. La CI/CD requiert :
 
@@ -80,6 +92,8 @@ Le déploiement utilise l’offre gratuite Cloudflare Workers/D1. Il reste désa
 - une base `datapredict-audience-counter` créée avec la juridiction `eu`.
 
 Le jeton Cloudflare est limité au compte concerné, avec les droits d’écriture `Workers Scripts` et `D1`. `COUNTER_ADMIN_PASSWORD` est une valeur aléatoire d’au moins 32 caractères.
+
+Les pushes sur une branche `codex/**` testent le compteur sans le déployer. Avant la première PR, le workflow peut être lancé manuellement sur la branche configurée ; après fusion, seuls `main` et un lancement manuel peuvent déployer le Worker.
 
 Après le premier déploiement, l’URL HTTPS de `/hit` remplace le marqueur `__DATAPREDICT_COUNTER_ENDPOINT__` dans `assets/js/audience-counter.js`.
 

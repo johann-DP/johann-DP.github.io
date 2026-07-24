@@ -20,7 +20,11 @@ concurrency:
 jobs:
   deploy:
     name: Déployer le compteur
-    if: ${{ vars.COUNTER_DEPLOY_ENABLED == 'true' }}
+    if: >-
+      ${{
+        vars.COUNTER_DEPLOY_ENABLED == 'true'
+        && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
+      }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     defaults:
