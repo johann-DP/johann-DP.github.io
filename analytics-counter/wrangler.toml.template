@@ -1,0 +1,20 @@
+name = "datapredict-audience-counter"
+main = "src/worker.js"
+compatibility_date = "2026-07-24"
+workers_dev = true
+
+[observability]
+enabled = false
+
+[vars]
+ALLOWED_ORIGINS = "https://www.datapredict.org,https://datapredict.org"
+ADMIN_USERNAME = "datapredict"
+
+[triggers]
+crons = ["17 3 * * *"]
+
+[[d1_databases]]
+binding = "COUNTER_DB"
+database_name = "datapredict-audience-counter"
+database_id = "__D1_DATABASE_ID__"
+migrations_dir = "migrations"
