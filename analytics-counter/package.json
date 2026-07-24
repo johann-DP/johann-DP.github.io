@@ -1,0 +1,18 @@
+{
+  "name": "datapredict-audience-counter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Compteur minimal de pages vues pour datapredict.org.",
+  "type": "module",
+  "scripts": {
+    "check": "node --check src/worker.js && node --test",
+    "test": "node --test",
+    "deploy:dry": "wrangler deploy --dry-run --config wrangler.toml"
+  },
+  "devDependencies": {
+    "wrangler": "4.114.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
