@@ -3861,6 +3861,24 @@ p {
   color: var(--color-heading-card);
 }
 
+.audience-control {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--color-link);
+  padding: 0;
+  font: inherit;
+  font-weight: 720;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.audience-control:hover {
+  color: var(--color-link-hover);
+}
+
 .qualification-block {
   max-width: 720px;
 }

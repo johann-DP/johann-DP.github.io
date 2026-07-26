@@ -216,18 +216,29 @@ function number(value, maximumFractionDigits = 0) {
     .format(Number(value) || 0);
 }
 
-function ratio(numerator, denominator) {
-  const safeDenominator = Number(denominator) || 0;
-  return safeDenominator ? Number(numerator) / safeDenominator : 0;
+function roundedCount(value) {
+  return Math.round(Math.max(0, Number(value) || 0) / 10) * 10;
 }
 
-function percent(numerator, denominator) {
-  return `${number(ratio(numerator, denominator) * 100, 1)} %`;
+function privateNumber(value) {
+  return number(roundedCount(value));
+}
+
+function privateRatio(numerator, denominator) {
+  const safeDenominator = roundedCount(denominator);
+  return safeDenominator ? roundedCount(numerator) / safeDenominator : 0;
+}
+
+function privatePercent(numerator, denominator) {
+  if (!roundedCount(denominator)) {
+    return "—";
+  }
+  return `${number(privateRatio(numerator, denominator) * 100, 1)} %`;
 }
 
 function changeLabel(current, previous) {
-  const safeCurrent = Number(current) || 0;
-  const safePrevious = Number(previous) || 0;
+  const safeCurrent = roundedCount(current);
+  const safePrevious = roundedCount(previous);
   if (!safePrevious) {
     return safeCurrent ? "nouvelle période" : "0 %";
   }
@@ -274,28 +285,29 @@ function tableRows(rows, label, columns) {
 
 function dashboard(summary, dailyRows, pages, dimensions, today) {
   const daily = fillDaily(dailyRows, today);
-  const maxDaily = Math.max(1, ...daily.map((row) => Number(row.page_views) || 0));
+  const maxDaily = Math.max(10, ...daily.map((row) => roundedCount(row.page_views)));
   const trendRows = daily
     .map((row) => {
-      const width = Math.round(((Number(row.page_views) || 0) / maxDaily) * 1000) / 10;
+      const pageViews = roundedCount(row.page_views);
+      const width = Math.round((pageViews / maxDaily) * 1000) / 10;
       return `
         <div class="trend-row">
           <time datetime="${row.day}">${escapeHtml(formatDay(row.day))}</time>
           <div class="trend-bar"><span style="width:${width}%"></span></div>
-          <strong>${number(row.page_views)}</strong>
-          <small>${number(row.visits)} visite(s)</small>
+          <strong>${privateNumber(row.page_views)}</strong>
+          <small>${privateNumber(row.visits)} visite(s)</small>
         </div>`;
     })
     .join("");
 
   const pageRows = tableRows(
-    pages,
+    pages.filter((row) => roundedCount(row.page_views) > 0),
     (row) => PAGE_LABELS[row.page] || row.page,
     [
-      (row) => number(row.page_views),
-      (row) => number(row.visits),
-      (row) => percent(row.engaged_30s, row.page_views),
-      (row) => percent(row.scroll_75, row.page_views),
+      (row) => privateNumber(row.page_views),
+      (row) => privateNumber(row.visits),
+      (row) => privatePercent(row.engaged_30s, row.page_views),
+      (row) => privatePercent(row.scroll_75, row.page_views),
     ],
   );
 
@@ -306,23 +318,26 @@ function dashboard(summary, dailyRows, pages, dimensions, today) {
     return groups;
   }, {});
   const sourceRows = tableRows(
-    groupedDimensions.source || [],
+    (groupedDimensions.source || []).filter((row) => roundedCount(row.count) > 0),
     (row) => SOURCE_LABELS[row.value] || row.value,
-    [(row) => number(row.count)],
+    [(row) => privateNumber(row.count)],
   );
   const countryRows = tableRows(
-    groupedDimensions.country || [],
+    (groupedDimensions.country || []).filter((row) => roundedCount(row.count) > 0),
     (row) => countryLabel(row.value),
-    [(row) => number(row.count)],
+    [(row) => privateNumber(row.count)],
   );
   const deviceRows = tableRows(
-    groupedDimensions.device || [],
+    (groupedDimensions.device || []).filter((row) => roundedCount(row.count) > 0),
     (row) => DEVICE_LABELS[row.value] || row.value,
-    [(row) => number(row.count)],
+    [(row) => privateNumber(row.count)],
   );
 
   const emptyRow = (columns = 2) => `<tr><td colspan="${columns}">Aucune donnée</td></tr>`;
-  const pagesPerVisit = ratio(summary.last_30_page_views, summary.last_30_visits);
+  const pagesPerVisit = privateRatio(
+    summary.last_30_page_views,
+    summary.last_30_visits,
+  );
   return `<!doctype html>
 <html lang="fr">
 <head>
@@ -368,14 +383,14 @@ function dashboard(summary, dailyRows, pages, dimensions, today) {
 <body>
   <main>
     <h1>Audience datapredict</h1>
-    <p class="intro">Statistiques agrégées, sans identifiant ni parcours individuel. Conservation : 24 mois.</p>
+    <p class="intro">Statistiques agrégées, sans identifiant ni parcours individuel. Valeurs présentées à la dizaine la plus proche ; conservation : 24 mois.</p>
     <div class="cards">
-      <div class="card"><span>Pages vues conservées</span><strong>${number(summary.total_page_views)}</strong></div>
-      <div class="card"><span>Aujourd’hui</span><strong>${number(summary.today_page_views)}</strong><small>${number(summary.today_visits)} visite(s) estimée(s)</small></div>
-      <div class="card"><span>Pages vues — 30 jours</span><strong>${number(summary.last_30_page_views)}</strong><small>${changeLabel(summary.last_30_page_views, summary.previous_30_page_views)} vs période précédente</small></div>
-      <div class="card"><span>Visites estimées — 30 jours</span><strong>${number(summary.last_30_visits)}</strong><small>une première page par session d’onglet</small></div>
+      <div class="card"><span>Pages vues conservées</span><strong>${privateNumber(summary.total_page_views)}</strong></div>
+      <div class="card"><span>Aujourd’hui</span><strong>${privateNumber(summary.today_page_views)}</strong><small>${privateNumber(summary.today_visits)} visite(s) estimée(s)</small></div>
+      <div class="card"><span>Pages vues — 30 jours</span><strong>${privateNumber(summary.last_30_page_views)}</strong><small>${changeLabel(summary.last_30_page_views, summary.previous_30_page_views)} vs période précédente</small></div>
+      <div class="card"><span>Visites estimées — 30 jours</span><strong>${privateNumber(summary.last_30_visits)}</strong><small>une première page par session d’onglet</small></div>
       <div class="card"><span>Pages par visite — 30 jours</span><strong>${number(pagesPerVisit, 2)}</strong></div>
-      <div class="card"><span>Pages vues — 90 jours</span><strong>${number(summary.last_90_page_views)}</strong></div>
+      <div class="card"><span>Pages vues — 90 jours</span><strong>${privateNumber(summary.last_90_page_views)}</strong></div>
     </div>
 
     <section>
@@ -386,7 +401,7 @@ function dashboard(summary, dailyRows, pages, dimensions, today) {
     <section>
       <h2>Contenus consultés — 30 jours</h2>
       <table>
-        <thead><tr><th>Page</th><th>Vues</th><th>Entrées</th><th>30 s actives</th><th>75 % lus</th></tr></thead>
+        <thead><tr><th>Page</th><th>Vues</th><th>Entrées</th><th>Visible 30 s</th><th>Défilement 75 %</th></tr></thead>
         <tbody>${pageRows || emptyRow(5)}</tbody>
       </table>
     </section>
@@ -406,7 +421,7 @@ function dashboard(summary, dailyRows, pages, dimensions, today) {
       <h2>Pays approximatif — 30 jours</h2>
       <table><tbody>${countryRows || emptyRow()}</tbody></table>
     </section>
-    <p class="note">Les visites sont des estimations par session d’onglet. Les sources, pays et écrans sont comptés séparément et ne peuvent pas être croisés pour reconstituer un parcours.</p>
+    <p class="note">Les visites sont des estimations par session d’onglet. Les valeurs sont arrondies à la dizaine la plus proche ; les catégories arrondies à zéro ne sont pas affichées. Les sources, pays et écrans sont comptés séparément et ne peuvent pas être croisés pour reconstituer un parcours.</p>
   </main>
 </body>
 </html>`;

@@ -85,17 +85,18 @@ Le Worker conserve pendant vingt-quatre mois des agrégats séparés par jour et
 
 Le script respecte le cookie d’opposition propre au site, Global Privacy Control et Do Not Track. Si `sessionStorage` est indisponible, la page vue reste mesurée mais n’est pas comptée comme une nouvelle visite, afin de ne pas surévaluer les visites.
 
-Le déploiement utilise l’offre gratuite Cloudflare Workers/D1. Il reste désactivé tant que la variable GitHub `COUNTER_DEPLOY_ENABLED` ne vaut pas `true`. La CI/CD requiert :
+Le déploiement utilise l’offre gratuite Cloudflare Workers/D1. La base
+`datapredict-audience-counter` est limitée à la juridiction UE. L’environnement
+GitHub `production`, réservé à `main`, contient uniquement les secrets
+`CLOUDFLARE_API_TOKEN` et `COUNTER_ADMIN_PASSWORD`. Le jeton Cloudflare est
+limité au compte concerné, avec les droits d’écriture `Workers Scripts` et
+`D1` ; le mot de passe est une valeur aléatoire d’au moins 32 caractères.
 
-- les secrets `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN` et `COUNTER_ADMIN_PASSWORD` ;
-- les variables `COUNTER_D1_DATABASE_ID` et `COUNTER_WORKER_URL` ;
-- une base `datapredict-audience-counter` créée avec la juridiction `eu`.
-
-Le jeton Cloudflare est limité au compte concerné, avec les droits d’écriture `Workers Scripts` et `D1`. `COUNTER_ADMIN_PASSWORD` est une valeur aléatoire d’au moins 32 caractères.
-
-Les pushes sur une branche `codex/**` testent le compteur sans le déployer. Avant la première PR, le workflow peut être lancé manuellement sur la branche configurée ; après fusion, seuls `main` et un lancement manuel peuvent déployer le Worker.
-
-Après le premier déploiement, l’URL HTTPS de `/hit` remplace le marqueur `__DATAPREDICT_COUNTER_ENDPOINT__` dans `assets/js/audience-counter.js`.
+Les pushes sur `main` et `codex/**`, ainsi que les PR vers `main`, testent le
+Worker sans le déployer. Le workflow `Déploiement du compteur` ne s’exécute que
+manuellement sur `main`. Le collecteur public est
+`https://datapredict-audience-counter.johann-grisel.workers.dev/hit` et le
+tableau privé est exposé sous `/stats`.
 
 ## Principes éditoriaux et de publication
 

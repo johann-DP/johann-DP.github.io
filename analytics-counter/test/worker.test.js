@@ -65,6 +65,7 @@ class FakeStatement {
       return {
         results: [
           { dimension: "source", value: "linkedin", count: 12 },
+          { dimension: "source", value: "other-site", count: 4 },
           { dimension: "device", value: "desktop", count: 20 },
           { dimension: "country", value: "FR", count: 25 },
         ],
@@ -230,10 +231,14 @@ test("protège et rend le tableau de statistiques enrichi", async () => {
   );
   const html = await accepted.text();
   assert.equal(accepted.status, 200);
-  assert.match(html, /142/);
+  assert.match(html, />140</);
+  assert.doesNotMatch(html, /142/);
   assert.match(html, /LinkedIn/);
+  assert.doesNotMatch(html, /Autre site/);
   assert.match(html, /France/);
-  assert.match(html, /30 s actives/);
+  assert.match(html, /Visible 30 s/);
+  assert.match(html, /Défilement 75 %/);
+  assert.match(html, /dizaine la plus proche/);
 });
 
 test("contrôle réellement la disponibilité de la base", async () => {

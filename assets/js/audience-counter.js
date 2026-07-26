@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ENDPOINT = "__DATAPREDICT_COUNTER_ENDPOINT__";
+  const ENDPOINT = "https://datapredict-audience-counter.johann-grisel.workers.dev/hit";
   const OPT_OUT_COOKIE = "datapredict_audience_optout";
   const OPT_OUT_MAX_AGE = 31_536_000;
   const SESSION_VISIT_KEY = "datapredict_audience_session_started";
@@ -55,25 +55,32 @@
   };
 
   const choice = new URL(location.href).searchParams.get("audience");
+  if (choice === "off") {
+    setOptOut(true);
+  }
   if (choice === "off" || choice === "on") {
-    setOptOut(choice === "off");
     const cleanUrl = new URL(location.href);
     cleanUrl.searchParams.delete("audience");
     history.replaceState(null, "", `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`);
   }
 
-  const optedOut = cookieValue(OPT_OUT_COOKIE) === "1";
-  const privacySignal = navigator.globalPrivacyControl === true
+  const privacyDisabled = () => cookieValue(OPT_OUT_COOKIE) === "1"
+    || navigator.globalPrivacyControl === true
     || navigator.doNotTrack === "1"
     || window.doNotTrack === "1";
-  const disabled = optedOut || privacySignal;
+  const optedOut = cookieValue(OPT_OUT_COOKIE) === "1";
+  const disabled = privacyDisabled();
   const configured = ENDPOINT.startsWith("https://");
 
   document.querySelectorAll("[data-audience-disable]").forEach((link) => {
     link.hidden = disabled;
   });
-  document.querySelectorAll("[data-audience-enable]").forEach((link) => {
-    link.hidden = !optedOut;
+  document.querySelectorAll("[data-audience-enable]").forEach((button) => {
+    button.hidden = !optedOut;
+    button.addEventListener("click", () => {
+      setOptOut(false);
+      location.reload();
+    });
   });
   document.querySelectorAll("[data-audience-status]").forEach((status) => {
     status.textContent = !configured
@@ -176,6 +183,10 @@
   const device = classifyDevice();
 
   const send = (event, visit = false) => {
+    if (privacyDisabled()) {
+      return;
+    }
+
     const body = JSON.stringify({
       page: normalizedPage,
       event,
