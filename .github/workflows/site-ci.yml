@@ -21,7 +21,7 @@ jobs:
   validate:
     name: Valider le site statique
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Récupérer le dépôt
@@ -36,6 +36,7 @@ jobs:
           from html.parser import HTMLParser
           from pathlib import Path
           from urllib.parse import unquote, urlsplit
+          import os
           import re
           import sys
           import xml.etree.ElementTree as ET
@@ -51,6 +52,7 @@ jobs:
               "cas-clients.html",
               "contact.html",
               "assets/css/site.css",
+              "assets/js/audience-counter.js",
               "assets/img/favicon-datapredict.png",
               "assets/img/logo-datapredict.png",
               "assets/img/social-datapredict.png",
@@ -61,6 +63,19 @@ jobs:
           for relative_path in sorted(required):
               if not (root / relative_path).is_file():
                   errors.append(f"fichier obligatoire absent : {relative_path}")
+
+          counter = root / "assets/js/audience-counter.js"
+          if counter.is_file():
+              counter_text = counter.read_text(encoding="utf-8")
+              endpoint_missing = "__DATAPREDICT_COUNTER_ENDPOINT__" in counter_text
+              protected_context = (
+                  os.environ.get("GITHUB_EVENT_NAME") == "pull_request"
+                  or os.environ.get("GITHUB_REF") == "refs/heads/main"
+              )
+              if endpoint_missing and protected_context:
+                  errors.append(
+                      "l’URL HTTPS du compteur doit être configurée avant toute PR ou publication sur main"
+                  )
 
           cname = root / "CNAME"
           if cname.is_file() and cname.read_text(encoding="utf-8").strip() != "www.datapredict.org":
@@ -83,6 +98,7 @@ jobs:
                   self.path = path
                   self.ids = set()
                   self.references = []
+                  self.script_sources = []
                   self.h1_count = 0
                   self.title_count = 0
                   self.lang = ""
@@ -109,6 +125,8 @@ jobs:
                       self.h1_count += 1
                   elif tag == "title":
                       self.title_count += 1
+                  elif tag == "script" and attributes.get("src"):
+                      self.script_sources.append(attributes["src"].strip())
 
                   for attribute in ("href", "src"):
                       value = attributes.get(attribute)
@@ -118,9 +136,13 @@ jobs:
                           self.references.append(value.strip())
 
           documents = {}
+          def ignored_generated_path(path):
+              parts = path.relative_to(root).parts
+              return any(part.startswith(".") or part == "node_modules" for part in parts)
+
           html_paths = sorted(
               path for path in root.rglob("*.html")
-              if not any(part.startswith(".") for part in path.relative_to(root).parts)
+              if not ignored_generated_path(path)
           )
 
           for path in html_paths:
@@ -140,6 +162,29 @@ jobs:
                   errors.append(f"{relative}: {document.title_count} élément(s) <title>, attendu : 1")
               if document.h1_count != 1:
                   errors.append(f"{relative}: {document.h1_count} élément(s) <h1>, attendu : 1")
+              if relative.as_posix() in {
+                  "index.html",
+                  "offres.html",
+                  "methode.html",
+                  "cas-clients.html",
+                  "contact.html",
+              } and document.script_sources.count("assets/js/audience-counter.js") != 1:
+                  errors.append(
+                      f"{relative}: le compteur doit être chargé exactement une fois"
+                  )
+
+          contact = root / "contact.html"
+          if contact.is_file():
+              contact_text = contact.read_text(encoding="utf-8")
+              obsolete_claims = (
+                  "ni traceur publicitaire ni outil de mesure d’audience",
+                  "aucune mesure d’audience",
+              )
+              for claim in obsolete_claims:
+                  if claim in contact_text:
+                      errors.append(
+                          f"contact.html contient encore la mention obsolète : {claim}"
+                      )
 
           def local_target(source, raw_reference):
               parsed = urlsplit(raw_reference)
@@ -184,7 +229,7 @@ jobs:
 
           css_url = re.compile(r"url\(\s*(['\"]?)(.*?)\1\s*\)", re.IGNORECASE)
           for css_path in sorted(root.rglob("*.css")):
-              if any(part.startswith(".") for part in css_path.relative_to(root).parts):
+              if ignored_generated_path(css_path):
                   continue
               css = css_path.read_text(encoding="utf-8")
               for _, reference in css_url.findall(css):
@@ -206,3 +251,22 @@ jobs:
               f"{sum(len(document.references) for document in documents.values())} référence(s)."
           )
           PY
+
+      - name: Préparer Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: analytics-counter/package-lock.json
+
+      - name: Tester le compteur
+        shell: bash
+        run: |
+          node --check assets/js/audience-counter.js
+          npm ci --prefix analytics-counter
+          npm run check --prefix analytics-counter
+          sed 's/__D1_DATABASE_ID__/00000000-0000-0000-0000-000000000000/' \
+            analytics-counter/wrangler.toml.template \
+            > analytics-counter/wrangler.toml
+          cd analytics-counter
+          npx wrangler deploy --dry-run --config wrangler.toml

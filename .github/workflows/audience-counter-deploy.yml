@@ -104,8 +104,11 @@ jobs:
         run: |
           [[ "$COUNTER_WORKER_URL" =~ ^https://[a-z0-9.-]+\.workers\.dev/?$ ]]
           node - <<'NODE'
-          (async () => {
-            const baseUrl = process.env.COUNTER_WORKER_URL.replace(/\/$/, "");
+          const delay = (milliseconds) => new Promise(
+            (resolve) => setTimeout(resolve, milliseconds),
+          );
+
+          const verify = async (baseUrl) => {
             const health = await fetch(`${baseUrl}/health`);
             if (!health.ok) throw new Error(`health HTTP ${health.status}`);
             const body = await health.json();
@@ -127,6 +130,28 @@ jobs:
             if (!html.includes("Audience datapredict")) {
               throw new Error("tableau de statistiques invalide");
             }
+          };
+
+          (async () => {
+            const baseUrl = process.env.COUNTER_WORKER_URL.replace(/\/$/, "");
+            let lastError;
+
+            for (let attempt = 1; attempt <= 10; attempt += 1) {
+              try {
+                await verify(baseUrl);
+                return;
+              } catch (error) {
+                lastError = error;
+                if (attempt < 10) {
+                  console.warn(
+                    `service non stabilisé (${attempt}/10) : ${error.message}`,
+                  );
+                  await delay(3_000);
+                }
+              }
+            }
+
+            throw lastError;
           })().catch((error) => {
             console.error(error);
             process.exit(1);
