@@ -111,6 +111,7 @@ const environment = () => ({
   ALLOWED_ORIGINS: "https://www.datapredict.org",
   ADMIN_USERNAME: "datapredict",
   ADMIN_PASSWORD: "test-password",
+  COLLECTION_STARTED_ON: "2024-01-01",
 });
 
 const basicAuth = (user, password) => (
@@ -137,6 +138,14 @@ function hitRequest(body, origin = "https://www.datapredict.org", country = "FR"
   });
   Object.defineProperty(request, "cf", { value: { country } });
   return request;
+}
+
+function tableRow(html, month) {
+  const row = html.match(
+    new RegExp(`<tr data-month="${month}">([\\s\\S]*?)<\\/tr>`),
+  );
+  assert.ok(row, `ligne mensuelle ${month} absente`);
+  return row[1];
 }
 
 test("normalise uniquement les cinq pages publiques et les codes pays", () => {
@@ -249,8 +258,20 @@ test("protège et rend les valeurs exactes et le tableau mensuel par page", asyn
   assert.equal(accepted.status, 200);
   assert.match(html, />142</);
   assert.doesNotMatch(html, /dizaine la plus proche/);
-  assert.match(html, /LinkedIn/);
-  assert.doesNotMatch(html, /Autre site/);
+  const sourceSection = html.match(
+    /<h2>Origine technique des visites — 30 jours<\/h2>[\s\S]*?<\/section>/,
+  );
+  assert.ok(sourceSection, "section des provenances absente");
+  assert.match(sourceSection[0], /LinkedIn/);
+  assert.doesNotMatch(sourceSection[0], /Autre site/);
+  assert.match(
+    sourceSection[0],
+    /Effectif inférieur à 5 — valeur masquée/,
+  );
+  assert.equal(
+    (html.match(/Effectif inférieur à 5 — valeur masquée/g) || []).length,
+    1,
+  );
   assert.match(html, /France/);
   assert.match(html, /Visible 30 s/);
   assert.match(html, /Défilement 75 %/);
@@ -261,8 +282,36 @@ test("protège et rend les valeurs exactes et le tableau mensuel par page", asyn
   assert.match(html, /<td>8<\/td>/);
   assert.match(html, /<td>3<\/td>/);
   assert.match(html, /<strong>11<\/strong>/);
-  assert.match(html, /juin 2026/);
-  assert.match(html, /<td>—<\/td>/);
+  const june = tableRow(html, "2026-06");
+  assert.match(june, /juin 2026/);
+  assert.match(june, /<td>0<\/td>/);
+  assert.doesNotMatch(june, /—/);
+
+  const recentEnv = environment();
+  recentEnv.COLLECTION_STARTED_ON = "2026-05-12";
+  const recent = await worker.fetch(
+    new Request("https://counter.example/stats", {
+      headers: { Authorization: basicAuth("datapredict", "test-password") },
+    }),
+    recentEnv,
+  );
+  const recentHtml = await recent.text();
+  assert.equal(recent.status, 200);
+  const april = tableRow(recentHtml, "2026-04");
+  assert.match(april, /avril 2026/);
+  assert.match(april, /<td>—<\/td>/);
+});
+
+test("refuse un tableau dont la date de début de collecte est absente", async () => {
+  const env = environment();
+  delete env.COLLECTION_STARTED_ON;
+  const response = await worker.fetch(
+    new Request("https://counter.example/stats", {
+      headers: { Authorization: basicAuth("datapredict", "test-password") },
+    }),
+    env,
+  );
+  assert.equal(response.status, 503);
 });
 
 test("contrôle réellement la disponibilité de la base", async () => {

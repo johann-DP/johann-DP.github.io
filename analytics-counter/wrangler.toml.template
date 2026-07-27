@@ -9,6 +9,8 @@ enabled = false
 [vars]
 ALLOWED_ORIGINS = "https://www.datapredict.org,https://datapredict.org"
 ADMIN_USERNAME = "datapredict"
+# Collecte activée par le commit 88ff025 du 2026-07-26.
+COLLECTION_STARTED_ON = "2026-07-26"
 
 [triggers]
 crons = ["17 3 * * *"]
