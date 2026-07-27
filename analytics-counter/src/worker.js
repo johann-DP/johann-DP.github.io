@@ -90,6 +90,17 @@ const PAGE_QUERY = `
   ORDER BY page_views DESC, page ASC
 `;
 
+const MONTHLY_PAGE_QUERY = `
+  SELECT
+    substr(day, 1, 7) AS month,
+    page,
+    SUM(page_views) AS page_views
+  FROM daily_pages
+  WHERE day BETWEEN ?1 AND ?2
+  GROUP BY month, page
+  ORDER BY month DESC, page ASC
+`;
+
 const DIMENSION_QUERY = `
   SELECT dimension, value, SUM(count) AS count
   FROM daily_dimensions
@@ -133,6 +144,19 @@ export function shiftDays(day, offset) {
   const [year, month, date] = day.split("-").map(Number);
   const shifted = new Date(Date.UTC(year, month - 1, date + offset));
   return shifted.toISOString().slice(0, 10);
+}
+
+export function shiftMonths(month, offset) {
+  const [year, monthNumber] = month.split("-").map(Number);
+  const shifted = new Date(Date.UTC(year, monthNumber - 1 + offset, 1));
+  return shifted.toISOString().slice(0, 7);
+}
+
+export function monthlyWindow(day) {
+  return {
+    from: `${shiftMonths(day.slice(0, 7), -23)}-01`,
+    to: day,
+  };
 }
 
 export function retentionCutoff(day) {
@@ -216,29 +240,38 @@ function number(value, maximumFractionDigits = 0) {
     .format(Number(value) || 0);
 }
 
-function roundedCount(value) {
-  return Math.round(Math.max(0, Number(value) || 0) / 10) * 10;
+function count(value) {
+  return Math.max(0, Number(value) || 0);
 }
 
-function privateNumber(value) {
+function countNumber(value) {
+  return number(count(value));
+}
+
+function roundedCount(value) {
+  return Math.round(count(value) / 10) * 10;
+}
+
+function roundedNumber(value) {
   return number(roundedCount(value));
 }
 
-function privateRatio(numerator, denominator) {
-  const safeDenominator = roundedCount(denominator);
-  return safeDenominator ? roundedCount(numerator) / safeDenominator : 0;
+function ratio(numerator, denominator) {
+  const safeDenominator = count(denominator);
+  return safeDenominator ? count(numerator) / safeDenominator : null;
 }
 
-function privatePercent(numerator, denominator) {
-  if (!roundedCount(denominator)) {
+function percent(numerator, denominator) {
+  const value = ratio(numerator, denominator);
+  if (value === null) {
     return "—";
   }
-  return `${number(privateRatio(numerator, denominator) * 100, 1)} %`;
+  return `${number(value * 100, 1)} %`;
 }
 
 function changeLabel(current, previous) {
-  const safeCurrent = roundedCount(current);
-  const safePrevious = roundedCount(previous);
+  const safeCurrent = count(current);
+  const safePrevious = count(previous);
   if (!safePrevious) {
     return safeCurrent ? "nouvelle période" : "0 %";
   }
@@ -265,6 +298,14 @@ function formatDay(day) {
   }).format(new Date(`${day}T12:00:00Z`));
 }
 
+function formatMonth(month) {
+  return new Intl.DateTimeFormat("fr-FR", {
+    month: "long",
+    year: "numeric",
+    timeZone: "Europe/Paris",
+  }).format(new Date(`${month}-15T12:00:00Z`));
+}
+
 function fillDaily(rows, today) {
   const values = new Map(rows.map((row) => [row.day, row]));
   return Array.from({ length: 30 }, (_, index) => {
@@ -283,33 +324,61 @@ function tableRows(rows, label, columns) {
     .join("");
 }
 
-function dashboard(summary, dailyRows, pages, dimensions, today) {
+function monthlyTableRows(rows, today) {
+  const counts = new Map(
+    rows.map((row) => [`${row.month}|${row.page}`, count(row.page_views)]),
+  );
+  const observedMonths = [...new Set(rows.map((row) => row.month))].sort();
+  const firstObservedMonth = observedMonths[0] || today.slice(0, 7);
+  const months = Array.from(
+    { length: 24 },
+    (_, index) => shiftMonths(today.slice(0, 7), -index),
+  );
+
+  return months
+    .map((month) => {
+      const dataAvailable = month >= firstObservedMonth;
+      const pageCounts = Object.keys(PAGE_LABELS)
+        .map((page) => counts.get(`${month}|${page}`) || 0);
+      const total = pageCounts.reduce((sum, value) => sum + value, 0);
+      return `
+        <tr>
+          <th scope="row">${escapeHtml(formatMonth(month))}</th>
+          ${pageCounts.map((value) => `<td>${dataAvailable ? escapeHtml(countNumber(value)) : "—"}</td>`).join("")}
+          <td><strong>${dataAvailable ? escapeHtml(countNumber(total)) : "—"}</strong></td>
+        </tr>`;
+    })
+    .join("");
+}
+
+function dashboard(summary, dailyRows, pages, monthlyPages, dimensions, today) {
   const daily = fillDaily(dailyRows, today);
-  const maxDaily = Math.max(10, ...daily.map((row) => roundedCount(row.page_views)));
+  const maxDaily = Math.max(1, ...daily.map((row) => count(row.page_views)));
   const trendRows = daily
     .map((row) => {
-      const pageViews = roundedCount(row.page_views);
+      const pageViews = count(row.page_views);
       const width = Math.round((pageViews / maxDaily) * 1000) / 10;
       return `
         <div class="trend-row">
           <time datetime="${row.day}">${escapeHtml(formatDay(row.day))}</time>
           <div class="trend-bar"><span style="width:${width}%"></span></div>
-          <strong>${privateNumber(row.page_views)}</strong>
-          <small>${privateNumber(row.visits)} visite(s)</small>
+          <strong>${countNumber(row.page_views)}</strong>
+          <small>${countNumber(row.visits)} visite(s)</small>
         </div>`;
     })
     .join("");
 
   const pageRows = tableRows(
-    pages.filter((row) => roundedCount(row.page_views) > 0),
+    pages,
     (row) => PAGE_LABELS[row.page] || row.page,
     [
-      (row) => privateNumber(row.page_views),
-      (row) => privateNumber(row.visits),
-      (row) => privatePercent(row.engaged_30s, row.page_views),
-      (row) => privatePercent(row.scroll_75, row.page_views),
+      (row) => countNumber(row.page_views),
+      (row) => countNumber(row.visits),
+      (row) => percent(row.engaged_30s, row.page_views),
+      (row) => percent(row.scroll_75, row.page_views),
     ],
   );
+  const monthlyRows = monthlyTableRows(monthlyPages, today);
 
   const groupedDimensions = dimensions.reduce((groups, row) => {
     const group = groups[row.dimension] || [];
@@ -320,21 +389,26 @@ function dashboard(summary, dailyRows, pages, dimensions, today) {
   const sourceRows = tableRows(
     (groupedDimensions.source || []).filter((row) => roundedCount(row.count) > 0),
     (row) => SOURCE_LABELS[row.value] || row.value,
-    [(row) => privateNumber(row.count)],
+    [(row) => roundedNumber(row.count)],
   );
   const countryRows = tableRows(
     (groupedDimensions.country || []).filter((row) => roundedCount(row.count) > 0),
     (row) => countryLabel(row.value),
-    [(row) => privateNumber(row.count)],
+    [(row) => roundedNumber(row.count)],
   );
   const deviceRows = tableRows(
     (groupedDimensions.device || []).filter((row) => roundedCount(row.count) > 0),
     (row) => DEVICE_LABELS[row.value] || row.value,
-    [(row) => privateNumber(row.count)],
+    [(row) => roundedNumber(row.count)],
   );
 
   const emptyRow = (columns = 2) => `<tr><td colspan="${columns}">Aucune donnée</td></tr>`;
-  const pagesPerVisit = privateRatio(
+  const dimensionEmptyRow = (rows) => (
+    rows.length
+      ? `<tr><td colspan="2">Effectif inférieur à 5 — valeur masquée</td></tr>`
+      : emptyRow()
+  );
+  const pagesPerVisit = ratio(
     summary.last_30_page_views,
     summary.last_30_visits,
   );
@@ -365,6 +439,11 @@ function dashboard(summary, dailyRows, pages, dimensions, today) {
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: .7rem 1.2rem; border-top: 1px solid #e6edf2; text-align: left; }
     td { text-align: right; font-variant-numeric: tabular-nums; }
+    .table-scroll { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .monthly-table { min-width: 48rem; }
+    .monthly-table th:not(:first-child), .monthly-table td { text-align: right; font-variant-numeric: tabular-nums; }
+    .monthly-table th:first-child { position: sticky; left: 0; z-index: 1; background: #fff; }
+    .monthly-table thead th:first-child { z-index: 2; background: #e6edf2; }
     .trend { padding: 1rem 1.2rem; }
     .trend-row { display: grid; grid-template-columns: 4.5rem minmax(5rem, 1fr) 3rem 6.5rem; gap: .7rem; align-items: center; min-height: 1.65rem; }
     .trend-row time, .trend-row small { color: #5b7284; font-size: .78rem; }
@@ -383,14 +462,14 @@ function dashboard(summary, dailyRows, pages, dimensions, today) {
 <body>
   <main>
     <h1>Audience datapredict</h1>
-    <p class="intro">Statistiques agrégées, sans identifiant ni parcours individuel. Valeurs présentées à la dizaine la plus proche ; conservation : 24 mois.</p>
+    <p class="intro">Statistiques agrégées, sans identifiant ni parcours individuel. Totaux et pages présentés à l’unité ; conservation : 24 mois.</p>
     <div class="cards">
-      <div class="card"><span>Pages vues conservées</span><strong>${privateNumber(summary.total_page_views)}</strong></div>
-      <div class="card"><span>Aujourd’hui</span><strong>${privateNumber(summary.today_page_views)}</strong><small>${privateNumber(summary.today_visits)} visite(s) estimée(s)</small></div>
-      <div class="card"><span>Pages vues — 30 jours</span><strong>${privateNumber(summary.last_30_page_views)}</strong><small>${changeLabel(summary.last_30_page_views, summary.previous_30_page_views)} vs période précédente</small></div>
-      <div class="card"><span>Visites estimées — 30 jours</span><strong>${privateNumber(summary.last_30_visits)}</strong><small>une première page par session d’onglet</small></div>
-      <div class="card"><span>Pages par visite — 30 jours</span><strong>${number(pagesPerVisit, 2)}</strong></div>
-      <div class="card"><span>Pages vues — 90 jours</span><strong>${privateNumber(summary.last_90_page_views)}</strong></div>
+      <div class="card"><span>Pages vues conservées</span><strong>${countNumber(summary.total_page_views)}</strong></div>
+      <div class="card"><span>Aujourd’hui</span><strong>${countNumber(summary.today_page_views)}</strong><small>${countNumber(summary.today_visits)} visite(s) estimée(s)</small></div>
+      <div class="card"><span>Pages vues — 30 jours</span><strong>${countNumber(summary.last_30_page_views)}</strong><small>${changeLabel(summary.last_30_page_views, summary.previous_30_page_views)} vs période précédente</small></div>
+      <div class="card"><span>Visites estimées — 30 jours</span><strong>${countNumber(summary.last_30_visits)}</strong><small>une première page par session d’onglet</small></div>
+      <div class="card"><span>Pages par visite — 30 jours</span><strong>${pagesPerVisit === null ? "—" : number(pagesPerVisit, 2)}</strong></div>
+      <div class="card"><span>Pages vues — 90 jours</span><strong>${countNumber(summary.last_90_page_views)}</strong></div>
     </div>
 
     <section>
@@ -406,22 +485,38 @@ function dashboard(summary, dailyRows, pages, dimensions, today) {
       </table>
     </section>
 
+    <section>
+      <h2>Pages vues par mois et par page — 24 mois</h2>
+      <div class="table-scroll">
+        <table class="monthly-table">
+          <thead>
+            <tr>
+              <th scope="col">Mois</th>
+              ${Object.values(PAGE_LABELS).map((label) => `<th scope="col">${escapeHtml(label)}</th>`).join("")}
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody>${monthlyRows}</tbody>
+        </table>
+      </div>
+    </section>
+
     <div class="grid">
       <section>
         <h2>Origine technique des visites — 30 jours</h2>
-        <table><tbody>${sourceRows || emptyRow()}</tbody></table>
+        <table><tbody>${sourceRows || dimensionEmptyRow(groupedDimensions.source || [])}</tbody></table>
       </section>
       <section>
         <h2>Type d’écran — 30 jours</h2>
-        <table><tbody>${deviceRows || emptyRow()}</tbody></table>
+        <table><tbody>${deviceRows || dimensionEmptyRow(groupedDimensions.device || [])}</tbody></table>
       </section>
     </div>
 
     <section>
       <h2>Pays approximatif — 30 jours</h2>
-      <table><tbody>${countryRows || emptyRow()}</tbody></table>
+      <table><tbody>${countryRows || dimensionEmptyRow(groupedDimensions.country || [])}</tbody></table>
     </section>
-    <p class="note">Les visites sont des estimations par session d’onglet. Les valeurs sont arrondies à la dizaine la plus proche ; les catégories arrondies à zéro ne sont pas affichées. Les sources, pays et écrans sont comptés séparément et ne peuvent pas être croisés pour reconstituer un parcours.</p>
+    <p class="note">Les visites sont des estimations par session d’onglet. « — » indique un mois antérieur au début de la collecte. Les sources, pays et écrans sont arrondis à la dizaine et comptés séparément ; ils ne peuvent pas être croisés pour reconstituer un parcours.</p>
   </main>
 </body>
 </html>`;
@@ -510,12 +605,20 @@ async function showStats(request, env) {
   const last30Days = shiftDays(today, -29);
   const previous30Days = shiftDays(today, -59);
   const last90Days = shiftDays(today, -89);
-  const [summary, dailyResult, pageResult, dimensionResult] = await Promise.all([
+  const monthly = monthlyWindow(today);
+  const [
+    summary,
+    dailyResult,
+    pageResult,
+    monthlyPageResult,
+    dimensionResult,
+  ] = await Promise.all([
     env.COUNTER_DB.prepare(SUMMARY_QUERY)
       .bind(today, last30Days, previous30Days, last90Days)
       .first(),
     env.COUNTER_DB.prepare(DAILY_QUERY).bind(last30Days).all(),
     env.COUNTER_DB.prepare(PAGE_QUERY).bind(last30Days).all(),
+    env.COUNTER_DB.prepare(MONTHLY_PAGE_QUERY).bind(monthly.from, monthly.to).all(),
     env.COUNTER_DB.prepare(DIMENSION_QUERY).bind(last30Days).all(),
   ]);
 
@@ -524,6 +627,7 @@ async function showStats(request, env) {
       summary || {},
       dailyResult.results || [],
       pageResult.results || [],
+      monthlyPageResult.results || [],
       dimensionResult.results || [],
       today,
     ),

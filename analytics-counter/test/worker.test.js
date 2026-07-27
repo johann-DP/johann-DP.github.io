@@ -4,8 +4,10 @@ import test from "node:test";
 import worker, {
   normalizeCountry,
   normalizePage,
+  monthlyWindow,
   retentionCutoff,
   shiftDays,
+  shiftMonths,
 } from "../src/worker.js";
 
 class FakeStatement {
@@ -51,6 +53,14 @@ class FakeStatement {
       };
     }
     if (this.sql.includes("FROM daily_pages")) {
+      if (this.sql.includes("AS month")) {
+        return {
+          results: [
+            { month: "2026-07", page: "/", page_views: 8 },
+            { month: "2026-07", page: "/offres.html", page_views: 3 },
+          ],
+        };
+      }
       return {
         results: [{
           page: "/",
@@ -140,6 +150,12 @@ test("normalise uniquement les cinq pages publiques et les codes pays", () => {
 
 test("calcule correctement les fenêtres calendaires", () => {
   assert.equal(shiftDays("2026-03-01", -1), "2026-02-28");
+  assert.equal(shiftMonths("2026-01", -1), "2025-12");
+  assert.equal(shiftMonths("2026-12", 2), "2027-02");
+  assert.deepEqual(monthlyWindow("2026-07-27"), {
+    from: "2024-08-01",
+    to: "2026-07-27",
+  });
   assert.equal(retentionCutoff("2026-07-31"), "2024-07-31");
   assert.equal(retentionCutoff("2026-02-28"), "2024-02-28");
   assert.equal(retentionCutoff("2024-02-29"), "2022-02-28");
@@ -218,7 +234,7 @@ test("refuse une origine étrangère et tout champ ou valeur non autorisé", asy
   assert.equal(invalidEnv.COUNTER_DB.batches.length, 0);
 });
 
-test("protège et rend le tableau de statistiques enrichi", async () => {
+test("protège et rend les valeurs exactes et le tableau mensuel par page", async () => {
   const env = environment();
   const refused = await worker.fetch(new Request("https://counter.example/stats"), env);
   assert.equal(refused.status, 401);
@@ -231,14 +247,22 @@ test("protège et rend le tableau de statistiques enrichi", async () => {
   );
   const html = await accepted.text();
   assert.equal(accepted.status, 200);
-  assert.match(html, />140</);
-  assert.doesNotMatch(html, /142/);
+  assert.match(html, />142</);
+  assert.doesNotMatch(html, /dizaine la plus proche/);
   assert.match(html, /LinkedIn/);
   assert.doesNotMatch(html, /Autre site/);
   assert.match(html, /France/);
   assert.match(html, /Visible 30 s/);
   assert.match(html, /Défilement 75 %/);
-  assert.match(html, /dizaine la plus proche/);
+  assert.match(html, /Pages vues par mois et par page — 24 mois/);
+  assert.match(html, /juillet 2026/);
+  assert.match(html, /<th scope="col">Accueil<\/th>/);
+  assert.match(html, /<th scope="col">Offres<\/th>/);
+  assert.match(html, /<td>8<\/td>/);
+  assert.match(html, /<td>3<\/td>/);
+  assert.match(html, /<strong>11<\/strong>/);
+  assert.match(html, /juin 2026/);
+  assert.match(html, /<td>—<\/td>/);
 });
 
 test("contrôle réellement la disponibilité de la base", async () => {
