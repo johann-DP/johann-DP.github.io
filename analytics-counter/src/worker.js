@@ -324,12 +324,14 @@ function tableRows(rows, label, columns) {
     .join("");
 }
 
-function monthlyTableRows(rows, today) {
+function monthlyTableRows(rows, today, collectionStartedOn) {
   const counts = new Map(
     rows.map((row) => [`${row.month}|${row.page}`, count(row.page_views)]),
   );
-  const observedMonths = [...new Set(rows.map((row) => row.month))].sort();
-  const firstObservedMonth = observedMonths[0] || today.slice(0, 7);
+  if (!/^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/.test(collectionStartedOn)) {
+    throw new Error("date de début de collecte absente ou invalide");
+  }
+  const collectionStartMonth = collectionStartedOn.slice(0, 7);
   const months = Array.from(
     { length: 24 },
     (_, index) => shiftMonths(today.slice(0, 7), -index),
@@ -337,12 +339,12 @@ function monthlyTableRows(rows, today) {
 
   return months
     .map((month) => {
-      const dataAvailable = month >= firstObservedMonth;
+      const dataAvailable = month >= collectionStartMonth;
       const pageCounts = Object.keys(PAGE_LABELS)
         .map((page) => counts.get(`${month}|${page}`) || 0);
       const total = pageCounts.reduce((sum, value) => sum + value, 0);
       return `
-        <tr>
+        <tr data-month="${month}">
           <th scope="row">${escapeHtml(formatMonth(month))}</th>
           ${pageCounts.map((value) => `<td>${dataAvailable ? escapeHtml(countNumber(value)) : "—"}</td>`).join("")}
           <td><strong>${dataAvailable ? escapeHtml(countNumber(total)) : "—"}</strong></td>
@@ -351,7 +353,15 @@ function monthlyTableRows(rows, today) {
     .join("");
 }
 
-function dashboard(summary, dailyRows, pages, monthlyPages, dimensions, today) {
+function dashboard(
+  summary,
+  dailyRows,
+  pages,
+  monthlyPages,
+  dimensions,
+  today,
+  collectionStartedOn,
+) {
   const daily = fillDaily(dailyRows, today);
   const maxDaily = Math.max(1, ...daily.map((row) => count(row.page_views)));
   const trendRows = daily
@@ -378,7 +388,7 @@ function dashboard(summary, dailyRows, pages, monthlyPages, dimensions, today) {
       (row) => percent(row.scroll_75, row.page_views),
     ],
   );
-  const monthlyRows = monthlyTableRows(monthlyPages, today);
+  const monthlyRows = monthlyTableRows(monthlyPages, today, collectionStartedOn);
 
   const groupedDimensions = dimensions.reduce((groups, row) => {
     const group = groups[row.dimension] || [];
@@ -386,27 +396,34 @@ function dashboard(summary, dailyRows, pages, monthlyPages, dimensions, today) {
     groups[row.dimension] = group;
     return groups;
   }, {});
-  const sourceRows = tableRows(
-    (groupedDimensions.source || []).filter((row) => roundedCount(row.count) > 0),
-    (row) => SOURCE_LABELS[row.value] || row.value,
-    [(row) => roundedNumber(row.count)],
-  );
-  const countryRows = tableRows(
-    (groupedDimensions.country || []).filter((row) => roundedCount(row.count) > 0),
-    (row) => countryLabel(row.value),
-    [(row) => roundedNumber(row.count)],
-  );
-  const deviceRows = tableRows(
-    (groupedDimensions.device || []).filter((row) => roundedCount(row.count) > 0),
-    (row) => DEVICE_LABELS[row.value] || row.value,
-    [(row) => roundedNumber(row.count)],
-  );
 
   const emptyRow = (columns = 2) => `<tr><td colspan="${columns}">Aucune donnée</td></tr>`;
-  const dimensionEmptyRow = (rows) => (
-    rows.length
-      ? `<tr><td colspan="2">Effectif inférieur à 5 — valeur masquée</td></tr>`
-      : emptyRow()
+  const suppressedRow = (
+    '<tr><td colspan="2">Effectif inférieur à 5 — valeur masquée</td></tr>'
+  );
+  const dimensionRows = (rows, label) => {
+    const visibleRows = rows.filter((row) => roundedCount(row.count) > 0);
+    const renderedRows = tableRows(
+      visibleRows,
+      label,
+      [(row) => roundedNumber(row.count)],
+    );
+    const suppressionNotice = visibleRows.length < rows.length
+      ? suppressedRow
+      : "";
+    return `${renderedRows}${suppressionNotice}` || emptyRow();
+  };
+  const sourceRows = dimensionRows(
+    groupedDimensions.source || [],
+    (row) => SOURCE_LABELS[row.value] || row.value,
+  );
+  const countryRows = dimensionRows(
+    groupedDimensions.country || [],
+    (row) => countryLabel(row.value),
+  );
+  const deviceRows = dimensionRows(
+    groupedDimensions.device || [],
+    (row) => DEVICE_LABELS[row.value] || row.value,
   );
   const pagesPerVisit = ratio(
     summary.last_30_page_views,
@@ -504,17 +521,17 @@ function dashboard(summary, dailyRows, pages, monthlyPages, dimensions, today) {
     <div class="grid">
       <section>
         <h2>Origine technique des visites — 30 jours</h2>
-        <table><tbody>${sourceRows || dimensionEmptyRow(groupedDimensions.source || [])}</tbody></table>
+        <table><tbody>${sourceRows}</tbody></table>
       </section>
       <section>
         <h2>Type d’écran — 30 jours</h2>
-        <table><tbody>${deviceRows || dimensionEmptyRow(groupedDimensions.device || [])}</tbody></table>
+        <table><tbody>${deviceRows}</tbody></table>
       </section>
     </div>
 
     <section>
       <h2>Pays approximatif — 30 jours</h2>
-      <table><tbody>${countryRows || dimensionEmptyRow(groupedDimensions.country || [])}</tbody></table>
+      <table><tbody>${countryRows}</tbody></table>
     </section>
     <p class="note">Les visites sont des estimations par session d’onglet. « — » indique un mois antérieur au début de la collecte. Les sources, pays et écrans sont arrondis à la dizaine et comptés séparément ; ils ne peuvent pas être croisés pour reconstituer un parcours.</p>
   </main>
@@ -630,6 +647,7 @@ async function showStats(request, env) {
       monthlyPageResult.results || [],
       dimensionResult.results || [],
       today,
+      env.COLLECTION_STARTED_ON,
     ),
     {
       headers: {
