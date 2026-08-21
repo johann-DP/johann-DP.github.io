@@ -564,7 +564,6 @@
         moveTo(1);
         break;
       case "continue":
-        button.disabled = true;
         moveTo(state.phase + 1);
         break;
       case "restart":
