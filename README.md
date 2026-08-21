@@ -18,13 +18,15 @@ Les réalisations présentées sur le site sont anonymisées et reformulées afi
 - [Offres](offres.html) : détail des trois axes, technologies, référentiels, formats et tarifs indicatifs ;
 - [Méthode](methode.html) : clarifier, diagnostiquer, arbitrer et transmettre, avec une représentation visuelle de la séquence ;
 - [Réalisations](cas-clients.html) : sélection de contextes et d’interventions anonymisés ;
+- [Démonstrations](demonstrations.html) : catalogue extensible de simulations interactives ;
+- [Ormévia Bâtiment](demonstrations/ormevia-batiment.html) : replay public d’un traitement IA local sur données entièrement fictives ;
 - [Contact](contact.html) : qualification d’un besoin et prise de contact.
 
 Le nom de fichier historique `cas-clients.html` est conservé ; son libellé public est « Réalisations ».
 
 ## Socle technique
 
-- HTML5 et CSS natifs, sans framework ; JavaScript limité à la mesure d’audience agrégée ;
+- HTML5 et CSS natifs, sans framework ; JavaScript limité à la mesure d’audience agrégée et aux interactions nécessaires des démonstrations ;
 - publication statique avec GitHub Pages ;
 - mesure d’audience propriétaire agrégée, sans identifiant ni suivi individuel, exécutée sur Cloudflare Workers et D1 en offre gratuite ;
 - interface fluide conçue pour les largeurs de référence de 320 à 1 920 pixels ;
@@ -45,12 +47,20 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
 ├── offres.html
 ├── methode.html
 ├── cas-clients.html
+├── demonstrations.html
 ├── contact.html
+├── demonstrations/
+│   └── ormevia-batiment.html
 ├── assets/
     ├── css/
-    │   └── site.css
+    │   ├── site.css
+    │   ├── demonstrations.css
+    │   └── demo-ormevia.css
+    ├── data/
+    │   └── ormevia-scenarios.json
     ├── js/
-    │   └── audience-counter.js
+    │   ├── audience-counter.js
+    │   └── demo-ormevia.js
     └── img/
         ├── case-immobilier-typologie-panel.jpg
         ├── case-sante-pilotage-capacitaire.png
@@ -67,7 +77,13 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
     └── test/
 ```
 
-`CNAME` configure le domaine public, `.nojekyll` assure la publication directe des fichiers statiques et `robots.txt` déclare le sitemap des cinq pages canoniques.
+`CNAME` configure le domaine public, `.nojekyll` assure la publication directe des fichiers statiques et `robots.txt` déclare le sitemap des sept pages canoniques.
+
+## Démonstrations interactives
+
+La page `demonstrations.html` constitue le catalogue public. Chaque démonstration possède sa propre page et ses ressources isolées afin que de nouveaux cas puissent être ajoutés sans modifier les lecteurs existants.
+
+La première démonstration, Ormévia Bâtiment, rejoue deux scénarios enregistrés : une proposition étayée et une abstention lorsque les sources ne permettent pas de répondre. Le navigateur charge uniquement une projection publique contrôlée ; il ne contacte ni les quatre machines d’origine, ni un backend privé, ni un réseau local. Les sources techniques sont classées `TEST`, ont reçu des corrections éditoriales après capture et ne sont pas présentées comme canoniques.
 
 ## Mesure d’audience agrégée
 

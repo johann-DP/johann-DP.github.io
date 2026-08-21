@@ -12,6 +12,8 @@
     "/offres.html",
     "/methode.html",
     "/cas-clients.html",
+    "/demonstrations.html",
+    "/demonstrations/ormevia-batiment.html",
     "/contact.html",
   ]);
   const SEARCH_DOMAINS = [

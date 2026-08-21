@@ -1,0 +1,3376 @@
+{
+  "formatVersion": "1.0.0",
+  "title": "Démonstration IA locale datapredict",
+  "fictionNotice": "Données entièrement fictives — aucun système client connecté",
+  "publicProvenance": "Exécution technique enregistrée localement, puis corrections éditoriales après capture. Les paquets sources restent classés TEST et ne sont pas présentés comme CANONICAL.",
+  "scenarios": [
+    {
+      "id": "standard",
+      "selectorLabel": "Question étayée",
+      "selectorHint": "Une proposition locale, sourcée et soumise à validation humaine.",
+      "question": "Quelles actions sont proposées pour le dossier AD-2026-0042, et qui en est responsable ?",
+      "caseReference": "AD-2026-0042",
+      "recordedAt": "2026-08-18T15:25:42.736933Z",
+      "introduction": {
+        "title": "De la demande à la validation humaine",
+        "description": "Une proposition locale, sourcée et soumise à validation humaine.",
+        "watch": [
+          "Les sources restent locales",
+          "Le résultat n’apparaît qu’après les contrôles",
+          "La transmission nécessite une validation humaine"
+        ]
+      },
+      "machines": [
+        {
+          "name": "Machine 1",
+          "role": "Sources métier",
+          "detail": "PostgreSQL, courrier synthétique et accès MCP",
+          "gpu": false
+        },
+        {
+          "name": "Machine 2",
+          "role": "Classement des passages",
+          "detail": "Recherche et reclassement sur GPU",
+          "gpu": true
+        },
+        {
+          "name": "Machine 3",
+          "role": "Contrôle sémantique",
+          "detail": "Vérification des citations sur GPU",
+          "gpu": true
+        },
+        {
+          "name": "Machine 4",
+          "role": "Orchestration et génération",
+          "detail": "LangGraph, RAG local, modèle local et validation structurée",
+          "gpu": true
+        }
+      ],
+      "models": [
+        {
+          "name": "google/flan-t5-small",
+          "role": "Recherche et reclassement",
+          "loaded": true,
+          "resident": true,
+          "executed": true,
+          "generationCalled": false
+        },
+        {
+          "name": "diallomama/fr-summarization",
+          "role": "Génération locale",
+          "loaded": true,
+          "resident": true,
+          "executed": true,
+          "generationCalled": true
+        },
+        {
+          "name": "google/flan-t5-small",
+          "role": "Contrôle des citations et du schéma",
+          "loaded": true,
+          "resident": true,
+          "executed": true,
+          "generationCalled": false
+        }
+      ],
+      "technologies": [
+        "Pydantic",
+        "Pydantic 2.13.4",
+        "Haystack BM25",
+        "Haystack 3.0.0 · BM25 InMemoryBM25Retriever",
+        "Haystack 3.0.0",
+        "BM25 InMemoryBM25Retriever",
+        "google/flan-t5-small · PyTorch 2.13.0+cu130 · CUDA 13.0",
+        "google/flan-t5-small",
+        "PyTorch 2.13.0+cu130",
+        "CUDA 13.0",
+        "MCP stdio · PostgreSQL/IMAP",
+        "MCP 2.0.0 · PostgreSQL · IMAP",
+        "MCP 2.0.0",
+        "PostgreSQL",
+        "IMAP",
+        "Modèle local",
+        "Transformers 5.15.0 · diallomama/fr-summarization · PyTorch 2.13.0+cu130 · CUDA 13.0",
+        "Transformers 5.15.0",
+        "diallomama/fr-summarization",
+        "LangGraph 1.2.11",
+        "LangGraph — 1.2.11",
+        "Pydantic — 2.13.4",
+        "Haystack — 3.0.0",
+        "BM25 — InMemoryBM25Retriever",
+        "PyTorch — 2.13.0+cu130",
+        "CUDA — 13.0",
+        "MCP — 2.0.0",
+        "Transformers — 5.15.0"
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "label": "Contrôle de la demande",
+          "machine": "Machine 4",
+          "explanation": "La demande est vérifiée avant traitement.",
+          "detail": "Question validée localement avant toute exécution distante.",
+          "technology": "Pydantic",
+          "technologyDetail": "Pydantic 2.13.4",
+          "durationMs": 4,
+          "gpuProof": null
+        },
+        {
+          "order": 2,
+          "label": "Recherche dans le RAG local",
+          "machine": "Machine 4",
+          "explanation": "Le RAG local recherche les passages utiles.",
+          "detail": "12 passages métier indexés et examinés.",
+          "technology": "Haystack BM25",
+          "technologyDetail": "Haystack 3.0.0 · BM25 InMemoryBM25Retriever",
+          "durationMs": 6,
+          "gpuProof": null
+        },
+        {
+          "order": 3,
+          "label": "Classement des passages",
+          "machine": "Machine 2",
+          "explanation": "La Machine 2 classe les passages sur le GPU.",
+          "detail": "3 passages retenus par le calcul GPU réel.",
+          "technology": "Service de recherche SSH-LAN",
+          "technologyDetail": "google/flan-t5-small · PyTorch 2.13.0+cu130 · CUDA 13.0",
+          "durationMs": 7298,
+          "gpuProof": {
+            "machine": "Machine 2",
+            "role": "Recherche et reclassement",
+            "execution": "Calcul réel",
+            "hardwareMatch": true,
+            "model": "google/flan-t5-small",
+            "framework": "torch 2.13.0+cu130",
+            "cuda": "CUDA 13.0",
+            "device": "Quadro RTX 4000",
+            "operation": "Classement des passages",
+            "vramPeakBytes": 336673792,
+            "modelSizeBytes": 307845120,
+            "modelResident": true,
+            "calculationCount": 1,
+            "durationMs": 246.563
+          }
+        },
+        {
+          "order": 4,
+          "label": "Lecture des données métier",
+          "machine": "Machine 1",
+          "explanation": "La Machine 1 consulte le dossier et le courriel via MCP.",
+          "detail": "3 décisions relues dans PostgreSQL ; source IMAP contrôlée sur le nœud réel.",
+          "technology": "MCP stdio · PostgreSQL/IMAP",
+          "technologyDetail": "MCP 2.0.0 · PostgreSQL · IMAP",
+          "durationMs": 2833,
+          "gpuProof": null
+        },
+        {
+          "order": 5,
+          "label": "Génération de la proposition",
+          "machine": "Machine 4",
+          "explanation": "La Machine 4 produit la proposition en local.",
+          "detail": "diallomama/fr-summarization exécuté sans réseau ; sortie produite localement et masquée dans le portail jusqu’à la validation structurée.",
+          "technology": "Modèle local",
+          "technologyDetail": "Transformers 5.15.0 · diallomama/fr-summarization · PyTorch 2.13.0+cu130 · CUDA 13.0",
+          "durationMs": 1176,
+          "gpuProof": {
+            "machine": "Machine 4",
+            "role": "Génération locale",
+            "execution": "Calcul réel",
+            "hardwareMatch": true,
+            "model": "diallomama/fr-summarization",
+            "framework": "torch 2.13.0+cu130",
+            "cuda": "CUDA 13.0",
+            "device": "NVIDIA RTX PRO 5000 Blackwell",
+            "operation": "Génération locale",
+            "vramPeakBytes": 3092964864,
+            "modelSizeBytes": 2951196672,
+            "modelResident": true,
+            "calculationCount": 1,
+            "durationMs": 1152.294
+          }
+        },
+        {
+          "order": 6,
+          "label": "Contrôle sémantique",
+          "machine": "Machine 3",
+          "explanation": "La Machine 3 contrôle la cohérence et les citations.",
+          "detail": "3 citations contrôlées.",
+          "technology": "Service de contrôle SSH-LAN",
+          "technologyDetail": "google/flan-t5-small · PyTorch 2.13.0+cu130 · CUDA 13.0",
+          "durationMs": 13863,
+          "gpuProof": {
+            "machine": "Machine 3",
+            "role": "Contrôle des citations et du schéma",
+            "execution": "Calcul réel",
+            "hardwareMatch": true,
+            "model": "google/flan-t5-small",
+            "framework": "torch 2.13.0+cu130",
+            "cuda": "CUDA 13.0",
+            "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+            "operation": "Contrôle sémantique",
+            "vramPeakBytes": 322300416,
+            "modelSizeBytes": 307845120,
+            "modelResident": true,
+            "calculationCount": 1,
+            "durationMs": 750.498
+          }
+        },
+        {
+          "order": 7,
+          "label": "Validation de la réponse structurée",
+          "machine": "Machine 4",
+          "explanation": "La réponse structurée est validée avant présentation à la Direction.",
+          "detail": "Réponse structurée validée après contrôle distant.",
+          "technology": "Pydantic",
+          "technologyDetail": "Pydantic 2.13.4",
+          "durationMs": 20,
+          "gpuProof": null
+        }
+      ],
+      "pauses": [
+        {
+          "order": 1,
+          "headline": "Question validée localement avant toute exécution distante.",
+          "narration": "La question est contrôlée localement avant tout accès aux autres machines. Le portail indique que le traitement a démarré ; aucun résultat n’est encore affiché.",
+          "step": {
+            "order": 1,
+            "label": "Contrôle de la demande",
+            "machine": "Machine 4",
+            "explanation": "La demande est vérifiée avant traitement.",
+            "detail": "Question validée localement avant toute exécution distante.",
+            "technology": "Pydantic",
+            "technologyDetail": "Pydantic 2.13.4",
+            "durationMs": 4,
+            "gpuProof": null
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quelles actions sont proposées pour le dossier AD-2026-0042, et qui en est responsable ?",
+            "status": "Traitement local en cours",
+            "busy": true,
+            "inputsTotal": 14,
+            "inputsTreated": 1,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Non traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Non traité"
+              }
+            ],
+            "resultVisible": false,
+            "resultKind": null,
+            "result": null,
+            "events": [
+              {
+                "order": 0,
+                "label": "Traitement demandé",
+                "detail": "Les services locaux commencent la lecture des nouveaux éléments."
+              },
+              {
+                "order": 1,
+                "label": "Élément reçu",
+                "detail": "La mise à jour de l’assureur a été lue."
+              }
+            ],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 2,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 1115316224,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 1,
+              "available": true,
+              "cpuPercent": 6,
+              "ramUsedBytes": 19097112576,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 1,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 11185930240,
+              "ramTotalBytes": 16309932032,
+              "gpuPercent": 0,
+              "vramUsedBytes": 0,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Wi-Fi",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 4": {
+              "sampleCount": 41,
+              "available": true,
+              "cpuPercent": 7.02,
+              "ramUsedBytes": 22346706944,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3685744640,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 2.31,
+              "calculationRamBytes": 1052856320,
+              "calculationVramBytes": 2951196672,
+              "calculationVramPeakBytes": 2951196672,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [
+            {
+              "step": 1,
+              "source": "API du portail",
+              "destination": "Machine 4",
+              "purpose": "Démarrer le parcours orchestré",
+              "support": "Aucun réseau intermachine",
+              "networkMedium": "Indéterminé",
+              "transport": "Mémoire du processus",
+              "protocol": "Python",
+              "service": "Orchestrateur LangGraph",
+              "durationMs": null,
+              "bytesSent": 0,
+              "bytesReceived": 0
+            }
+          ],
+          "eventsObservedDuringReading": [
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210,
+            211,
+            212,
+            213,
+            214,
+            215,
+            216,
+            217,
+            218,
+            219,
+            220,
+            221,
+            222,
+            223,
+            224,
+            225,
+            226,
+            227,
+            228,
+            229,
+            230,
+            231,
+            232,
+            233
+          ]
+        },
+        {
+          "order": 2,
+          "headline": "12 passages métier indexés et examinés.",
+          "narration": "Le RAG local examine 12 passages indexés pour rechercher les éléments utiles. Le résultat métier reste masqué.",
+          "step": {
+            "order": 2,
+            "label": "Recherche dans le RAG local",
+            "machine": "Machine 4",
+            "explanation": "Le RAG local recherche les passages utiles.",
+            "detail": "12 passages métier indexés et examinés.",
+            "technology": "Haystack BM25",
+            "technologyDetail": "Haystack 3.0.0 · BM25 InMemoryBM25Retriever",
+            "durationMs": 6,
+            "gpuProof": null
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quelles actions sont proposées pour le dossier AD-2026-0042, et qui en est responsable ?",
+            "status": "Traitement local en cours",
+            "busy": true,
+            "inputsTotal": 14,
+            "inputsTreated": 2,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Non traité"
+              }
+            ],
+            "resultVisible": false,
+            "resultKind": null,
+            "result": null,
+            "events": [
+              {
+                "order": 0,
+                "label": "Traitement demandé",
+                "detail": "Les services locaux commencent la lecture des nouveaux éléments."
+              },
+              {
+                "order": 1,
+                "label": "Élément reçu",
+                "detail": "La mise à jour de l’assureur a été lue."
+              },
+              {
+                "order": 2,
+                "label": "Référence détectée",
+                "detail": "La référence AD-2026-0042 a été reconnue."
+              }
+            ],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 2,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 1115316224,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 2,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 19106877440,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 2,
+              "available": true,
+              "cpuPercent": 2,
+              "ramUsedBytes": 10252226560,
+              "ramTotalBytes": 16309932032,
+              "gpuPercent": 0,
+              "vramUsedBytes": 0,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Wi-Fi",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 4": {
+              "sampleCount": 41,
+              "available": true,
+              "cpuPercent": 7.02,
+              "ramUsedBytes": 22346706944,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3685744640,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 2.31,
+              "calculationRamBytes": 1052856320,
+              "calculationVramBytes": 2951196672,
+              "calculationVramPeakBytes": 2951196672,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [],
+          "eventsObservedDuringReading": []
+        },
+        {
+          "order": 3,
+          "headline": "3 passages retenus par le calcul GPU réel.",
+          "narration": "La Machine 2 classe les passages par calcul GPU réel : 3 passages sont retenus. Le portail n’affiche toujours aucune proposition.",
+          "step": {
+            "order": 3,
+            "label": "Classement des passages",
+            "machine": "Machine 2",
+            "explanation": "La Machine 2 classe les passages sur le GPU.",
+            "detail": "3 passages retenus par le calcul GPU réel.",
+            "technology": "Service de recherche SSH-LAN",
+            "technologyDetail": "google/flan-t5-small · PyTorch 2.13.0+cu130 · CUDA 13.0",
+            "durationMs": 7298,
+            "gpuProof": {
+              "machine": "Machine 2",
+              "role": "Recherche et reclassement",
+              "execution": "Calcul réel",
+              "hardwareMatch": true,
+              "model": "google/flan-t5-small",
+              "framework": "torch 2.13.0+cu130",
+              "cuda": "CUDA 13.0",
+              "device": "Quadro RTX 4000",
+              "operation": "Classement des passages",
+              "vramPeakBytes": 336673792,
+              "modelSizeBytes": 307845120,
+              "modelResident": true,
+              "calculationCount": 1,
+              "durationMs": 246.563
+            }
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quelles actions sont proposées pour le dossier AD-2026-0042, et qui en est responsable ?",
+            "status": "Traitement local en cours",
+            "busy": true,
+            "inputsTotal": 14,
+            "inputsTreated": 14,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Traité"
+              }
+            ],
+            "resultVisible": false,
+            "resultKind": null,
+            "result": null,
+            "events": [
+              {
+                "order": 0,
+                "label": "Traitement demandé",
+                "detail": "Les services locaux commencent la lecture des nouveaux éléments."
+              },
+              {
+                "order": 1,
+                "label": "Élément reçu",
+                "detail": "La mise à jour de l’assureur a été lue."
+              },
+              {
+                "order": 2,
+                "label": "Référence détectée",
+                "detail": "La référence AD-2026-0042 a été reconnue."
+              },
+              {
+                "order": 3,
+                "label": "Dossier retrouvé",
+                "detail": "Le dossier correspondant a été retrouvé."
+              }
+            ],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 4,
+              "available": true,
+              "cpuPercent": 1.23,
+              "ramUsedBytes": 1114345472,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 6,
+              "available": true,
+              "cpuPercent": 24.62,
+              "ramUsedBytes": 20141584384,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 799014912,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Indéterminé",
+              "calculation": true,
+              "calculationState": "calculation",
+              "model": "google/flan-t5-small",
+              "modelResident": true,
+              "calculationCpuPercent": 17.03,
+              "calculationRamBytes": null,
+              "calculationVramBytes": 323829760,
+              "calculationVramPeakBytes": 323953152,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            },
+            "Machine 3": {
+              "sampleCount": 4,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 10250444800,
+              "ramTotalBytes": 16309932032,
+              "gpuPercent": 0,
+              "vramUsedBytes": 0,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Wi-Fi",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 4": {
+              "sampleCount": 79,
+              "available": true,
+              "cpuPercent": 11.3,
+              "ramUsedBytes": 22538641408,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3685744640,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 0.24,
+              "calculationRamBytes": 1084088320,
+              "calculationVramBytes": 2951196672,
+              "calculationVramPeakBytes": 2951196672,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [
+            {
+              "step": 3,
+              "source": "Machine 4",
+              "destination": "Machine 2",
+              "purpose": "Envoyer les passages à classer",
+              "support": "Réseau local — Autre",
+              "networkMedium": "Autre",
+              "transport": "SSH chiffré",
+              "protocol": "SSH",
+              "service": "Worker GPU de recherche",
+              "durationMs": 7275,
+              "bytesSent": 2344,
+              "bytesReceived": 6218
+            }
+          ],
+          "eventsObservedDuringReading": []
+        },
+        {
+          "order": 4,
+          "headline": "3 décisions relues dans PostgreSQL ; source IMAP contrôlée sur le nœud réel.",
+          "narration": "La Machine 1 relit les données structurées et la messagerie locales via MCP : trois décisions sont retrouvées et les pièces sont rassemblées. Aucune proposition n’est encore visible.",
+          "step": {
+            "order": 4,
+            "label": "Lecture des données métier",
+            "machine": "Machine 1",
+            "explanation": "La Machine 1 consulte le dossier et le courriel via MCP.",
+            "detail": "3 décisions relues dans PostgreSQL ; source IMAP contrôlée sur le nœud réel.",
+            "technology": "MCP stdio · PostgreSQL/IMAP",
+            "technologyDetail": "MCP 2.0.0 · PostgreSQL · IMAP",
+            "durationMs": 2833,
+            "gpuProof": null
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quelles actions sont proposées pour le dossier AD-2026-0042, et qui en est responsable ?",
+            "status": "Données et pièces rassemblées",
+            "busy": true,
+            "inputsTotal": 14,
+            "inputsTreated": 14,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Traité"
+              }
+            ],
+            "resultVisible": false,
+            "resultKind": null,
+            "result": null,
+            "events": [
+              {
+                "order": 0,
+                "label": "Traitement demandé",
+                "detail": "Les services locaux commencent la lecture des nouveaux éléments."
+              },
+              {
+                "order": 1,
+                "label": "Élément reçu",
+                "detail": "La mise à jour de l’assureur a été lue."
+              },
+              {
+                "order": 2,
+                "label": "Référence détectée",
+                "detail": "La référence AD-2026-0042 a été reconnue."
+              },
+              {
+                "order": 3,
+                "label": "Dossier retrouvé",
+                "detail": "Le dossier correspondant a été retrouvé."
+              },
+              {
+                "order": 4,
+                "label": "Message et document associés",
+                "detail": "Le courriel et sa pièce jointe ont été rattachés au dossier."
+              }
+            ],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 5,
+              "available": true,
+              "cpuPercent": 3.75,
+              "ramUsedBytes": 1115521024,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 7,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 19146633216,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 5,
+              "available": true,
+              "cpuPercent": 5,
+              "ramUsedBytes": 10241867776,
+              "ramTotalBytes": 16309932032,
+              "gpuPercent": 0,
+              "vramUsedBytes": 0,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Wi-Fi",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 4": {
+              "sampleCount": 98,
+              "available": true,
+              "cpuPercent": 17.37,
+              "ramUsedBytes": 22694961152,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3685744640,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 3.19,
+              "calculationRamBytes": 1132802048,
+              "calculationVramBytes": 2951196672,
+              "calculationVramPeakBytes": 2951196672,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [
+            {
+              "step": 4,
+              "source": "Machine 4",
+              "destination": "Machine 1",
+              "purpose": "Consulter les sources métier",
+              "support": "Réseau local — Autre",
+              "networkMedium": "Autre",
+              "transport": "SSH chiffré",
+              "protocol": "MCP stdio",
+              "service": "Lecture des sources métier",
+              "durationMs": 2255,
+              "bytesSent": 437,
+              "bytesReceived": 5403
+            },
+            {
+              "step": 4,
+              "source": "Machine 1",
+              "destination": "Base PostgreSQL locale",
+              "purpose": "Lire les informations structurées",
+              "support": "Connexion locale à la source",
+              "networkMedium": "Autre",
+              "transport": "Socket locale",
+              "protocol": "PostgreSQL",
+              "service": "Informations structurées",
+              "durationMs": 101,
+              "bytesSent": 254,
+              "bytesReceived": 6134
+            },
+            {
+              "step": 4,
+              "source": "Machine 1",
+              "destination": "Messagerie IMAP locale",
+              "purpose": "Consulter la boîte de réception",
+              "support": "Connexion locale à la source",
+              "networkMedium": "Autre",
+              "transport": "TCP local",
+              "protocol": "IMAP",
+              "service": "Boîte de réception",
+              "durationMs": 85,
+              "bytesSent": 124,
+              "bytesReceived": 485
+            }
+          ],
+          "eventsObservedDuringReading": []
+        },
+        {
+          "order": 5,
+          "headline": "diallomama/fr-summarization exécuté sans réseau ; sortie produite localement et masquée dans le portail jusqu’à la validation structurée.",
+          "narration": "La Machine 4 exécute le modèle local sans réseau et produit une proposition. Elle demeure masquée dans le portail tant que les contrôles ne sont pas terminés.",
+          "step": {
+            "order": 5,
+            "label": "Génération de la proposition",
+            "machine": "Machine 4",
+            "explanation": "La Machine 4 produit la proposition en local.",
+            "detail": "diallomama/fr-summarization exécuté sans réseau ; sortie produite localement et masquée dans le portail jusqu’à la validation structurée.",
+            "technology": "Modèle local",
+            "technologyDetail": "Transformers 5.15.0 · diallomama/fr-summarization · PyTorch 2.13.0+cu130 · CUDA 13.0",
+            "durationMs": 1176,
+            "gpuProof": {
+              "machine": "Machine 4",
+              "role": "Génération locale",
+              "execution": "Calcul réel",
+              "hardwareMatch": true,
+              "model": "diallomama/fr-summarization",
+              "framework": "torch 2.13.0+cu130",
+              "cuda": "CUDA 13.0",
+              "device": "NVIDIA RTX PRO 5000 Blackwell",
+              "operation": "Génération locale",
+              "vramPeakBytes": 3092964864,
+              "modelSizeBytes": 2951196672,
+              "modelResident": true,
+              "calculationCount": 1,
+              "durationMs": 1152.294
+            }
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quelles actions sont proposées pour le dossier AD-2026-0042, et qui en est responsable ?",
+            "status": "Proposition générée",
+            "busy": true,
+            "inputsTotal": 14,
+            "inputsTreated": 14,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Traité"
+              }
+            ],
+            "resultVisible": false,
+            "resultKind": null,
+            "result": null,
+            "events": [
+              {
+                "order": 0,
+                "label": "Traitement demandé",
+                "detail": "Les services locaux commencent la lecture des nouveaux éléments."
+              },
+              {
+                "order": 1,
+                "label": "Élément reçu",
+                "detail": "La mise à jour de l’assureur a été lue."
+              },
+              {
+                "order": 2,
+                "label": "Référence détectée",
+                "detail": "La référence AD-2026-0042 a été reconnue."
+              },
+              {
+                "order": 3,
+                "label": "Dossier retrouvé",
+                "detail": "Le dossier correspondant a été retrouvé."
+              },
+              {
+                "order": 4,
+                "label": "Message et document associés",
+                "detail": "Le courriel et sa pièce jointe ont été rattachés au dossier."
+              },
+              {
+                "order": 5,
+                "label": "Sources indexées",
+                "detail": "12 passages ont été examinés localement."
+              }
+            ],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 6,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 1286692864,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 8,
+              "available": true,
+              "cpuPercent": 11,
+              "ramUsedBytes": 19141029888,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 6,
+              "available": true,
+              "cpuPercent": 5,
+              "ramUsedBytes": 10250821632,
+              "ramTotalBytes": 16309932032,
+              "gpuPercent": 0,
+              "vramUsedBytes": 0,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Wi-Fi",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 4": {
+              "sampleCount": 117,
+              "available": true,
+              "cpuPercent": 14.05,
+              "ramUsedBytes": 23947309056,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3949985792,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 0.63,
+              "calculationRamBytes": 2178580480,
+              "calculationVramBytes": 2984751104,
+              "calculationVramPeakBytes": 3092964864,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [],
+          "eventsObservedDuringReading": []
+        },
+        {
+          "order": 6,
+          "headline": "3 citations contrôlées.",
+          "narration": "La Machine 3 contrôle la cohérence et les trois citations. La proposition reste masquée jusqu’à la validation structurée.",
+          "step": {
+            "order": 6,
+            "label": "Contrôle sémantique",
+            "machine": "Machine 3",
+            "explanation": "La Machine 3 contrôle la cohérence et les citations.",
+            "detail": "3 citations contrôlées.",
+            "technology": "Service de contrôle SSH-LAN",
+            "technologyDetail": "google/flan-t5-small · PyTorch 2.13.0+cu130 · CUDA 13.0",
+            "durationMs": 13863,
+            "gpuProof": {
+              "machine": "Machine 3",
+              "role": "Contrôle des citations et du schéma",
+              "execution": "Calcul réel",
+              "hardwareMatch": true,
+              "model": "google/flan-t5-small",
+              "framework": "torch 2.13.0+cu130",
+              "cuda": "CUDA 13.0",
+              "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+              "operation": "Contrôle sémantique",
+              "vramPeakBytes": 322300416,
+              "modelSizeBytes": 307845120,
+              "modelResident": true,
+              "calculationCount": 1,
+              "durationMs": 750.498
+            }
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quelles actions sont proposées pour le dossier AD-2026-0042, et qui en est responsable ?",
+            "status": "Contrôle terminé",
+            "busy": true,
+            "inputsTotal": 14,
+            "inputsTreated": 14,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Traité"
+              }
+            ],
+            "resultVisible": false,
+            "resultKind": null,
+            "result": null,
+            "events": [
+              {
+                "order": 0,
+                "label": "Traitement demandé",
+                "detail": "Les services locaux commencent la lecture des nouveaux éléments."
+              },
+              {
+                "order": 1,
+                "label": "Élément reçu",
+                "detail": "La mise à jour de l’assureur a été lue."
+              },
+              {
+                "order": 2,
+                "label": "Référence détectée",
+                "detail": "La référence AD-2026-0042 a été reconnue."
+              },
+              {
+                "order": 3,
+                "label": "Dossier retrouvé",
+                "detail": "Le dossier correspondant a été retrouvé."
+              },
+              {
+                "order": 4,
+                "label": "Message et document associés",
+                "detail": "Le courriel et sa pièce jointe ont été rattachés au dossier."
+              },
+              {
+                "order": 5,
+                "label": "Sources indexées",
+                "detail": "12 passages ont été examinés localement."
+              },
+              {
+                "order": 6,
+                "label": "Proposition préparée",
+                "detail": "Le résumé, les actions et le responsable ont été proposés par l’IA locale."
+              }
+            ],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 11,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 1294737408,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 13,
+              "available": true,
+              "cpuPercent": 17,
+              "ramUsedBytes": 19164045312,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 11,
+              "available": true,
+              "cpuPercent": 7.69,
+              "ramUsedBytes": 1752596480,
+              "ramTotalBytes": 7895412736,
+              "gpuPercent": 3,
+              "vramUsedBytes": 487587840,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "calculation",
+              "model": "google/flan-t5-small",
+              "modelResident": true,
+              "calculationCpuPercent": 5.94,
+              "calculationRamBytes": 1395494912,
+              "calculationVramBytes": 316836352,
+              "calculationVramPeakBytes": 322300416,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            },
+            "Machine 4": {
+              "sampleCount": 183,
+              "available": true,
+              "cpuPercent": 25.31,
+              "ramUsedBytes": 24241672192,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3949985792,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 4.71,
+              "calculationRamBytes": 2274496512,
+              "calculationVramBytes": 2984751104,
+              "calculationVramPeakBytes": 3092964864,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [
+            {
+              "step": 6,
+              "source": "Machine 4",
+              "destination": "Machine 3",
+              "purpose": "Envoyer la réponse au contrôle qualité",
+              "support": "Réseau local — Autre",
+              "networkMedium": "Autre",
+              "transport": "SSH chiffré",
+              "protocol": "SSH",
+              "service": "Worker GPU de contrôle",
+              "durationMs": 13799,
+              "bytesSent": 4900,
+              "bytesReceived": 7665
+            }
+          ],
+          "eventsObservedDuringReading": []
+        },
+        {
+          "order": 7,
+          "headline": "Réponse structurée validée après contrôle distant.",
+          "narration": "La Machine 4 valide la réponse structurée. La proposition, les trois actions et Louis Morel apparaissent maintenant dans le portail ; une validation humaine reste requise.",
+          "step": {
+            "order": 7,
+            "label": "Validation de la réponse structurée",
+            "machine": "Machine 4",
+            "explanation": "La réponse structurée est validée avant présentation à la Direction.",
+            "detail": "Réponse structurée validée après contrôle distant.",
+            "technology": "Pydantic",
+            "technologyDetail": "Pydantic 2.13.4",
+            "durationMs": 20,
+            "gpuProof": null
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quelles actions sont proposées pour le dossier AD-2026-0042, et qui en est responsable ?",
+            "status": "Validation humaine requise",
+            "busy": false,
+            "inputsTotal": 14,
+            "inputsTreated": 14,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Traité"
+              }
+            ],
+            "resultVisible": true,
+            "resultKind": "standard",
+            "result": {
+              "summary": "Le dossier AD-2026-0042 signale une infiltration dans la zone de stockage nord. L'action proposée est de sécuriser cette zone et de confier le contrôle à Louis Morel.",
+              "actions": [
+                "Sécuriser la zone concernée et confirmer l'étendue de l'infiltration.",
+                "Confirmer le créneau avant le déplacement du salarié.",
+                "Limiter la vue du salarié à son dossier affecté et à ses actions."
+              ],
+              "risks": [
+                "Maintenir l'accès à une zone signalée comme humide.",
+                "Planifier un déplacement sans accès confirmé.",
+                "Afficher au salarié un dossier qui ne lui est pas affecté."
+              ],
+              "responsible": "Louis Morel · Intervention terrain",
+              "abstained": false,
+              "abstentionReason": null,
+              "evidenceCount": 3,
+              "citations": [
+                {
+                  "label": "Information assureur",
+                  "excerpt": "Le dossier AD-2026-0042 signale une infiltration dans la zone de stockage nord. L'action proposée est de sécuriser cette zone et d'en confier le contrôle à Louis Morel."
+                },
+                {
+                  "label": "Procédure de planification",
+                  "excerpt": "Pour AD-2026-0042, le créneau d'accès doit être confirmé avant le déplacement. Louis Morel est le responsable proposé pour l'intervention du mardi matin."
+                },
+                {
+                  "label": "Procédure de suivi du salarié",
+                  "excerpt": "Pour AD-2026-0042, Louis Morel voit uniquement le dossier qui lui est affecté, le résumé validé et les actions transmises. Il peut changer le statut, ajouter une note et joindre une photographie."
+                }
+              ],
+              "rag": {
+                "passagesExamined": 12,
+                "passagesRetained": 3,
+                "citedSources": 3,
+                "generationState": "Génération locale",
+                "abstentionState": null
+              }
+            },
+            "events": [
+              {
+                "order": 0,
+                "label": "Traitement demandé",
+                "detail": "Les services locaux commencent la lecture des nouveaux éléments."
+              },
+              {
+                "order": 1,
+                "label": "Élément reçu",
+                "detail": "La mise à jour de l’assureur a été lue."
+              },
+              {
+                "order": 2,
+                "label": "Référence détectée",
+                "detail": "La référence AD-2026-0042 a été reconnue."
+              },
+              {
+                "order": 3,
+                "label": "Dossier retrouvé",
+                "detail": "Le dossier correspondant a été retrouvé."
+              },
+              {
+                "order": 4,
+                "label": "Message et document associés",
+                "detail": "Le courriel et sa pièce jointe ont été rattachés au dossier."
+              },
+              {
+                "order": 5,
+                "label": "Sources indexées",
+                "detail": "12 passages ont été examinés localement."
+              },
+              {
+                "order": 6,
+                "label": "Proposition préparée",
+                "detail": "Le résumé, les actions et le responsable ont été proposés par l’IA locale."
+              },
+              {
+                "order": 7,
+                "label": "Validation humaine requise",
+                "detail": "Aucune transmission n’a encore été effectuée."
+              }
+            ],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 11,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 1294737408,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 13,
+              "available": true,
+              "cpuPercent": 17,
+              "ramUsedBytes": 19164045312,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 11,
+              "available": true,
+              "cpuPercent": 7.69,
+              "ramUsedBytes": 1752596480,
+              "ramTotalBytes": 7895412736,
+              "gpuPercent": 3,
+              "vramUsedBytes": 487587840,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "calculation",
+              "model": "google/flan-t5-small",
+              "modelResident": true,
+              "calculationCpuPercent": 5.94,
+              "calculationRamBytes": 1395494912,
+              "calculationVramBytes": 316836352,
+              "calculationVramPeakBytes": 322300416,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            },
+            "Machine 4": {
+              "sampleCount": 183,
+              "available": true,
+              "cpuPercent": 25.31,
+              "ramUsedBytes": 24241672192,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3949985792,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 4.71,
+              "calculationRamBytes": 2274496512,
+              "calculationVramBytes": 2984751104,
+              "calculationVramPeakBytes": 3092964864,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [],
+          "eventsObservedDuringReading": []
+        }
+      ],
+      "conclusion": {
+        "narration": "Parcours terminé. La proposition a été validée humainement, publiée et transmise à Louis Morel. L’exécution locale a examiné 12 passages, en a retenu 3 et cite 3 sources. Les opérations ont été réparties sur quatre machines et conservées dans un replay traçable. Aucune durée de travail évitée n’a été mesurée pendant cette exécution.",
+        "result": {
+          "summary": "Le dossier AD-2026-0042 signale une infiltration dans la zone de stockage nord. L'action proposée est de sécuriser cette zone et de confier le contrôle à Louis Morel.",
+          "actions": [
+            "Sécuriser la zone concernée et confirmer l'étendue de l'infiltration.",
+            "Confirmer le créneau avant le déplacement du salarié.",
+            "Limiter la vue du salarié à son dossier affecté et à ses actions."
+          ],
+          "risks": [
+            "Maintenir l'accès à une zone signalée comme humide.",
+            "Planifier un déplacement sans accès confirmé.",
+            "Afficher au salarié un dossier qui ne lui est pas affecté."
+          ],
+          "responsible": "Louis Morel · Intervention terrain",
+          "abstained": false,
+          "abstentionReason": null,
+          "evidenceCount": 3,
+          "citations": [
+            {
+              "label": "Information assureur",
+              "excerpt": "Le dossier AD-2026-0042 signale une infiltration dans la zone de stockage nord. L'action proposée est de sécuriser cette zone et d'en confier le contrôle à Louis Morel."
+            },
+            {
+              "label": "Procédure de planification",
+              "excerpt": "Pour AD-2026-0042, le créneau d'accès doit être confirmé avant le déplacement. Louis Morel est le responsable proposé pour l'intervention du mardi matin."
+            },
+            {
+              "label": "Procédure de suivi du salarié",
+              "excerpt": "Pour AD-2026-0042, Louis Morel voit uniquement le dossier qui lui est affecté, le résumé validé et les actions transmises. Il peut changer le statut, ajouter une note et joindre une photographie."
+            }
+          ],
+          "rag": {
+            "passagesExamined": 12,
+            "passagesRetained": 3,
+            "citedSources": 3,
+            "generationState": "Génération locale",
+            "abstentionState": null
+          }
+        },
+        "portal": {
+          "caseReference": "AD-2026-0042",
+          "question": "Quelles actions sont proposées pour le dossier AD-2026-0042, et qui en est responsable ?",
+          "status": "Transmis à Louis Morel",
+          "busy": false,
+          "inputsTotal": 14,
+          "inputsTreated": 14,
+          "sourceCards": [
+            {
+              "label": "Information assureur",
+              "kind": "Base métier",
+              "status": "Traité"
+            },
+            {
+              "label": "Boîte de réception",
+              "kind": "Courrier synthétique",
+              "status": "Traité"
+            },
+            {
+              "label": "Documents de référence",
+              "kind": "12 pièces locales",
+              "status": "Traité"
+            }
+          ],
+          "resultVisible": true,
+          "resultKind": "standard",
+          "result": {
+            "summary": "Le dossier AD-2026-0042 signale une infiltration dans la zone de stockage nord. L'action proposée est de sécuriser cette zone et de confier le contrôle à Louis Morel.",
+            "actions": [
+              "Sécuriser la zone concernée et confirmer l'étendue de l'infiltration.",
+              "Confirmer le créneau avant le déplacement du salarié.",
+              "Limiter la vue du salarié à son dossier affecté et à ses actions."
+            ],
+            "risks": [
+              "Maintenir l'accès à une zone signalée comme humide.",
+              "Planifier un déplacement sans accès confirmé.",
+              "Afficher au salarié un dossier qui ne lui est pas affecté."
+            ],
+            "responsible": "Louis Morel · Intervention terrain",
+            "abstained": false,
+            "abstentionReason": null,
+            "evidenceCount": 3,
+            "citations": [
+              {
+                "label": "Information assureur",
+                "excerpt": "Le dossier AD-2026-0042 signale une infiltration dans la zone de stockage nord. L'action proposée est de sécuriser cette zone et d'en confier le contrôle à Louis Morel."
+              },
+              {
+                "label": "Procédure de planification",
+                "excerpt": "Pour AD-2026-0042, le créneau d'accès doit être confirmé avant le déplacement. Louis Morel est le responsable proposé pour l'intervention du mardi matin."
+              },
+              {
+                "label": "Procédure de suivi du salarié",
+                "excerpt": "Pour AD-2026-0042, Louis Morel voit uniquement le dossier qui lui est affecté, le résumé validé et les actions transmises. Il peut changer le statut, ajouter une note et joindre une photographie."
+              }
+            ],
+            "rag": {
+              "passagesExamined": 12,
+              "passagesRetained": 3,
+              "citedSources": 3,
+              "generationState": "Génération locale",
+              "abstentionState": null
+            }
+          },
+          "events": [
+            {
+              "order": 0,
+              "label": "Traitement demandé",
+              "detail": "Les services locaux commencent la lecture des nouveaux éléments."
+            },
+            {
+              "order": 1,
+              "label": "Élément reçu",
+              "detail": "La mise à jour de l’assureur a été lue."
+            },
+            {
+              "order": 2,
+              "label": "Référence détectée",
+              "detail": "La référence AD-2026-0042 a été reconnue."
+            },
+            {
+              "order": 3,
+              "label": "Dossier retrouvé",
+              "detail": "Le dossier correspondant a été retrouvé."
+            },
+            {
+              "order": 4,
+              "label": "Message et document associés",
+              "detail": "Le courriel et sa pièce jointe ont été rattachés au dossier."
+            },
+            {
+              "order": 5,
+              "label": "Sources indexées",
+              "detail": "12 passages ont été examinés localement."
+            },
+            {
+              "order": 6,
+              "label": "Proposition préparée",
+              "detail": "Le résumé, les actions et le responsable ont été proposés par l’IA locale."
+            },
+            {
+              "order": 7,
+              "label": "Validation humaine effectuée",
+              "detail": "La proposition validée a été transmise à Louis Morel."
+            }
+          ],
+          "transmissionVisible": true,
+          "transmission": "Transmis à Louis Morel",
+          "employeeViewVisible": true,
+          "employeeAttachments": [
+            "photo-chantier.png",
+            "constat-intervention.pdf"
+          ]
+        },
+        "events": [
+          {
+            "order": 0,
+            "label": "Traitement demandé",
+            "detail": "Les services locaux commencent la lecture des nouveaux éléments."
+          },
+          {
+            "order": 1,
+            "label": "Élément reçu",
+            "detail": "La mise à jour de l’assureur a été lue."
+          },
+          {
+            "order": 2,
+            "label": "Référence détectée",
+            "detail": "La référence AD-2026-0042 a été reconnue."
+          },
+          {
+            "order": 3,
+            "label": "Dossier retrouvé",
+            "detail": "Le dossier correspondant a été retrouvé."
+          },
+          {
+            "order": 4,
+            "label": "Message et document associés",
+            "detail": "Le courriel et sa pièce jointe ont été rattachés au dossier."
+          },
+          {
+            "order": 5,
+            "label": "Sources indexées",
+            "detail": "12 passages ont été examinés localement."
+          },
+          {
+            "order": 6,
+            "label": "Proposition préparée",
+            "detail": "Le résumé, les actions et le responsable ont été proposés par l’IA locale."
+          },
+          {
+            "order": 7,
+            "label": "Validation humaine effectuée",
+            "detail": "La proposition validée a été transmise à Louis Morel."
+          }
+        ],
+        "transmitted": true,
+        "employeeViewLoaded": true,
+        "eventCount": 232,
+        "citedSourceCount": 3,
+        "observedLimitation": "Aucune durée manuelle évitée n’a été mesurée pendant cette exécution."
+      },
+      "integrity": {
+        "status": "COMPLET",
+        "privacy": "PASS",
+        "eventCount": 232,
+        "firstSequence": 2,
+        "lastSequence": 233,
+        "missingSequences": [],
+        "pauseCount": 7,
+        "manualClickCount": 7,
+        "viewFrameCount": 42,
+        "synchronizedViews": true
+      },
+      "provenance": {
+        "classification": "TEST",
+        "status": "COMPLET",
+        "gitSha": "675198e5d9cbdede9b42fc590828703c40f1bd95",
+        "sourceArtifact": "scenario-standard-TEST-verifie.zip",
+        "sourceSha256": "00213eacb1c158fd63f50ee7195819f0557c1ec4fae69604db539257de549911",
+        "rawArtifact": "scenario-standard-20260818-172710.zip",
+        "rawSha256": "fecdfae604bb39711ec451f1ca4036099a3af7f0bed8d2c3350d30800c95b93e",
+        "editorialCorrectionsAfterCapture": true
+      }
+    },
+    {
+      "id": "sans-preuve",
+      "selectorLabel": "Question sans preuve",
+      "selectorHint": "Une abstention explicite lorsque les sources locales ne permettent pas de répondre.",
+      "question": "Quel est le montant réel du contrat d'assurance du dossier AD-2026-0042 ?",
+      "caseReference": "AD-2026-0042",
+      "recordedAt": "2026-08-18T15:27:45.089167Z",
+      "introduction": {
+        "title": "Savoir ne pas inventer",
+        "description": "Une abstention explicite lorsque les sources locales ne permettent pas de répondre.",
+        "watch": [
+          "Aucune source pertinente n’est retenue",
+          "Le modèle génératif n’est pas appelé",
+          "Aucune décision métier n’est fabriquée"
+        ]
+      },
+      "machines": [
+        {
+          "name": "Machine 1",
+          "role": "Sources métier",
+          "detail": "PostgreSQL, courrier synthétique et accès MCP",
+          "gpu": false
+        },
+        {
+          "name": "Machine 2",
+          "role": "Classement des passages",
+          "detail": "Recherche et reclassement sur GPU",
+          "gpu": true
+        },
+        {
+          "name": "Machine 3",
+          "role": "Contrôle sémantique",
+          "detail": "Vérification des citations sur GPU",
+          "gpu": true
+        },
+        {
+          "name": "Machine 4",
+          "role": "Orchestration et génération",
+          "detail": "LangGraph, RAG local, modèle local et validation structurée",
+          "gpu": true
+        }
+      ],
+      "models": [
+        {
+          "name": "google/flan-t5-small",
+          "role": "Recherche et reclassement",
+          "loaded": true,
+          "resident": true,
+          "executed": true,
+          "generationCalled": false
+        },
+        {
+          "name": "google/flan-t5-small",
+          "role": "Contrôle des citations et du schéma",
+          "loaded": true,
+          "resident": true,
+          "executed": true,
+          "generationCalled": false
+        },
+        {
+          "name": "diallomama/fr-summarization",
+          "role": "Génération locale",
+          "loaded": true,
+          "resident": true,
+          "executed": false,
+          "generationCalled": false
+        }
+      ],
+      "technologies": [
+        "Pydantic",
+        "Pydantic 2.13.4",
+        "Haystack BM25",
+        "Haystack 3.0.0 · BM25 InMemoryBM25Retriever",
+        "Haystack 3.0.0",
+        "BM25 InMemoryBM25Retriever",
+        "google/flan-t5-small · PyTorch 2.13.0+cu130 · CUDA 13.0",
+        "google/flan-t5-small",
+        "PyTorch 2.13.0+cu130",
+        "CUDA 13.0",
+        "MCP stdio · PostgreSQL/IMAP",
+        "MCP 2.0.0 · PostgreSQL · IMAP",
+        "MCP 2.0.0",
+        "PostgreSQL",
+        "IMAP",
+        "Barrière d'abstention",
+        "LangGraph 1.2.11",
+        "LangGraph — 1.2.11",
+        "Pydantic — 2.13.4",
+        "Haystack — 3.0.0",
+        "BM25 — InMemoryBM25Retriever",
+        "PyTorch — 2.13.0+cu130",
+        "CUDA — 13.0",
+        "MCP — 2.0.0"
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "label": "Contrôle de la demande",
+          "machine": "Machine 4",
+          "explanation": "La demande est vérifiée avant traitement.",
+          "detail": "Question validée localement avant toute exécution distante.",
+          "technology": "Pydantic",
+          "technologyDetail": "Pydantic 2.13.4",
+          "durationMs": 2,
+          "gpuProof": null
+        },
+        {
+          "order": 2,
+          "label": "Recherche dans le RAG local",
+          "machine": "Machine 4",
+          "explanation": "Le RAG local recherche les passages utiles.",
+          "detail": "12 passages métier indexés et examinés.",
+          "technology": "Haystack BM25",
+          "technologyDetail": "Haystack 3.0.0 · BM25 InMemoryBM25Retriever",
+          "durationMs": 5,
+          "gpuProof": null
+        },
+        {
+          "order": 3,
+          "label": "Classement des passages",
+          "machine": "Machine 2",
+          "explanation": "La Machine 2 classe les passages sur le GPU.",
+          "detail": "aucun passage retenu par le calcul GPU réel.",
+          "technology": "Service de recherche SSH-LAN",
+          "technologyDetail": "google/flan-t5-small · PyTorch 2.13.0+cu130 · CUDA 13.0",
+          "durationMs": 7413,
+          "gpuProof": {
+            "machine": "Machine 2",
+            "role": "Recherche et reclassement",
+            "execution": "Calcul réel",
+            "hardwareMatch": true,
+            "model": "google/flan-t5-small",
+            "framework": "torch 2.13.0+cu130",
+            "cuda": "CUDA 13.0",
+            "device": "Quadro RTX 4000",
+            "operation": "Classement des passages",
+            "vramPeakBytes": 336673792,
+            "modelSizeBytes": 307845120,
+            "modelResident": true,
+            "calculationCount": 1,
+            "durationMs": 248.122
+          }
+        },
+        {
+          "order": 4,
+          "label": "Lecture des données métier",
+          "machine": "Machine 1",
+          "explanation": "La Machine 1 consulte le dossier et le courriel via MCP.",
+          "detail": "aucune décision relue dans PostgreSQL ; source IMAP contrôlée sur le nœud réel.",
+          "technology": "MCP stdio · PostgreSQL/IMAP",
+          "technologyDetail": "MCP 2.0.0 · PostgreSQL · IMAP",
+          "durationMs": 2327,
+          "gpuProof": null
+        },
+        {
+          "order": 5,
+          "label": "Génération bloquée",
+          "machine": "Machine 4",
+          "explanation": "Aucune génération n'est exécutée : le RAG local n'a retenu aucune preuve.",
+          "detail": "Aucune preuve : le modèle local n'est pas appelé et l'orchestrateur s'abstient.",
+          "technology": "Barrière d'abstention",
+          "technologyDetail": "LangGraph 1.2.11",
+          "durationMs": 12,
+          "gpuProof": null
+        },
+        {
+          "order": 6,
+          "label": "Contrôle sémantique",
+          "machine": "Machine 3",
+          "explanation": "La Machine 3 contrôle la cohérence et les citations.",
+          "detail": "aucune citation contrôlée.",
+          "technology": "Service de contrôle SSH-LAN",
+          "technologyDetail": "google/flan-t5-small · PyTorch 2.13.0+cu130 · CUDA 13.0",
+          "durationMs": 13473,
+          "gpuProof": {
+            "machine": "Machine 3",
+            "role": "Contrôle des citations et du schéma",
+            "execution": "Calcul réel",
+            "hardwareMatch": true,
+            "model": "google/flan-t5-small",
+            "framework": "torch 2.13.0+cu130",
+            "cuda": "CUDA 13.0",
+            "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+            "operation": "Contrôle sémantique",
+            "vramPeakBytes": 359081472,
+            "modelSizeBytes": 307845120,
+            "modelResident": true,
+            "calculationCount": 1,
+            "durationMs": 825.483
+          }
+        },
+        {
+          "order": 7,
+          "label": "Validation de l’abstention structurée",
+          "machine": "Machine 4",
+          "explanation": "La réponse structurée est validée avant présentation à la Direction.",
+          "detail": "Objet d’abstention structuré validé après contrôle distant ; aucune réponse métier générée.",
+          "technology": "Pydantic",
+          "technologyDetail": "Pydantic 2.13.4",
+          "durationMs": 18,
+          "gpuProof": null
+        }
+      ],
+      "pauses": [
+        {
+          "order": 1,
+          "headline": "Question validée localement avant toute exécution distante.",
+          "narration": "La question est contrôlée localement avant tout accès aux autres machines. Aucun résultat n’est encore affiché.",
+          "step": {
+            "order": 1,
+            "label": "Contrôle de la demande",
+            "machine": "Machine 4",
+            "explanation": "La demande est vérifiée avant traitement.",
+            "detail": "Question validée localement avant toute exécution distante.",
+            "technology": "Pydantic",
+            "technologyDetail": "Pydantic 2.13.4",
+            "durationMs": 2,
+            "gpuProof": null
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quel est le montant réel du contrat d'assurance du dossier AD-2026-0042 ?",
+            "status": "Traitement local en cours",
+            "busy": true,
+            "inputsTotal": 14,
+            "inputsTreated": 0,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Non traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Non traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Non traité"
+              }
+            ],
+            "resultVisible": false,
+            "resultKind": null,
+            "result": null,
+            "events": [],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 0,
+              "available": false
+            },
+            "Machine 2": {
+              "sampleCount": 0,
+              "available": false
+            },
+            "Machine 3": {
+              "sampleCount": 0,
+              "available": false
+            },
+            "Machine 4": {
+              "sampleCount": 26,
+              "available": true,
+              "cpuPercent": 6.28,
+              "ramUsedBytes": 24512253952,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3949985792,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 0.73,
+              "calculationRamBytes": 2302435328,
+              "calculationVramBytes": 2984751104,
+              "calculationVramPeakBytes": 3092964864,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [
+            {
+              "step": 1,
+              "source": "API du portail",
+              "destination": "Machine 4",
+              "purpose": "Démarrer le parcours orchestré",
+              "support": "Aucun réseau intermachine",
+              "networkMedium": "Indéterminé",
+              "transport": "Mémoire du processus",
+              "protocol": "Python",
+              "service": "Orchestrateur LangGraph",
+              "durationMs": null,
+              "bytesSent": 0,
+              "bytesReceived": 0
+            }
+          ],
+          "eventsObservedDuringReading": [
+            323,
+            324,
+            325,
+            326,
+            327,
+            328,
+            329,
+            330,
+            331,
+            332,
+            333,
+            334,
+            335,
+            336,
+            337,
+            338,
+            339,
+            340,
+            341,
+            342,
+            343,
+            344,
+            345,
+            346,
+            347,
+            348,
+            349,
+            350,
+            351,
+            352,
+            353,
+            354,
+            355,
+            356,
+            357,
+            358,
+            359,
+            360,
+            361,
+            362,
+            363,
+            364,
+            365,
+            366,
+            367,
+            368,
+            369,
+            370,
+            371,
+            372,
+            373,
+            374,
+            375,
+            376,
+            377,
+            378,
+            379,
+            380,
+            381,
+            382,
+            383,
+            384,
+            385,
+            386,
+            387,
+            388,
+            389,
+            390,
+            391,
+            392,
+            393,
+            394,
+            395,
+            396,
+            397,
+            398,
+            399,
+            400,
+            401,
+            402,
+            403,
+            404,
+            405,
+            406,
+            407,
+            408,
+            409,
+            410,
+            411,
+            412,
+            413,
+            414,
+            415,
+            416,
+            417,
+            418,
+            419,
+            420,
+            421,
+            422,
+            423,
+            424,
+            425,
+            426,
+            427,
+            428,
+            429,
+            430,
+            431,
+            432
+          ]
+        },
+        {
+          "order": 2,
+          "headline": "12 passages métier indexés et examinés.",
+          "narration": "Le RAG local examine 12 passages indexés pour rechercher une preuve du montant demandé. Aucun résultat métier n’est affiché.",
+          "step": {
+            "order": 2,
+            "label": "Recherche dans le RAG local",
+            "machine": "Machine 4",
+            "explanation": "Le RAG local recherche les passages utiles.",
+            "detail": "12 passages métier indexés et examinés.",
+            "technology": "Haystack BM25",
+            "technologyDetail": "Haystack 3.0.0 · BM25 InMemoryBM25Retriever",
+            "durationMs": 5,
+            "gpuProof": null
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quel est le montant réel du contrat d'assurance du dossier AD-2026-0042 ?",
+            "status": "Traitement local en cours",
+            "busy": true,
+            "inputsTotal": 14,
+            "inputsTreated": 0,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Non traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Non traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Non traité"
+              }
+            ],
+            "resultVisible": false,
+            "resultKind": null,
+            "result": null,
+            "events": [],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 1,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 1111326720,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 1,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 19107270656,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 1,
+              "available": true,
+              "cpuPercent": 5,
+              "ramUsedBytes": 10205945856,
+              "ramTotalBytes": 16309932032,
+              "gpuPercent": 0,
+              "vramUsedBytes": 0,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Wi-Fi",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 4": {
+              "sampleCount": 27,
+              "available": true,
+              "cpuPercent": 6.28,
+              "ramUsedBytes": 24512253952,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3949985792,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 0.73,
+              "calculationRamBytes": 2302435328,
+              "calculationVramBytes": 2984751104,
+              "calculationVramPeakBytes": 3092964864,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [],
+          "eventsObservedDuringReading": []
+        },
+        {
+          "order": 3,
+          "headline": "aucun passage retenu par le calcul GPU réel.",
+          "narration": "La Machine 2 classe les passages par calcul GPU réel : aucun passage pertinent n’est retenu. Le portail ne produit aucune réponse.",
+          "step": {
+            "order": 3,
+            "label": "Classement des passages",
+            "machine": "Machine 2",
+            "explanation": "La Machine 2 classe les passages sur le GPU.",
+            "detail": "aucun passage retenu par le calcul GPU réel.",
+            "technology": "Service de recherche SSH-LAN",
+            "technologyDetail": "google/flan-t5-small · PyTorch 2.13.0+cu130 · CUDA 13.0",
+            "durationMs": 7413,
+            "gpuProof": {
+              "machine": "Machine 2",
+              "role": "Recherche et reclassement",
+              "execution": "Calcul réel",
+              "hardwareMatch": true,
+              "model": "google/flan-t5-small",
+              "framework": "torch 2.13.0+cu130",
+              "cuda": "CUDA 13.0",
+              "device": "Quadro RTX 4000",
+              "operation": "Classement des passages",
+              "vramPeakBytes": 336673792,
+              "modelSizeBytes": 307845120,
+              "modelResident": true,
+              "calculationCount": 1,
+              "durationMs": 248.122
+            }
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quel est le montant réel du contrat d'assurance du dossier AD-2026-0042 ?",
+            "status": "Traitement local en cours",
+            "busy": true,
+            "inputsTotal": 14,
+            "inputsTreated": 0,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Non traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Non traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Non traité"
+              }
+            ],
+            "resultVisible": false,
+            "resultKind": null,
+            "result": null,
+            "events": [],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 3,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 1109520384,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 5,
+              "available": true,
+              "cpuPercent": 31.94,
+              "ramUsedBytes": 20152983552,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 799014912,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Indéterminé",
+              "calculation": true,
+              "calculationState": "calculation",
+              "model": "google/flan-t5-small",
+              "modelResident": true,
+              "calculationCpuPercent": 21.74,
+              "calculationRamBytes": null,
+              "calculationVramBytes": 323734016,
+              "calculationVramPeakBytes": 323734016,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            },
+            "Machine 3": {
+              "sampleCount": 3,
+              "available": true,
+              "cpuPercent": 7,
+              "ramUsedBytes": 10221043712,
+              "ramTotalBytes": 16309932032,
+              "gpuPercent": 0,
+              "vramUsedBytes": 0,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Wi-Fi",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 4": {
+              "sampleCount": 65,
+              "available": true,
+              "cpuPercent": 13.22,
+              "ramUsedBytes": 24320348160,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3949985792,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 3.94,
+              "calculationRamBytes": 2303160320,
+              "calculationVramBytes": 2984751104,
+              "calculationVramPeakBytes": 3092964864,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [
+            {
+              "step": 3,
+              "source": "Machine 4",
+              "destination": "Machine 2",
+              "purpose": "Envoyer les passages à classer",
+              "support": "Réseau local — Autre",
+              "networkMedium": "Autre",
+              "transport": "SSH chiffré",
+              "protocol": "SSH",
+              "service": "Worker GPU de recherche",
+              "durationMs": 7393,
+              "bytesSent": 2364,
+              "bytesReceived": 6134
+            }
+          ],
+          "eventsObservedDuringReading": []
+        },
+        {
+          "order": 4,
+          "headline": "aucune décision relue dans PostgreSQL ; source IMAP contrôlée sur le nœud réel.",
+          "narration": "La Machine 1 contrôle les données structurées et la messagerie locales via MCP. Aucune décision étayant le montant demandé n’est retrouvée.",
+          "step": {
+            "order": 4,
+            "label": "Lecture des données métier",
+            "machine": "Machine 1",
+            "explanation": "La Machine 1 consulte le dossier et le courriel via MCP.",
+            "detail": "aucune décision relue dans PostgreSQL ; source IMAP contrôlée sur le nœud réel.",
+            "technology": "MCP stdio · PostgreSQL/IMAP",
+            "technologyDetail": "MCP 2.0.0 · PostgreSQL · IMAP",
+            "durationMs": 2327,
+            "gpuProof": null
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quel est le montant réel du contrat d'assurance du dossier AD-2026-0042 ?",
+            "status": "Traitement local en cours",
+            "busy": true,
+            "inputsTotal": 14,
+            "inputsTreated": 0,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Non traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Non traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Non traité"
+              }
+            ],
+            "resultVisible": false,
+            "resultKind": null,
+            "result": null,
+            "events": [],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 4,
+              "available": true,
+              "cpuPercent": 19.23,
+              "ramUsedBytes": 1185923072,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 6,
+              "available": true,
+              "cpuPercent": 13,
+              "ramUsedBytes": 19170824192,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 4,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 10216669184,
+              "ramTotalBytes": 16309932032,
+              "gpuPercent": 0,
+              "vramUsedBytes": 0,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Wi-Fi",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 4": {
+              "sampleCount": 84,
+              "available": true,
+              "cpuPercent": 9.58,
+              "ramUsedBytes": 24424501248,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3949985792,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 1.63,
+              "calculationRamBytes": 2303582208,
+              "calculationVramBytes": 2984751104,
+              "calculationVramPeakBytes": 3092964864,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [
+            {
+              "step": 4,
+              "source": "Machine 4",
+              "destination": "Machine 1",
+              "purpose": "Consulter les sources métier",
+              "support": "Réseau local — Autre",
+              "networkMedium": "Autre",
+              "transport": "SSH chiffré",
+              "protocol": "MCP stdio",
+              "service": "Lecture des sources métier",
+              "durationMs": 2276,
+              "bytesSent": 352,
+              "bytesReceived": 2330
+            },
+            {
+              "step": 4,
+              "source": "Machine 1",
+              "destination": "Base PostgreSQL locale",
+              "purpose": "Lire les informations structurées",
+              "support": "Connexion locale à la source",
+              "networkMedium": "Autre",
+              "transport": "Socket locale",
+              "protocol": "PostgreSQL",
+              "service": "Informations structurées",
+              "durationMs": 111,
+              "bytesSent": 254,
+              "bytesReceived": 6134
+            },
+            {
+              "step": 4,
+              "source": "Machine 1",
+              "destination": "Messagerie IMAP locale",
+              "purpose": "Consulter la boîte de réception",
+              "support": "Connexion locale à la source",
+              "networkMedium": "Autre",
+              "transport": "TCP local",
+              "protocol": "IMAP",
+              "service": "Boîte de réception",
+              "durationMs": 85,
+              "bytesSent": 124,
+              "bytesReceived": 485
+            }
+          ],
+          "eventsObservedDuringReading": []
+        },
+        {
+          "order": 5,
+          "headline": "Aucune preuve : le modèle local n'est pas appelé et l'orchestrateur s'abstient.",
+          "narration": "Aucune preuve suffisante n’a été trouvée : le modèle génératif n’est ni exécuté ni appelé. Le portail affiche une abstention explicite.",
+          "step": {
+            "order": 5,
+            "label": "Génération bloquée",
+            "machine": "Machine 4",
+            "explanation": "Aucune génération n'est exécutée : le RAG local n'a retenu aucune preuve.",
+            "detail": "Aucune preuve : le modèle local n'est pas appelé et l'orchestrateur s'abstient.",
+            "technology": "Barrière d'abstention",
+            "technologyDetail": "LangGraph 1.2.11",
+            "durationMs": 12,
+            "gpuProof": null
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quel est le montant réel du contrat d'assurance du dossier AD-2026-0042 ?",
+            "status": "Prêt",
+            "busy": false,
+            "inputsTotal": 14,
+            "inputsTreated": 0,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Non traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Non traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Non traité"
+              }
+            ],
+            "resultVisible": true,
+            "resultKind": "abstention",
+            "result": {
+              "summary": "Abstention : aucune réponse étayée n’est disponible dans les sources locales.",
+              "actions": [],
+              "risks": [],
+              "responsible": null,
+              "abstained": true,
+              "abstentionReason": "Aucune preuve pertinente n'a été retrouvée ; aucune invention n'est autorisée.",
+              "evidenceCount": 0,
+              "citations": [],
+              "rag": {
+                "passagesExamined": 12,
+                "passagesRetained": 0,
+                "citedSources": 0,
+                "generationState": "Génération bloquée",
+                "abstentionState": "Abstention explicite"
+              }
+            },
+            "events": [],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 4,
+              "available": true,
+              "cpuPercent": 19.23,
+              "ramUsedBytes": 1185923072,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 6,
+              "available": true,
+              "cpuPercent": 13,
+              "ramUsedBytes": 19170824192,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 4,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 10216669184,
+              "ramTotalBytes": 16309932032,
+              "gpuPercent": 0,
+              "vramUsedBytes": 0,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Wi-Fi",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 4": {
+              "sampleCount": 84,
+              "available": true,
+              "cpuPercent": 9.58,
+              "ramUsedBytes": 24424501248,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3949985792,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 1.63,
+              "calculationRamBytes": 2303582208,
+              "calculationVramBytes": 2984751104,
+              "calculationVramPeakBytes": 3092964864,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [],
+          "eventsObservedDuringReading": []
+        },
+        {
+          "order": 6,
+          "headline": "aucune citation contrôlée.",
+          "narration": "La Machine 3 contrôle l’absence de citation exploitable. L’abstention reste affichée et aucune réponse métier n’est créée.",
+          "step": {
+            "order": 6,
+            "label": "Contrôle sémantique",
+            "machine": "Machine 3",
+            "explanation": "La Machine 3 contrôle la cohérence et les citations.",
+            "detail": "aucune citation contrôlée.",
+            "technology": "Service de contrôle SSH-LAN",
+            "technologyDetail": "google/flan-t5-small · PyTorch 2.13.0+cu130 · CUDA 13.0",
+            "durationMs": 13473,
+            "gpuProof": {
+              "machine": "Machine 3",
+              "role": "Contrôle des citations et du schéma",
+              "execution": "Calcul réel",
+              "hardwareMatch": true,
+              "model": "google/flan-t5-small",
+              "framework": "torch 2.13.0+cu130",
+              "cuda": "CUDA 13.0",
+              "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+              "operation": "Contrôle sémantique",
+              "vramPeakBytes": 359081472,
+              "modelSizeBytes": 307845120,
+              "modelResident": true,
+              "calculationCount": 1,
+              "durationMs": 825.483
+            }
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quel est le montant réel du contrat d'assurance du dossier AD-2026-0042 ?",
+            "status": "Prêt",
+            "busy": false,
+            "inputsTotal": 14,
+            "inputsTreated": 0,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Non traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Non traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Non traité"
+              }
+            ],
+            "resultVisible": true,
+            "resultKind": "abstention",
+            "result": {
+              "summary": "Abstention : aucune réponse étayée n’est disponible dans les sources locales.",
+              "actions": [],
+              "risks": [],
+              "responsible": null,
+              "abstained": true,
+              "abstentionReason": "Aucune preuve pertinente n'a été retrouvée ; aucune invention n'est autorisée.",
+              "evidenceCount": 0,
+              "citations": [],
+              "rag": {
+                "passagesExamined": 12,
+                "passagesRetained": 0,
+                "citedSources": 0,
+                "generationState": "Génération bloquée",
+                "abstentionState": "Abstention explicite"
+              }
+            },
+            "events": [],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 9,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 1296723968,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 11,
+              "available": true,
+              "cpuPercent": 17,
+              "ramUsedBytes": 19165896704,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 10,
+              "available": true,
+              "cpuPercent": 7.16,
+              "ramUsedBytes": 1702731776,
+              "ramTotalBytes": 7895412736,
+              "gpuPercent": 1,
+              "vramUsedBytes": 527433728,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "calculation",
+              "model": "google/flan-t5-small",
+              "modelResident": true,
+              "calculationCpuPercent": 5.98,
+              "calculationRamBytes": 1348308992,
+              "calculationVramBytes": 322646016,
+              "calculationVramPeakBytes": 359081472,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            },
+            "Machine 4": {
+              "sampleCount": 151,
+              "available": true,
+              "cpuPercent": 12.66,
+              "ramUsedBytes": 24588136448,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3949985792,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 3.42,
+              "calculationRamBytes": 2304512000,
+              "calculationVramBytes": 2984751104,
+              "calculationVramPeakBytes": 3092964864,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [
+            {
+              "step": 6,
+              "source": "Machine 4",
+              "destination": "Machine 3",
+              "purpose": "Envoyer la réponse au contrôle qualité",
+              "support": "Réseau local — Autre",
+              "networkMedium": "Autre",
+              "transport": "SSH chiffré",
+              "protocol": "SSH",
+              "service": "Worker GPU de contrôle",
+              "durationMs": 13424,
+              "bytesSent": 4268,
+              "bytesReceived": 9000
+            }
+          ],
+          "eventsObservedDuringReading": []
+        },
+        {
+          "order": 7,
+          "headline": "Objet d’abstention structuré validé après contrôle distant ; aucune réponse métier générée.",
+          "narration": "La Machine 4 valide l’objet d’abstention structuré. Aucune réponse métier, publication ou transmission n’est générée.",
+          "step": {
+            "order": 7,
+            "label": "Validation de l’abstention structurée",
+            "machine": "Machine 4",
+            "explanation": "La réponse structurée est validée avant présentation à la Direction.",
+            "detail": "Objet d’abstention structuré validé après contrôle distant ; aucune réponse métier générée.",
+            "technology": "Pydantic",
+            "technologyDetail": "Pydantic 2.13.4",
+            "durationMs": 18,
+            "gpuProof": null
+          },
+          "portal": {
+            "caseReference": "AD-2026-0042",
+            "question": "Quel est le montant réel du contrat d'assurance du dossier AD-2026-0042 ?",
+            "status": "Prêt",
+            "busy": false,
+            "inputsTotal": 14,
+            "inputsTreated": 0,
+            "sourceCards": [
+              {
+                "label": "Information assureur",
+                "kind": "Base métier",
+                "status": "Non traité"
+              },
+              {
+                "label": "Boîte de réception",
+                "kind": "Courrier synthétique",
+                "status": "Non traité"
+              },
+              {
+                "label": "Documents de référence",
+                "kind": "12 pièces locales",
+                "status": "Non traité"
+              }
+            ],
+            "resultVisible": true,
+            "resultKind": "abstention",
+            "result": {
+              "summary": "Abstention : aucune réponse étayée n’est disponible dans les sources locales.",
+              "actions": [],
+              "risks": [],
+              "responsible": null,
+              "abstained": true,
+              "abstentionReason": "Aucune preuve pertinente n'a été retrouvée ; aucune invention n'est autorisée.",
+              "evidenceCount": 0,
+              "citations": [],
+              "rag": {
+                "passagesExamined": 12,
+                "passagesRetained": 0,
+                "citedSources": 0,
+                "generationState": "Génération bloquée",
+                "abstentionState": "Abstention explicite"
+              }
+            },
+            "events": [],
+            "transmissionVisible": false,
+            "transmission": null,
+            "employeeViewVisible": false,
+            "employeeAttachments": []
+          },
+          "metrics": {
+            "Machine 1": {
+              "sampleCount": 9,
+              "available": true,
+              "cpuPercent": 0,
+              "ramUsedBytes": 1296723968,
+              "ramTotalBytes": 33365282816,
+              "gpuPercent": null,
+              "vramUsedBytes": null,
+              "vramTotalBytes": null,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 2": {
+              "sampleCount": 11,
+              "available": true,
+              "cpuPercent": 17,
+              "ramUsedBytes": 19165896704,
+              "ramTotalBytes": 137131098112,
+              "gpuPercent": 0,
+              "vramUsedBytes": 315621376,
+              "vramTotalBytes": 8589934592,
+              "networkMedium": "Ethernet",
+              "calculation": false,
+              "calculationState": null,
+              "model": null,
+              "modelResident": null,
+              "calculationCpuPercent": null,
+              "calculationRamBytes": null,
+              "calculationVramBytes": null,
+              "calculationVramPeakBytes": null,
+              "cudaCalculationCount": null,
+              "cudaDurationMs": null
+            },
+            "Machine 3": {
+              "sampleCount": 10,
+              "available": true,
+              "cpuPercent": 7.16,
+              "ramUsedBytes": 1702731776,
+              "ramTotalBytes": 7895412736,
+              "gpuPercent": 1,
+              "vramUsedBytes": 527433728,
+              "vramTotalBytes": 8585740288,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "calculation",
+              "model": "google/flan-t5-small",
+              "modelResident": true,
+              "calculationCpuPercent": 5.98,
+              "calculationRamBytes": 1348308992,
+              "calculationVramBytes": 322646016,
+              "calculationVramPeakBytes": 359081472,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            },
+            "Machine 4": {
+              "sampleCount": 151,
+              "available": true,
+              "cpuPercent": 12.66,
+              "ramUsedBytes": 24588136448,
+              "ramTotalBytes": 99762855936,
+              "gpuPercent": 0,
+              "vramUsedBytes": 3949985792,
+              "vramTotalBytes": 51312066560,
+              "networkMedium": "Autre",
+              "calculation": true,
+              "calculationState": "idle",
+              "model": "diallomama/fr-summarization",
+              "modelResident": true,
+              "calculationCpuPercent": 3.42,
+              "calculationRamBytes": 2304512000,
+              "calculationVramBytes": 2984751104,
+              "calculationVramPeakBytes": 3092964864,
+              "cudaCalculationCount": 0,
+              "cudaDurationMs": 0
+            }
+          },
+          "communications": [],
+          "eventsObservedDuringReading": []
+        }
+      ],
+      "conclusion": {
+        "narration": "Parcours terminé. L’assistant n’a trouvé aucune preuve pertinente et s’est abstenu : le modèle génératif n’a pas été appelé, aucune réponse métier n’a été produite et aucune information n’a été transmise. L’exécution montre qu’un système local peut refuser une réponse non étayée et en conserver la trace.",
+        "result": {
+          "summary": "Abstention : aucune réponse étayée n’est disponible dans les sources locales.",
+          "actions": [],
+          "risks": [],
+          "responsible": null,
+          "abstained": true,
+          "abstentionReason": "Aucune preuve pertinente n'a été retrouvée ; aucune invention n'est autorisée.",
+          "evidenceCount": 0,
+          "citations": [],
+          "rag": {
+            "passagesExamined": 12,
+            "passagesRetained": 0,
+            "citedSources": 0,
+            "generationState": "Génération bloquée",
+            "abstentionState": "Abstention explicite"
+          }
+        },
+        "portal": {
+          "caseReference": "AD-2026-0042",
+          "question": "Quel est le montant réel du contrat d'assurance du dossier AD-2026-0042 ?",
+          "status": "Prêt",
+          "busy": false,
+          "inputsTotal": 14,
+          "inputsTreated": 0,
+          "sourceCards": [
+            {
+              "label": "Information assureur",
+              "kind": "Base métier",
+              "status": "Non traité"
+            },
+            {
+              "label": "Boîte de réception",
+              "kind": "Courrier synthétique",
+              "status": "Non traité"
+            },
+            {
+              "label": "Documents de référence",
+              "kind": "12 pièces locales",
+              "status": "Non traité"
+            }
+          ],
+          "resultVisible": true,
+          "resultKind": "abstention",
+          "result": {
+            "summary": "Abstention : aucune réponse étayée n’est disponible dans les sources locales.",
+            "actions": [],
+            "risks": [],
+            "responsible": null,
+            "abstained": true,
+            "abstentionReason": "Aucune preuve pertinente n'a été retrouvée ; aucune invention n'est autorisée.",
+            "evidenceCount": 0,
+            "citations": [],
+            "rag": {
+              "passagesExamined": 12,
+              "passagesRetained": 0,
+              "citedSources": 0,
+              "generationState": "Génération bloquée",
+              "abstentionState": "Abstention explicite"
+            }
+          },
+          "events": [],
+          "transmissionVisible": false,
+          "transmission": null,
+          "employeeViewVisible": false,
+          "employeeAttachments": []
+        },
+        "events": [],
+        "transmitted": false,
+        "employeeViewLoaded": false,
+        "eventCount": 198,
+        "citedSourceCount": 0,
+        "observedLimitation": "Aucune durée manuelle évitée n’a été mesurée pendant cette exécution."
+      },
+      "integrity": {
+        "status": "COMPLET",
+        "privacy": "PASS",
+        "eventCount": 198,
+        "firstSequence": 235,
+        "lastSequence": 432,
+        "missingSequences": [],
+        "pauseCount": 7,
+        "manualClickCount": 7,
+        "viewFrameCount": 42,
+        "synchronizedViews": true
+      },
+      "provenance": {
+        "classification": "TEST",
+        "status": "COMPLET",
+        "gitSha": "675198e5d9cbdede9b42fc590828703c40f1bd95",
+        "sourceArtifact": "scenario-sans-preuve-TEST-verifie.zip",
+        "sourceSha256": "577cac99bc6b668d6d2db18e22a1ca2aff99b2d8d6add788a3b2af7a99de5473",
+        "rawArtifact": "scenario-sans-preuve-20260818-172901.zip",
+        "rawSha256": "52c6379b468ef6dcce963809925c2eb962ecd8ec0cac157926f9d140bc16548f",
+        "editorialCorrectionsAfterCapture": true
+      }
+    }
+  ]
+}

@@ -3,6 +3,8 @@ const PAGE_LABELS = Object.freeze({
   "/offres.html": "Offres",
   "/methode.html": "Méthode",
   "/cas-clients.html": "Réalisations",
+  "/demonstrations.html": "Démonstrations",
+  "/demonstrations/ormevia-batiment.html": "Démo Ormévia",
   "/contact.html": "Contact",
 });
 

@@ -36,6 +36,7 @@ jobs:
           from html.parser import HTMLParser
           from pathlib import Path
           from urllib.parse import unquote, urlsplit
+          import json
           import os
           import re
           import sys
@@ -50,9 +51,15 @@ jobs:
               "offres.html",
               "methode.html",
               "cas-clients.html",
+              "demonstrations.html",
+              "demonstrations/ormevia-batiment.html",
               "contact.html",
               "assets/css/site.css",
+              "assets/css/demonstrations.css",
+              "assets/css/demo-ormevia.css",
+              "assets/data/ormevia-scenarios.json",
               "assets/js/audience-counter.js",
+              "assets/js/demo-ormevia.js",
               "assets/img/favicon-datapredict.png",
               "assets/img/logo-datapredict.png",
               "assets/img/social-datapredict.png",
@@ -162,13 +169,16 @@ jobs:
                   errors.append(f"{relative}: {document.title_count} élément(s) <title>, attendu : 1")
               if document.h1_count != 1:
                   errors.append(f"{relative}: {document.h1_count} élément(s) <h1>, attendu : 1")
-              if relative.as_posix() in {
-                  "index.html",
-                  "offres.html",
-                  "methode.html",
-                  "cas-clients.html",
-                  "contact.html",
-              } and document.script_sources.count("assets/js/audience-counter.js") != 1:
+              expected_counter = {
+                  "index.html": "assets/js/audience-counter.js",
+                  "offres.html": "assets/js/audience-counter.js",
+                  "methode.html": "assets/js/audience-counter.js",
+                  "cas-clients.html": "assets/js/audience-counter.js",
+                  "demonstrations.html": "assets/js/audience-counter.js",
+                  "demonstrations/ormevia-batiment.html": "../assets/js/audience-counter.js",
+                  "contact.html": "assets/js/audience-counter.js",
+              }.get(relative.as_posix())
+              if expected_counter and document.script_sources.count(expected_counter) != 1:
                   errors.append(
                       f"{relative}: le compteur doit être chargé exactement une fois"
                   )
@@ -242,6 +252,111 @@ jobs:
                           f"{css_path.relative_to(root)}: ressource locale absente : {reference}"
                       )
 
+          projection_path = root / "assets/data/ormevia-scenarios.json"
+          if projection_path.is_file():
+              try:
+                  projection = json.loads(projection_path.read_text(encoding="utf-8"))
+              except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                  errors.append(f"projection Ormévia invalide : {exc}")
+              else:
+                  scenarios = {
+                      scenario.get("id"): scenario
+                      for scenario in projection.get("scenarios", [])
+                      if isinstance(scenario, dict)
+                  }
+                  if set(scenarios) != {"standard", "sans-preuve"}:
+                      errors.append("projection Ormévia : scénarios inattendus")
+                  expected_visibility = {
+                      "standard": [False, False, False, False, False, False, True],
+                      "sans-preuve": [False, False, False, False, True, True, True],
+                  }
+                  expected_sources = {
+                      "standard": {
+                          "sourceSha256": "00213eacb1c158fd63f50ee7195819f0557c1ec4fae69604db539257de549911",
+                          "rawSha256": "fecdfae604bb39711ec451f1ca4036099a3af7f0bed8d2c3350d30800c95b93e",
+                      },
+                      "sans-preuve": {
+                          "sourceSha256": "577cac99bc6b668d6d2db18e22a1ca2aff99b2d8d6add788a3b2af7a99de5473",
+                          "rawSha256": "52c6379b468ef6dcce963809925c2eb962ecd8ec0cac157926f9d140bc16548f",
+                      },
+                  }
+                  for scenario_id, visibility in expected_visibility.items():
+                      scenario = scenarios.get(scenario_id, {})
+                      pauses = scenario.get("pauses", [])
+                      steps = scenario.get("steps", [])
+                      integrity = scenario.get("integrity", {})
+                      provenance = scenario.get("provenance", {})
+                      observed = [
+                          pause.get("portal", {}).get("resultVisible")
+                          for pause in pauses
+                          if isinstance(pause, dict)
+                      ]
+                      if len(pauses) != 7 or len(steps) != 7:
+                          errors.append(
+                              f"projection Ormévia {scenario_id} : sept pauses et étapes attendues"
+                          )
+                      if integrity.get("manualClickCount") != 7:
+                          errors.append(
+                              f"projection Ormévia {scenario_id} : sept reprises manuelles attendues"
+                          )
+                      if observed != visibility:
+                          errors.append(
+                              f"projection Ormévia {scenario_id} : révélation du résultat incorrecte"
+                          )
+                      if integrity.get("privacy") != "PASS":
+                          errors.append(
+                              f"projection Ormévia {scenario_id} : confidentialité non validée"
+                          )
+                      if provenance.get("classification") != "TEST":
+                          errors.append(
+                              f"projection Ormévia {scenario_id} : classification TEST absente"
+                          )
+                      if provenance.get("gitSha") != "675198e5d9cbdede9b42fc590828703c40f1bd95":
+                          errors.append(
+                              f"projection Ormévia {scenario_id} : commit source inattendu"
+                          )
+                      for key, expected in expected_sources[scenario_id].items():
+                          if provenance.get(key) != expected:
+                              errors.append(
+                                  f"projection Ormévia {scenario_id} : empreinte {key} inattendue"
+                              )
+
+                  if projection.get("fictionNotice") != (
+                      "Données entièrement fictives — aucun système client connecté"
+                  ):
+                      errors.append("projection Ormévia : mention de fiction incorrecte")
+                  public_provenance = str(projection.get("publicProvenance", ""))
+                  for marker in ("TEST", "corrections éditoriales", "CANONICAL"):
+                      if marker.lower() not in public_provenance.lower():
+                          errors.append(
+                              f"projection Ormévia : provenance publique incomplète ({marker})"
+                          )
+
+                  projection_text = projection_path.read_text(encoding="utf-8")
+                  forbidden_projection = (
+                      "run_id",
+                      "session_id",
+                      "reset_id",
+                      "journey_id",
+                      "portal_instance_id",
+                      "projection_id",
+                      "MISSION-DATA-IA-001",
+                      "etat-portail",
+                      "Futur bouton",
+                      "dossier-postgresql.md",
+                  )
+                  for forbidden in forbidden_projection:
+                      if forbidden.lower() in projection_text.lower():
+                          errors.append(
+                              f"projection Ormévia : libellé interne interdit : {forbidden}"
+                          )
+                  if re.search(
+                      r"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b",
+                      projection_text,
+                      re.IGNORECASE,
+                  ):
+                      errors.append("projection Ormévia : UUID interdit")
+
           if errors:
               print("\n".join(f"ERREUR : {error}" for error in errors))
               sys.exit(1)
@@ -263,6 +378,7 @@ jobs:
         shell: bash
         run: |
           node --check assets/js/audience-counter.js
+          node --check assets/js/demo-ormevia.js
           npm ci --prefix analytics-counter
           npm run check --prefix analytics-counter
           sed 's/__D1_DATABASE_ID__/00000000-0000-0000-0000-000000000000/' \
