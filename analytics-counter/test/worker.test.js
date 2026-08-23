@@ -148,9 +148,14 @@ function tableRow(html, month) {
   return row[1];
 }
 
-test("normalise uniquement les cinq pages publiques et les codes pays", () => {
+test("normalise uniquement les sept pages publiques et les codes pays", () => {
   assert.equal(normalizePage("/index.html"), "/");
   assert.equal(normalizePage("/cas-clients.html"), "/cas-clients.html");
+  assert.equal(normalizePage("/demonstrations.html"), "/demonstrations.html");
+  assert.equal(
+    normalizePage("/demonstrations/ormevia-batiment.html"),
+    "/demonstrations/ormevia-batiment.html",
+  );
   assert.equal(normalizePage("/inconnue.html"), null);
   assert.equal(normalizeCountry("fr"), "FR");
   assert.equal(normalizeCountry("France"), "XX");
@@ -186,6 +191,26 @@ test("enregistre une page vue et une visite dans des agrégats séparés", async
   assert.deepEqual(statements[2].parameters.slice(1), ["source", "linkedin"]);
   assert.deepEqual(statements[3].parameters.slice(1), ["device", "mobile"]);
   assert.deepEqual(statements[4].parameters.slice(1), ["country", "FR"]);
+});
+
+test("enregistre la démonstration Ormévia comme page publique", async () => {
+  const env = environment();
+  const response = await worker.fetch(
+    hitRequest(payload({
+      page: "/demonstrations/ormevia-batiment.html",
+      visit: false,
+      source: "internal",
+    })),
+    env,
+  );
+
+  assert.equal(response.status, 204);
+  const statements = env.COUNTER_DB.batches[0];
+  assert.equal(statements.length, 2);
+  assert.deepEqual(
+    statements[1].parameters.slice(1),
+    ["/demonstrations/ormevia-batiment.html", 1, 0, 0, 0],
+  );
 });
 
 test("n’ajoute aucune dimension sur les pages suivantes d’une visite", async () => {
@@ -279,6 +304,8 @@ test("protège et rend les valeurs exactes et le tableau mensuel par page", asyn
   assert.match(html, /juillet 2026/);
   assert.match(html, /<th scope="col">Accueil<\/th>/);
   assert.match(html, /<th scope="col">Offres<\/th>/);
+  assert.match(html, /<th scope="col">Démonstrations<\/th>/);
+  assert.match(html, /<th scope="col">Démo Ormévia<\/th>/);
   assert.match(html, /<td>8<\/td>/);
   assert.match(html, /<td>3<\/td>/);
   assert.match(html, /<strong>11<\/strong>/);
