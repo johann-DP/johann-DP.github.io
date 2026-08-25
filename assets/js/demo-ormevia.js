@@ -517,7 +517,7 @@
       <div>
         ${brandLogo(true)}
         <div class="footer-copy">
-          <p>Replay TEST · Exécution enregistrée le 18 août 2026 · Corrections éditoriales postérieures à la capture</p>
+          <p>Replay disponible · Exécution enregistrée le 18 août 2026 · Corrections éditoriales postérieures à la capture</p>
           <nav class="demo-footer-links" aria-label="Liens de fin de démonstration">
             <a href="../demonstrations.html">Toutes les démonstrations</a>
             <a href="../offres.html">Offres</a>
