@@ -37,6 +37,7 @@ jobs:
           from pathlib import Path
           from urllib.parse import unquote, urlsplit
           import json
+          import hashlib
           import os
           import re
           import sys
@@ -53,13 +54,19 @@ jobs:
               "cas-clients.html",
               "demonstrations.html",
               "demonstrations/ormevia-batiment.html",
+              "demonstrations/fissures.html",
               "contact.html",
               "assets/css/site.css",
               "assets/css/demonstrations.css",
               "assets/css/demo-ormevia.css",
+              "assets/css/demo-fissures.css",
               "assets/data/ormevia-scenarios.json",
               "assets/js/audience-counter.js",
               "assets/js/demo-ormevia.js",
+              "assets/js/demo-fissures.js",
+              "assets/js/demo-fissures-data.js",
+              "assets/img/demo-fissures-geometry.svg",
+              "assets/data/demo-fissures-manifest.json",
               "assets/img/favicon-datapredict.png",
               "assets/img/logo-datapredict.png",
               "assets/img/social-datapredict.png",
@@ -176,6 +183,7 @@ jobs:
                   "cas-clients.html": "assets/js/audience-counter.js",
                   "demonstrations.html": "assets/js/audience-counter.js",
                   "demonstrations/ormevia-batiment.html": "../assets/js/audience-counter.js",
+                  "demonstrations/fissures.html": "../assets/js/audience-counter.js",
                   "contact.html": "assets/js/audience-counter.js",
               }.get(relative.as_posix())
               if expected_counter and document.script_sources.count(expected_counter) != 1:
@@ -357,6 +365,66 @@ jobs:
                   ):
                       errors.append("projection Ormévia : UUID interdit")
 
+          fissures_manifest_path = root / "assets/data/demo-fissures-manifest.json"
+          if fissures_manifest_path.is_file():
+              try:
+                  fissures_manifest = json.loads(
+                      fissures_manifest_path.read_text(encoding="utf-8")
+                  )
+              except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                  errors.append(f"manifeste Fissures invalide : {exc}")
+              else:
+                  expected_constraints = {
+                      "historical_recent_segments_separate": True,
+                      "s1_included": False,
+                      "weather_crack_causality_claimed": False,
+                      "weather_crack_join": False,
+                  }
+                  if fissures_manifest.get("scientific_constraints") != expected_constraints:
+                      errors.append("manifeste Fissures : contraintes scientifiques divergentes")
+                  for entry in fissures_manifest.get("files", []):
+                      if not isinstance(entry, dict):
+                          errors.append("manifeste Fissures : entrée invalide")
+                          continue
+                      relative = entry.get("path")
+                      if not isinstance(relative, str):
+                          errors.append("manifeste Fissures : chemin invalide")
+                          continue
+                      path = root / relative
+                      if not path.is_file():
+                          errors.append(f"manifeste Fissures : fichier absent : {relative}")
+                          continue
+                      content = path.read_bytes()
+                      if len(content) != entry.get("size_bytes"):
+                          errors.append(f"manifeste Fissures : taille divergente : {relative}")
+                      if hashlib.sha256(content).hexdigest() != entry.get("sha256"):
+                          errors.append(f"manifeste Fissures : SHA-256 divergent : {relative}")
+
+                  fissures_data = (root / "assets/js/demo-fissures-data.js").read_text(
+                      encoding="utf-8"
+                  )
+                  forbidden_patterns = {
+                      "email": r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}",
+                      "IPv4": r"(?<!\d)(?:\d{1,3}\.){3}\d{1,3}(?!\d)",
+                      "MAC": r"(?i)(?:[0-9a-f]{2}[:-]){5}[0-9a-f]{2}",
+                      "chemin opérationnel": r"/(?:media|home|root)/",
+                  }
+                  for label, pattern in forbidden_patterns.items():
+                      if re.search(pattern, fissures_data, re.IGNORECASE):
+                          errors.append(f"projection Fissures : {label} interdit")
+                  required_markers = (
+                      '"observation_count":449',
+                      '"series_count":3',
+                      '"join_ready":false',
+                      '"hidden_interpolation_applied":false',
+                      '"unit":"cm"',
+                      '"unit":"mm"',
+                      "Le capteur automatique est omis",
+                  )
+                  for marker in required_markers:
+                      if marker not in fissures_data:
+                          errors.append(f"projection Fissures : invariant absent : {marker}")
+
           if errors:
               print("\n".join(f"ERREUR : {error}" for error in errors))
               sys.exit(1)
@@ -379,6 +447,8 @@ jobs:
         run: |
           node --check assets/js/audience-counter.js
           node --check assets/js/demo-ormevia.js
+          node --check assets/js/demo-fissures.js
+          node --check assets/js/demo-fissures-data.js
           npm ci --prefix analytics-counter
           npm run check --prefix analytics-counter
           sed 's/__D1_DATABASE_ID__/00000000-0000-0000-0000-000000000000/' \

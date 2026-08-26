@@ -20,6 +20,7 @@ Les réalisations présentées sur le site sont anonymisées et reformulées afi
 - [Réalisations](cas-clients.html) : sélection de contextes et d’interventions anonymisés ;
 - [Démonstrations](demonstrations.html) : catalogue extensible de simulations interactives ;
 - [Ormévia Bâtiment](demonstrations/ormevia-batiment.html) : replay public d’un traitement IA local sur données entièrement fictives ;
+- [Mesures de fissures](demonstrations/fissures.html) : replay déterministe de 449 observations réelles anonymisées, sans interpolation ni diagnostic ;
 - [Contact](contact.html) : qualification d’un besoin et prise de contact.
 
 Le nom de fichier historique `cas-clients.html` est conservé ; son libellé public est « Réalisations ».
