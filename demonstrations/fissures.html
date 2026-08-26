@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Replay public et déterministe de 449 mesures de fissures anonymisées, avec provenance, unités et limites scientifiques explicites.">
+  <link rel="canonical" href="https://www.datapredict.org/demonstrations/fissures.html">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/img/favicon-datapredict.png">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mesures de fissures — replay public datapredict">
+  <meta property="og:description" content="449 observations réelles anonymisées, trois séries séparées et des limites scientifiques visibles.">
+  <meta property="og:url" content="https://www.datapredict.org/demonstrations/fissures.html">
+  <meta property="og:image" content="https://www.datapredict.org/assets/img/social-datapredict.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="color-scheme" content="light">
+  <title>datapredict — replay public des mesures de fissures</title>
+  <link rel="stylesheet" href="../assets/css/demo-fissures.css">
+  <script src="../assets/js/demo-fissures-data.js" defer></script>
+  <script src="../assets/js/demo-fissures.js" defer></script>
+</head>
+<body>
+  <button class="skip-link" type="button" data-scroll-target="contenu">Aller au contenu</button>
+
+  <header class="masthead">
+    <div class="shell masthead__inner">
+      <a class="wordmark" href="../demonstrations.html" aria-label="datapredict — retour aux démonstrations">
+        <img src="../assets/img/logo-datapredict.png" width="966" height="159" alt="datapredict">
+      </a>
+      <nav class="primary-nav" aria-label="Parcours du replay">
+        <button type="button" data-scroll-target="geometrie">Géométrie</button>
+        <button type="button" data-scroll-target="mesures">Mesures</button>
+        <button type="button" data-scroll-target="preuves">Preuves</button>
+        <button type="button" data-scroll-target="limites">Limites</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu" tabindex="-1">
+    <section id="contexte" class="hero shell" aria-labelledby="titre-replay">
+      <div class="hero__copy">
+        <p class="eyebrow">Replay public · mesures de fissures</p>
+        <h1 id="titre-replay">Observer sans confondre</h1>
+        <p class="hero__lede">
+          Un suivi structurel anonymisé, reconstruit à partir d’artefacts publics expurgés.
+          Les observations, leurs protocoles et leurs unités restent séparés lorsque leur
+          continuité scientifique n’est pas démontrée.
+        </p>
+        <ul class="principles" aria-label="Principes du replay">
+          <li>Données réelles publiées</li>
+          <li>Aucune interpolation</li>
+          <li>Limites visibles</li>
+        </ul>
+      </div>
+      <aside class="summary-card" aria-labelledby="resume-title">
+        <h2 id="resume-title">Périmètre vérifiable</h2>
+        <dl id="summary" class="metric-grid"></dl>
+      </aside>
+    </section>
+
+    <section id="geometrie" class="section shell" aria-labelledby="geometrie-title">
+      <header class="section-heading">
+        <p class="eyebrow">01 · Repérage</p>
+        <h2 id="geometrie-title">Une géométrie commune, deux élévations</h2>
+        <p>
+          La figure vectorielle conserve le repère métrique et les statuts de validation
+          documentés. Elle situe le contexte sans produire de diagnostic structurel.
+        </p>
+      </header>
+
+      <figure class="geometry-card">
+        <div class="geometry-overview">
+          <img
+            src="../assets/img/demo-fissures-geometry.svg"
+            width="6288"
+            height="2342"
+            alt="Deux élévations vectorielles anonymisées du système de surveillance structurelle."
+          >
+        </div>
+        <figcaption>
+          <p>
+            Vue d’ensemble de la géométrie acceptée, expurgée des éléments hors périmètre
+            de ce replay.
+          </p>
+          <dl id="geometry-meta" class="compact-meta"></dl>
+          <ul id="geometry-limits" class="limit-list"></ul>
+        </figcaption>
+      </figure>
+
+      <details class="geometry-detail">
+        <summary>Examiner la géométrie en détail</summary>
+        <p class="detail-help">
+          La zone suivante se parcourt horizontalement au clavier ou au toucher.
+        </p>
+        <div class="geometry-viewport" tabindex="0" aria-label="Géométrie agrandie et défilable">
+          <img
+            src="../assets/img/demo-fissures-geometry.svg"
+            width="6288"
+            height="2342"
+            alt="Version agrandie des deux élévations vectorielles anonymisées."
+          >
+        </div>
+      </details>
+    </section>
+
+    <section id="mesures" class="section section--tinted" aria-labelledby="mesures-title">
+      <div class="shell">
+        <header class="section-heading">
+          <p class="eyebrow">02 · Observations</p>
+          <h2 id="mesures-title">Trois séries, trois contextes conservés</h2>
+          <p>
+            Chaque point correspond à une valeur source. Les observations ne sont ni reliées,
+            ni lissées, ni converties pour suggérer une continuité qui n’est pas établie.
+          </p>
+        </header>
+
+        <div id="series-tabs" class="series-tabs" role="tablist" aria-label="Choisir une série"></div>
+        <div id="series-panels"></div>
+
+        <noscript>
+          <p class="notice">JavaScript local est requis pour parcourir les séries publiques.</p>
+        </noscript>
+      </div>
+    </section>
+
+    <section id="preuves" class="section shell" aria-labelledby="preuves-title">
+      <header class="section-heading">
+        <p class="eyebrow">03 · Traçabilité</p>
+        <h2 id="preuves-title">Des transformations vérifiables</h2>
+        <p>
+          Le replay relie ses données minimales au manifeste public et rend explicites les
+          contrôles qui empêchent les rapprochements non validés.
+        </p>
+      </header>
+
+      <div class="evidence-grid">
+        <article class="evidence-card">
+          <h3>Provenance publique</h3>
+          <dl id="source-meta" class="provenance-list"></dl>
+        </article>
+        <article class="evidence-card">
+          <h3>Contrôles de qualité</h3>
+          <dl id="quality-meta" class="provenance-list"></dl>
+        </article>
+      </div>
+
+      <article class="pipeline-card" aria-labelledby="pipeline-title">
+        <h3 id="pipeline-title">Chaîne déterministe</h3>
+        <ol id="pipeline" class="pipeline"></ol>
+      </article>
+    </section>
+
+    <section id="limites" class="section section--dark" aria-labelledby="limites-title">
+      <div class="shell limits-layout">
+        <header class="section-heading">
+          <p class="eyebrow">04 · Portée scientifique</p>
+          <h2 id="limites-title">Ce que ce replay ne conclut pas</h2>
+          <p>
+            Une tendance observée n’est pas une causalité. Ce support ne conclut ni sur la
+            stabilité, ni sur la sécurité, ni sur l’état structurel du bâtiment.
+          </p>
+        </header>
+        <div class="limits-card">
+          <ul id="limits" class="limit-list limit-list--light"></ul>
+          <p class="weather-limit">
+            La météo est acquise mais non jointe aux fissures. L’offset source
+            <code>+0800</code> n’est validé que pour la fenêtre expérimentale du 25 au
+            26 août 2026 ; l’historique reste <code>TO_CONFIRM</code>.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <a class="wordmark wordmark--footer" href="../demonstrations.html">
+        <img src="../assets/img/logo-datapredict.png" width="966" height="159" alt="datapredict">
+      </a>
+      <span>Replay public déterministe · hors ligne</span>
+    </div>
+  </footer>
+  <script src="../assets/js/audience-counter.js" defer></script>
+</body>
+</html>

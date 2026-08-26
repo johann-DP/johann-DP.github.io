@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:lang="fr"
+  id="structural-monitoring-layout" viewBox="0 0 6288 2342"
+  width="6288" height="2342" role="img"
+  aria-labelledby="diagram-title diagram-description" preserveAspectRatio="xMidYMid meet"
+  data-view-count="2" data-two-views-only="YES" data-vector-regenerated="YES"
+  data-px-per-m="180" data-isotropic-scale="YES"
+  data-outer-margin="120"
+  data-content-left="120" data-content-right="6167.81"
+  data-shared-z-zero="YES" data-road-drawn="NO" data-buried-return-drawn="NO"
+  data-visible-dimensions="NO" data-road-wall-trapezoidal="YES"
+  data-road-wall-left-face-inclined="YES" data-road-wall-right-face-inclined="YES"
+  data-crack-fine-model-restored="YES"
+  data-sketch-transform="ROTATE_90_CCW_THEN_MAP_OPPOSITE_VIEWPOINT">
+  <title id="diagram-title">Élévations vectorielles du bâtiment et du mur routier</title>
+  <desc id="diagram-description">Deux élévations régénérées à la même échelle isotrope. La façade
+  historique est à gauche. La coupe latérale corrigée est à droite, avec le mur routier
+  trapézoïdal. Seul le niveau local de la route est repéré.</desc>
+  <defs>
+    <style>
+      .view-title { fill:#000000; font:500 46px "DejaVu Sans", sans-serif; }
+      .label { fill:#000000; font:38px "DejaVu Sans", sans-serif; }
+      .label-strong { fill:#000000; font:700 38px "DejaVu Sans", sans-serif; }
+      .small-label { fill:#000000; font:33px "DejaVu Sans", sans-serif; }
+      .label-blue { fill:#0000ff; font:33px "DejaVu Sans", sans-serif; }
+      .terrain-label { fill:#000000; font:38px "DejaVu Sans", sans-serif; }
+      .terrain-label-light { fill:#ffffff; font:38px "DejaVu Sans", sans-serif; }
+      .footer-prefix { font:400 38px "DejaVu Sans", sans-serif; }
+      .footer-detail { font:400 30px "DejaVu Sans", sans-serif; }
+      .building { fill:#d3d3d3; stroke:#000000; stroke-width:4; }
+      .concrete { fill:#808080; stroke:#000000; stroke-width:4; }
+      .dark-concrete { fill:#a9a9a9; stroke:#000000; stroke-width:4; }
+      .retaining-wall { fill:#808080; stroke:#000000; stroke-width:4; }
+      .road-wall { fill:#808080; stroke:#000000; stroke-width:5; }
+      .insulation { fill:#d3d3d3; stroke:#000000; stroke-width:4; }
+      .roof-gravel { fill:#808080; stroke:#000000; stroke-width:4; }
+      .ipn { fill:#0000ff; stroke:#000000; stroke-width:4; }
+      .hill { fill:#008000; stroke:#000000; stroke-width:4; }
+      .fill { fill:#ffff00; stroke:#000000; stroke-width:4; }
+      .crack { fill:none; stroke:#ff0000;
+        stroke-linecap:round; stroke-linejoin:round; }
+      .sensor { fill:#000000; stroke:#ffffff; stroke-width:3; }
+      .road-level-mark { fill:none; stroke:#000000; stroke-width:4; }
+      .annotation-leader { fill:none; stroke:#000000; stroke-width:4;
+        marker-end:url(#annotation-arrow); }
+    </style>
+    <marker id="annotation-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6"
+      orient="auto" markerUnits="strokeWidth">
+      <path d="M1 1 L10 6 L1 11 Z" fill="#000000"/>
+    </marker>
+  </defs>
+  <rect id="figure-background" x="0" y="0" width="6288" height="2342"
+    fill="#ffffff"/>
+  <g id="front-view" data-view-id="front_view" data-metric-scale="PX_PER_M">
+    <text id="front-view-title" class="view-title" x="1650" y="74" text-anchor="middle">Vue de face du bâtiment</text>
+<rect id="front-fill" class="fill" x="120" y="1205.4" width="3060" height="882" data-metric-x-min="-1.00" data-metric-x-max="16.00" data-metric-z-min="0.00" data-metric-z-max="4.90"/>
+<rect id="front-hill-left" class="hill" x="120" y="816.6" width="180" height="388.8" data-metric-x-min="-1.00" data-metric-x-max="0.00" data-metric-z-min="4.90" data-metric-z-max="7.06"/>
+<rect id="front-hill-right" class="hill" x="3000" y="816.6" width="180" height="388.8" data-metric-x-min="15.00" data-metric-x-max="16.00" data-metric-z-min="4.90" data-metric-z-max="7.06"/>
+<rect id="front-building-retaining-wall" class="retaining-wall" x="300" y="870.6" width="2700" height="334.8" data-metric-x-min="0.00" data-metric-x-max="15.00" data-metric-z-min="4.90" data-metric-z-max="6.76"/>
+<rect id="front-building-envelope" class="building" x="300" y="330.6" width="2700" height="486" data-metric-x-min="0.00" data-metric-x-max="15.00" data-metric-z-min="7.06" data-metric-z-max="9.76"/>
+<rect id="front-floor-slab" class="dark-concrete" x="300" y="789.6" width="2700" height="27" data-metric-x-min="0.00" data-metric-x-max="15.00" data-metric-z-min="7.06" data-metric-z-max="7.21"/>
+<rect id="front-roof-slab" class="dark-concrete" x="300" y="303.6" width="2700" height="27" data-metric-x-min="0.00" data-metric-x-max="15.00" data-metric-z-min="9.76" data-metric-z-max="9.91"/>
+<rect id="front-roof-insulation" class="insulation" x="300" y="282" width="2700" height="21.6" data-metric-x-min="0.00" data-metric-x-max="15.00" data-metric-z-min="9.91" data-metric-z-max="10.03"/>
+<rect id="front-roof-gravel" class="roof-gravel" x="300" y="264" width="2700" height="18" data-metric-x-min="0.00" data-metric-x-max="15.00" data-metric-z-min="10.03" data-metric-z-max="10.13"/>
+<rect id="front-parapet" class="dark-concrete" x="174" y="210" width="2952" height="90" data-metric-x-min="-0.70" data-metric-x-max="15.70" data-metric-z-min="9.93" data-metric-z-max="10.43"/>
+<rect id="front-beam-support-1" class="concrete" x="327" y="816.6" width="54" height="54" data-metric-x-min="0.15" data-metric-x-max="0.45" data-metric-z-min="6.76" data-metric-z-max="7.06"/>
+<rect id="front-beam-support-2" class="concrete" x="975" y="816.6" width="54" height="54" data-metric-x-min="3.75" data-metric-x-max="4.05" data-metric-z-min="6.76" data-metric-z-max="7.06"/>
+<rect id="front-beam-support-3" class="concrete" x="1623" y="816.6" width="54" height="54" data-metric-x-min="7.35" data-metric-x-max="7.65" data-metric-z-min="6.76" data-metric-z-max="7.06"/>
+<rect id="front-beam-support-4" class="concrete" x="2271" y="816.6" width="54" height="54" data-metric-x-min="10.95" data-metric-x-max="11.25" data-metric-z-min="6.76" data-metric-z-max="7.06"/>
+<rect id="front-beam-support-5" class="concrete" x="2919" y="816.6" width="54" height="54" data-metric-x-min="14.55" data-metric-x-max="14.85" data-metric-z-min="6.76" data-metric-z-max="7.06"/>
+<rect id="front-ipn-1" class="ipn" x="336" y="870.6" width="36" height="334.8" data-metric-x-min="0.20" data-metric-x-max="0.40" data-metric-z-min="4.90" data-metric-z-max="6.76"/>
+<rect id="front-ipn-2" class="ipn" x="984" y="870.6" width="36" height="334.8" data-metric-x-min="3.80" data-metric-x-max="4.00" data-metric-z-min="4.90" data-metric-z-max="6.76"/>
+<rect id="front-ipn-3" class="ipn" x="1632" y="870.6" width="36" height="334.8" data-metric-x-min="7.40" data-metric-x-max="7.60" data-metric-z-min="4.90" data-metric-z-max="6.76"/>
+<rect id="front-ipn-4" class="ipn" x="2280" y="870.6" width="36" height="334.8" data-metric-x-min="11.00" data-metric-x-max="11.20" data-metric-z-min="4.90" data-metric-z-max="6.76"/>
+<rect id="front-ipn-5" class="ipn" x="2928" y="870.6" width="36" height="334.8" data-metric-x-min="14.60" data-metric-x-max="14.80" data-metric-z-min="4.90" data-metric-z-max="6.76"/>
+<rect id="front-concrete-plinth-1" class="dark-concrete" x="264" y="1205.4" width="180" height="180" data-metric-x-min="-0.20" data-metric-x-max="0.80" data-metric-z-min="3.90" data-metric-z-max="4.90"/>
+<rect id="front-concrete-plinth-2" class="dark-concrete" x="912" y="1205.4" width="180" height="180" data-metric-x-min="3.40" data-metric-x-max="4.40" data-metric-z-min="3.90" data-metric-z-max="4.90"/>
+<rect id="front-concrete-plinth-3" class="dark-concrete" x="1560" y="1205.4" width="180" height="180" data-metric-x-min="7.00" data-metric-x-max="8.00" data-metric-z-min="3.90" data-metric-z-max="4.90"/>
+<rect id="front-concrete-plinth-4" class="dark-concrete" x="2208" y="1205.4" width="180" height="180" data-metric-x-min="10.60" data-metric-x-max="11.60" data-metric-z-min="3.90" data-metric-z-max="4.90"/>
+<rect id="front-concrete-plinth-5" class="dark-concrete" x="2856" y="1205.4" width="180" height="180" data-metric-x-min="14.20" data-metric-x-max="15.20" data-metric-z-min="3.90" data-metric-z-max="4.90"/>
+  </g>
+  <g id="side-view" data-view-id="side_view_completed" data-metric-scale="PX_PER_M"
+    data-completion-transform="ROTATE_90_CCW_THEN_MAP_OPPOSITE_VIEWPOINT">
+    <text id="side-view-title" class="view-title" x="4426" y="74" text-anchor="middle">Vue de côté du bâtiment</text>
+<polygon id="side-hill" class="hill" points="3400,2087.4 3400,816.6 3634,816.6 4147,1205.4 5326,2087.4"/>
+<polygon id="side-fill" class="fill" points="4147,1205.4 5314.45,1205.4 5263,2087.4"/>
+<polygon id="road-retaining-wall" class="road-wall" points="5263,2087.4 5452,2087.4 5389,1007.4 5326,1007.4"/>
+<rect id="side-building-retaining-wall" class="retaining-wall" x="4417" y="870.6" width="63" height="334.8" data-metric-x-min="-0.35" data-metric-x-max="0.00" data-metric-z-min="4.90" data-metric-z-max="6.76"/>
+<rect id="side-concrete-beam" class="concrete" x="3634" y="816.6" width="1368" height="54" data-metric-x-min="-4.70" data-metric-x-max="2.90" data-metric-z-min="6.76" data-metric-z-max="7.06"/>
+<rect id="side-building-envelope" class="building" x="3634" y="330.6" width="1350" height="486" data-metric-x-min="-4.70" data-metric-x-max="2.80" data-metric-z-min="7.06" data-metric-z-max="9.76"/>
+<rect id="side-floor-slab" class="dark-concrete" x="3634" y="789.6" width="1350" height="27" data-metric-x-min="-4.70" data-metric-x-max="2.80" data-metric-z-min="7.06" data-metric-z-max="7.21"/>
+<rect id="side-roof-slab" class="dark-concrete" x="3634" y="303.6" width="1350" height="27" data-metric-x-min="-4.70" data-metric-x-max="2.80" data-metric-z-min="9.76" data-metric-z-max="9.91"/>
+<rect id="side-roof-insulation" class="insulation" x="3634" y="282" width="1350" height="21.6" data-metric-x-min="-4.70" data-metric-x-max="2.80" data-metric-z-min="9.91" data-metric-z-max="10.03"/>
+<rect id="side-roof-gravel" class="roof-gravel" x="3634" y="264" width="1350" height="18" data-metric-x-min="-4.70" data-metric-x-max="2.80" data-metric-z-min="10.03" data-metric-z-max="10.13"/>
+<rect id="side-parapet" class="dark-concrete" x="3508" y="210" width="1602" height="90" data-metric-x-min="-5.40" data-metric-x-max="3.50" data-metric-z-min="9.93" data-metric-z-max="10.43"/>
+<rect id="side-last-visible-ipn" class="ipn" x="4966" y="870.6" width="36" height="334.8" data-metric-x-min="2.70" data-metric-x-max="2.90" data-metric-z-min="4.90" data-metric-z-max="6.76"/>
+<rect id="side-concrete-plinth" class="dark-concrete" x="4894" y="1205.4" width="180" height="180" data-metric-x-min="2.30" data-metric-x-max="3.30" data-metric-z-min="3.90" data-metric-z-max="4.90"/>
+<line id="side-crack-segment-01" class="crack" x1="4381" y1="816.6" x2="4379.085" y2="810.571" stroke-width="0.8"/>
+<line id="side-crack-segment-02" class="crack" x1="4379.085" y1="810.571" x2="4383.123" y2="806.113" stroke-width="0.864"/>
+<line id="side-crack-segment-03" class="crack" x1="4383.123" y1="806.113" x2="4381.135" y2="799.177" stroke-width="0.928"/>
+<line id="side-crack-segment-04" class="crack" x1="4381.135" y1="799.177" x2="4379.93" y2="790.519" stroke-width="0.992"/>
+<line id="side-crack-segment-05" class="crack" x1="4379.93" y1="790.519" x2="4379.47" y2="783.769" stroke-width="1.056"/>
+<line id="side-crack-segment-06" class="crack" x1="4379.47" y1="783.769" x2="4380.462" y2="773.13" stroke-width="1.12"/>
+<line id="side-crack-segment-07" class="crack" x1="4380.462" y1="773.13" x2="4380.132" y2="767.102" stroke-width="1.184"/>
+<line id="side-crack-segment-08" class="crack" x1="4380.132" y1="767.102" x2="4380.454" y2="760.828" stroke-width="1.248"/>
+<line id="side-crack-segment-09" class="crack" x1="4380.454" y1="760.828" x2="4380.1" y2="747.404" stroke-width="1.312"/>
+<line id="side-crack-segment-10" class="crack" x1="4380.1" y1="747.404" x2="4376.017" y2="741.578" stroke-width="1.376"/>
+<line id="side-crack-segment-11" class="crack" x1="4376.017" y1="741.578" x2="4373.4" y2="734.208" stroke-width="1.44"/>
+<line id="side-crack-segment-12" class="crack" x1="4373.4" y1="734.208" x2="4372.862" y2="721.149" stroke-width="1.504"/>
+<line id="side-crack-segment-13" class="crack" x1="4372.862" y1="721.149" x2="4376.652" y2="708.614" stroke-width="1.568"/>
+<line id="side-crack-segment-14" class="crack" x1="4376.652" y1="708.614" x2="4375.672" y2="695.438" stroke-width="1.632"/>
+<line id="side-crack-segment-15" class="crack" x1="4375.672" y1="695.438" x2="4370.396" y2="680.511" stroke-width="1.696"/>
+<line id="side-crack-segment-16" class="crack" x1="4370.396" y1="680.511" x2="4368.107" y2="666.299" stroke-width="1.76"/>
+<line id="side-crack-segment-17" class="crack" x1="4368.107" y1="666.299" x2="4367.509" y2="657.201" stroke-width="1.824"/>
+<line id="side-crack-segment-18" class="crack" x1="4367.509" y1="657.201" x2="4369.622" y2="643.091" stroke-width="1.888"/>
+<line id="side-crack-segment-19" class="crack" x1="4369.622" y1="643.091" x2="4369.346" y2="638.023" stroke-width="1.952"/>
+<line id="side-crack-segment-20" class="crack" x1="4369.346" y1="638.023" x2="4365.453" y2="627.146" stroke-width="2.016"/>
+<line id="side-crack-segment-21" class="crack" x1="4365.453" y1="627.146" x2="4371.044" y2="619.955" stroke-width="2.08"/>
+<line id="side-crack-segment-22" class="crack" x1="4371.044" y1="619.955" x2="4365.986" y2="604.579" stroke-width="2.144"/>
+<line id="side-crack-segment-23" class="crack" x1="4365.986" y1="604.579" x2="4365.442" y2="592.037" stroke-width="2.208"/>
+<line id="side-crack-segment-24" class="crack" x1="4365.442" y1="592.037" x2="4363.613" y2="581.47" stroke-width="2.272"/>
+<line id="side-crack-segment-25" class="crack" x1="4363.613" y1="581.47" x2="4367.843" y2="570" stroke-width="2.336"/>
+<line id="side-crack-segment-26" class="crack" x1="4367.843" y1="570" x2="4361.449" y2="560.282" stroke-width="2.4"/>
+<line id="side-crack-segment-27" class="crack" x1="4361.449" y1="560.282" x2="4364.943" y2="553.323" stroke-width="2.464"/>
+<line id="side-crack-segment-28" class="crack" x1="4364.943" y1="553.323" x2="4362.659" y2="544.989" stroke-width="2.528"/>
+<line id="side-crack-segment-29" class="crack" x1="4362.659" y1="544.989" x2="4364.8" y2="534.244" stroke-width="2.592"/>
+<line id="side-crack-segment-30" class="crack" x1="4364.8" y1="534.244" x2="4359.996" y2="524.115" stroke-width="2.656"/>
+<line id="side-crack-segment-31" class="crack" x1="4359.996" y1="524.115" x2="4359.151" y2="514.291" stroke-width="2.72"/>
+<line id="side-crack-segment-32" class="crack" x1="4359.151" y1="514.291" x2="4359.622" y2="506.507" stroke-width="2.784"/>
+<line id="side-crack-segment-33" class="crack" x1="4359.622" y1="506.507" x2="4360.547" y2="490.511" stroke-width="2.848"/>
+<line id="side-crack-segment-34" class="crack" x1="4360.547" y1="490.511" x2="4355.822" y2="474.788" stroke-width="2.912"/>
+<line id="side-crack-segment-35" class="crack" x1="4355.822" y1="474.788" x2="4356.645" y2="460.306" stroke-width="2.976"/>
+<line id="side-crack-segment-36" class="crack" x1="4356.645" y1="460.306" x2="4353.058" y2="446.66" stroke-width="3.04"/>
+<line id="side-crack-segment-37" class="crack" x1="4353.058" y1="446.66" x2="4357.809" y2="435.033" stroke-width="3.104"/>
+<line id="side-crack-segment-38" class="crack" x1="4357.809" y1="435.033" x2="4354.5" y2="424.093" stroke-width="3.168"/>
+<line id="side-crack-segment-39" class="crack" x1="4354.5" y1="424.093" x2="4353.102" y2="415.513" stroke-width="3.232"/>
+<line id="side-crack-segment-40" class="crack" x1="4353.102" y1="415.513" x2="4353.003" y2="400.6" stroke-width="3.296"/>
+<line id="side-crack-segment-41" class="crack" x1="4353.003" y1="400.6" x2="4348.929" y2="393.931" stroke-width="3.36"/>
+<line id="side-crack-segment-42" class="crack" x1="4348.929" y1="393.931" x2="4350.492" y2="387.361" stroke-width="3.424"/>
+<line id="side-crack-segment-43" class="crack" x1="4350.492" y1="387.361" x2="4350.104" y2="382.931" stroke-width="3.488"/>
+<line id="side-crack-segment-44" class="crack" x1="4350.104" y1="382.931" x2="4350.124" y2="378.321" stroke-width="3.552"/>
+<line id="side-crack-segment-45" class="crack" x1="4350.124" y1="378.321" x2="4350.696" y2="363.675" stroke-width="3.616"/>
+<line id="side-crack-segment-46" class="crack" x1="4350.696" y1="363.675" x2="4346.897" y2="349.987" stroke-width="3.68"/>
+<line id="side-crack-segment-47" class="crack" x1="4346.897" y1="349.987" x2="4350.445" y2="340.214" stroke-width="3.744"/>
+<line id="side-crack-segment-48" class="crack" x1="4350.445" y1="340.214" x2="4350.462" y2="327.132" stroke-width="3.808"/>
+<line id="side-crack-segment-49" class="crack" x1="4350.462" y1="327.132" x2="4347.639" y2="316.742" stroke-width="3.872"/>
+<line id="side-crack-segment-50" class="crack" x1="4347.639" y1="316.742" x2="4345" y2="303.6" stroke-width="3.936"/>
+<line id="road-level-marker" class="road-level-mark" x1="5452" y1="2087.4" x2="5479" y2="2087.4" data-metric-z="0.00"/>
+<text id="road-level-label" class="label" x="5520.4" y="2055">Niveau de la route</text>
+<text id="side-hill-label" class="terrain-label-light" x="3841" y="1520.4" text-anchor="middle">Colline</text>
+<text id="side-fill-label" class="terrain-label" x="4723" y="1412.4" text-anchor="middle">Remblai</text>
+<text id="crawl-space-label" class="small-label" x="4282" y="1052.4" text-anchor="middle">Vide sanitaire</text>
+<text id="building-retaining-wall-label" class="small-label" x="4508.8" y="1057.8">Mur de soutènement</text>
+<text id="side-ipn-label" class="label-blue" x="5038" y="1050.6">IPN</text>
+<text id="side-plinth-label" class="label-blue" x="5095.6" y="1342.2">Socle béton</text>
+<text id="road-wall-label" class="label" x="5497" y="1597.8">Mur de soutènement côté route</text>
+<line id="parapet-leader" class="annotation-leader" x1="5887" y1="209" x2="5101" y2="231.6"/><text id="parapet-label" class="label" x="5911" y="220">Acrotère</text>
+<line id="gravel-leader" class="annotation-leader" x1="5887" y1="257" x2="5011" y2="273"/><text id="gravel-label" class="label" x="5911" y="268">Gravier</text>
+<line id="insulation-leader" class="annotation-leader" x1="5887" y1="305" x2="5011" y2="292.8"/><text id="insulation-label" class="label" x="5911" y="316">Isolation</text>
+<line id="ceiling-slab-leader" class="annotation-leader" x1="5887" y1="353" x2="5011" y2="317.1"/><text id="ceiling-slab-label" class="label" x="5911" y="364">Dalle plafond</text>
+<line id="building-wall-leader" class="annotation-leader" x1="5887" y1="573.6" x2="5011" y2="573.6"/><text id="building-wall-label" class="label" x="5911" y="584.6">Mur bâtiment</text>
+<line id="floor-slab-leader" class="annotation-leader" x1="5887" y1="803.1" x2="5011" y2="803.1"/><text id="floor-slab-label" class="label" x="5911" y="814.1">Dalle de sol</text>
+<line id="concrete-beam-leader" class="annotation-leader" x1="5887" y1="843.6" x2="5011" y2="843.6"/><text id="concrete-beam-label" class="label" x="5911" y="854.6">Poutre béton</text>
+  </g>
+  <text id="historical-footer-construction" x="3144" xml:space="preserve"
+    y="2165.4" text-anchor="middle"><tspan class="footer-prefix"
+    fill="#000000">Acrotère : </tspan><tspan class="footer-detail"
+    fill="#000000">en noir, date de construction du bâtiment (1959)</tspan></text>
+  <text id="historical-footer-ipn" x="3144" xml:space="preserve"
+    y="2221.4" text-anchor="middle"><tspan class="footer-prefix"
+    fill="#0000ff">IPN : </tspan><tspan class="footer-detail"
+    fill="#000000">en bleu, mise en place à la date des travaux (2016)</tspan></text>
+</svg>

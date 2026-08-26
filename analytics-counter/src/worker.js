@@ -5,6 +5,7 @@ const PAGE_LABELS = Object.freeze({
   "/cas-clients.html": "Réalisations",
   "/demonstrations.html": "Démonstrations",
   "/demonstrations/ormevia-batiment.html": "Démo Ormévia",
+  "/demonstrations/fissures.html": "Démo Fissures",
   "/contact.html": "Contact",
 });
 
