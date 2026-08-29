@@ -12,6 +12,44 @@
   overflow: clip;
 }
 
+.fissures-demo__maintenance {
+  display: grid;
+  min-height: min(720px, calc(100vh - 190px));
+  place-items: center;
+  border-bottom: 1px solid var(--color-border);
+  background:
+    radial-gradient(circle at 84% 12%, rgba(17, 179, 191, 0.18), transparent 30%),
+    linear-gradient(145deg, #dce8eb 0%, #edf4f5 58%, #d5e5e8 100%);
+  padding-block: clamp(64px, 10vw, 132px);
+}
+
+.fissures-demo__maintenance-card {
+  max-width: 860px;
+  border: 1px solid rgba(16, 47, 61, 0.13);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.88);
+  padding: clamp(32px, 6vw, 68px);
+  box-shadow: var(--shadow-md);
+}
+
+.fissures-demo__maintenance-card h1 {
+  max-width: 16ch;
+  margin-bottom: 24px;
+  font-size: clamp(2.4rem, 5.4vw, 4.8rem);
+}
+
+.fissures-demo__maintenance-card > p:not(.kicker) {
+  max-width: 720px;
+}
+
+.fissures-demo__maintenance-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
+  margin-top: 34px;
+}
+
 .fissures-demo__breadcrumb {
   border-bottom: 1px solid var(--color-border);
   background: #e5ecef;
