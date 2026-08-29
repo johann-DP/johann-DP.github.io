@@ -478,6 +478,10 @@ jobs:
           )
           PY
 
+      - name: Tester l’attestation de production hors réseau
+        shell: bash
+        run: python3 -m unittest discover -s tests -p 'test_attest_production.py'
+
       - name: Préparer Node.js
         uses: actions/setup-node@v6
         with:
