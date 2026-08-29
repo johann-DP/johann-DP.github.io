@@ -234,7 +234,14 @@ jobs:
           documents = {}
           def ignored_generated_path(path):
               parts = path.relative_to(root).parts
-              return any(part.startswith(".") or part == "node_modules" for part in parts)
+              inactive_demo2_release = parts[:3] == (
+                  "assets",
+                  "validated-releases",
+                  "demo-2",
+              )
+              return inactive_demo2_release or any(
+                  part.startswith(".") or part == "node_modules" for part in parts
+              )
 
           html_paths = sorted(
               path for path in root.rglob("*.html")
@@ -478,9 +485,11 @@ jobs:
           )
           PY
 
-      - name: Tester l’attestation de production hors réseau
+      - name: Tester l’attestation et les imports inactifs hors réseau
         shell: bash
-        run: python3 -m unittest discover -s tests -p 'test_attest_production.py'
+        run: |
+          python3 -m unittest discover -s tests -p 'test_*.py'
+          python3 scripts/import_demo2_validated_release.py --verify-existing
 
       - name: Préparer Node.js
         uses: actions/setup-node@v6
