@@ -14,6 +14,7 @@
     "/cas-clients.html",
     "/demonstrations.html",
     "/demonstrations/ormevia-batiment.html",
+    "/demonstrations/fissures.html",
     "/contact.html",
   ]);
   const SEARCH_DOMAINS = [

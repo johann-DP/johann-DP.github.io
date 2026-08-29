@@ -20,6 +20,7 @@ Les réalisations présentées sur le site sont anonymisées et reformulées afi
 - [Réalisations](cas-clients.html) : sélection de contextes et d’interventions anonymisés ;
 - [Démonstrations](demonstrations.html) : catalogue extensible de simulations interactives ;
 - [Ormévia Bâtiment](demonstrations/ormevia-batiment.html) : replay public d’un traitement IA local sur données entièrement fictives ;
+- [Comprendre l’évolution de fissures](demonstrations/fissures.html) : investigation de mesures physiques réelles, de leur acquisition à leur restitution prudente ;
 - [Contact](contact.html) : qualification d’un besoin et prise de contact.
 
 Le nom de fichier historique `cas-clients.html` est conservé ; son libellé public est « Réalisations ».
@@ -50,17 +51,22 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
 ├── demonstrations.html
 ├── contact.html
 ├── demonstrations/
+│   ├── fissures.html
 │   └── ormevia-batiment.html
 ├── assets/
     ├── css/
     │   ├── site.css
     │   ├── demonstrations.css
+    │   ├── demo-fissures.css
     │   └── demo-ormevia.css
     ├── data/
     │   └── ormevia-scenarios.json
     ├── js/
     │   ├── audience-counter.js
+    │   ├── demo-fissures.js
     │   └── demo-ormevia.js
+    ├── figures/
+    │   └── demo-2/
     └── img/
         ├── case-immobilier-typologie-panel.jpg
         ├── case-sante-pilotage-capacitaire.png
@@ -77,13 +83,15 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
     └── test/
 ```
 
-`CNAME` configure le domaine public, `.nojekyll` assure la publication directe des fichiers statiques et `robots.txt` déclare le sitemap des sept pages canoniques.
+`CNAME` configure le domaine public, `.nojekyll` assure la publication directe des fichiers statiques et `robots.txt` déclare le sitemap des huit pages canoniques.
 
 ## Démonstrations interactives
 
 La page `demonstrations.html` constitue le catalogue public. Chaque démonstration possède sa propre page et ses ressources isolées afin que de nouveaux cas puissent être ajoutés sans modifier les lecteurs existants.
 
 La première démonstration, Ormévia Bâtiment, rejoue deux scénarios enregistrés : une proposition étayée et une abstention lorsque les sources ne permettent pas de répondre. Le navigateur charge uniquement une projection publique contrôlée ; il ne contacte ni les quatre machines d’origine, ni un backend privé, ni un réseau local. Les sources techniques sont classées `TEST`, ont reçu des corrections éditoriales après capture et ne sont pas présentées comme canoniques.
+
+La deuxième démonstration présente une investigation conduite à partir de mesures physiques réelles appartenant à leur auteur. Elle relie instrumentation, acquisitions manuelles et automatiques, météo, contrôles de qualité et visualisations précalculées. Les treize figures validées sont conservées octet pour octet et chargées une par une à la demande ; le navigateur ne contacte ni la station météo, ni le Raspberry Pi, ni les machines de calcul.
 
 ## Mesure d’audience agrégée
 
