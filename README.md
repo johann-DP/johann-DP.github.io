@@ -91,7 +91,7 @@ La page `demonstrations.html` constitue le catalogue public. Chaque démonstrati
 
 La première démonstration, Ormévia Bâtiment, rejoue deux scénarios enregistrés : une proposition étayée et une abstention lorsque les sources ne permettent pas de répondre. Le navigateur charge uniquement une projection publique contrôlée ; il ne contacte ni les quatre machines d’origine, ni un backend privé, ni un réseau local. Les sources techniques sont classées `TEST`, ont reçu des corrections éditoriales après capture et ne sont pas présentées comme canoniques.
 
-La deuxième démonstration présente une investigation conduite à partir de mesures physiques réelles appartenant à leur auteur. Elle relie instrumentation, acquisitions manuelles et automatiques, météo, contrôles de qualité et visualisations précalculées. Les treize figures validées sont conservées octet pour octet et chargées une par une à la demande ; le navigateur ne contacte ni la station météo, ni le Raspberry Pi, ni les machines de calcul.
+La deuxième démonstration présente une investigation conduite à partir de mesures physiques réelles appartenant à leur auteur. Elle relie instrumentation, acquisitions manuelles et automatiques, météo, contrôles de qualité et visualisations précalculées. Les quatorze figures validées sont conservées octet pour octet et chargées une par une à la demande ; le navigateur ne contacte ni la station météo, ni le Raspberry Pi, ni les machines de calcul.
 
 ## Mesure d’audience agrégée
 

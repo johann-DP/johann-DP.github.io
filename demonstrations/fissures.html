@@ -10,7 +10,7 @@
   <meta property="og:locale" content="fr_FR">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Mesures physiques et séries temporelles — démonstration | datapredict">
-  <meta property="og:description" content="Du phénomène physique à une information compréhensible : treize restitutions de mesures réelles, leurs contrôles et leurs limites d’interprétation.">
+  <meta property="og:description" content="Du phénomène physique à une information compréhensible : quatorze restitutions de mesures réelles, leurs contrôles et leurs limites d’interprétation.">
   <meta property="og:url" content="https://www.datapredict.org/demonstrations/fissures.html">
   <meta property="og:image" content="https://www.datapredict.org/assets/img/social-datapredict.png">
   <meta property="og:image:type" content="image/png">
@@ -64,7 +64,7 @@
           <h1 id="fissures-title">Relier un phénomène physique à une donnée exploitable</h1>
           <p class="lead">À partir du suivi de fissures, d’un joint de dilatation, d’un mur de soutènement et de leur environnement météorologique, cette démonstration rend visible toute la chaîne qui va du terrain à une interprétation responsable.</p>
           <div class="fissures-demo__hero-actions">
-            <a class="btn primary" href="#figures">Explorer les treize restitutions</a>
+            <a class="btn primary" href="#figures">Explorer les quatorze restitutions</a>
             <a class="fissures-demo__text-link" href="#chaine">Comprendre la chaîne de mesure <span aria-hidden="true">↓</span></a>
           </div>
           <p class="fissures-demo__source-note"><strong>Cadre de consultation.</strong> Les relevés sont réels et privés ; ils n’appartiennent à aucun client. Les résultats sont précalculés : la visite ne sollicite ni le Raspberry Pi, ni la station météo, ni une machine de calcul.</p>
@@ -189,16 +189,16 @@
         <header class="fissures-demo__figures-heading">
           <div>
             <p class="eyebrow">Mesures et analyses</p>
-            <h2 id="figures-title">Treize restitutions à examiner à votre rythme</h2>
+            <h2 id="figures-title">Quatorze restitutions à examiner à votre rythme</h2>
           </div>
           <div class="fissures-demo__validation-note" role="note">
             <strong>Portée de la validation</strong>
-            <p>Ces treize restitutions HTML ont été validées visuellement pour leur présentation. Cette validation graphique ne signifie pas que chacune constitue, à elle seule, une conclusion scientifique validée.</p>
+            <p>Ces quatorze restitutions HTML ont été validées visuellement pour leur présentation. Cette validation graphique ne signifie pas que chacune constitue, à elle seule, une conclusion scientifique validée.</p>
           </div>
         </header>
 
         <nav class="fissures-demo__family-nav" aria-label="Familles de restitutions">
-          <a href="#famille-structure">Fissures et joint <span>3</span></a>
+          <a href="#famille-structure">Fissures, joint et mur <span>4</span></a>
           <a href="#famille-meteo">Séries météorologiques <span>8</span></a>
           <a href="#famille-qualite">Exploration et qualité <span>2</span></a>
         </nav>
@@ -207,8 +207,8 @@
           <section id="famille-structure" class="fissures-demo__figure-family" aria-labelledby="structure-title">
             <header>
               <p>Famille 01</p>
-              <h3 id="structure-title">Fissures et joint de dilatation</h3>
-              <span>3 restitutions</span>
+              <h3 id="structure-title">Fissures, joint et mur de soutènement</h3>
+              <span>4 restitutions</span>
             </header>
             <ul class="fissures-demo__figure-list">
               <li>
@@ -247,6 +247,19 @@
                   <div class="fissures-demo__figure-actions">
                     <button type="button" data-figure-id="expansion-joint" aria-label="Afficher le joint de dilatation du mur de soutènement dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
                     <a href="../assets/figures/demo-2/joint-dilatation-rendu-site.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : joint de dilatation</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Comparateur automatique · Valeurs brutes</span>
+                    <h4>Signal brut du comparateur automatique</h4>
+                    <p>Chaque point conserve une valeur source dans l’ordre des lignes physiques : « valeur source — unité à confirmer » et « temps source naïf — fuseau à confirmer », sans correction, conversion, interpolation, jointure, causalité ni diagnostic.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="retaining-wall-source-values" aria-label="Afficher le signal brut du comparateur automatique du mur côté route dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/retaining-wall-sensor-source-values.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : signal brut du comparateur automatique du mur côté route</span></a>
                   </div>
                 </article>
               </li>
@@ -418,14 +431,14 @@
           </div>
           <div id="viewer-mount" class="fissures-demo__viewer-mount">
             <div class="fissures-demo__viewer-empty">
-              <span aria-hidden="true">13</span>
+              <span aria-hidden="true">14</span>
               <p>Aucune figure n’est chargée au démarrage afin de préserver la rapidité de la page.</p>
             </div>
           </div>
           <p id="viewer-status" class="sr-only" aria-live="polite" aria-atomic="true"></p>
         </section>
 
-        <p class="fissures-demo__scope-note"><strong>Périmètre actuel des figures.</strong> Cette sélection couvre les mesures de fissures, le joint de dilatation et la météo. Elle ne contient ni vue géométrique du dispositif ni restitution du comparateur automatique du mur ; aucun visuel de substitution n’est inventé. Ces éléments ne seront ajoutés qu’après validation de leurs propres résultats.</p>
+        <p class="fissures-demo__scope-note"><strong>Périmètre actuel des figures.</strong> Cette sélection couvre les mesures manuelles de fissures et du joint, le signal brut du comparateur automatique et la météo. Elle ne contient pas de vue géométrique du dispositif et ne permet ni conversion angulaire, ni causalité, ni diagnostic structurel.</p>
       </div>
     </section>
 

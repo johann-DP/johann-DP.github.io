@@ -17,6 +17,11 @@
       description: "Mesures observées, ajustement périodique et incertitude associée.",
       path: "../assets/figures/demo-2/joint-dilatation-rendu-site.html",
     },
+    "retaining-wall-source-values": {
+      title: "Signal brut du comparateur automatique — mur côté route",
+      description: "Valeurs source brutes ; unité et fuseau des timestamps à confirmer.",
+      path: "../assets/figures/demo-2/retaining-wall-sensor-source-values.html",
+    },
     "weather-temperature": {
       title: "Températures intérieure et extérieure",
       description: "Séries temporelles et moyennes mobiles de température.",
