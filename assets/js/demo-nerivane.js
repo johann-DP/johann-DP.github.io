@@ -64,6 +64,7 @@
   function validateData(data) {
     assertText(data.title, "title");
     assertText(data.subtitle, "subtitle");
+    assertText(data.introduction?.framework, "introduction.framework");
     if (data.formatVersion !== "0.2.0") throw new Error("Version de registre inattendue");
     const corpus = data.corpus;
     assertText(corpus?.title, "corpus.title");
@@ -120,6 +121,7 @@
     data.steps.forEach((step) => {
       const visual = step.visual ?? {};
       [visual.targetClaimId, visual.finalClaimId].filter(Boolean).forEach((id) => references.push(id));
+      if (visual.candidate?.claimId) references.push(visual.candidate.claimId);
       [visual.sources, visual.nodes, visual.events].filter(Array.isArray).flat().forEach((item) => references.push(item.claimId));
       [visual.input, visual.model, visual.controls].filter(Boolean).forEach((item) => references.push(item.claimId));
     });
@@ -174,11 +176,13 @@
         ${visual.sources.map((source) => `
           <article>
             <div class="definition-grid__topline"><span>${escapeHtml(source.name)}</span>${referencedBadge(source.claimId)}</div>
+            <p class="definition-grid__amount">${escapeHtml(source.amount)}</p>
+            <p class="definition-grid__bridge">${escapeHtml(source.bridge)}</p>
             <strong>${escapeHtml(source.definition)}</strong>
             <small>Responsable : ${escapeHtml(source.owner)}</small>
           </article>`).join("")}
       </div>
-      <div class="definition-blocker"><span aria-hidden="true">×</span><strong>Aucune agrégation tant que la définition commune n’est pas arbitrée</strong></div>`;
+      <div class="definition-blocker"><span aria-hidden="true">×</span><strong>${escapeHtml(visual.candidate.label)} : ${escapeHtml(visual.candidate.value)} — publication refusée tant que la définition commune n’est pas arbitrée</strong>${referencedBadge(visual.candidate.claimId)}</div>`;
   }
 
   function renderH1Visual(visual) {
@@ -363,6 +367,10 @@
           </header>
           <h2 id="watch-title">Ce qu’il faut regarder</h2>
           <ul>${intro.watch.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+          <div class="nerivane-intro__rule">
+            <strong>Repère méthodologique DAMA-DMBOK</strong>
+            <p>${escapeHtml(intro.framework)}</p>
+          </div>
           <div class="nerivane-intro__rule">
             <strong>Règle de lecture</strong>
             <p>${escapeHtml(state.data.mode.limitation)}</p>

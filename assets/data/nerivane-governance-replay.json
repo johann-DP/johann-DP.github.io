@@ -25,8 +25,10 @@
     "kicker": "Replay de gouvernance · 7 décisions observables",
     "headline": "Un chiffre n’est fiable que si l’on peut expliquer qui l’a défini, comment il a été calculé et pourquoi il a été publié.",
     "lead": "Le Comité exécutif de Nérivane Distribution demande un KPI unique. Trois systèmes répondent différemment. Le parcours montre comment datapredict transforme cette divergence en décision gouvernée — et comment la preuve technique empêche une conclusion prématurée.",
+    "framework": "Le parcours mobilise, en référence au DAMA-DMBOK, la gouvernance, l’architecture, les métadonnées, la qualité, l’intégration, la sécurité, les opérations et la mesure de valeur. Il ne revendique ni certification ni conformité exhaustive.",
     "watch": [
       "La distinction constante entre cible, exécution, mesure et validation",
+      "Le repère DAMA-DMBOK utilisé comme grille de couverture, sans revendiquer de certification",
       "Le rôle réel des quatre nœuds et des stockages hétérogènes",
       "Les contrôles qui peuvent refuser la publication du KPI",
       "L’avis IA déterminant, sans effacer la responsabilité du Data Owner"
@@ -149,22 +151,33 @@
           {
             "name": "CRM commercial",
             "owner": "Direction commerciale",
+            "amount": "12 842 610,00 EUR",
+            "bridge": "Pont : −556 160,00 EUR",
             "definition": "Commandes engagées, avec traitement propre des annulations tardives",
-            "claimId": "definitions-corpus"
+            "claimId": "source-values"
           },
           {
             "name": "ERP logistique",
             "owner": "Direction des opérations",
+            "amount": "12 497 380,00 EUR",
+            "bridge": "Pont : −210 930,00 EUR",
             "definition": "Factures émises après préparation et expédition",
-            "claimId": "definitions-corpus"
+            "claimId": "source-values"
           },
           {
             "name": "Clôture Finance",
             "owner": "Direction financière",
+            "amount": "12 371 940,00 EUR",
+            "bridge": "Pont : −85 490,00 EUR",
             "definition": "Encaissements nets rapprochés et corrigés des avoirs",
-            "claimId": "definitions-corpus"
+            "claimId": "source-values"
           }
-        ]
+        ],
+        "candidate": {
+          "label": "Valeur gouvernée candidate",
+          "value": "12 286 450,00 EUR",
+          "claimId": "kpi-candidate"
+        }
       },
       "claims": [
         {
@@ -172,7 +185,7 @@
           "label": "Définitions concurrentes documentées",
           "value": "3 chaînes métier à rapprocher",
           "status": "MESURÉ",
-          "scope": "Corpus fictif Nérivane, périmètre S1 2021",
+          "scope": "Corpus financier fictif Nérivane, juillet 2026",
           "proof": {
             "label": "Dossier des définitions et pièces associées",
             "href": "../assets/nerivane-public-v1/steps/01.html",
@@ -181,9 +194,22 @@
           "limitation": "Ces documents prouvent la cohérence du scénario gouverné, pas la certification du KPI ni l’exécution H1."
         },
         {
+          "id": "source-values",
+          "label": "Valeurs sources et ponts documentés",
+          "value": "CRM 12 842 610,00 EUR · ERP 12 497 380,00 EUR · Finance 12 371 940,00 EUR",
+          "status": "MESURÉ",
+          "scope": "Scénario financier entièrement fictif de juillet 2026",
+          "proof": {
+            "label": "Registre public des assertions et pièces de rapprochement",
+            "href": "../assets/nerivane-public-v1/claim-registry.json",
+            "sha256": "ef0ab5c78a135757b47a6dbf25c4c1f9a441911411c1ad2ae372ac8bf14c5012"
+          },
+          "limitation": "Ces montants et leurs trois ponts sont cohérents dans le corpus synthétique ; ils ne constituent pas encore un KPI publiable."
+        },
+        {
           "id": "kpi-candidate",
           "label": "Statut de certification du KPI",
-          "value": "Candidat — publication refusée",
+          "value": "12 286 450,00 EUR — publication refusée",
           "status": "BLOQUÉ",
           "scope": "KPI consolidé présenté au Comité exécutif fictif",
           "proof": {

@@ -100,7 +100,7 @@ class NerivanePublicReplayTests(unittest.TestCase):
     def test_every_claim_has_status_scope_proof_fingerprint_and_limit(self):
         data = load_data()
         claims = all_claims(data)
-        self.assertEqual(len(claims), 19)
+        self.assertEqual(len(claims), 20)
         self.assertEqual(len({claim["id"] for claim in claims}), len(claims))
 
         for claim in claims:
@@ -205,6 +205,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
             references.extend(
                 value for value in (visual.get("targetClaimId"), visual.get("finalClaimId")) if value
             )
+            if visual.get("candidate", {}).get("claimId"):
+                references.append(visual["candidate"]["claimId"])
             for collection in ("sources", "nodes", "events"):
                 references.extend(
                     item["claimId"] for item in visual.get(collection, []) if item.get("claimId")
@@ -217,6 +219,28 @@ class NerivanePublicReplayTests(unittest.TestCase):
         references.extend(gate["claimId"] for gate in data["conclusion"]["gates"])
         self.assertTrue(references)
         self.assertEqual(set(references) - ids, set())
+
+    def test_main_story_surfaces_financial_values_bridges_and_dama_reference(self):
+        data = load_data()
+        first = data["steps"][0]
+        amounts = [source["amount"] for source in first["visual"]["sources"]]
+        self.assertEqual(
+            amounts,
+            ["12 842 610,00 EUR", "12 497 380,00 EUR", "12 371 940,00 EUR"],
+        )
+        self.assertEqual(
+            [source["bridge"] for source in first["visual"]["sources"]],
+            ["Pont : −556 160,00 EUR", "Pont : −210 930,00 EUR", "Pont : −85 490,00 EUR"],
+        )
+        self.assertEqual(first["visual"]["candidate"]["value"], "12 286 450,00 EUR")
+        self.assertEqual(
+            next(claim for claim in first["claims"] if claim["id"] == "definitions-corpus")["scope"],
+            "Corpus financier fictif Nérivane, juillet 2026",
+        )
+        source_claim = next(claim for claim in first["claims"] if claim["id"] == "source-values")
+        self.assertIn("trois ponts", source_claim["limitation"])
+        self.assertTrue(any("DAMA-DMBOK" in item for item in data["introduction"]["watch"]))
+        self.assertIn("ne revendique ni certification", data["introduction"]["framework"])
 
     def test_projection_is_never_presented_as_realized(self):
         data = load_data()

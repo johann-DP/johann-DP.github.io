@@ -1153,6 +1153,21 @@
   line-height: 1.48;
 }
 
+.definition-grid__amount {
+  margin: 0.75rem 0 0;
+  color: #153e4b;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.definition-grid__bridge {
+  margin: 0.2rem 0 0;
+  color: #4c6a74;
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
 .definition-grid article > small {
   display: block;
   margin-top: 0.8rem;
@@ -1177,7 +1192,11 @@
   text-align: center;
 }
 
-.definition-blocker span {
+.definition-blocker .proof-status {
+  flex: 0 0 auto;
+}
+
+.definition-blocker > span[aria-hidden="true"] {
   display: grid;
   width: 26px;
   height: 26px;
