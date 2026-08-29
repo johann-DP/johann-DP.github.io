@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Définition historique du chiffre d&#x27;affaires net — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-006</nav>
+<p class="eyebrow">Document synthétique · DOC-006</p>
+<h1>Définition historique du chiffre d&#x27;affaires net</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>0.9</dd></div>
+  <div><dt>Statut documentaire</dt><dd>SUPERSEDED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Nadia Gervais</dd></div>
+  <div><dt>Rôle</dt><dd>Directeur commercial</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>635dc63ef569ccdb3da69ff5ba5d3cb12195fb39a526d716f7546848f52182ef</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Données, organisation et signatures entièrement fictives.</strong> <strong>Version historique remplacée : ne pas utiliser comme définition courante.</strong> Son contenu ambigu est conservé pour démontrer le diagnostic documentaire du snapshot candidat.</blockquote>
+<h3 id="FINALITE-HISTORIQUE">Finalité historique</h3>
+<p>Cette version 0.9 avait été rédigée par la direction commerciale pour rapprocher rapidement le carnet de commandes CRM d'un indicateur mensuel intitulé « chiffre d'affaires net ». Elle privilégiait la disponibilité de la donnée commerciale au détriment d'un cut-off opérationnel et comptable partagé.</p>
+<h3 id="DEFINITION-09">Définition 0.9</h3>
+<p>Le montant historique correspond à la somme, en centimes entiers, des lignes de commande capturées dans le CRM pendant le mois, diminuée des remises déjà matérialisées dans ces mêmes lignes.</p>
+<p>Une ligne était réputée appartenir au mois dès sa capture, même lorsque l'exécution logistique, la facturation définitive ou le traitement d'un retour intervenait ultérieurement. Les frais, taxes et remises non encore répercutés dans le CRM ne faisaient pas l'objet d'une règle uniforme.</p>
+<h3 id="PERIMETRE-HISTORIQUE">Périmètre historique</h3>
+<div class="table-wrap"><table><thead><tr><th>Élément</th><th>Traitement dans la version 0.9</th></tr></thead><tbody>
+<tr><td>Commande capturée</td><td>Incluse à la date de création CRM</td></tr>
+<tr><td>Commande annulée après capture</td><td>Conservée jusqu'à mise à jour du statut</td></tr>
+<tr><td>Retour non encore rapproché</td><td>Conservé dans le montant du mois</td></tr>
+<tr><td>Remise présente sur la ligne</td><td>Déduite</td></tr>
+<tr><td>Remise portée par une règle externe</td><td>Traitement non défini</td></tr>
+<tr><td>Livraison après fin de mois</td><td>Sans effet sur l'inclusion initiale</td></tr>
+<tr><td>Écriture comptable</td><td>Utilisée seulement comme contrôle a posteriori</td></tr>
+</tbody></table></div>
+<h3 id="REGLE-CALCUL-HISTORIQUE">Règle de calcul historique</h3>
+<p>La formule documentaire était : somme des montants CRM capturés, exprimés en centimes, moins les remises explicitement portées par ces lignes. Elle ne définissait ni ordre de priorité entre CRM, ERP et Finance, ni traitement déterministe des annulations et retours en attente.</p>
+<h3 id="CONFLIT-C-001">Conflit volontaire C-001</h3>
+<p>Cette définition retient la commande capturée alors que <code>DOC-008</code> exige une réalisation nette gouvernée. Le cas <code>BR-CRM-01</code>, relatif aux commandes annulées avant exécution, matérialise cette divergence.</p>
+<p>Le contenu de cette section n'est donc pas une règle actuelle. Il doit être cité comme preuve d'une définition obsolète et conduire le gate à rejeter toute tentative de l'utiliser pour juillet 2026.</p>
+<h3 id="RISQUE-VERSION-C-003">Risque de version C-003</h3>
+<p>Un index hérité peut encore présenter <code>DOC-006</code> comme définition courante. La présence du statut <code>SUPERSEDED</code> et la chaîne <code>DOC-006</code>, <code>DOC-007</code>, <code>DOC-008</code> doivent être contrôlées ensemble. Une simple correspondance sur le titre « chiffre d'affaires net » n'est pas suffisante.</p>
+<h3 id="LIMITES-CONNUES">Limites connues</h3>
+<ul><li>absence de cut-off livré ;</li><li>absence de priorité de source par composante ;</li><li>traitement tardif des annulations et retours ;</li><li>composants de prix non normalisés ;</li><li>responsabilité de certification non identifiée ;</li><li>preuve d'exécution non exigée dans le document historique.</li></ul>
+<h3 id="REGLE-USAGE">Règle d'usage</h3>
+<p>Cette version peut être consultée pour comprendre l'écart CRM et entraîner le contrôle sémantique. Elle ne peut être citée pour approuver, calculer, certifier ou publier <code>KPI-CA-NET-001</code>.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

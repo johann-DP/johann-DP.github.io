@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Étape 5 — Produire le KPI et son lignage — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / Étape 5</nav>
+<p class="eyebrow">Étape 5 sur 7</p>
+<h1>Produire le KPI et son lignage</h1>
+<p><span class="status limited">DEMONSTRATED_SAMPLE_ONLY</span></p>
+<section class="four-part" aria-label="Problème, action, preuve et décision">
+  <article><h2>Problème</h2><p>Une définition approuvée reste théorique si les sources ne convergent pas par des règles reproductibles.</p></article>
+  <article><h2>Action</h2><p>Appliquer les ponts CRM, ERP et Finance, puis exécuter les contrôles déterministes et relier chaque résultat à sa preuve.</p></article>
+  <article><h2>Preuve</h2><p>L&#x27;échantillon BigQuery V1 et le pilote on-premise sont PASS dans leur portée exacte ; le corpus H1 massif n&#x27;est pas encore attesté.</p></article>
+  <article><h2>Décision</h2><p>Montrer la valeur candidate et son lignage, sans la présenter comme KPI publiable ni comme preuve H1.</p></article>
+</section>
+<h2>Conclusions à portée fermée</h2><div class="claim-grid"><article class="claim"><span class="status limited">PASS_SAMPLE_ONLY</span><h3>Valeur gouvernée candidate</h3><p class="claim-value">12 286 450,00 EUR</p><p><strong>Portée :</strong> Rapprochement déterministe du corpus V1</p><p class="limitation"><strong>Limite :</strong> Le KPI reste non publiable tant que le veto et les arbitrages ne sont pas levés.</p></article><article class="claim"><span class="status limited">PASS_SAMPLE_ONLY</span><h3>Échantillon BigQuery contrôlé</h3><p class="claim-value">17 tables, 531 240 lignes physiques et 36 contrôles</p><p><strong>Portée :</strong> BigQuery Sandbox sans compte de facturation</p><p class="limitation"><strong>Limite :</strong> Cet échantillon ne prouve pas le corpus H1 massif.</p></article><article class="claim"><span class="status limited">PASS_SAMPLE_ONLY</span><h3>Pilote on-premise trois couches</h3><p class="claim-value">75 000 000 lignes physiques et 74 013 405 120 octets Parquet</p><p><strong>Portée :</strong> Pilote mesuré RAW, BRONZE et SILVER</p><p class="limitation"><strong>Limite :</strong> Le pilote n&#x27;atteste ni le corpus H1 complet ni un volume supérieur à 1,5 Tio.</p></article></div>
+<h2>Documents à consulter</h2><ul class="resource-list"><li><a href="../documents/DOC-018.html">DOC-018 — Spécification du lignage de bout en bout</a><small><code>documents/DOC-018.html</code></small></li><li><a href="../documents/DOC-020.html">DOC-020 — Pont de rapprochement CRM ERP Finance</a><small><code>documents/DOC-020.html</code></small></li><li><a href="../documents/DOC-028.html">DOC-028 — Index public des preuves</a><small><code>documents/DOC-028.html</code></small></li></ul>
+<h2>Preuves techniques directes</h2><ul class="resource-list"><li><a href="../evidence/gcp/sample-apply/20260826T070016Z/manifest.json">Chargement et 36 contrôles BigQuery — entrée empreintée</a><small><code>evidence/gcp/sample-apply/20260826T070016Z/manifest.json</code></small></li><li><a href="../evidence/onprem-lake-pilot-dcff45d/execution-proof.json">Pilote trois couches de 75 millions de lignes physiques — entrée empreintée</a><small><code>evidence/onprem-lake-pilot-dcff45d/execution-proof.json</code></small></li></ul>
+<nav class="step-nav" aria-label="Navigation entre les étapes"><a href="04.html">← Étape 4</a><a class="button" href="06.html">Étape 6 →</a></nav>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

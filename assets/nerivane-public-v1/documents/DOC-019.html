@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Rapport qualité initial — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-019</nav>
+<p class="eyebrow">Document synthétique · DOC-019</p>
+<h1>Rapport qualité initial</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Salomé Vial</dd></div>
+  <div><dt>Rôle</dt><dd>Data Quality Lead</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>73cd63f9edbdfa03a764a8fdaf3ed82b2fe4bbe55652a16117479aaf4195fc34</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Document de démonstration — données, organisation et signatures entièrement fictives.</strong></blockquote>
+<h3 id="DOC-019-OBJET">Objet du rapport</h3>
+<p>Ce rapport restitue l'appréciation qualité initiale communiquée au programme avant la consolidation complète du dossier de preuves. Il est conservé dans sa forme pré-arbitrage afin de montrer pourquoi un rapport approuvé ne suffit pas, à lui seul, à certifier un KPI.</p>
+<p>Le périmètre déclaré comprend les trois sources financières de juillet 2026, soit 421 763 lignes candidates : 164 487 CRM, 139 182 ERP et 118 094 FINANCE. L'analyse initiale distingue les lignes susceptibles d'alimenter le canonique des lignes nécessitant un pont métier.</p>
+<h3 id="DOC-019-METHODE">Méthode initiale</h3>
+<p>L'équipe qualité a comparé les volumes des trois sources, les dates de juillet, les huit agences, les trois canaux, les références disponibles et les montants en centimes. Les divergences connues ont été réparties entre commandes annulées, retours, composantes hors définition, doublons, factures provisoires, cut-off, périmètres exclus, écritures intercompagnies, provisions, journaux manuels et références orphelines.</p>
+<p>Cette méthode était pertinente pour cadrer le diagnostic, mais le rapport initial n'a pas joint de résultats de contrôles identifiés, d'empreintes, de requêtes exécutées ni de manifeste opposable. Les signatures fictives attestent une revue documentaire ; elles n'attestent pas une exécution technique.</p>
+<h3 id="DOC-019-OBSERVATIONS">Observations initiales</h3>
+<p>Le rapprochement préparatoire a isolé 8 452 lignes d'exception. Les montants candidats ont été rapprochés vers 1 228 645 000 centimes. Les équipes ont observé une couverture des 31 jours, des huit agences et des trois canaux attendus. Les référentiels de personnes, rôles, affectations, sites et documents étaient disponibles pour l'instruction.</p>
+<p>Plusieurs sujets restaient néanmoins ouverts : priorité entre ERP et Finance pour les crédits et le cut-off, correspondance source multiple, référence maître absente, version de définition opposable et responsabilité de certification. Ces sujets relevaient d'un arbitrage et non d'une simple correction de données.</p>
+<h3 id="DOC-019-CONCLUSION-HISTORIQUE">Conclusion historique approuvée</h3>
+<p>La conclusion diffusée le 22 juillet 2026 était : <strong>zéro anomalie résiduelle susceptible d'empêcher la présentation du KPI après isolement des lignes de pont</strong>.</p>
+<p>Cette phrase est reproduite sans ajout rétroactif de preuve. Elle reflète l'état initial du pilotage : une conclusion rassurante avait été approuvée alors que le rapport ne permettait pas à un tiers de retrouver un résultat exécutable, une valeur observée ou une empreinte associée.</p>
+<h3 id="DOC-019-C011">Conflit d'assertion non soutenue</h3>
+<p><strong>Matière à arbitrer C-011.</strong> L'affirmation de zéro anomalie n'est soutenue, dans ce document, par aucun résultat de contrôle cité. La liste des sujets ouverts montre en outre que l'absence d'anomalie technique ne pouvait pas être assimilée à l'absence de conflit sémantique.</p>
+<p>Le présent snapshot conserve volontairement ce défaut. Ajouter aujourd'hui des références à une exécution ultérieure ferait disparaître artificiellement le cas pré-arbitrage et donnerait l'impression que la preuve existait au moment de l'approbation. La conclusion initiale doit donc être traitée comme une assertion non soutenue et produire un veto tant que le dossier probant n'est pas consulté séparément.</p>
+<h3 id="DOC-019-LECTURE-ULTERIEURE">Lecture à la lumière des preuves ultérieures</h3>
+<p>Une campagne BigQuery ultérieure a effectivement validé 531 240 lignes physiques, 17 tables et 36 contrôles. Elle a confirmé les montants, les ponts, les références et l'état BLOCKED du gate de publication. Cette campagne constitue une preuve distincte ; elle ne corrige pas rétroactivement le rapport initial et ne transforme pas sa conclusion historique en preuve.</p>
+<p>De même, la calibration de 1 000 000 lignes par couche — 3 000 000 au total — et le pilote on-premise de 25 000 000 lignes par couche — 75 000 000 au total — sont désormais validés sur RAW, BRONZE et SILVER. Ils prouvent leurs propres fichiers et, pour le pilote, l'équivalence de 421 763 ancres. Ils ne justifient pas l'affirmation initiale de zéro anomalie et ne certifient pas le KPI.</p>
+<h3 id="DOC-019-DECISION">Décision attendue</h3>
+<p>Le Data Owner doit décider si la conclusion initiale est retirée, reformulée ou remplacée par un rapport versionné citant les preuves exécutées. La décision doit aussi distinguer conformité déterministe du corpus, résolution des conflits sémantiques et autorisation de publication.</p>
+<p>Tant que cette décision n'est pas tracée et traduite dans les règles de publication, le rapport initial reste consultable comme pièce historique, mais il n'est pas recevable comme preuve de certification.</p>
+<h3 id="DOC-019-LIMITES">Limites</h3>
+<p>Le plein volume de 7 404 704 501 lignes reste proposé et n'était pas exécuté à la date du rapport. Aucune chronologie entre les preuves BigQuery et on-premise n'est revendiquée. Le rapport ne contient aucune donnée personnelle réelle et ne doit pas être présenté comme un audit client.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

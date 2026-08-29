@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Backlog priorisé et critères d&#x27;acceptation — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-023</nav>
+<p class="eyebrow">Document synthétique · DOC-023</p>
+<h1>Backlog priorisé et critères d&#x27;acceptation</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Léa Morvan</dd></div>
+  <div><dt>Rôle</dt><dd>Product Owner Data</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>5655c877d0387861757438b90bd7d7e4c0bdf1d8e36696e9a2ffa53871bdaa38</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Démonstration — document entièrement fictif.</strong> Le backlog, ses rôles, ses priorités et ses engagements sont une simulation Nérivane Distribution. Il ne décrit aucun contrat ni engagement de livraison réel.</blockquote>
+<h2>Backlog priorisé et critères d'acceptation</h2>
+<h3 id="DOC-023-VISION">Vision produit</h3>
+<p>Le data product doit permettre à un prospect de comprendre comment trois chiffres sources incompatibles deviennent un KPI gouverné, puis pourquoi un KPI techniquement rapproché peut néanmoins rester non publiable. La valeur recherchée n’est pas une conversation libre avec un modèle : c’est un veto sémantique traçable, relié à des preuves et à un arbitrage humain.</p>
+<h3 id="DOC-023-PRIORITE">Règles de priorité</h3>
+<p>La priorité <code>P0</code> protège l’intégrité de la démonstration et interdit une fausse preuve. La priorité <code>P1</code> rend le parcours démontrable et exploitable. La priorité <code>P2</code> améliore la lisibilité sans modifier le gate. Aucun élément cosmétique ne peut précéder la fermeture d’un P0.</p>
+<p>Les états candidats ci-dessous sont figés dans le scénario fictif au 31 juillet 2026. Ils sont conservés comme état de planification historique et ne doivent pas être lus comme le statut technique du replay observé le 26 août 2026.</p>
+<div class="table-wrap"><table><thead><tr><th>Rang</th><th>Élément</th><th>Valeur attendue</th><th>Dépendance</th><th>État candidat</th></tr></thead><tbody>
+<tr><td>P0-01</td><td>Corpus public complet</td><td>Les 28 documents possèdent un contenu, une version, un propriétaire et des ancres.</td><td>Catalogue</td><td>EN COURS</td></tr>
+<tr><td>P0-02</td><td>Jeu d’or aveugle</td><td>Les 24 entrées ne révèlent ni classe, ni sévérité, ni réponse attendue.</td><td>P0-01</td><td>À FAIRE</td></tr>
+<tr><td>P0-03</td><td>Vérificateur de citations</td><td>Toute citation résout un contenu et une empreinte ; sinon le gate bloque.</td><td>P0-01</td><td>À FAIRE</td></tr>
+<tr><td>P0-04</td><td>Runner IA local fermé</td><td>Modèle, poids, runtime, prompt et paramètres sont épinglés.</td><td>P0-02</td><td>À FAIRE</td></tr>
+<tr><td>P0-05</td><td>État de publication fail-closed</td><td>Erreur, timeout, JSON invalide ou citation absente donnent <code>BLOCKED</code>.</td><td>P0-03,P0-04</td><td>À FAIRE</td></tr>
+<tr><td>P0-06</td><td>Arbitrage humain</td><td>Chaque finding majeur ou critique reçoit une décision explicite et une règle de suivi.</td><td>P0-05</td><td>À FAIRE</td></tr>
+<tr><td>P1-01</td><td>Replay statique public</td><td>Entrées assainies, sortie capturée, vérifications et décision sont navigables sans service live.</td><td>P0-06</td><td>À FAIRE</td></tr>
+<tr><td>P1-02</td><td>Runbook et transition</td><td>Les responsabilités, alertes, reprises et conditions de RUN sont documentées.</td><td>P0-05</td><td>EN COURS</td></tr>
+<tr><td>P2-01</td><td>Mise en scène commerciale</td><td>Le parcours en sept étapes expose problème, preuves, veto et arbitrage.</td><td>P1-01</td><td>À FAIRE</td></tr>
+</tbody></table></div>
+<h3 id="DOC-023-ACCEPTATION-CORPUS">Critères d'acceptation du corpus</h3>
+<p>Le corpus est accepté lorsque chaque <code>document_id</code> du catalogue correspond exactement à un fichier public candidat, que les métadonnées de titre, version, date d’effet et propriétaire convergent et que chaque section citée dispose d’une ancre stable. Les documents doivent être entièrement fictifs, exempts de coordonnées, de secrets et de chemins locaux.</p>
+<p>Une chaîne de remplacement documentaire doit rester visible : <code>DOC-006</code>, puis <code>DOC-007</code>, puis <code>DOC-008</code>. Le corpus doit conserver les versions obsolètes comme preuves historiques sans les présenter comme règles courantes.</p>
+<h3 id="DOC-023-ACCEPTATION-IA">Critères d'acceptation du gate IA</h3>
+<p>Le gate candidat est accepté seulement si :</p>
+<ul><li>les 24 cas du jeu d’or sont correctement classés, dont 7 <code>BLOCK</code>, 5 <code>REVIEW</code> et 12 <code>ADMISSIBLE</code> ;</li><li>les 7 cas critiques sont détectés ;</li><li>aucun témoin sain ne reçoit un faux <code>BLOCK</code> ;</li><li>100 % des sorties respectent le schéma JSON fermé ;</li><li>100 % des citations critiques se résolvent vers les preuves attendues ;</li><li>aucune assertion critique non soutenue n’est acceptée ;</li><li>cinq replays produisent les mêmes verdicts, findings structurés et citations canoniques ;</li><li>le run plein corpus produit un veto <code>BLOCK</code> tant que les conflits injectés subsistent.</li></ul>
+<p>Un modèle qui échoue à un seul de ces critères n’est pas présenté comme composant déterminant de la démonstration.</p>
+<h3 id="DOC-023-ACCEPTATION-ARBITRAGE">Critères d'acceptation de l'arbitrage</h3>
+<p>Chaque finding <code>BLOCK</code> ou <code>REVIEW</code> doit être associé à une décision humaine distincte, à l’affectation du rôle compétent, aux preuves consultées, à une justification et à la règle déterministe modifiée. L’arbitrage est explicitement fictif dans le replay ; il ne doit pas être confondu avec une signature réelle.</p>
+<p>L’IA peut empêcher la publication. Elle ne peut ni recalculer la valeur du KPI, ni lever son propre veto, ni signer le procès-verbal. La levée dépend du Data Owner, du rejeu des contrôles et de l’acceptation RUN.</p>
+<h3 id="DOC-023-DEFINITION-TERMINE">Définition de terminé</h3>
+<p>Un élément n’est <code>TERMINÉ</code> que si son artefact existe, si un test causal couvre son échec principal, si les empreintes nécessaires sont publiées et si la portée de preuve est formulée sans extrapolation. Une génération réussie ou une sortie JSON valide ne constitue pas à elle seule une acceptation métier.</p>
+<p>Au snapshot <code>candidate-v1</code>, <code>CTRL-023</code> et <code>CTRL-024</code> fournissent des ancres techniques utiles, mais les P0-02 à P0-06 restent ouverts. La publication demeure donc hors périmètre.</p>
+<h3 id="DOC-023-REPLAY-20260827">Addendum technique du replay du 27 août 2026</h3>
+<p>À l'instant d'observation <code>2026-08-27T07:28:48Z</code>, P0-01 est techniquement satisfait : les 28 documents ont un contenu, une version, un propriétaire et des ancres. Cette observation ne réécrit pas la ligne <code>EN COURS</code> du backlog fictif daté du 31 juillet.</p>
+<p>P0-02 à P0-06 restent à faire. Le périmètre sémantique actuel est annoté et non aveugle ; il ne peut donc pas servir d'entrée probante à un modèle. Aucune exécution IA ni aucun plein volume n'est revendiqué, et le gate reste <code>BLOCKED</code>.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

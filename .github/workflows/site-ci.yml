@@ -54,16 +54,25 @@ jobs:
               "cas-clients.html",
               "demonstrations.html",
               "demonstrations/fissures.html",
+              "demonstrations/nerivane-distribution.html",
               "demonstrations/ormevia-batiment.html",
               "contact.html",
               "assets/css/site.css",
               "assets/css/demonstrations.css",
               "assets/css/demo-fissures.css",
+              "assets/css/demo-nerivane.css",
               "assets/css/demo-ormevia.css",
+              "assets/data/nerivane-governance-replay.json",
               "assets/data/ormevia-scenarios.json",
               "assets/js/audience-counter.js",
               "assets/js/demo-fissures.js",
+              "assets/js/demo-nerivane.js",
               "assets/js/demo-ormevia.js",
+              "assets/nerivane-public-v1/SHA256SUMS",
+              "assets/nerivane-public-v1/corpus-manifest.json",
+              "assets/nerivane-public-v1/reference-registry.json",
+              "assets/nerivane-public-v1/references.html",
+              "assets/nerivane-public-v1/replay-manifest.json",
               "assets/figures/demo-2/content-manifest.json",
               "assets/figures/demo-2/weather/content-manifest.json",
               "assets/img/favicon-datapredict.png",
@@ -265,6 +274,7 @@ jobs:
                   "cas-clients.html": "assets/js/audience-counter.js",
                   "demonstrations.html": "assets/js/audience-counter.js",
                   "demonstrations/fissures.html": "../assets/js/audience-counter.js",
+                  "demonstrations/nerivane-distribution.html": "../assets/js/audience-counter.js",
                   "demonstrations/ormevia-batiment.html": "../assets/js/audience-counter.js",
                   "contact.html": "assets/js/audience-counter.js",
               }.get(relative.as_posix())
@@ -478,6 +488,10 @@ jobs:
           )
           PY
 
+      - name: Vérifier le replay Nérivane
+        shell: bash
+        run: python3 -m unittest -q tests.test_nerivane_public_replay
+
       - name: Tester l’attestation de production hors réseau
         shell: bash
         run: python3 -m unittest discover -s tests -p 'test_attest_production.py'
@@ -494,6 +508,7 @@ jobs:
         run: |
           node --check assets/js/audience-counter.js
           node --check assets/js/demo-fissures.js
+          node --check assets/js/demo-nerivane.js
           node --check assets/js/demo-ormevia.js
           npm ci --prefix analytics-counter
           npm run check --prefix analytics-counter

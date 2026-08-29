@@ -148,10 +148,14 @@ function tableRow(html, month) {
   return row[1];
 }
 
-test("normalise uniquement les huit pages publiques et les codes pays", () => {
+test("normalise uniquement les neuf pages publiques et les codes pays", () => {
   assert.equal(normalizePage("/index.html"), "/");
   assert.equal(normalizePage("/cas-clients.html"), "/cas-clients.html");
   assert.equal(normalizePage("/demonstrations.html"), "/demonstrations.html");
+  assert.equal(
+    normalizePage("/demonstrations/nerivane-distribution.html"),
+    "/demonstrations/nerivane-distribution.html",
+  );
   assert.equal(
     normalizePage("/demonstrations/ormevia-batiment.html"),
     "/demonstrations/ormevia-batiment.html",
@@ -214,6 +218,26 @@ test("enregistre la démonstration Ormévia comme page publique", async () => {
   assert.deepEqual(
     statements[1].parameters.slice(1),
     ["/demonstrations/ormevia-batiment.html", 1, 0, 0, 0],
+  );
+});
+
+test("enregistre la démonstration Nérivane comme page publique", async () => {
+  const env = environment();
+  const response = await worker.fetch(
+    hitRequest(payload({
+      page: "/demonstrations/nerivane-distribution.html",
+      visit: false,
+      source: "internal",
+    })),
+    env,
+  );
+
+  assert.equal(response.status, 204);
+  const statements = env.COUNTER_DB.batches[0];
+  assert.equal(statements.length, 2);
+  assert.deepEqual(
+    statements[1].parameters.slice(1),
+    ["/demonstrations/nerivane-distribution.html", 1, 0, 0, 0],
   );
 });
 

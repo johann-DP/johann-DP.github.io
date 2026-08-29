@@ -1,0 +1,96 @@
+{
+  "billing": {
+    "billing_account_name": null,
+    "billing_enabled": false
+  },
+  "datasets": [
+    "nerivane_evidence",
+    "nerivane_mart",
+    "nerivane_raw",
+    "nerivane_reference",
+    "nerivane_staging"
+  ],
+  "identity": {
+    "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+    "raw_observation_public": false,
+    "sole_active_account": true
+  },
+  "project": {
+    "display_name": "datapredict-nerivane-sandbox",
+    "lifecycle_state": "ACTIVE",
+    "parent": null,
+    "project_id": "datapredict-nerivane-2026",
+    "project_number": "1094152932383"
+  },
+  "resources": {
+    "dataset_access_control_source": "DATASET_ACCESS_FROM_BQ_SHOW_FULL",
+    "datasets": [
+      {
+        "acl_entry_count": 4,
+        "approved_user_owner_present": true,
+        "dataset_id": "nerivane_raw",
+        "default_partition_expiration_ms": 5184000000,
+        "default_table_expiration_ms": 2592000000,
+        "public_or_cross_resource_grant_present": false,
+        "status": "PASS"
+      },
+      {
+        "acl_entry_count": 4,
+        "approved_user_owner_present": true,
+        "dataset_id": "nerivane_reference",
+        "default_partition_expiration_ms": 5184000000,
+        "default_table_expiration_ms": 2592000000,
+        "public_or_cross_resource_grant_present": false,
+        "status": "PASS"
+      },
+      {
+        "acl_entry_count": 4,
+        "approved_user_owner_present": true,
+        "dataset_id": "nerivane_staging",
+        "default_partition_expiration_ms": 5184000000,
+        "default_table_expiration_ms": 2592000000,
+        "public_or_cross_resource_grant_present": false,
+        "status": "PASS"
+      },
+      {
+        "acl_entry_count": 4,
+        "approved_user_owner_present": true,
+        "dataset_id": "nerivane_mart",
+        "default_partition_expiration_ms": 5184000000,
+        "default_table_expiration_ms": 2592000000,
+        "public_or_cross_resource_grant_present": false,
+        "status": "PASS"
+      },
+      {
+        "acl_entry_count": 4,
+        "approved_user_owner_present": true,
+        "dataset_id": "nerivane_evidence",
+        "default_partition_expiration_ms": 5184000000,
+        "default_table_expiration_ms": 2592000000,
+        "public_or_cross_resource_grant_present": false,
+        "status": "PASS"
+      }
+    ],
+    "models": [],
+    "project_iam": {
+      "approved_user_present": true,
+      "binding_count": 1,
+      "member_count": 1,
+      "public_or_external_principal_present": false,
+      "roles": [
+        "roles/owner"
+      ],
+      "status": "PASS"
+    },
+    "routines": [],
+    "row_access_policy_control": "CLOSED_SQL_FORBIDS_ROW_ACCESS_POLICY_DDL",
+    "row_access_policy_observation": "NOT_AVAILABLE_WITH_NON_ALLOWLISTED_BQ_CLI",
+    "table_iam_direct_policy_observation": "NOT_AVAILABLE_WITH_NON_ALLOWLISTED_BQ_CLI",
+    "tables": [
+      "nerivane_raw.crm_order_line"
+    ]
+  },
+  "tables": [
+    "nerivane_raw.crm_order_line"
+  ]
+}

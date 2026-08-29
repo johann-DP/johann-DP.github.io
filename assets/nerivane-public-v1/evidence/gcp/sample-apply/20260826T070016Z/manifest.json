@@ -1,0 +1,3971 @@
+{
+  "authorization": {
+    "antecedent_sha256": "b55e4320c78f5e03618327dfbed60383697810fab8318814a4bffee80294bcd3",
+    "combined_context_sha256": "b38ac2195b79f8066d7831005d99c3b26e29aac5d1d3370babf9c88abdfd1429",
+    "project_id": "datapredict-nerivane-2026",
+    "scope": "CREATE_AND_LOAD_COMMITTED_SAMPLE_TABLES",
+    "single_use": true,
+    "status": "EXPLICIT_USER_ORDER_RECEIVED_IN_CONTEXT",
+    "user_message_sha256": "ef937b54c0cbe4fb1d8897cb3d0add5918909e5e44cad5faeeaa8ac67f564f99"
+  },
+  "cli": {
+    "alternate_endpoints_absent": "true",
+    "bigqueryrc_neutralized": "true",
+    "bq_version": "This is BigQuery CLI 2.1.37",
+    "cloudsdk_environment_allowlist_verified": "true",
+    "impersonation_and_service_account_overrides_absent": "true",
+    "pinned_binary_paths_verified": "true",
+    "sdk_release": "581.0.0"
+  },
+  "command_contract": {
+    "append_possible": false,
+    "automatic_rollback": false,
+    "job_id_mode": "DETERMINISTIC_AUTHORIZATION_AND_ARTIFACT",
+    "load_write_disposition": "WRITE_TRUNCATE_DATA",
+    "manual_sql": false,
+    "source_transport": "LOCAL_GZIP_MEDIA_UPLOAD"
+  },
+  "control_campaign": {
+    "bytes_billed": 220200960,
+    "bytes_processed": 76835832,
+    "job_count": 3,
+    "maximum_bytes": 500000000
+  },
+  "control_group_jobs": [
+    {
+      "bytes_billed": 52428800,
+      "bytes_processed": 52428800,
+      "control_count": 1,
+      "dry_run_estimated_bytes": 52428800,
+      "group_id": "CG-01",
+      "identity_and_billing_guard_after": "PASS",
+      "identity_and_billing_guard_before": "PASS",
+      "job_id": "nerivane_control_group_b38ac2195b_894399d95b_01",
+      "minimum_billed_bytes_floor": 52428800,
+      "projected_billed_bytes": 52428800,
+      "referenced_tables": [
+        "nerivane_evidence.INFORMATION_SCHEMA.PARTITIONS",
+        "nerivane_mart.INFORMATION_SCHEMA.PARTITIONS",
+        "nerivane_raw.INFORMATION_SCHEMA.PARTITIONS",
+        "nerivane_reference.INFORMATION_SCHEMA.PARTITIONS",
+        "nerivane_staging.INFORMATION_SCHEMA.PARTITIONS"
+      ],
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sql_sha256": "894399d95b5408519798f5af206879b39691718a308df9cf51190b188f7d9b2f",
+      "status": "PASS"
+    },
+    {
+      "bytes_billed": 83886080,
+      "bytes_processed": 24404545,
+      "control_count": 33,
+      "dry_run_estimated_bytes": 24404545,
+      "group_id": "CG-02",
+      "identity_and_billing_guard_after": "PASS",
+      "identity_and_billing_guard_before": "PASS",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "minimum_billed_bytes_floor": 83886080,
+      "projected_billed_bytes": 83886080,
+      "referenced_tables": [
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ],
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "status": "PASS"
+    },
+    {
+      "bytes_billed": 83886080,
+      "bytes_processed": 2487,
+      "control_count": 2,
+      "dry_run_estimated_bytes": 2487,
+      "group_id": "CG-03",
+      "identity_and_billing_guard_after": "PASS",
+      "identity_and_billing_guard_before": "PASS",
+      "job_id": "nerivane_control_group_b38ac2195b_232eba35a3_03",
+      "minimum_billed_bytes_floor": 83886080,
+      "projected_billed_bytes": 83886080,
+      "referenced_tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_evidence.publication_gate",
+        "nerivane_evidence.semantic_case",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ],
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sql_sha256": "232eba35a3707f775b1f69ca21c4698201c3924cdd40e96d9835e24d48f8ee32",
+      "status": "PASS"
+    }
+  ],
+  "controls": [
+    {
+      "actual_value": "531240",
+      "control_id": "CTRL-001",
+      "expected_value": "531240",
+      "group_id": "CG-01",
+      "group_sql_sha256": "894399d95b5408519798f5af206879b39691718a308df9cf51190b188f7d9b2f",
+      "job_id": "nerivane_control_group_b38ac2195b_894399d95b_01",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 1,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "421763",
+      "control_id": "CTRL-002",
+      "expected_value": "421763",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 2,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "164487",
+      "control_id": "CTRL-003",
+      "expected_value": "164487",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 3,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "139182",
+      "control_id": "CTRL-004",
+      "expected_value": "139182",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 4,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "118094",
+      "control_id": "CTRL-005",
+      "expected_value": "118094",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 5,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "100823",
+      "control_id": "CTRL-006",
+      "expected_value": "100823",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 6,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "31",
+      "control_id": "CTRL-007",
+      "expected_value": "31",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 7,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "8",
+      "control_id": "CTRL-008",
+      "expected_value": "8",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 8,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "3",
+      "control_id": "CTRL-009",
+      "expected_value": "3",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 9,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "744",
+      "control_id": "CTRL-010",
+      "expected_value": "744",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 10,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "PASS",
+      "control_id": "CTRL-011",
+      "expected_value": "PASS",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 11,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "PASS",
+      "control_id": "CTRL-012",
+      "expected_value": "PASS",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 12,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "1228645000",
+      "control_id": "CTRL-013",
+      "expected_value": "1228645000",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 13,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "1284261000",
+      "control_id": "CTRL-014",
+      "expected_value": "1284261000",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 14,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "1249738000",
+      "control_id": "CTRL-015",
+      "expected_value": "1249738000",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 15,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "1237194000",
+      "control_id": "CTRL-016",
+      "expected_value": "1237194000",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 16,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "8452",
+      "control_id": "CTRL-017",
+      "expected_value": "8452",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 17,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "12",
+      "control_id": "CTRL-018",
+      "expected_value": "12",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 18,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "-55616000",
+      "control_id": "CTRL-019",
+      "expected_value": "-55616000",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 19,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "-21093000",
+      "control_id": "CTRL-020",
+      "expected_value": "-21093000",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 20,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "-8549000",
+      "control_id": "CTRL-021",
+      "expected_value": "-8549000",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 21,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "1228645000",
+      "control_id": "CTRL-022",
+      "expected_value": "1228645000",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 22,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "PASS",
+      "control_id": "CTRL-023",
+      "expected_value": "PASS",
+      "group_id": "CG-03",
+      "group_sql_sha256": "232eba35a3707f775b1f69ca21c4698201c3924cdd40e96d9835e24d48f8ee32",
+      "job_id": "nerivane_control_group_b38ac2195b_232eba35a3_03",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 23,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "BLOCKED",
+      "control_id": "CTRL-024",
+      "expected_value": "BLOCKED",
+      "group_id": "CG-03",
+      "group_sql_sha256": "232eba35a3707f775b1f69ca21c4698201c3924cdd40e96d9835e24d48f8ee32",
+      "job_id": "nerivane_control_group_b38ac2195b_232eba35a3_03",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 24,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=1204;stage_adjustment=-21478340;mart_rows=1;mart_lines=1204;mart_adjustment=-21478340",
+      "control_id": "BRIDGE-BR-CRM-01",
+      "expected_value": "stage_lines=1204;stage_adjustment=-21478340;mart_rows=1;mart_lines=1204;mart_adjustment=-21478340",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 25,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=683;stage_adjustment=-14936825;mart_rows=1;mart_lines=683;mart_adjustment=-14936825",
+      "control_id": "BRIDGE-BR-CRM-02",
+      "expected_value": "stage_lines=683;stage_adjustment=-14936825;mart_rows=1;mart_lines=683;mart_adjustment=-14936825",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 26,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=3412;stage_adjustment=-11284710;mart_rows=1;mart_lines=3412;mart_adjustment=-11284710",
+      "control_id": "BRIDGE-BR-CRM-03",
+      "expected_value": "stage_lines=3412;stage_adjustment=-11284710;mart_rows=1;mart_lines=3412;mart_adjustment=-11284710",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 27,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=587;stage_adjustment=-7916125;mart_rows=1;mart_lines=587;mart_adjustment=-7916125",
+      "control_id": "BRIDGE-BR-CRM-04",
+      "expected_value": "stage_lines=587;stage_adjustment=-7916125;mart_rows=1;mart_lines=587;mart_adjustment=-7916125",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 28,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=442;stage_adjustment=-8763412;mart_rows=1;mart_lines=442;mart_adjustment=-8763412",
+      "control_id": "BRIDGE-BR-ERP-01",
+      "expected_value": "stage_lines=442;stage_adjustment=-8763412;mart_rows=1;mart_lines=442;mart_adjustment=-8763412",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 29,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=588;stage_adjustment=-4208788;mart_rows=1;mart_lines=588;mart_adjustment=-4208788",
+      "control_id": "BRIDGE-BR-ERP-02",
+      "expected_value": "stage_lines=588;stage_adjustment=-4208788;mart_rows=1;mart_lines=588;mart_adjustment=-4208788",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 30,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=326;stage_adjustment=-6941535;mart_rows=1;mart_lines=326;mart_adjustment=-6941535",
+      "control_id": "BRIDGE-BR-ERP-03",
+      "expected_value": "stage_lines=326;stage_adjustment=-6941535;mart_rows=1;mart_lines=326;mart_adjustment=-6941535",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 31,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=217;stage_adjustment=-1179265;mart_rows=1;mart_lines=217;mart_adjustment=-1179265",
+      "control_id": "BRIDGE-BR-ERP-04",
+      "expected_value": "stage_lines=217;stage_adjustment=-1179265;mart_rows=1;mart_lines=217;mart_adjustment=-1179265",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 32,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=193;stage_adjustment=-3712480;mart_rows=1;mart_lines=193;mart_adjustment=-3712480",
+      "control_id": "BRIDGE-BR-FIN-01",
+      "expected_value": "stage_lines=193;stage_adjustment=-3712480;mart_rows=1;mart_lines=193;mart_adjustment=-3712480",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 33,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=128;stage_adjustment=-2638905;mart_rows=1;mart_lines=128;mart_adjustment=-2638905",
+      "control_id": "BRIDGE-BR-FIN-02",
+      "expected_value": "stage_lines=128;stage_adjustment=-2638905;mart_rows=1;mart_lines=128;mart_adjustment=-2638905",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 34,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=588;stage_adjustment=-1402315;mart_rows=1;mart_lines=588;mart_adjustment=-1402315",
+      "control_id": "BRIDGE-BR-FIN-03",
+      "expected_value": "stage_lines=588;stage_adjustment=-1402315;mart_rows=1;mart_lines=588;mart_adjustment=-1402315",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 35,
+      "status": "PASS"
+    },
+    {
+      "actual_value": "stage_lines=84;stage_adjustment=-795300;mart_rows=1;mart_lines=84;mart_adjustment=-795300",
+      "control_id": "BRIDGE-BR-FIN-04",
+      "expected_value": "stage_lines=84;stage_adjustment=-795300;mart_rows=1;mart_lines=84;mart_adjustment=-795300",
+      "group_id": "CG-02",
+      "group_sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+      "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+      "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+      "sequence": 36,
+      "status": "PASS"
+    }
+  ],
+  "ddl_dry_runs": [
+    {
+      "ddl_sha256": "66fd8165328afe849562bb70c198a24a84cfaa8f3c94726b0db2858cd914444b",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 1,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_raw.crm_order_line"
+    },
+    {
+      "ddl_sha256": "4432bc6075abc1815205d3cafad5fdd01847019f677db2a4602183e39f846f44",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 2,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_raw.erp_invoice_line"
+    },
+    {
+      "ddl_sha256": "92bb7b0520a74ff1e153fb7e8adcb15f6465354b4d947748346034e4bdfd570c",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 3,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_raw.finance_ledger_line"
+    },
+    {
+      "ddl_sha256": "be320ea465442fe44e5560b2c3a599b479719cddb0f952a9a567fb8e26aaf961",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 4,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_reference.site"
+    },
+    {
+      "ddl_sha256": "78055ee5fdb09f5d409462757348bd5fa77ff9545786b8faa848772a03d6ffa1",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 5,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_reference.role"
+    },
+    {
+      "ddl_sha256": "28455f12a945d455255fd56000edf2030c8c6ff4407eebd3579864cecd54a3c3",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 6,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_reference.person"
+    },
+    {
+      "ddl_sha256": "6d7de5f3e746a9f23007bb3d5ea26322c54f9cd71e246fa16935ad6443c5cb77",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 7,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_reference.assignment"
+    },
+    {
+      "ddl_sha256": "66fe2b93d3776f05e7d4bf9446de79cb297369a99b2e936dcf02a172826ac460",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 8,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_reference.document"
+    },
+    {
+      "ddl_sha256": "973463d122472fecac5cf95bc5b69c177fb17e26435af1556c10723e3efbd294",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 9,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_staging.canonical_financial_line"
+    },
+    {
+      "ddl_sha256": "45316b0799d94d651b6c412406c879679e1f2db9cf99b211ed37be837e0b9f22",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 10,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_staging.bridge_exception"
+    },
+    {
+      "ddl_sha256": "40333c71b42979c3f78c1fcfeb195424ae8381ead1d614d19e0cf936e6e6ec35",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 11,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_mart.kpi_source_value"
+    },
+    {
+      "ddl_sha256": "806ee9bff7c22e061a811e1835deca3e3d95cb9380a5cdeabcbe103ae0ed9778",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 12,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_mart.kpi_bridge_adjustment"
+    },
+    {
+      "ddl_sha256": "b9a748dacc7ec42a1df0095e067a7a5fb1a6467119ab06ec854f93b34cba4e14",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 13,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_mart.kpi_certified"
+    },
+    {
+      "ddl_sha256": "f854a2ce29e1e891662dc5a7f5fb3695ebe9d87659a4770c9a89d240d39390fe",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 14,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_evidence.control_result"
+    },
+    {
+      "ddl_sha256": "518a6b21d963630633737bfe039272ec75956c44f3870f3d72cf7da5602d6497",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 15,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_evidence.lineage_edge"
+    },
+    {
+      "ddl_sha256": "94178ac0a04adde5f211c1d98123396a7ed865d8768afd18b7cc075c6efaefb7",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 16,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_evidence.semantic_case"
+    },
+    {
+      "ddl_sha256": "3bedd39c66bf2ce5245c4ff262e9e0dacb35a23ed806dff08fe9c1bdd27ea91f",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "sequence": 17,
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "table": "nerivane_evidence.publication_gate"
+    }
+  ],
+  "ddl_jobs": [
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "66fd8165328afe849562bb70c198a24a84cfaa8f3c94726b0db2858cd914444b",
+      "job_id": "nerivane_table_b38ac2195b_66fd816532_01",
+      "operation": "CREATE_TABLE",
+      "run_action": "RECONCILED_FROM_JOURNAL",
+      "state": "DONE",
+      "status": "PASS",
+      "table": "nerivane_raw.crm_order_line"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "4432bc6075abc1815205d3cafad5fdd01847019f677db2a4602183e39f846f44",
+      "job_id": "nerivane_table_b38ac2195b_4432bc6075_02",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_raw.erp_invoice_line"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "92bb7b0520a74ff1e153fb7e8adcb15f6465354b4d947748346034e4bdfd570c",
+      "job_id": "nerivane_table_b38ac2195b_92bb7b0520_03",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_raw.finance_ledger_line"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "be320ea465442fe44e5560b2c3a599b479719cddb0f952a9a567fb8e26aaf961",
+      "job_id": "nerivane_table_b38ac2195b_be320ea465_04",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_reference.site"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "78055ee5fdb09f5d409462757348bd5fa77ff9545786b8faa848772a03d6ffa1",
+      "job_id": "nerivane_table_b38ac2195b_78055ee5fd_05",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_reference.role"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "28455f12a945d455255fd56000edf2030c8c6ff4407eebd3579864cecd54a3c3",
+      "job_id": "nerivane_table_b38ac2195b_28455f12a9_06",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_reference.person"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "6d7de5f3e746a9f23007bb3d5ea26322c54f9cd71e246fa16935ad6443c5cb77",
+      "job_id": "nerivane_table_b38ac2195b_6d7de5f3e7_07",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_reference.assignment"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "66fe2b93d3776f05e7d4bf9446de79cb297369a99b2e936dcf02a172826ac460",
+      "job_id": "nerivane_table_b38ac2195b_66fe2b93d3_08",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_reference.document"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "973463d122472fecac5cf95bc5b69c177fb17e26435af1556c10723e3efbd294",
+      "job_id": "nerivane_table_b38ac2195b_973463d122_09",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_staging.canonical_financial_line"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "45316b0799d94d651b6c412406c879679e1f2db9cf99b211ed37be837e0b9f22",
+      "job_id": "nerivane_table_b38ac2195b_45316b0799_10",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_staging.bridge_exception"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "40333c71b42979c3f78c1fcfeb195424ae8381ead1d614d19e0cf936e6e6ec35",
+      "job_id": "nerivane_table_b38ac2195b_40333c71b4_11",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_mart.kpi_source_value"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "806ee9bff7c22e061a811e1835deca3e3d95cb9380a5cdeabcbe103ae0ed9778",
+      "job_id": "nerivane_table_b38ac2195b_806ee9bff7_12",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_mart.kpi_bridge_adjustment"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "b9a748dacc7ec42a1df0095e067a7a5fb1a6467119ab06ec854f93b34cba4e14",
+      "job_id": "nerivane_table_b38ac2195b_b9a748dacc_13",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_mart.kpi_certified"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "f854a2ce29e1e891662dc5a7f5fb3695ebe9d87659a4770c9a89d240d39390fe",
+      "job_id": "nerivane_table_b38ac2195b_f854a2ce29_14",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_evidence.control_result"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "518a6b21d963630633737bfe039272ec75956c44f3870f3d72cf7da5602d6497",
+      "job_id": "nerivane_table_b38ac2195b_518a6b21d9_15",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_evidence.lineage_edge"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "94178ac0a04adde5f211c1d98123396a7ed865d8768afd18b7cc075c6efaefb7",
+      "job_id": "nerivane_table_b38ac2195b_94178ac0a0_16",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_evidence.semantic_case"
+    },
+    {
+      "bytes_billed": 0,
+      "bytes_processed": 0,
+      "ddl_sha256": "3bedd39c66bf2ce5245c4ff262e9e0dacb35a23ed806dff08fe9c1bdd27ea91f",
+      "job_id": "nerivane_table_b38ac2195b_3bedd39c66_17",
+      "operation": "CREATE_TABLE",
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_evidence.publication_gate"
+    }
+  ],
+  "failure_code": null,
+  "generated_at": "2026-08-26T07:00:16.868544+00:00",
+  "git": {
+    "commit": "99d22f4135e2f0eaaa9afeb2ca6356c1efb427b7",
+    "tree": "3c5e8b29a73e77927402d54fa5535d68a11ec254",
+    "worktree_clean_before_preflight": true
+  },
+  "inputs": {
+    "compressed_bytes": 27350664,
+    "contract_sha256": "94fa4e8db848c9a48ebc4225890607a2d2cdf43c3a3083159ec88a630d3abb89",
+    "control_count": 36,
+    "control_group_count": 3,
+    "control_sql_sha256": "89a47978e099908a55546824e355a5c4e6679860e7fe21a934a8f59fe154b26b",
+    "files": [
+      {
+        "compressed_bytes": 8469325,
+        "content_sha256": "0ea3b751a7bd5e88b5854bf28841b36de628d9b7e1a7366abdc12cba21c6b490",
+        "ddl_sha256": "66fd8165328afe849562bb70c198a24a84cfaa8f3c94726b0db2858cd914444b",
+        "path": "nerivane_raw/crm_order_line.ndjson.gz",
+        "rows": 164487,
+        "schema_sha256": "51f0f64414a1e6d5818d5a148d7117de0a2d65c3767609508d95c35a0ba39d83",
+        "sha256": "e31958e7bd7d4e4768428a668a29c412e6132e1e50ffa9d532804119fcb61ec9",
+        "table": "nerivane_raw.crm_order_line",
+        "uncompressed_bytes": 55301504
+      },
+      {
+        "compressed_bytes": 7231169,
+        "content_sha256": "d5fcb0512ac1fb32c096e08f7ead160942a094eef0882045ac1b1fa474504a44",
+        "ddl_sha256": "4432bc6075abc1815205d3cafad5fdd01847019f677db2a4602183e39f846f44",
+        "path": "nerivane_raw/erp_invoice_line.ndjson.gz",
+        "rows": 139182,
+        "schema_sha256": "e92ec771ee679cee409939ac584009aa573435972332c8fefde7be3093430e29",
+        "sha256": "f6634dcab908636beb041883f64871ce73165e6e4f5d2994475c787fcf737637",
+        "table": "nerivane_raw.erp_invoice_line",
+        "uncompressed_bytes": 46807367
+      },
+      {
+        "compressed_bytes": 6189460,
+        "content_sha256": "06d79b7e6ad281290fb88ba749bfd70f0378668fe24f030287dfc7ba8cd21bd0",
+        "ddl_sha256": "92bb7b0520a74ff1e153fb7e8adcb15f6465354b4d947748346034e4bdfd570c",
+        "path": "nerivane_raw/finance_ledger_line.ndjson.gz",
+        "rows": 118094,
+        "schema_sha256": "129825dfd47552470535b09fc3eb88321f163d8404b8ebe171a9a13211389841",
+        "sha256": "6072c169bb82e05636f8943c1d77dbca6400ff4e320742a7984fe686317d780e",
+        "table": "nerivane_raw.finance_ledger_line",
+        "uncompressed_bytes": 39730014
+      },
+      {
+        "compressed_bytes": 407,
+        "content_sha256": "1dacb9c98fcaff8997e064e1cf124d6b24896cb4996aa6f528eb39a34190a72b",
+        "ddl_sha256": "be320ea465442fe44e5560b2c3a599b479719cddb0f952a9a567fb8e26aaf961",
+        "path": "nerivane_reference/site.ndjson.gz",
+        "rows": 10,
+        "schema_sha256": "20a081f566a226c189797a03c67bbf6b14234d8458ff2092f37cd4010f1246cc",
+        "sha256": "a577d48671845d7f65e94fcc28a7eba2f3f228a3bfd57944249a93a72bc32115",
+        "table": "nerivane_reference.site",
+        "uncompressed_bytes": 1376
+      },
+      {
+        "compressed_bytes": 839,
+        "content_sha256": "7cfb7aabe17b1a31b1ee1f252438279670ce4a0b3f7daf5fdc67d438766fab32",
+        "ddl_sha256": "78055ee5fdb09f5d409462757348bd5fa77ff9545786b8faa848772a03d6ffa1",
+        "path": "nerivane_reference/role.ndjson.gz",
+        "rows": 18,
+        "schema_sha256": "2a66b64c8269265915939e1a55892c187444d06dbee813cec6b818c73f122e28",
+        "sha256": "c37714cca9fe20bb789aea273e49ec2383257da1d9a338c7d662e05e18398ef2",
+        "table": "nerivane_reference.role",
+        "uncompressed_bytes": 2233
+      },
+      {
+        "compressed_bytes": 706,
+        "content_sha256": "c6bacb7ba04ef8dd6a3f653c93b58e03d092be0a72dcc4c011266f5b9b1816bd",
+        "ddl_sha256": "28455f12a945d455255fd56000edf2030c8c6ff4407eebd3579864cecd54a3c3",
+        "path": "nerivane_reference/person.ndjson.gz",
+        "rows": 26,
+        "schema_sha256": "d07bdb324b38ddb77a212af571a4b562da6bb793c5f112a7602aa7c8196b88aa",
+        "sha256": "5d813e5a9576a3355c1eb2513a51ae36d7a54d083371551ecf25ab0a4787e6d2",
+        "table": "nerivane_reference.person",
+        "uncompressed_bytes": 4422
+      },
+      {
+        "compressed_bytes": 662,
+        "content_sha256": "8630f6d4b92ee3184ae748a422ea07a6d5086f929ba608c23c32fb9686790e7d",
+        "ddl_sha256": "6d7de5f3e746a9f23007bb3d5ea26322c54f9cd71e246fa16935ad6443c5cb77",
+        "path": "nerivane_reference/assignment.ndjson.gz",
+        "rows": 37,
+        "schema_sha256": "d004e20bd8a063fe854666298424e4a173abdecd8f5fd3723c2479ac4cfaf6e6",
+        "sha256": "023bfa5cb3408e99de3cc71bb598e58f01101b58156e73a1bf03db1fcc8ed5a5",
+        "table": "nerivane_reference.assignment",
+        "uncompressed_bytes": 5486
+      },
+      {
+        "compressed_bytes": 1013,
+        "content_sha256": "be805d6d890eeb51841f53039f73a1be21afec4c143c1834d0337d050abf59d6",
+        "ddl_sha256": "66fe2b93d3776f05e7d4bf9446de79cb297369a99b2e936dcf02a172826ac460",
+        "path": "nerivane_reference/document.ndjson.gz",
+        "rows": 28,
+        "schema_sha256": "40e2f4bcd1299c3e0e5c0e781bb9fc4cb2e274637efa9d2234a44902dec45a76",
+        "sha256": "62d4826ab2767fb85ae7977309280ec6259dec7c29f9fb5c54e84fdbcd343ea2",
+        "table": "nerivane_reference.document",
+        "uncompressed_bytes": 7071
+      },
+      {
+        "compressed_bytes": 4959408,
+        "content_sha256": "fe7695b6e4c9a6f13a519079bef634e837b77c489b12e26d2de65e9399e25ae6",
+        "ddl_sha256": "973463d122472fecac5cf95bc5b69c177fb17e26435af1556c10723e3efbd294",
+        "path": "nerivane_staging/canonical_financial_line.ndjson.gz",
+        "rows": 100823,
+        "schema_sha256": "4f0e477755a0172df99163ffb447e49f71892d20142248427ea8467f943b6051",
+        "sha256": "b71d2caeeb1d8065cf41974c09664b086f31a4331ed20436d74c797463aa1d32",
+        "table": "nerivane_staging.canonical_financial_line",
+        "uncompressed_bytes": 25565891
+      },
+      {
+        "compressed_bytes": 491464,
+        "content_sha256": "eb31c6c4ef61dffd1b29ea309d694684d3a7168274b57b99380e859c01f1123e",
+        "ddl_sha256": "45316b0799d94d651b6c412406c879679e1f2db9cf99b211ed37be837e0b9f22",
+        "path": "nerivane_staging/bridge_exception.ndjson.gz",
+        "rows": 8452,
+        "schema_sha256": "90ce36952340418be37dd5d978d50a9b3887c3a73fa04dda704c74d4e076d1db",
+        "sha256": "92c6e9a61e3ce1f63eb74984ef0f4596e447060af2836cb476a19c1c6c92a7fc",
+        "table": "nerivane_staging.bridge_exception",
+        "uncompressed_bytes": 3583176
+      },
+      {
+        "compressed_bytes": 265,
+        "content_sha256": "cb2cdaefa5c568c290e7416058773435be65d735fa62ee5fbe6c9262f8b628fc",
+        "ddl_sha256": "40333c71b42979c3f78c1fcfeb195424ae8381ead1d614d19e0cf936e6e6ec35",
+        "path": "nerivane_mart/kpi_source_value.ndjson.gz",
+        "rows": 3,
+        "schema_sha256": "2af02d7033501d9d3c925b2f3605856f21a7a9aed6cfdbc5cea7ca86f122f723",
+        "sha256": "e0ae425e6a189c95efb5881a78bbaf68c836b5c6b7c546964e49d2aa2287c187",
+        "table": "nerivane_mart.kpi_source_value",
+        "uncompressed_bytes": 751
+      },
+      {
+        "compressed_bytes": 826,
+        "content_sha256": "4bbe4c8e06c72b656a68cdd86ada9363e0866183bcf820dde4dc31452e256b9e",
+        "ddl_sha256": "806ee9bff7c22e061a811e1835deca3e3d95cb9380a5cdeabcbe103ae0ed9778",
+        "path": "nerivane_mart/kpi_bridge_adjustment.ndjson.gz",
+        "rows": 12,
+        "schema_sha256": "495a338e23c7312121b516f6fd4d8c06ee0163b8cd8b9830e66ddc3d0519ee9e",
+        "sha256": "a332c0e6300802090ca5aeacd802988f9b75876336929a6b567afca7672a9c00",
+        "table": "nerivane_mart.kpi_bridge_adjustment",
+        "uncompressed_bytes": 3876
+      },
+      {
+        "compressed_bytes": 266,
+        "content_sha256": "4dff8d682cb7408e2a3a301ac04a1776f79da57d8677c454bba70f303d6c5d78",
+        "ddl_sha256": "b9a748dacc7ec42a1df0095e067a7a5fb1a6467119ab06ec854f93b34cba4e14",
+        "path": "nerivane_mart/kpi_certified.ndjson.gz",
+        "rows": 1,
+        "schema_sha256": "48241f64e0ec84c99374c943a06f596c06526754356e9e6a64d48fa91148a0d7",
+        "sha256": "fcba4fdbc4c816582ef4a612ac30e45db9678c9abf295f0a6016bb5c716390e4",
+        "table": "nerivane_mart.kpi_certified",
+        "uncompressed_bytes": 343
+      },
+      {
+        "compressed_bytes": 1997,
+        "content_sha256": "cc83957117042b409d2bd3af443f7b609362f2017fa46257e853a368ac2306ff",
+        "ddl_sha256": "f854a2ce29e1e891662dc5a7f5fb3695ebe9d87659a4770c9a89d240d39390fe",
+        "path": "nerivane_evidence/control_result.ndjson.gz",
+        "rows": 24,
+        "schema_sha256": "a2d4398ff8bcee7df13757bf7d245b42dacbb05b7d714b87c509c15a60779088",
+        "sha256": "1d796b8d622fe9f607739c771dadd65ee26c3e64fc1962b66e8f38756df6b897",
+        "table": "nerivane_evidence.control_result",
+        "uncompressed_bytes": 7793
+      },
+      {
+        "compressed_bytes": 658,
+        "content_sha256": "ba974c8800dfda3d2497406a3213e5abc52212cc6ce3e2825fd1245863dfbdc4",
+        "ddl_sha256": "518a6b21d963630633737bfe039272ec75956c44f3870f3d72cf7da5602d6497",
+        "path": "nerivane_evidence/lineage_edge.ndjson.gz",
+        "rows": 18,
+        "schema_sha256": "4100ba9657da1dc788745370d7e40b8b2f943872ef5a98b56a3f57f4ae773ee6",
+        "sha256": "30021cff37c760e2526234b2c6c4676f86a4a8d3405a7eb463a952a08846db60",
+        "table": "nerivane_evidence.lineage_edge",
+        "uncompressed_bytes": 3863
+      },
+      {
+        "compressed_bytes": 1868,
+        "content_sha256": "437e3f5dafd1a0786ee5af9037769997f725f4c2f0c6756e71816b6c5c8b71b1",
+        "ddl_sha256": "94178ac0a04adde5f211c1d98123396a7ed865d8768afd18b7cc075c6efaefb7",
+        "path": "nerivane_evidence/semantic_case.ndjson.gz",
+        "rows": 24,
+        "schema_sha256": "e1b05e6ff23ef8aa135a71d8b665b56cb50714252e0c31d7940bbc13be6f228a",
+        "sha256": "5d8a35fd3f90c8d8de479ea4b2f1604b33f53a370957dc9b42f003b7fdef3e81",
+        "table": "nerivane_evidence.semantic_case",
+        "uncompressed_bytes": 8676
+      },
+      {
+        "compressed_bytes": 331,
+        "content_sha256": "19a58e583ecaf02896c69db9b63fdf8a476ba585db6d32f80df72b4e711985e1",
+        "ddl_sha256": "3bedd39c66bf2ce5245c4ff262e9e0dacb35a23ed806dff08fe9c1bdd27ea91f",
+        "path": "nerivane_evidence/publication_gate.ndjson.gz",
+        "rows": 1,
+        "schema_sha256": "7cfc129279912dd77becc3becd79b18eb327a339619a2734792099573af846a1",
+        "sha256": "7ec2aaf357c3708b1b134ee3bf06acd607da7314e794546dbedfd3ee573ddf43",
+        "table": "nerivane_evidence.publication_gate",
+        "uncompressed_bytes": 481
+      }
+    ],
+    "manifest_sha256": "036ce731f8e91991aa6b8194f4e020f74a62c4f9c7a484ce8f385ed24e4d0b84",
+    "rows": 531240,
+    "sample_id": "NERIVANE-2026-07-GCP-V1",
+    "status": "PASS",
+    "table_count": 17,
+    "uncompressed_bytes": 171034323
+  },
+  "load_jobs": [
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 8469325,
+      "input_file_bytes": 55301504,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_e31958e7bd_01",
+      "operation": "LOAD",
+      "output_bytes": 25166652,
+      "output_rows": 164487,
+      "run_action": "RECONCILED_FROM_JOURNAL",
+      "source_sha256": "e31958e7bd7d4e4768428a668a29c412e6132e1e50ffa9d532804119fcb61ec9",
+      "state": "DONE",
+      "status": "PASS",
+      "table": "nerivane_raw.crm_order_line"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 7231169,
+      "input_file_bytes": 46807367,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_f6634dcab9_02",
+      "operation": "LOAD",
+      "output_bytes": 21294756,
+      "output_rows": 139182,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "f6634dcab908636beb041883f64871ce73165e6e4f5d2994475c787fcf737637",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_raw.erp_invoice_line"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 6189460,
+      "input_file_bytes": 39730014,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_6072c169bb_03",
+      "operation": "LOAD",
+      "output_bytes": 18068031,
+      "output_rows": 118094,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "6072c169bb82e05636f8943c1d77dbca6400ff4e320742a7984fe686317d780e",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_raw.finance_ledger_line"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 407,
+      "input_file_bytes": 1376,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_a577d48671_04",
+      "operation": "LOAD",
+      "output_bytes": 576,
+      "output_rows": 10,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "a577d48671845d7f65e94fcc28a7eba2f3f228a3bfd57944249a93a72bc32115",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_reference.site"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 839,
+      "input_file_bytes": 2233,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_c37714cca9_05",
+      "operation": "LOAD",
+      "output_bytes": 1441,
+      "output_rows": 18,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "c37714cca9fe20bb789aea273e49ec2383257da1d9a338c7d662e05e18398ef2",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_reference.role"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 706,
+      "input_file_bytes": 4422,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_5d813e5a95_06",
+      "operation": "LOAD",
+      "output_bytes": 1198,
+      "output_rows": 26,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "5d813e5a9576a3355c1eb2513a51ae36d7a54d083371551ecf25ab0a4787e6d2",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_reference.person"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 662,
+      "input_file_bytes": 5486,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_023bfa5cb3_07",
+      "operation": "LOAD",
+      "output_bytes": 1574,
+      "output_rows": 37,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "023bfa5cb3408e99de3cc71bb598e58f01101b58156e73a1bf03db1fcc8ed5a5",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_reference.assignment"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 1013,
+      "input_file_bytes": 7071,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_62d4826ab2_08",
+      "operation": "LOAD",
+      "output_bytes": 2599,
+      "output_rows": 28,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "62d4826ab2767fb85ae7977309280ec6259dec7c29f9fb5c54e84fdbcd343ea2",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_reference.document"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 4959408,
+      "input_file_bytes": 25565891,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_b71d2caeeb_09",
+      "operation": "LOAD",
+      "output_bytes": 12502049,
+      "output_rows": 100823,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "b71d2caeeb1d8065cf41974c09664b086f31a4331ed20436d74c797463aa1d32",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_staging.canonical_financial_line"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 491464,
+      "input_file_bytes": 3583176,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_92c6e9a61e_10",
+      "operation": "LOAD",
+      "output_bytes": 1863312,
+      "output_rows": 8452,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "92c6e9a61e3ce1f63eb74984ef0f4596e447060af2836cb476a19c1c6c92a7fc",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_staging.bridge_exception"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 265,
+      "input_file_bytes": 751,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_e0ae425e6a_11",
+      "operation": "LOAD",
+      "output_bytes": 257,
+      "output_rows": 3,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "e0ae425e6a189c95efb5881a78bbaf68c836b5c6b7c546964e49d2aa2287c187",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_mart.kpi_source_value"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 826,
+      "input_file_bytes": 3876,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_a332c0e630_12",
+      "operation": "LOAD",
+      "output_bytes": 1567,
+      "output_rows": 12,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "a332c0e6300802090ca5aeacd802988f9b75876336929a6b567afca7672a9c00",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_mart.kpi_bridge_adjustment"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 266,
+      "input_file_bytes": 343,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_fcba4fdbc4_13",
+      "operation": "LOAD",
+      "output_bytes": 131,
+      "output_rows": 1,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "fcba4fdbc4c816582ef4a612ac30e45db9678c9abf295f0a6016bb5c716390e4",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_mart.kpi_certified"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 1997,
+      "input_file_bytes": 7793,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_1d796b8d62_14",
+      "operation": "LOAD",
+      "output_bytes": 4169,
+      "output_rows": 24,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "1d796b8d622fe9f607739c771dadd65ee26c3e64fc1962b66e8f38756df6b897",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_evidence.control_result"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 658,
+      "input_file_bytes": 3863,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_30021cff37_15",
+      "operation": "LOAD",
+      "output_bytes": 2333,
+      "output_rows": 18,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "30021cff37c760e2526234b2c6c4676f86a4a8d3405a7eb463a952a08846db60",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_evidence.lineage_edge"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 1868,
+      "input_file_bytes": 8676,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_5d8a35fd3f_16",
+      "operation": "LOAD",
+      "output_bytes": 5356,
+      "output_rows": 24,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "5d8a35fd3f90c8d8de479ea4b2f1604b33f53a370957dc9b42f003b7fdef3e81",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_evidence.semantic_case"
+    },
+    {
+      "bad_records": 0,
+      "compressed_source_bytes": 331,
+      "input_file_bytes": 481,
+      "input_file_bytes_basis": "DECOMPRESSED_NDJSON",
+      "input_files": 1,
+      "job_id": "nerivane_load_b38ac2195b_7ec2aaf357_17",
+      "operation": "LOAD",
+      "output_bytes": 172,
+      "output_rows": 1,
+      "run_action": "LOAD_CONFIRMED",
+      "source_sha256": "7ec2aaf357c3708b1b134ee3bf06acd607da7314e794546dbedfd3ee573ddf43",
+      "state": "DONE",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "table": "nerivane_evidence.publication_gate"
+    }
+  ],
+  "location": "europe-west9",
+  "mutation_guards": [
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "after-ddl-dry-runs",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-01-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-01-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-01-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-02-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-02-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-02-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-03-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-03-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-03-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-04-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-04-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-04-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-05-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-05-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-05-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-06-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-06-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-06-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-07-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-07-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-07-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-08-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-08-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-08-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-09-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-09-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-09-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-10-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-10-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-10-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-11-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-11-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-11-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-12-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-12-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-12-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-13-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-13-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-13-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-14-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-14-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-14-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-15-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-15-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_evidence.lineage_edge",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-15-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_evidence.lineage_edge",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-16-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_evidence.lineage_edge",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-16-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_evidence.lineage_edge",
+        "nerivane_evidence.semantic_case",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-16-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_evidence.lineage_edge",
+        "nerivane_evidence.semantic_case",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-17-before-ddl",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_evidence.lineage_edge",
+        "nerivane_evidence.semantic_case",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-17-after-ddl-before-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_evidence.lineage_edge",
+        "nerivane_evidence.publication_gate",
+        "nerivane_evidence.semantic_case",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    {
+      "billing": {
+        "billing_account_name": null,
+        "billing_enabled": false
+      },
+      "checkpoint": "table-17-after-load",
+      "datasets": [
+        "nerivane_evidence",
+        "nerivane_mart",
+        "nerivane_raw",
+        "nerivane_reference",
+        "nerivane_staging"
+      ],
+      "identity": {
+        "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+        "raw_observation_public": false,
+        "sole_active_account": true
+      },
+      "status": "PASS",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_evidence.lineage_edge",
+        "nerivane_evidence.publication_gate",
+        "nerivane_evidence.semantic_case",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    }
+  ],
+  "mutations_before_resume": [
+    {
+      "job_id": "nerivane_table_b38ac2195b_66fd816532_01",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_raw.crm_order_line"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_e31958e7bd_01",
+      "operation": "LOAD",
+      "table": "nerivane_raw.crm_order_line"
+    }
+  ],
+  "mutations_in_this_attempt": [
+    {
+      "job_id": "nerivane_table_b38ac2195b_4432bc6075_02",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_raw.erp_invoice_line"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_f6634dcab9_02",
+      "operation": "LOAD",
+      "table": "nerivane_raw.erp_invoice_line"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_92bb7b0520_03",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_raw.finance_ledger_line"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_6072c169bb_03",
+      "operation": "LOAD",
+      "table": "nerivane_raw.finance_ledger_line"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_be320ea465_04",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_reference.site"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_a577d48671_04",
+      "operation": "LOAD",
+      "table": "nerivane_reference.site"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_78055ee5fd_05",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_reference.role"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_c37714cca9_05",
+      "operation": "LOAD",
+      "table": "nerivane_reference.role"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_28455f12a9_06",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_reference.person"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_5d813e5a95_06",
+      "operation": "LOAD",
+      "table": "nerivane_reference.person"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_6d7de5f3e7_07",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_reference.assignment"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_023bfa5cb3_07",
+      "operation": "LOAD",
+      "table": "nerivane_reference.assignment"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_66fe2b93d3_08",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_reference.document"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_62d4826ab2_08",
+      "operation": "LOAD",
+      "table": "nerivane_reference.document"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_973463d122_09",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_staging.canonical_financial_line"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_b71d2caeeb_09",
+      "operation": "LOAD",
+      "table": "nerivane_staging.canonical_financial_line"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_45316b0799_10",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_staging.bridge_exception"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_92c6e9a61e_10",
+      "operation": "LOAD",
+      "table": "nerivane_staging.bridge_exception"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_40333c71b4_11",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_mart.kpi_source_value"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_e0ae425e6a_11",
+      "operation": "LOAD",
+      "table": "nerivane_mart.kpi_source_value"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_806ee9bff7_12",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_mart.kpi_bridge_adjustment"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_a332c0e630_12",
+      "operation": "LOAD",
+      "table": "nerivane_mart.kpi_bridge_adjustment"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_b9a748dacc_13",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_mart.kpi_certified"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_fcba4fdbc4_13",
+      "operation": "LOAD",
+      "table": "nerivane_mart.kpi_certified"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_f854a2ce29_14",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_evidence.control_result"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_1d796b8d62_14",
+      "operation": "LOAD",
+      "table": "nerivane_evidence.control_result"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_518a6b21d9_15",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_evidence.lineage_edge"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_30021cff37_15",
+      "operation": "LOAD",
+      "table": "nerivane_evidence.lineage_edge"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_94178ac0a0_16",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_evidence.semantic_case"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_5d8a35fd3f_16",
+      "operation": "LOAD",
+      "table": "nerivane_evidence.semantic_case"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_3bedd39c66_17",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_evidence.publication_gate"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_7ec2aaf357_17",
+      "operation": "LOAD",
+      "table": "nerivane_evidence.publication_gate"
+    }
+  ],
+  "mutations_performed": [
+    {
+      "job_id": "nerivane_table_b38ac2195b_66fd816532_01",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_raw.crm_order_line"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_e31958e7bd_01",
+      "operation": "LOAD",
+      "table": "nerivane_raw.crm_order_line"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_4432bc6075_02",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_raw.erp_invoice_line"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_f6634dcab9_02",
+      "operation": "LOAD",
+      "table": "nerivane_raw.erp_invoice_line"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_92bb7b0520_03",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_raw.finance_ledger_line"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_6072c169bb_03",
+      "operation": "LOAD",
+      "table": "nerivane_raw.finance_ledger_line"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_be320ea465_04",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_reference.site"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_a577d48671_04",
+      "operation": "LOAD",
+      "table": "nerivane_reference.site"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_78055ee5fd_05",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_reference.role"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_c37714cca9_05",
+      "operation": "LOAD",
+      "table": "nerivane_reference.role"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_28455f12a9_06",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_reference.person"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_5d813e5a95_06",
+      "operation": "LOAD",
+      "table": "nerivane_reference.person"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_6d7de5f3e7_07",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_reference.assignment"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_023bfa5cb3_07",
+      "operation": "LOAD",
+      "table": "nerivane_reference.assignment"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_66fe2b93d3_08",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_reference.document"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_62d4826ab2_08",
+      "operation": "LOAD",
+      "table": "nerivane_reference.document"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_973463d122_09",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_staging.canonical_financial_line"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_b71d2caeeb_09",
+      "operation": "LOAD",
+      "table": "nerivane_staging.canonical_financial_line"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_45316b0799_10",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_staging.bridge_exception"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_92c6e9a61e_10",
+      "operation": "LOAD",
+      "table": "nerivane_staging.bridge_exception"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_40333c71b4_11",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_mart.kpi_source_value"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_e0ae425e6a_11",
+      "operation": "LOAD",
+      "table": "nerivane_mart.kpi_source_value"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_806ee9bff7_12",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_mart.kpi_bridge_adjustment"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_a332c0e630_12",
+      "operation": "LOAD",
+      "table": "nerivane_mart.kpi_bridge_adjustment"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_b9a748dacc_13",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_mart.kpi_certified"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_fcba4fdbc4_13",
+      "operation": "LOAD",
+      "table": "nerivane_mart.kpi_certified"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_f854a2ce29_14",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_evidence.control_result"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_1d796b8d62_14",
+      "operation": "LOAD",
+      "table": "nerivane_evidence.control_result"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_518a6b21d9_15",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_evidence.lineage_edge"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_30021cff37_15",
+      "operation": "LOAD",
+      "table": "nerivane_evidence.lineage_edge"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_94178ac0a0_16",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_evidence.semantic_case"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_5d8a35fd3f_16",
+      "operation": "LOAD",
+      "table": "nerivane_evidence.semantic_case"
+    },
+    {
+      "job_id": "nerivane_table_b38ac2195b_3bedd39c66_17",
+      "operation": "CREATE_TABLE",
+      "table": "nerivane_evidence.publication_gate"
+    },
+    {
+      "job_id": "nerivane_load_b38ac2195b_7ec2aaf357_17",
+      "operation": "LOAD",
+      "table": "nerivane_evidence.publication_gate"
+    }
+  ],
+  "policy_sha256": "41093f75e875364b96881d5456e8c6f2908a178ad426c7859852f4ec6510e805",
+  "private_evidence_commitment": {
+    "file_count": 646,
+    "index_sha256": "656237f79b826ab5607dc63e33929e59d701845c31a372599f90d40032cebdd8",
+    "raw_observations_public": false,
+    "resume_record_sha256": "82b5db429734a2b2e1bd09d2dad4b8281fc3a034c2e3a9467adae3008a7bcab3"
+  },
+  "project_id": "datapredict-nerivane-2026",
+  "proof_scope": "GCP_SAMPLE_TABLES_AND_LOAD_APPLY",
+  "resume_provenance": {
+    "authorization_user_message_sha256": "d3b88a91dfa6e42ef92460ec2f5631fbfe128c5160f7253d6b033e2f06365f06",
+    "new_git": {
+      "commit": "99d22f4135e2f0eaaa9afeb2ca6356c1efb427b7",
+      "tree": "3c5e8b29a73e77927402d54fa5535d68a11ec254",
+      "worktree_clean_before_preflight": true
+    },
+    "old_git": {
+      "commit": "8f4914d412724ff7188238f5a50ee53f44b9490d",
+      "tree": "1d1c1cfe531a6d27a1ba82b0d6faba4c2c08300a",
+      "worktree_clean_before_preflight": true
+    },
+    "prior_terminal_sha256": "81a28b0ef1c8131a77967210c2503b079a06c7c3919ac43888afbf339d3d7407",
+    "resume_record_sha256": "82b5db429734a2b2e1bd09d2dad4b8281fc3a034c2e3a9467adae3008a7bcab3",
+    "status": "RESUME_EXPLICITLY_AUTHORIZED_2026-08-26"
+  },
+  "schema_version": 1,
+  "state_after": {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "project": {
+      "display_name": "datapredict-nerivane-sandbox",
+      "lifecycle_state": "ACTIVE",
+      "parent": null,
+      "project_id": "datapredict-nerivane-2026",
+      "project_number": "1094152932383"
+    },
+    "resources": {
+      "dataset_access_control_source": "DATASET_ACCESS_FROM_BQ_SHOW_FULL",
+      "datasets": [
+        {
+          "acl_entry_count": 4,
+          "approved_user_owner_present": true,
+          "dataset_id": "nerivane_raw",
+          "default_partition_expiration_ms": 5184000000,
+          "default_table_expiration_ms": 2592000000,
+          "public_or_cross_resource_grant_present": false,
+          "status": "PASS"
+        },
+        {
+          "acl_entry_count": 4,
+          "approved_user_owner_present": true,
+          "dataset_id": "nerivane_reference",
+          "default_partition_expiration_ms": 5184000000,
+          "default_table_expiration_ms": 2592000000,
+          "public_or_cross_resource_grant_present": false,
+          "status": "PASS"
+        },
+        {
+          "acl_entry_count": 4,
+          "approved_user_owner_present": true,
+          "dataset_id": "nerivane_staging",
+          "default_partition_expiration_ms": 5184000000,
+          "default_table_expiration_ms": 2592000000,
+          "public_or_cross_resource_grant_present": false,
+          "status": "PASS"
+        },
+        {
+          "acl_entry_count": 4,
+          "approved_user_owner_present": true,
+          "dataset_id": "nerivane_mart",
+          "default_partition_expiration_ms": 5184000000,
+          "default_table_expiration_ms": 2592000000,
+          "public_or_cross_resource_grant_present": false,
+          "status": "PASS"
+        },
+        {
+          "acl_entry_count": 4,
+          "approved_user_owner_present": true,
+          "dataset_id": "nerivane_evidence",
+          "default_partition_expiration_ms": 5184000000,
+          "default_table_expiration_ms": 2592000000,
+          "public_or_cross_resource_grant_present": false,
+          "status": "PASS"
+        }
+      ],
+      "models": [],
+      "project_iam": {
+        "approved_user_present": true,
+        "binding_count": 1,
+        "member_count": 1,
+        "public_or_external_principal_present": false,
+        "roles": [
+          "roles/owner"
+        ],
+        "status": "PASS"
+      },
+      "routines": [],
+      "row_access_policy_control": "CLOSED_SQL_FORBIDS_ROW_ACCESS_POLICY_DDL",
+      "row_access_policy_observation": "NOT_AVAILABLE_WITH_NON_ALLOWLISTED_BQ_CLI",
+      "table_iam_direct_policy_observation": "NOT_AVAILABLE_WITH_NON_ALLOWLISTED_BQ_CLI",
+      "tables": [
+        "nerivane_evidence.control_result",
+        "nerivane_evidence.lineage_edge",
+        "nerivane_evidence.publication_gate",
+        "nerivane_evidence.semantic_case",
+        "nerivane_mart.kpi_bridge_adjustment",
+        "nerivane_mart.kpi_certified",
+        "nerivane_mart.kpi_source_value",
+        "nerivane_raw.crm_order_line",
+        "nerivane_raw.erp_invoice_line",
+        "nerivane_raw.finance_ledger_line",
+        "nerivane_reference.assignment",
+        "nerivane_reference.document",
+        "nerivane_reference.person",
+        "nerivane_reference.role",
+        "nerivane_reference.site",
+        "nerivane_staging.bridge_exception",
+        "nerivane_staging.canonical_financial_line"
+      ]
+    },
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_evidence.lineage_edge",
+      "nerivane_evidence.publication_gate",
+      "nerivane_evidence.semantic_case",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  "state_before": {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "project": {
+      "display_name": "datapredict-nerivane-sandbox",
+      "lifecycle_state": "ACTIVE",
+      "parent": null,
+      "project_id": "datapredict-nerivane-2026",
+      "project_number": "1094152932383"
+    },
+    "resources": {
+      "dataset_access_control_source": "DATASET_ACCESS_FROM_BQ_SHOW_FULL",
+      "datasets": [
+        {
+          "acl_entry_count": 4,
+          "approved_user_owner_present": true,
+          "dataset_id": "nerivane_raw",
+          "default_partition_expiration_ms": 5184000000,
+          "default_table_expiration_ms": 2592000000,
+          "public_or_cross_resource_grant_present": false,
+          "status": "PASS"
+        },
+        {
+          "acl_entry_count": 4,
+          "approved_user_owner_present": true,
+          "dataset_id": "nerivane_reference",
+          "default_partition_expiration_ms": 5184000000,
+          "default_table_expiration_ms": 2592000000,
+          "public_or_cross_resource_grant_present": false,
+          "status": "PASS"
+        },
+        {
+          "acl_entry_count": 4,
+          "approved_user_owner_present": true,
+          "dataset_id": "nerivane_staging",
+          "default_partition_expiration_ms": 5184000000,
+          "default_table_expiration_ms": 2592000000,
+          "public_or_cross_resource_grant_present": false,
+          "status": "PASS"
+        },
+        {
+          "acl_entry_count": 4,
+          "approved_user_owner_present": true,
+          "dataset_id": "nerivane_mart",
+          "default_partition_expiration_ms": 5184000000,
+          "default_table_expiration_ms": 2592000000,
+          "public_or_cross_resource_grant_present": false,
+          "status": "PASS"
+        },
+        {
+          "acl_entry_count": 4,
+          "approved_user_owner_present": true,
+          "dataset_id": "nerivane_evidence",
+          "default_partition_expiration_ms": 5184000000,
+          "default_table_expiration_ms": 2592000000,
+          "public_or_cross_resource_grant_present": false,
+          "status": "PASS"
+        }
+      ],
+      "models": [],
+      "project_iam": {
+        "approved_user_present": true,
+        "binding_count": 1,
+        "member_count": 1,
+        "public_or_external_principal_present": false,
+        "roles": [
+          "roles/owner"
+        ],
+        "status": "PASS"
+      },
+      "routines": [],
+      "row_access_policy_control": "CLOSED_SQL_FORBIDS_ROW_ACCESS_POLICY_DDL",
+      "row_access_policy_observation": "NOT_AVAILABLE_WITH_NON_ALLOWLISTED_BQ_CLI",
+      "table_iam_direct_policy_observation": "NOT_AVAILABLE_WITH_NON_ALLOWLISTED_BQ_CLI",
+      "tables": [
+        "nerivane_raw.crm_order_line"
+      ]
+    },
+    "tables": [
+      "nerivane_raw.crm_order_line"
+    ]
+  },
+  "status": "PASS",
+  "table_contracts": [
+    {
+      "clustering": [
+        "site_id",
+        "channel",
+        "bridge_rule_id"
+      ],
+      "expiration_delta_ms": 5184000000,
+      "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+      "expiration_source": "timePartitioning.expirationMs",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "environment": "sandbox",
+        "layer": "raw",
+        "sample": "v1",
+        "source": "crm"
+      },
+      "logical_bytes": 25166652,
+      "partition_expiration_ms": 5184000000,
+      "partition_field": "business_date",
+      "partition_type": "DAY",
+      "require_partition_filter": true,
+      "rows": 164487,
+      "schema_sha256": "51f0f64414a1e6d5818d5a148d7117de0a2d65c3767609508d95c35a0ba39d83",
+      "status": "PASS",
+      "table": "nerivane_raw.crm_order_line"
+    },
+    {
+      "clustering": [
+        "site_id",
+        "channel",
+        "bridge_rule_id"
+      ],
+      "expiration_delta_ms": 5184000000,
+      "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+      "expiration_source": "timePartitioning.expirationMs",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "environment": "sandbox",
+        "layer": "raw",
+        "sample": "v1",
+        "source": "erp"
+      },
+      "logical_bytes": 21294756,
+      "partition_expiration_ms": 5184000000,
+      "partition_field": "business_date",
+      "partition_type": "DAY",
+      "require_partition_filter": true,
+      "rows": 139182,
+      "schema_sha256": "e92ec771ee679cee409939ac584009aa573435972332c8fefde7be3093430e29",
+      "status": "PASS",
+      "table": "nerivane_raw.erp_invoice_line"
+    },
+    {
+      "clustering": [
+        "site_id",
+        "channel",
+        "bridge_rule_id"
+      ],
+      "expiration_delta_ms": 5184000000,
+      "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+      "expiration_source": "timePartitioning.expirationMs",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "environment": "sandbox",
+        "layer": "raw",
+        "sample": "v1",
+        "source": "finance"
+      },
+      "logical_bytes": 18068031,
+      "partition_expiration_ms": 5184000000,
+      "partition_field": "business_date",
+      "partition_type": "DAY",
+      "require_partition_filter": true,
+      "rows": 118094,
+      "schema_sha256": "129825dfd47552470535b09fc3eb88321f163d8404b8ebe171a9a13211389841",
+      "status": "PASS",
+      "table": "nerivane_raw.finance_ledger_line"
+    },
+    {
+      "clustering": [],
+      "expiration_delta_ms": 2592000000,
+      "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+      "expiration_source": "expirationTime_minus_creationTime",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "organization",
+        "environment": "sandbox",
+        "layer": "reference",
+        "sample": "v1"
+      },
+      "logical_bytes": 576,
+      "partition_expiration_ms": null,
+      "partition_field": null,
+      "partition_type": null,
+      "require_partition_filter": false,
+      "rows": 10,
+      "schema_sha256": "20a081f566a226c189797a03c67bbf6b14234d8458ff2092f37cd4010f1246cc",
+      "status": "PASS",
+      "table": "nerivane_reference.site"
+    },
+    {
+      "clustering": [],
+      "expiration_delta_ms": 2592000000,
+      "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+      "expiration_source": "expirationTime_minus_creationTime",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "governance",
+        "environment": "sandbox",
+        "layer": "reference",
+        "sample": "v1"
+      },
+      "logical_bytes": 1441,
+      "partition_expiration_ms": null,
+      "partition_field": null,
+      "partition_type": null,
+      "require_partition_filter": false,
+      "rows": 18,
+      "schema_sha256": "2a66b64c8269265915939e1a55892c187444d06dbee813cec6b818c73f122e28",
+      "status": "PASS",
+      "table": "nerivane_reference.role"
+    },
+    {
+      "clustering": [
+        "primary_role_id",
+        "site_id"
+      ],
+      "expiration_delta_ms": 2592000000,
+      "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+      "expiration_source": "expirationTime_minus_creationTime",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "governance",
+        "environment": "sandbox",
+        "layer": "reference",
+        "sample": "v1"
+      },
+      "logical_bytes": 1198,
+      "partition_expiration_ms": null,
+      "partition_field": null,
+      "partition_type": null,
+      "require_partition_filter": false,
+      "rows": 26,
+      "schema_sha256": "d07bdb324b38ddb77a212af571a4b562da6bb793c5f112a7602aa7c8196b88aa",
+      "status": "PASS",
+      "table": "nerivane_reference.person"
+    },
+    {
+      "clustering": [
+        "role_id",
+        "scope_id"
+      ],
+      "expiration_delta_ms": 2592000000,
+      "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+      "expiration_source": "expirationTime_minus_creationTime",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "governance",
+        "environment": "sandbox",
+        "layer": "reference",
+        "sample": "v1"
+      },
+      "logical_bytes": 1574,
+      "partition_expiration_ms": null,
+      "partition_field": null,
+      "partition_type": null,
+      "require_partition_filter": false,
+      "rows": 37,
+      "schema_sha256": "d004e20bd8a063fe854666298424e4a173abdecd8f5fd3723c2479ac4cfaf6e6",
+      "status": "PASS",
+      "table": "nerivane_reference.assignment"
+    },
+    {
+      "clustering": [
+        "owner_role_id",
+        "status"
+      ],
+      "expiration_delta_ms": 2592000000,
+      "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+      "expiration_source": "expirationTime_minus_creationTime",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "documents",
+        "environment": "sandbox",
+        "layer": "reference",
+        "sample": "v1"
+      },
+      "logical_bytes": 2599,
+      "partition_expiration_ms": null,
+      "partition_field": null,
+      "partition_type": null,
+      "require_partition_filter": false,
+      "rows": 28,
+      "schema_sha256": "40e2f4bcd1299c3e0e5c0e781bb9fc4cb2e274637efa9d2234a44902dec45a76",
+      "status": "PASS",
+      "table": "nerivane_reference.document"
+    },
+    {
+      "clustering": [
+        "site_id",
+        "channel"
+      ],
+      "expiration_delta_ms": 5184000000,
+      "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+      "expiration_source": "timePartitioning.expirationMs",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "finance",
+        "environment": "sandbox",
+        "layer": "staging",
+        "sample": "v1"
+      },
+      "logical_bytes": 12502049,
+      "partition_expiration_ms": 5184000000,
+      "partition_field": "business_date",
+      "partition_type": "DAY",
+      "require_partition_filter": true,
+      "rows": 100823,
+      "schema_sha256": "4f0e477755a0172df99163ffb447e49f71892d20142248427ea8467f943b6051",
+      "status": "PASS",
+      "table": "nerivane_staging.canonical_financial_line"
+    },
+    {
+      "clustering": [
+        "source_system",
+        "bridge_rule_id"
+      ],
+      "expiration_delta_ms": 5184000000,
+      "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+      "expiration_source": "timePartitioning.expirationMs",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "governance",
+        "environment": "sandbox",
+        "layer": "staging",
+        "sample": "v1"
+      },
+      "logical_bytes": 1863312,
+      "partition_expiration_ms": 5184000000,
+      "partition_field": "business_date",
+      "partition_type": "DAY",
+      "require_partition_filter": true,
+      "rows": 8452,
+      "schema_sha256": "90ce36952340418be37dd5d978d50a9b3887c3a73fa04dda704c74d4e076d1db",
+      "status": "PASS",
+      "table": "nerivane_staging.bridge_exception"
+    },
+    {
+      "clustering": [
+        "source_system"
+      ],
+      "expiration_delta_ms": 5184000000,
+      "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+      "expiration_source": "timePartitioning.expirationMs",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "kpi",
+        "environment": "sandbox",
+        "layer": "mart",
+        "sample": "v1"
+      },
+      "logical_bytes": 257,
+      "partition_expiration_ms": 5184000000,
+      "partition_field": "kpi_month",
+      "partition_type": "MONTH",
+      "require_partition_filter": true,
+      "rows": 3,
+      "schema_sha256": "2af02d7033501d9d3c925b2f3605856f21a7a9aed6cfdbc5cea7ca86f122f723",
+      "status": "PASS",
+      "table": "nerivane_mart.kpi_source_value"
+    },
+    {
+      "clustering": [
+        "source_system",
+        "bridge_rule_id"
+      ],
+      "expiration_delta_ms": 5184000000,
+      "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+      "expiration_source": "timePartitioning.expirationMs",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "kpi",
+        "environment": "sandbox",
+        "layer": "mart",
+        "sample": "v1"
+      },
+      "logical_bytes": 1567,
+      "partition_expiration_ms": 5184000000,
+      "partition_field": "kpi_month",
+      "partition_type": "MONTH",
+      "require_partition_filter": true,
+      "rows": 12,
+      "schema_sha256": "495a338e23c7312121b516f6fd4d8c06ee0163b8cd8b9830e66ddc3d0519ee9e",
+      "status": "PASS",
+      "table": "nerivane_mart.kpi_bridge_adjustment"
+    },
+    {
+      "clustering": [],
+      "expiration_delta_ms": 5184000000,
+      "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+      "expiration_source": "timePartitioning.expirationMs",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "kpi",
+        "environment": "sandbox",
+        "layer": "mart",
+        "sample": "v1"
+      },
+      "logical_bytes": 131,
+      "partition_expiration_ms": 5184000000,
+      "partition_field": "kpi_month",
+      "partition_type": "MONTH",
+      "require_partition_filter": true,
+      "rows": 1,
+      "schema_sha256": "48241f64e0ec84c99374c943a06f596c06526754356e9e6a64d48fa91148a0d7",
+      "status": "PASS",
+      "table": "nerivane_mart.kpi_certified"
+    },
+    {
+      "clustering": [
+        "category",
+        "status"
+      ],
+      "expiration_delta_ms": 2592000000,
+      "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+      "expiration_source": "expirationTime_minus_creationTime",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "controls",
+        "environment": "sandbox",
+        "layer": "evidence",
+        "sample": "v1"
+      },
+      "logical_bytes": 4169,
+      "partition_expiration_ms": null,
+      "partition_field": null,
+      "partition_type": null,
+      "require_partition_filter": false,
+      "rows": 24,
+      "schema_sha256": "a2d4398ff8bcee7df13757bf7d245b42dacbb05b7d714b87c509c15a60779088",
+      "status": "PASS",
+      "table": "nerivane_evidence.control_result"
+    },
+    {
+      "clustering": [
+        "from_asset",
+        "to_asset"
+      ],
+      "expiration_delta_ms": 2592000000,
+      "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+      "expiration_source": "expirationTime_minus_creationTime",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "lineage",
+        "environment": "sandbox",
+        "layer": "evidence",
+        "sample": "v1"
+      },
+      "logical_bytes": 2333,
+      "partition_expiration_ms": null,
+      "partition_field": null,
+      "partition_type": null,
+      "require_partition_filter": false,
+      "rows": 18,
+      "schema_sha256": "4100ba9657da1dc788745370d7e40b8b2f943872ef5a98b56a3f57f4ae773ee6",
+      "status": "PASS",
+      "table": "nerivane_evidence.lineage_edge"
+    },
+    {
+      "clustering": [
+        "case_kind",
+        "category"
+      ],
+      "expiration_delta_ms": 2592000000,
+      "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+      "expiration_source": "expirationTime_minus_creationTime",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "ai_gate",
+        "environment": "sandbox",
+        "layer": "evidence",
+        "sample": "v1"
+      },
+      "logical_bytes": 5356,
+      "partition_expiration_ms": null,
+      "partition_field": null,
+      "partition_type": null,
+      "require_partition_filter": false,
+      "rows": 24,
+      "schema_sha256": "e1b05e6ff23ef8aa135a71d8b665b56cb50714252e0c31d7940bbc13be6f228a",
+      "status": "PASS",
+      "table": "nerivane_evidence.semantic_case"
+    },
+    {
+      "clustering": [],
+      "expiration_delta_ms": 2592000000,
+      "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+      "expiration_source": "expirationTime_minus_creationTime",
+      "labels": {
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "domain": "publication",
+        "environment": "sandbox",
+        "layer": "evidence",
+        "sample": "v1"
+      },
+      "logical_bytes": 172,
+      "partition_expiration_ms": null,
+      "partition_field": null,
+      "partition_type": null,
+      "require_partition_filter": false,
+      "rows": 1,
+      "schema_sha256": "7cfc129279912dd77becc3becd79b18eb327a339619a2734792099573af846a1",
+      "status": "PASS",
+      "table": "nerivane_evidence.publication_gate"
+    }
+  ],
+  "total_logical_bytes": 78916173
+}
