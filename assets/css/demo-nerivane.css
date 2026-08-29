@@ -179,7 +179,7 @@
   box-shadow: 0 14px 34px rgba(78, 52, 10, 0.08);
 }
 
-.nerivane-maintenance h1 {
+.nerivane-maintenance h2 {
   margin: 0 0 0.55rem;
   color: #5f400d;
   font-size: clamp(1.25rem, 2.5vw, 1.8rem);
