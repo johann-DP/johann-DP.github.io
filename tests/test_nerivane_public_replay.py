@@ -97,6 +97,18 @@ class NerivanePublicReplayTests(unittest.TestCase):
             ],
         )
 
+    def test_maintenance_state_is_explicit_on_page_and_catalogue(self):
+        page = PAGE.read_text(encoding="utf-8")
+        catalogue = CATALOGUE.read_text(encoding="utf-8")
+        script = SCRIPT.read_text(encoding="utf-8")
+        self.assertIn('data-maintenance="true"', page)
+        self.assertIn("Maintenance planifiée", page)
+        self.assertIn("à partir du 3 septembre 2026", page)
+        self.assertIn("Les résultats finaux demeurent volontairement fermés", page)
+        self.assertIn(">Maintenance<", catalogue)
+        self.assertIn("Consulter la version de maintenance", catalogue)
+        self.assertIn('headerState.dataset.maintenance !== "true"', script)
+
     def test_every_claim_has_status_scope_proof_fingerprint_and_limit(self):
         data = load_data()
         claims = all_claims(data)

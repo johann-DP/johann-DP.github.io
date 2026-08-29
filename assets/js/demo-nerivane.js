@@ -510,7 +510,7 @@
     })
     .then((data) => {
       state.data = validateData(data);
-      if (headerState) {
+      if (headerState && headerState.dataset.maintenance !== "true") {
         headerState.dataset.status = statusClass(state.data.mode.status);
         headerState.innerHTML = `<span aria-hidden="true">●</span> ${escapeHtml(state.data.mode.label)}`;
       }

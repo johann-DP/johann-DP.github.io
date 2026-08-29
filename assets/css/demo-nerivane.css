@@ -168,6 +168,31 @@
   font-weight: 900;
 }
 
+.nerivane-maintenance {
+  width: min(1500px, calc(100% - 2rem));
+  margin: 1.25rem auto 0;
+  padding: clamp(1.1rem, 3vw, 1.7rem);
+  border: 1px solid #d7b36c;
+  border-left: 5px solid #c28620;
+  border-radius: 0.8rem;
+  background: var(--nerivane-warning-soft);
+  box-shadow: 0 14px 34px rgba(78, 52, 10, 0.08);
+}
+
+.nerivane-maintenance h1 {
+  margin: 0 0 0.55rem;
+  color: #5f400d;
+  font-size: clamp(1.25rem, 2.5vw, 1.8rem);
+  line-height: 1.2;
+}
+
+.nerivane-maintenance p:last-child {
+  max-width: 100ch;
+  margin: 0;
+  color: #684b1b;
+  line-height: 1.6;
+}
+
 .nerivane-breadcrumb {
   width: min(1500px, calc(100% - 2rem));
   margin: 0 auto;
