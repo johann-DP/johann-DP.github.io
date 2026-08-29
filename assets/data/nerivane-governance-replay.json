@@ -1,5 +1,5 @@
 {
-  "formatVersion": "0.1.0",
+  "formatVersion": "0.2.0",
   "updatedAt": "2026-08-29",
   "title": "Nérivane Distribution — gouverner un KPI à l’échelle Big Data",
   "subtitle": "De trois définitions contradictoires à une décision traçable, reproductible et assumée",
@@ -9,9 +9,9 @@
     "status": "BLOQUÉ",
     "scope": "Replay public Nérivane Distribution, version de préparation du 29 août 2026",
     "proof": {
-      "label": "Registre public de préparation",
-      "href": "../assets/data/nerivane-governance-replay.json",
-      "sha256": "NON_SCELLÉ"
+      "label": "Manifeste du paquet public candidat",
+      "href": "../assets/nerivane-public-v1/replay-manifest.json",
+      "sha256": "3242b7d917b180cd6fae5c0d4792b97ea5e6629fb251c3ca5906685207e970dc"
     },
     "limitation": "Le replay décrit la chaîne attendue, mais ne vaut ni preuve finale H1, ni résultat BigQuery V2, ni qualification IA V16."
   },
@@ -65,12 +65,72 @@
         "status": "BLOQUÉ",
         "scope": "Décision publique finale de la démonstration",
         "proof": {
-          "label": "Registre public de préparation",
-          "href": "../assets/data/nerivane-governance-replay.json",
-          "sha256": "NON_SCELLÉ"
+          "label": "Manifeste du replay candidat — porte bloquée",
+          "href": "../assets/nerivane-public-v1/replay-manifest.json",
+          "sha256": "3242b7d917b180cd6fae5c0d4792b97ea5e6629fb251c3ca5906685207e970dc"
         },
         "limitation": "Le KPI ne deviendra publiable qu’après convergence des preuves H1, BigQuery, IA et de l’arbitrage humain."
       }
+    ]
+  },
+  "corpus": {
+    "title": "Le dossier métier est consultable, pièce par pièce",
+    "lead": "Le scénario ne repose pas sur quelques libellés décoratifs : 28 documents synthétiques décrivent le mandat, les responsabilités, les définitions, les contrats de données, les contrôles, les décisions et le passage au RUN.",
+    "status": "MESURÉ",
+    "scope": "Snapshot candidat Nérivane v1, organisation et données entièrement fictives",
+    "limitation": "Ce corpus démontre la profondeur et la cohérence documentaire du scénario. Il ne prouve ni l’achèvement H1, ni un échantillon BigQuery V2, ni la qualification IA finale.",
+    "counts": {
+      "documents": 28,
+      "people": 26,
+      "roles": 18,
+      "assignments": 37,
+      "sites": 10,
+      "sourceSystems": 4
+    },
+    "manifest": {
+      "label": "Manifeste du corpus — 28 documents",
+      "href": "../assets/nerivane-public-v1/corpus-manifest.json",
+      "sha256": "46dc9d2735eb672eef5724e5692b0a9d56259004a91fa2d8bac5b234de955f30"
+    },
+    "references": {
+      "label": "Référentiels détaillés des responsabilités",
+      "href": "../assets/nerivane-public-v1/references.html",
+      "sha256": "5e15e7c9515ff4aedf9171029daaeb0e97a2c3a30dbc3eb2fcbdda74dd76c736"
+    },
+    "package": {
+      "label": "Parcourir le paquet public candidat à sept étapes",
+      "href": "../assets/nerivane-public-v1/index.html",
+      "sha256": "728937c725698a6edfdc4d200eede22c51df4456bf3d8e024df6d3032d09b552"
+    },
+    "documents": [
+      {"id": "DOC-001", "title": "Note sponsor de reprise du programme", "href": "../assets/nerivane-public-v1/documents/DOC-001.html", "sha256": "d9fedc44b7177367bd94f456021e0a53054491f422827e9e5deb0c793190f8ba"},
+      {"id": "DOC-002", "title": "Charte du programme KPI gouverné", "href": "../assets/nerivane-public-v1/documents/DOC-002.html", "sha256": "33f90733d746eeefadcf14786576ea1342ab0e333f2c9b43159b74e73e4b348f"},
+      {"id": "DOC-003", "title": "RACI de reprise et de RUN", "href": "../assets/nerivane-public-v1/documents/DOC-003.html", "sha256": "1899d9fb5baff98c84098d53687acb3ad71fc708726eaf7efb3cbba9ddab51d5"},
+      {"id": "DOC-004", "title": "Matrice des délégations", "href": "../assets/nerivane-public-v1/documents/DOC-004.html", "sha256": "8ce2eafec3c6522ce1e0a24fd99e3e39aebd9d74769cb6a692d060a52778a9cb"},
+      {"id": "DOC-005", "title": "Organisation et périmètre multi-sites", "href": "../assets/nerivane-public-v1/documents/DOC-005.html", "sha256": "887c5e5589de54e3f460bf975e5214523e1e29b558fe2c7351a3a0a909c504ad"},
+      {"id": "DOC-006", "title": "Définition historique du chiffre d’affaires net", "href": "../assets/nerivane-public-v1/documents/DOC-006.html", "sha256": "19fc0919be1c0ce5db63518188246f0fd97c3d7107bbf1c49d9e7266ffeb2ee7"},
+      {"id": "DOC-007", "title": "Définition arbitrée du chiffre d’affaires net", "href": "../assets/nerivane-public-v1/documents/DOC-007.html", "sha256": "b6a0fdbdc60b55a5456cc2eb291aff81f33d3616af3b936368034ce2c0cf5885"},
+      {"id": "DOC-008", "title": "Contrat certifié du KPI chiffre d’affaires net", "href": "../assets/nerivane-public-v1/documents/DOC-008.html", "sha256": "94574aa2470273d2af55ef61798a87f2a8b1b97e4b953f4c527419bb9fbd16a8"},
+      {"id": "DOC-009", "title": "Contrat de données CRM", "href": "../assets/nerivane-public-v1/documents/DOC-009.html", "sha256": "1c3e6a2cc07a562792eb6eb9391fe0d6638555b82f5035ee74dba669c9c2d162"},
+      {"id": "DOC-010", "title": "Contrat de données ERP", "href": "../assets/nerivane-public-v1/documents/DOC-010.html", "sha256": "9eabc921101a85159e8717a45c5bbbe41f36cd6cefac2bca464406b001f03011"},
+      {"id": "DOC-011", "title": "Contrat de données Finance", "href": "../assets/nerivane-public-v1/documents/DOC-011.html", "sha256": "7d3352c30eb626c97e646c2613f388371ac4ede4397ced561796d994766ec61e"},
+      {"id": "DOC-012", "title": "Contrat de données WMS", "href": "../assets/nerivane-public-v1/documents/DOC-012.html", "sha256": "f1df00cf23d43a47a60c47f36cc368e7203091d464f7bd8a1f2a20b77e7deee4"},
+      {"id": "DOC-013", "title": "Politique des référentiels maîtres", "href": "../assets/nerivane-public-v1/documents/DOC-013.html", "sha256": "87d27d357c29aabeb11921a4160f9cb9e7475eebe23a93face4813f241fc7752"},
+      {"id": "DOC-014", "title": "Table de correspondance des identifiants sources", "href": "../assets/nerivane-public-v1/documents/DOC-014.html", "sha256": "9ef56e6dd8466cea8002dc983138350d7554a590b968e2e3bae2c522e01fb227"},
+      {"id": "DOC-015", "title": "Référentiel des règles de qualité", "href": "../assets/nerivane-public-v1/documents/DOC-015.html", "sha256": "b35456ebcaf745b976af5c6c9714c9143abacc56922b220f360ad8ad6c66f2f9"},
+      {"id": "DOC-016", "title": "Manifeste des anomalies injectées", "href": "../assets/nerivane-public-v1/documents/DOC-016.html", "sha256": "ebcb07f7abdde2911a2561ac1d255175a55280743f5f1cb52396241f1eb78574"},
+      {"id": "DOC-017", "title": "Manifeste des données synthétiques", "href": "../assets/nerivane-public-v1/documents/DOC-017.html", "sha256": "8fc6e42cabfe5ecbdee71f9a862c03edbd05de95937f7b965cda3ef4e9de4071"},
+      {"id": "DOC-018", "title": "Spécification du lignage de bout en bout", "href": "../assets/nerivane-public-v1/documents/DOC-018.html", "sha256": "7c2b1a02c412d9b76b1f507eeec15e907106868bf4b00171c1866fe4f9b91a3d"},
+      {"id": "DOC-019", "title": "Rapport qualité initial", "href": "../assets/nerivane-public-v1/documents/DOC-019.html", "sha256": "6b3c570fffc38e83039e0aa409fc0b266109102bad62b0e50c95f12c469b3f97"},
+      {"id": "DOC-020", "title": "Pont de rapprochement CRM ERP Finance", "href": "../assets/nerivane-public-v1/documents/DOC-020.html", "sha256": "60cdab380f178272dd1ee2195b1865814b448db01288ff82d95899e3c2904fd0"},
+      {"id": "DOC-021", "title": "Journal des décisions et arbitrages", "href": "../assets/nerivane-public-v1/documents/DOC-021.html", "sha256": "71027f49451f2fdc1169efa9b4fc923e4f581724ee6de40c29a44c8955bf5bd2"},
+      {"id": "DOC-022", "title": "Registre RAID", "href": "../assets/nerivane-public-v1/documents/DOC-022.html", "sha256": "793defdaa48413545f7d607bd3dafd33e3629eae1a354621851d295ac5911f8c"},
+      {"id": "DOC-023", "title": "Backlog priorisé et critères d’acceptation", "href": "../assets/nerivane-public-v1/documents/DOC-023.html", "sha256": "e0f9106579d4acad26200e6cc8d3272454bc49ae798dd965441c7c70c9ba61d0"},
+      {"id": "DOC-024", "title": "Plan de transition vers le RUN", "href": "../assets/nerivane-public-v1/documents/DOC-024.html", "sha256": "9386d369f6388cac6efe6140fe75ed4421efa05d95501bd3bcbf80d20fdc6c7c"},
+      {"id": "DOC-025", "title": "Runbook d’exploitation du data product", "href": "../assets/nerivane-public-v1/documents/DOC-025.html", "sha256": "a73e9eef785d41b259cb6e34f60dfd4bcbbb91cf9d908a0cdb8c2fa8110b4ed7"},
+      {"id": "DOC-026", "title": "Procès-verbal d’acceptation et de certification", "href": "../assets/nerivane-public-v1/documents/DOC-026.html", "sha256": "2987a52947b6bb6bf3ab476ebb254922f4e942032d49859216af259edab5afd7"},
+      {"id": "DOC-027", "title": "Rapport du veto sémantique IA", "href": "../assets/nerivane-public-v1/documents/DOC-027.html", "sha256": "a1f8a74c7f0ac902b87f7b14bc1ffe162dced5b41b3f3c5a83d689404204c38b"},
+      {"id": "DOC-028", "title": "Index public des preuves", "href": "../assets/nerivane-public-v1/documents/DOC-028.html", "sha256": "8f32ce40dea5769e5659a267993caf981cce136a59f14e38aa75f46fda5324bd"}
     ]
   },
   "steps": [
@@ -111,14 +171,14 @@
           "id": "definitions-corpus",
           "label": "Définitions concurrentes documentées",
           "value": "3 chaînes métier à rapprocher",
-          "status": "PLANIFIÉ",
+          "status": "MESURÉ",
           "scope": "Corpus fictif Nérivane, périmètre S1 2021",
           "proof": {
-            "label": "Corpus métier public — publication attendue",
-            "href": "../assets/data/nerivane-governance-replay.json",
-            "sha256": "NON_SCELLÉ"
+            "label": "Dossier des définitions et pièces associées",
+            "href": "../assets/nerivane-public-v1/steps/01.html",
+            "sha256": "18f56418d202a883c20575d2ed0e9e748386e26b0096102340790eed2d789a0a"
           },
-          "limitation": "Les définitions sont le scénario gouverné ; elles ne prouveront la crédibilité du cas qu’après publication des documents fictifs associés."
+          "limitation": "Ces documents prouvent la cohérence du scénario gouverné, pas la certification du KPI ni l’exécution H1."
         },
         {
           "id": "kpi-candidate",
@@ -127,9 +187,9 @@
           "status": "BLOQUÉ",
           "scope": "KPI consolidé présenté au Comité exécutif fictif",
           "proof": {
-            "label": "Dossier d’arbitrage public — en attente",
-            "href": "../assets/data/nerivane-governance-replay.json",
-            "sha256": "NON_SCELLÉ"
+            "label": "Procès-verbal candidat — décision non signée",
+            "href": "../assets/nerivane-public-v1/documents/DOC-026.html",
+            "sha256": "2987a52947b6bb6bf3ab476ebb254922f4e942032d49859216af259edab5afd7"
           },
           "limitation": "Le refus actuel est une protection de préparation, pas encore la décision finale du Data Owner."
         }
@@ -472,9 +532,9 @@
           "status": "EXÉCUTÉ_NON_VALIDÉ",
           "scope": "Échantillon pilote uniquement, antérieur au H1 complet",
           "proof": {
-            "label": "Preuve pilote assainie — à rattacher",
-            "href": "../assets/data/nerivane-governance-replay.json",
-            "sha256": "NON_RATTACHÉ"
+            "label": "Manifeste assaini du pont pilote V1",
+            "href": "../assets/nerivane-public-v1/evidence/gcp/sample-apply/20260826T070016Z/manifest.json",
+            "sha256": "5d46406599ff66d458366ebe352ca18b33ddcc3d53d28c4388cb01a952863f33"
           },
           "limitation": "Ce pont valide une mécanique de contrôle, pas le lignage H1 final ni le volume Big Data."
         },
@@ -559,9 +619,9 @@
           "status": "PLANIFIÉ",
           "scope": "Gate de gouvernance appliqué au dossier de certification du KPI",
           "proof": {
-            "label": "Contrat de décision public",
-            "href": "../assets/data/nerivane-governance-replay.json",
-            "sha256": "NON_SCELLÉ"
+            "label": "Rapport candidat du veto sémantique",
+            "href": "../assets/nerivane-public-v1/documents/DOC-027.html",
+            "sha256": "a1f8a74c7f0ac902b87f7b14bc1ffe162dced5b41b3f3c5a83d689404204c38b"
           },
           "limitation": "Même après PASS, SQL, contrôles déterministes et décision humaine restent obligatoires."
         }

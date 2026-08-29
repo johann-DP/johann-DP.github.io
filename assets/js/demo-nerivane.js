@@ -53,9 +53,54 @@
     assertText(claim.proof?.sha256, `${label}.proof.sha256`);
   }
 
+  function validateResource(resource, label) {
+    assertText(resource?.label, `${label}.label`);
+    assertText(resource?.href, `${label}.href`);
+    if (!/^[0-9a-f]{64}$/.test(resource?.sha256 ?? "")) {
+      throw new Error(`Empreinte invalide : ${label}.sha256`);
+    }
+  }
+
   function validateData(data) {
     assertText(data.title, "title");
     assertText(data.subtitle, "subtitle");
+    if (data.formatVersion !== "0.2.0") throw new Error("Version de registre inattendue");
+    const corpus = data.corpus;
+    assertText(corpus?.title, "corpus.title");
+    assertText(corpus?.lead, "corpus.lead");
+    assertText(corpus?.scope, "corpus.scope");
+    assertText(corpus?.limitation, "corpus.limitation");
+    if (corpus?.status !== "MESURÉ") throw new Error("Le corpus public stable doit être mesuré");
+    validateResource(corpus.manifest, "corpus.manifest");
+    validateResource(corpus.references, "corpus.references");
+    validateResource(corpus.package, "corpus.package");
+    const expectedCounts = {
+      documents: 28,
+      people: 26,
+      roles: 18,
+      assignments: 37,
+      sites: 10,
+      sourceSystems: 4,
+    };
+    if (JSON.stringify(corpus.counts) !== JSON.stringify(expectedCounts)) {
+      throw new Error("Comptages du corpus public inattendus");
+    }
+    if (!Array.isArray(corpus.documents) || corpus.documents.length !== 28) {
+      throw new Error("Le corpus public doit exposer 28 documents");
+    }
+    const documentIds = new Set();
+    corpus.documents.forEach((document, index) => {
+      const expectedId = `DOC-${String(index + 1).padStart(3, "0")}`;
+      if (document.id !== expectedId || documentIds.has(document.id)) {
+        throw new Error("Ordre ou identifiant documentaire invalide");
+      }
+      documentIds.add(document.id);
+      assertText(document.title, `corpus.documents[${index}].title`);
+      assertText(document.href, `corpus.documents[${index}].href`);
+      if (!/^[0-9a-f]{64}$/.test(document.sha256 ?? "")) {
+        throw new Error(`Empreinte documentaire invalide : ${document.id}`);
+      }
+    });
     if (!Array.isArray(data.steps) || data.steps.length !== 7) throw new Error("Sept étapes sont requises");
     const claimIds = new Set();
     const allClaims = [...(data.introduction?.summaryClaims ?? [])];
@@ -250,6 +295,53 @@
     </ol>`;
   }
 
+  function renderCorpus() {
+    const corpus = state.data.corpus;
+    const counts = corpus.counts;
+    return `
+      <section class="nerivane-corpus" id="corpus-public" aria-labelledby="corpus-title">
+        <header>
+          <div>
+            <p class="nerivane-eyebrow">Dossier public assaini</p>
+            <h2 id="corpus-title">${escapeHtml(corpus.title)}</h2>
+            <p>${escapeHtml(corpus.lead)}</p>
+          </div>
+          ${statusBadge(corpus.status)}
+        </header>
+        <div class="nerivane-corpus__metrics" aria-label="Composition du corpus public">
+          <a href="${escapeHtml(safeHref(corpus.manifest.href))}">
+            <strong>${counts.documents}</strong>
+            <span>documents fictifs consultables</span>
+            <small>Manifeste ${escapeHtml(corpus.manifest.sha256)}</small>
+          </a>
+          <a href="${escapeHtml(safeHref(corpus.references.href))}">
+            <strong>${counts.people} personnes · ${counts.roles} rôles</strong>
+            <span>${counts.assignments} affectations et délégations</span>
+            <small>${counts.sites} sites · ${counts.sourceSystems} systèmes sources</small>
+          </a>
+          <a href="${escapeHtml(safeHref(corpus.package.href))}">
+            <strong>7 étapes</strong>
+            <span>Paquet public candidat autonome</span>
+            <small>Gate finale maintenue fermée</small>
+          </a>
+        </div>
+        <details class="nerivane-corpus__library">
+          <summary>Parcourir les 28 pièces du dossier <span aria-hidden="true">＋</span></summary>
+          <ol>
+            ${corpus.documents.map((document) => `
+              <li>
+                <a href="${escapeHtml(safeHref(document.href))}">
+                  <span>${escapeHtml(document.id)}</span>
+                  <strong>${escapeHtml(document.title)}</strong>
+                  <small>SHA-256 ${escapeHtml(document.sha256)}</small>
+                </a>
+              </li>`).join("")}
+          </ol>
+        </details>
+        <p class="nerivane-corpus__limit"><strong>Portée :</strong> ${escapeHtml(corpus.scope)}. ${escapeHtml(corpus.limitation)}</p>
+      </section>`;
+  }
+
   function renderIntroduction() {
     const intro = state.data.introduction;
     return `
@@ -280,7 +372,8 @@
       <section class="nerivane-summary" id="registre-preuves" aria-labelledby="summary-title">
         <header><p class="nerivane-eyebrow">Trois repères avant le départ</p><h2 id="summary-title">La page refuse de confondre intention et résultat</h2></header>
         <div>${intro.summaryClaims.map(renderClaim).join("")}</div>
-      </section>`;
+      </section>
+      ${renderCorpus()}`;
   }
 
   function renderStep() {

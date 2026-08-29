@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Runbook d&#x27;exploitation du data product — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-025</nav>
+<p class="eyebrow">Document synthétique · DOC-025</p>
+<h1>Runbook d&#x27;exploitation du data product</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Éric Masson</dd></div>
+  <div><dt>Rôle</dt><dd>Responsable RUN BI</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>95329b29c2c4f1953e4ff26d7d680123758c658b74de23af26410ee8f10865de</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Démonstration — document entièrement fictif.</strong> Ce runbook, ses personnes, ses seuils et son organisation sont simulés. Il décrit un mode opératoire candidat et ne doit pas être utilisé pour exploiter un système réel.</blockquote>
+<h2>Runbook d'exploitation du data product</h2>
+<h3 id="DOC-025-PERIMETRE">Périmètre de service</h3>
+<p>Le service candidat couvre la génération ou la lecture du corpus gouverné, l’exécution des contrôles déterministes, l’avis sémantique local, la vérification des citations, la préparation de l’arbitrage et la production d’un replay public statique. Il ne couvre ni une inférence publique en direct, ni la certification autonome du KPI par un modèle.</p>
+<p>Le KPI de référence est <code>KPI-CA-NET-001</code>. La valeur en centimes est calculée par les règles déterministes ; le gate sémantique agit uniquement sur la publication.</p>
+<h3 id="DOC-025-PRECONDITIONS">Préconditions d'une exécution</h3>
+<p>Avant chaque run, l’opérateur vérifie que le snapshot, le manifeste du corpus, le prompt, le schéma de sortie, la révision du modèle et l’image du runtime correspondent à la politique approuvée. Le répertoire de sortie doit être nouveau. Le runtime IA doit être hors réseau et ne doit recevoir aucun fichier de vérité du jeu d’or.</p>
+<p>Les entrées sont refusées si une empreinte diffère, si une ancre documentaire ne se résout pas, si un document classé autrement que <code>PUBLIC</code> entre dans le replay ou si un résultat antérieur risque d’être écrasé.</p>
+<h3 id="DOC-025-SEQUENCE">Séquence d'exploitation</h3>
+<div class="table-wrap"><table><thead><tr><th>Ordre</th><th>Opération</th><th>Produit attendu</th><th>Condition d’arrêt</th></tr></thead><tbody>
+<tr><td>1</td><td>Vérifier le manifeste et les ancres du corpus.</td><td>Rapport d’intégrité.</td><td>Fichier, version ou ancre absent.</td></tr>
+<tr><td>2</td><td>Rejouer les contrôles déterministes.</td><td>Résultats de contrôle signés par empreinte.</td><td>Un contrôle requis n’est pas <code>PASS</code>.</td></tr>
+<tr><td>3</td><td>Charger le modèle local et enregistrer sa révision.</td><td>Preuve du runtime et des poids.</td><td>Révision ou capacité mémoire non conforme.</td></tr>
+<tr><td>4</td><td>Exécuter le jeu d’or aveugle.</td><td>Sorties JSON brutes et métriques.</td><td>Seuil d’acceptation non atteint.</td></tr>
+<tr><td>5</td><td>Exécuter le plein corpus.</td><td>Avis IA et findings cités.</td><td>Erreur, timeout ou sortie invalide.</td></tr>
+<tr><td>6</td><td>Vérifier schéma, citations et verdict dérivé.</td><td>Rapport déterministe de validation.</td><td>Citation non résolue ou verdict incohérent.</td></tr>
+<tr><td>7</td><td>Ouvrir les arbitrages.</td><td>Dossiers associés aux findings.</td><td>Finding majeur ou critique sans propriétaire.</td></tr>
+<tr><td>8</td><td>Construire le replay public.</td><td>Bundle statique assaini.</td><td>Secret, identité réelle ou chemin local détecté.</td></tr>
+</tbody></table></div>
+<h3 id="DOC-025-STATUTS">Règles de statut</h3>
+<p><code>PASS_TECHNIQUE</code> signifie que les données et contrôles déterministes ont convergé. <code>BLOCKED_AI_PENDING</code> signifie que l’inférence n’est pas exécutée. <code>BLOCKED_AI_VETO</code> signifie qu’au moins un finding critique valide existe. <code>PENDING_HUMAN_REVIEW</code> signifie que des findings nécessitent une décision. <code>READY_FOR_ACCEPTANCE</code> exige l’absence de blocage, les arbitrages achevés et les contrôles rejoués.</p>
+<p>Tout état inconnu se ramène à <code>BLOCKED_TECHNICAL_ERROR</code>. L’absence de sortie n’est jamais interprétée comme <code>ADMISSIBLE</code>.</p>
+<h3 id="DOC-025-SURVEILLANCE">Surveillance et alertes</h3>
+<p>Une alerte critique est émise pour une empreinte d’entrée différente, un schéma invalide, une citation non résolue, une divergence entre verdict et sévérité, un faux <code>ADMISSIBLE</code> sur un cas critique du jeu d’or ou une tentative de publication alors que <code>CTRL-024</code> reste bloqué.</p>
+<p>Une alerte majeure couvre la dérive de durée, une différence non critique entre replays, un arbitrage arrivé à échéance ou une documentation non courante encore référencée. Les métriques n’embarquent aucun contenu sensible ; elles utilisent les identifiants fictifs et les empreintes publiques.</p>
+<h3 id="DOC-025-INCIDENTS">Gestion des incidents</h3>
+<p>L’opérateur conserve la sortie brute et le journal privé, classe l’incident, puis interdit la promotion du replay. Il ne corrige jamais manuellement le JSON du modèle pour le faire passer. Une correction du prompt, du corpus ou du runtime crée une nouvelle version et déclenche les cinq replays complets.</p>
+<p>En cas de citation erronée, le finding reste visible avec l’état <code>REJECTED_BY_VERIFIER</code>; il ne peut pas servir de preuve d’arbitrage. En cas d’indisponibilité GPU, aucun appel API de secours n’est lancé sans une politique et un budget distincts explicitement autorisés.</p>
+<h3 id="DOC-025-CONSERVATION">Conservation et preuve publique</h3>
+<p>Le bundle public contient seulement les entrées assainies, les empreintes, les sorties structurées, les vérifications, les décisions fictives et l’état du gate. Les observations d’identité, secrets, clés, journaux détaillés et chemins locaux restent exclus.</p>
+<p>Chaque bundle est immuable et indexé. Une nouvelle exécution n’efface jamais une preuve antérieure, même invalide. Cette règle permet d’expliquer une reprise sans fabriquer une continuité artificielle.</p>
+<h3 id="DOC-025-ETAT">État opérationnel candidat</h3>
+<p><code>CTRL-001</code> prouve le nombre physique de lignes du corpus GCP V1 et <code>CTRL-023</code> son intégrité référentielle. <code>CTRL-024</code> maintient le gate fermé. Le runbook est prêt comme conception, mais l’exploitation IA décrite ici n’a pas encore été exécutée ; le service n’est donc pas accepté en RUN.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qualité de l’acquisition météorologique</title>
+<style>
+:root {
+  color-scheme: light;
+  --ink: #18212b;
+  --muted: #5c6670;
+  --blue: #234b9b;
+  --orange: #f05a3c;
+  --green: #41b883;
+  --panel: #ffffff;
+  --plot: #e5ecf6;
+  --edge: #d2dbe5;
+  --warn: #9a5a00;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: #dfe7ed; color: var(--ink); }
+body { font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.page { width: 100%; margin: 0; padding: clamp(10px, 2vw, 28px); }
+.surface { width: 100%; background: var(--panel); padding: clamp(14px, 2.2vw, 34px); }
+h1 { margin: 0 0 6px; font-size: clamp(1.35rem, 2.5vw, 2.05rem); font-weight: 620; line-height: 1.18; }
+h2 { margin: 24px 0 4px; font-size: clamp(1.08rem, 1.7vw, 1.35rem); }
+p { margin: 4px 0; }
+.lead { color: var(--muted); font-size: clamp(.9rem, 1.25vw, 1.02rem); line-height: 1.45; }
+.facts { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 9px; margin: 16px 0 12px; }
+.facts.quality-facts { grid-template-columns: repeat(5, minmax(130px, 1fr)); }
+.fact { min-width: 0; padding: 10px 12px; background: #f7f9fb; border-left: 4px solid var(--blue); }
+.fact strong { display: block; font-size: 1.12rem; }
+.fact span { display: block; color: var(--muted); font-size: .78rem; margin-top: 2px; }
+.control { display: flex; align-items: end; gap: 12px; flex-wrap: wrap; margin: 14px 0 4px; }
+.control label { display: grid; gap: 5px; font-weight: 620; min-width: min(100%, 440px); }
+select { width: min(100%, 720px); min-height: 42px; padding: 8px 10px; font: inherit; color: var(--ink); background: #fff; border: 1px solid #aeb9c5; border-radius: 4px; }
+.status { min-height: 42px; padding: 9px 12px; background: #f7f9fb; border: 1px solid var(--edge); color: var(--muted); line-height: 1.35; }
+.plot { width: 100%; min-height: 570px; }
+.plot.compact { min-height: 430px; }
+.plot.tall { min-height: 680px; }
+.section { margin-top: 18px; border-top: 1px solid var(--edge); padding-top: 8px; }
+.note { margin-top: 8px; color: var(--muted); font-size: .82rem; line-height: 1.45; }
+.warning { color: var(--warn); font-weight: 620; }
+.fatal { padding: 24px; color: #8f1d1d; background: #fff1f1; border: 1px solid #e5aaaa; }
+@media (max-width: 760px) {
+  .page { padding: 0; }
+  .surface { padding: 14px 8px; }
+  .facts { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+  .facts.quality-facts { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+  .plot { min-height: 500px; }
+  .plot.tall { min-height: 660px; }
+}
+</style>
+<script src="../assets/plotly-2.35.2.min.js" charset="utf-8"></script>
+</head>
+<body>
+
+<main class="page"><article class="surface">
+  <h1>Qualité et continuité de l’acquisition météorologique</h1>
+  <p class="lead">Contrôles descriptifs effectués sur les valeurs brutes. Ils documentent l’acquisition ; ils ne corrigent ni ne fusionnent les données.</p>
+  <p class="note"><strong>Horodatage :</strong> Offset source +0800 conservé ; correspondance avec l’heure civile locale non validée.</p>
+  <div class="facts quality-facts">
+    <div class="fact"><strong>23 241</strong><span>lignes lues dans 11 XLS</span></div>
+    <div class="fact"><strong>156</strong><span>doublons exacts retirés</span></div>
+    <div class="fact"><strong>29</strong><span>intervalles strictement supérieurs à 2 h</span></div>
+    <div class="fact"><strong>0</strong><span>canal entièrement vide retenu</span></div>
+    <div class="fact"><strong>35</strong><span>valeurs brutes &gt; 1 000 °C</span></div>
+  </div>
+
+  <section class="section"><h2>Complétude des 21 mesures retenues</h2>
+    <p class="lead">Part des 23 085 horodatages disposant d’une valeur pour chaque champ.</p>
+    <div id="completeness" class="plot tall" role="img" aria-label="Complétude de chaque mesure météorologique"></div>
+    <p class="note">Les champs de capteurs hors périmètre sont exclus de cette vue conformément à la sélection validée.</p>
+  </section>
+
+  <section class="section"><h2>Valeurs brutes anormales de la température minimale extérieure</h2>
+    <p class="lead">Le champ <strong>Outdoor Tem.Min(°C)</strong> contient exactement 35 valeurs supérieures à 1 000 °C, toutes égales à la valeur brute 36 390,5 °C. Ce seuil reprend le diagnostic du code historique ; ici, ces observations sont conservées telles quelles et ne sont ni corrigées ni interpolées.</p>
+    <div id="temperature-anomalies" class="plot compact" role="img" aria-label="Dates et valeurs des températures minimales extérieures brutes supérieures à mille degrés Celsius"></div>
+  </section>
+
+  <section class="section"><h2>Trous temporels d’acquisition</h2>
+    <p class="lead">Tous les intervalles entre observations successives strictement supérieurs à 2 heures ; l’axe vertical logarithmique conserve la lisibilité des petits et grands trous.</p>
+    <div id="gaps" class="plot compact" role="img" aria-label="Trous temporels supérieurs à deux heures"></div>
+  </section>
+
+  <section class="section"><h2>Chevauchements entre extractions</h2>
+    <p class="lead">Les 156 lignes répétées sont toutes des doublons exacts situés aux frontières de fichiers ; aucun horodatage répété ne subsiste après leur retrait.</p>
+    <div id="duplicates" class="plot compact" role="img" aria-label="Doublons exacts entre fichiers source"></div>
+  </section>
+
+  <section class="section"><h2>Transition du schéma des vitesses de vent</h2>
+    <p class="lead">Disponibilité séparée des trois champs bruts. La transition observée dans les fichiers n’est pas interprétée comme une équivalence de mesures.</p>
+    <div id="wind" class="plot compact" role="img" aria-label="Disponibilité temporelle des trois champs de vitesse du vent"></div>
+  </section>
+  <p class="note"><strong>Règle appliquée :</strong> concaténation dans l’ordre des fichiers du dépôt, tri chronologique, retrait des seuls doublons strictement identiques. Aucun lissage, aucune interpolation, aucune agrégation et aucune fusion des trois champs de vent.</p>
+</article></main>
+
+<script id="payload" type="application/json">{"completeness":[{"name":"Indoor Tem(°C)","count":23085,"percent":100,"empty":false},{"name":"Indoor Tem.Max(°C)","count":23085,"percent":100,"empty":false},{"name":"Indoor Tem.Min(°C)","count":23085,"percent":100,"empty":false},{"name":"Indoor Hum(%)","count":23085,"percent":100,"empty":false},{"name":"Indoor Hum.Max(%)","count":23085,"percent":100,"empty":false},{"name":"Indoor Hum.Min(%)","count":23085,"percent":100,"empty":false},{"name":"Outdoor Tem(°C)","count":23085,"percent":100,"empty":false},{"name":"Outdoor Tem.Max(°C)","count":23085,"percent":100,"empty":false},{"name":"Outdoor Tem.Min(°C)","count":23085,"percent":100,"empty":false},{"name":"Outdoor Hum(%)","count":23085,"percent":100,"empty":false},{"name":"Outdoor Hum.Max(%)","count":23085,"percent":100,"empty":false},{"name":"Outdoor Hum.Min(%)","count":23085,"percent":100,"empty":false},{"name":"Rainfull(Hour)(mm)","count":23085,"percent":100,"empty":false},{"name":"Rainfull(Day)(mm)","count":23085,"percent":100,"empty":false},{"name":"Wind speed(km/h)","count":6238,"percent":27.021876,"empty":false},{"name":"Wind direction","count":23085,"percent":100,"empty":false},{"name":"Light intensity","count":23085,"percent":100,"empty":false},{"name":"UV rating","count":23085,"percent":100,"empty":false},{"name":"Pressure(hpa)","count":23085,"percent":100,"empty":false},{"name":"Wind speed(Hour)(km/h)","count":16847,"percent":72.978124,"empty":false},{"name":"Wind speed(Day)(km/h)","count":16847,"percent":72.978124,"empty":false}],"temperatureAnomalies":[{"time":"2024-03-07T11:00:14.000+0800","value":36390.5},{"time":"2024-03-07T12:00:07.000+0800","value":36390.5},{"time":"2024-03-07T13:02:09.000+0800","value":36390.5},{"time":"2024-03-07T14:00:33.000+0800","value":36390.5},{"time":"2024-03-07T15:00:28.000+0800","value":36390.5},{"time":"2024-03-07T16:00:23.000+0800","value":36390.5},{"time":"2024-03-07T17:00:19.000+0800","value":36390.5},{"time":"2024-03-07T18:00:27.000+0800","value":36390.5},{"time":"2024-03-07T19:00:23.000+0800","value":36390.5},{"time":"2024-03-07T20:00:18.000+0800","value":36390.5},{"time":"2024-03-07T21:00:13.000+0800","value":36390.5},{"time":"2024-03-07T22:00:09.000+0800","value":36390.5},{"time":"2024-03-07T23:00:04.000+0800","value":36390.5},{"time":"2024-03-08T00:00:56.000+0800","value":36390.5},{"time":"2024-03-08T01:00:21.000+0800","value":36390.5},{"time":"2024-03-08T02:00:15.000+0800","value":36390.5},{"time":"2024-03-08T03:00:10.000+0800","value":36390.5},{"time":"2024-03-08T04:00:05.000+0800","value":36390.5},{"time":"2024-03-08T05:01:01.000+0800","value":36390.5},{"time":"2024-03-08T06:00:56.000+0800","value":36390.5},{"time":"2025-04-26T15:00:40.000+0800","value":36390.5},{"time":"2025-04-26T16:00:36.000+0800","value":36390.5},{"time":"2025-04-26T17:00:32.000+0800","value":36390.5},{"time":"2025-04-26T18:00:27.000+0800","value":36390.5},{"time":"2025-04-26T19:00:27.000+0800","value":36390.5},{"time":"2025-04-26T20:00:23.000+0800","value":36390.5},{"time":"2025-04-26T21:00:18.000+0800","value":36390.5},{"time":"2025-04-26T22:00:14.000+0800","value":36390.5},{"time":"2025-04-26T23:00:10.000+0800","value":36390.5},{"time":"2025-04-27T00:00:08.000+0800","value":36390.5},{"time":"2025-04-27T01:00:10.000+0800","value":36390.5},{"time":"2025-04-27T02:00:11.000+0800","value":36390.5},{"time":"2025-04-27T03:00:07.000+0800","value":36390.5},{"time":"2025-04-27T04:00:02.000+0800","value":36390.5},{"time":"2025-04-27T05:00:03.000+0800","value":36390.5}],"gaps":[{"from":"2023-12-06T23:00:56.000+0800","to":"2023-12-17T16:51:21.000+0800","hours":257.840278},{"from":"2023-12-23T21:56:07.000+0800","to":"2023-12-23T23:56:22.000+0800","hours":2.004167},{"from":"2023-12-30T15:50:42.000+0800","to":"2023-12-30T17:50:58.000+0800","hours":2.004444},{"from":"2024-01-01T22:00:37.000+0800","to":"2024-01-02T00:15:57.000+0800","hours":2.255556},{"from":"2024-02-09T04:54:13.000+0800","to":"2024-02-09T06:54:29.000+0800","hours":2.004444},{"from":"2024-02-25T23:00:14.000+0800","to":"2024-02-26T01:00:26.000+0800","hours":2.003333},{"from":"2024-03-08T21:00:26.000+0800","to":"2024-03-08T23:00:53.000+0800","hours":2.0075},{"from":"2024-03-29T03:00:12.000+0800","to":"2024-03-29T15:08:11.000+0800","hours":12.133056},{"from":"2024-03-30T04:00:47.000+0800","to":"2024-03-30T15:27:48.000+0800","hours":11.450278},{"from":"2024-03-31T02:00:15.000+0800","to":"2024-03-31T16:48:23.000+0800","hours":14.802222},{"from":"2024-04-20T23:00:36.000+0800","to":"2024-04-21T01:01:16.000+0800","hours":2.011111},{"from":"2024-04-21T11:00:45.000+0800","to":"2024-04-21T13:01:22.000+0800","hours":2.010278},{"from":"2024-05-01T03:00:04.000+0800","to":"2024-05-01T05:00:37.000+0800","hours":2.009167},{"from":"2024-06-30T23:00:34.000+0800","to":"2024-07-02T11:00:12.000+0800","hours":35.993889},{"from":"2024-07-05T10:00:02.000+0800","to":"2024-07-05T12:00:04.000+0800","hours":2.000556},{"from":"2024-08-25T23:00:19.000+0800","to":"2024-08-26T01:00:44.000+0800","hours":2.006944},{"from":"2024-09-01T21:00:38.000+0800","to":"2024-09-02T06:00:02.000+0800","hours":8.99},{"from":"2024-09-14T23:00:13.000+0800","to":"2024-09-15T01:00:32.000+0800","hours":2.005278},{"from":"2024-09-18T21:00:26.000+0800","to":"2024-09-18T23:00:50.000+0800","hours":2.006667},{"from":"2024-11-19T10:00:06.000+0800","to":"2024-11-22T18:10:01.000+0800","hours":80.165278},{"from":"2025-06-30T23:00:21.000+0800","to":"2025-07-04T15:00:48.000+0800","hours":88.0075},{"from":"2025-08-15T22:00:03.000+0800","to":"2025-08-16T00:00:56.000+0800","hours":2.014722},{"from":"2025-09-09T00:00:03.000+0800","to":"2025-09-09T03:34:35.000+0800","hours":3.575556},{"from":"2025-09-14T23:00:44.000+0800","to":"2025-09-15T17:54:07.000+0800","hours":18.889722},{"from":"2025-10-29T23:00:24.000+0800","to":"2025-10-30T01:00:48.000+0800","hours":2.006667},{"from":"2025-11-12T23:00:29.000+0800","to":"2025-11-13T01:00:37.000+0800","hours":2.002222},{"from":"2025-12-11T22:00:38.000+0800","to":"2025-12-12T00:00:40.000+0800","hours":2.000556},{"from":"2025-12-29T21:00:16.000+0800","to":"2025-12-29T23:00:26.000+0800","hours":2.002778},{"from":"2026-03-24T08:00:02.000+0800","to":"2026-03-24T11:46:59.000+0800","hours":3.7825}],"duplicates":[{"left":"20240902_20241202.xls","right":"20241202_20250302.xls","count":24},{"left":"20241202_20250302.xls","right":"20250302_20250602.xls","count":24},{"left":"20250302_20250602.xls","right":"20250602_20250902.xls","count":24},{"left":"20250602_20250902.xls","right":"20250902_20251202.xls","count":24},{"left":"20250902_20251202.xls","right":"20251202_20260302.xls","count":24},{"left":"20251202_20260302.xls","right":"20260302_20260524.xls","count":24},{"left":"20260302_20260524.xls","right":"20260524_20260816.xls","count":12}],"wind":[{"name":"Wind speed(km/h)","count":6238,"first":"2023-12-01T07:00:19.000+0800","last":"2024-09-01T21:00:38.000+0800"},{"name":"Wind speed(Hour)(km/h)","count":16847,"first":"2024-09-02T06:00:02.000+0800","last":"2026-08-16T18:00:23.000+0800"},{"name":"Wind speed(Day)(km/h)","count":16847,"first":"2024-09-02T06:00:02.000+0800","last":"2026-08-16T18:00:23.000+0800"}]}</script>
+<script>
+const payload = JSON.parse(document.getElementById('payload').textContent);
+if (!window.Plotly) { document.body.insertAdjacentHTML('afterbegin', '<div class="fatal"><strong>Plotly indisponible.</strong> Le fichier partagé ../assets/plotly-2.35.2.min.js doit accompagner cette page.</div>'); }
+else {
+
+const cfg = {responsive: true, displaylogo: false};
+const font = {family: 'Inter, Segoe UI, sans-serif', color: '#18212b', size: 12};
+const base = {paper_bgcolor: '#ffffff', plot_bgcolor: '#e5ecf6', showlegend: false, font};
+const mobile = window.matchMedia('(max-width: 760px)').matches;
+
+const comp = payload.completeness.slice().reverse();
+Plotly.newPlot('completeness', [{
+  type: 'bar', orientation: 'h', y: comp.map(d => d.name), x: comp.map(d => d.percent),
+  customdata: comp.map(d => [d.count, d.empty ? 'Canal entièrement vide' : '']),
+  marker: {color: comp.map(d => d.empty ? '#d7a13b' : (d.percent < 99.999 ? '#f05a3c' : '#234b9b'))},
+  hovertemplate: '<b>%{y}</b><br>%{x:.2f} %<br>%{customdata[0]:,d} valeurs<br>%{customdata[1]}<extra></extra>'
+}], {...base,
+  margin: {l: mobile ? 150 : 245, r: 18, t: 20, b: 55},
+  xaxis: {title: 'Complétude (%)', range: [0, 101], gridcolor: '#ffffff'},
+  yaxis: {automargin: true, tickfont: {size: mobile ? 8 : 11}}
+}, cfg);
+
+Plotly.newPlot('temperature-anomalies', [{
+  type: 'scatter', mode: 'markers',
+  x: payload.temperatureAnomalies.map(d => d.time),
+  y: payload.temperatureAnomalies.map(d => d.value),
+  customdata: payload.temperatureAnomalies.map(d => d.time),
+  marker: {size: 10, color: '#f05a3c', line: {width: 1, color: '#8c2f1b'}},
+  hovertemplate: '<b>%{y:,.1f} °C</b><br>Horodatage source : %{customdata}<extra></extra>'
+}], {...base,
+  margin: {l: mobile ? 66 : 88, r: 20, t: 20, b: 65},
+  xaxis: {title: 'Date', gridcolor: '#ffffff'},
+  yaxis: {title: 'Valeur brute (°C)', gridcolor: '#ffffff', tickformat: ',.1f'}
+}, cfg);
+
+Plotly.newPlot('gaps', [{
+  type: 'scatter', mode: 'markers', x: payload.gaps.map(d => d.to), y: payload.gaps.map(d => d.hours),
+  customdata: payload.gaps.map(d => [d.from, d.to, d.hours]),
+  marker: {size: 9, color: payload.gaps.map(d => d.hours), colorscale: 'YlOrRd', showscale: false, line: {width: 1, color: '#7d321f'}},
+  hovertemplate: '<b>%{customdata[2]:.3f} h</b><br>Dernière mesure : %{customdata[0]}<br>Reprise : %{customdata[1]}<extra></extra>'
+}], {...base,
+  margin: {l: mobile ? 58 : 72, r: 20, t: 20, b: 65},
+  xaxis: {title: 'Date de reprise — offset source +0800 au survol', gridcolor: '#ffffff'},
+  yaxis: {
+    title: 'Durée du trou (h, échelle log)', type: 'log', gridcolor: '#ffffff',
+    range: [Math.log10(1.9), Math.log10(300)],
+    tickmode: 'array', tickvals: [2, 3, 6, 12, 24, 48, 96, 192],
+    ticktext: ['2', '3', '6', '12', '24', '48', '96', '192']
+  }
+}, cfg);
+
+const dupLabels = payload.duplicates.map(d => d.left.slice(0, 8) + ' → ' + d.right.slice(0, 8));
+Plotly.newPlot('duplicates', [{
+  type: 'bar', x: dupLabels, y: payload.duplicates.map(d => d.count),
+  customdata: payload.duplicates.map(d => [d.left, d.right]),
+  marker: {color: '#234b9b'}, text: payload.duplicates.map(d => d.count), textposition: 'outside',
+  hovertemplate: '<b>%{y} doublons exacts</b><br>%{customdata[0]}<br>%{customdata[1]}<extra></extra>'
+}], {...base,
+  margin: {l: mobile ? 50 : 62, r: 14, t: 28, b: mobile ? 125 : 100},
+  xaxis: {title: 'Paire de fichiers en chevauchement', tickangle: -22, gridcolor: '#ffffff'},
+  yaxis: {title: 'Lignes répétées', rangemode: 'tozero', gridcolor: '#ffffff'}
+}, cfg);
+
+const windColors = ['#234b9b', '#f05a3c', '#41b883'];
+const windTraces = payload.wind.map((d, i) => ({
+  type: 'scatter', mode: 'lines+markers', name: d.name, x: [d.first, d.last], y: [d.name, d.name],
+  customdata: [[d.count, d.first, d.last], [d.count, d.first, d.last]],
+  line: {width: 8, color: windColors[i]}, marker: {size: 11, color: windColors[i]},
+  hovertemplate: '<b>%{y}</b><br>%{customdata[0]:,d} valeurs<br>Première : %{customdata[1]}<br>Dernière : %{customdata[2]}<extra></extra>'
+}));
+const firstNew = payload.wind[1].first;
+Plotly.newPlot('wind', windTraces, {...base,
+  showlegend: false, margin: {l: mobile ? 145 : 220, r: 18, t: 45, b: 65},
+  xaxis: {title: 'Plage de disponibilité observée — offset source +0800 au survol', gridcolor: '#ffffff'},
+  yaxis: {automargin: true},
+  shapes: [{type: 'line', x0: firstNew, x1: firstNew, y0: -.5, y1: 2.5, line: {color: '#111827', width: 2, dash: 'dot'}}],
+  annotations: [{x: firstNew, y: 1.08, yref: 'paper', text: 'Première présence des deux nouveaux champs<br>' + firstNew, showarrow: false, xanchor: 'left', font: {size: 11}}]
+}, cfg);
+
+}
+</script>
+</body>
+</html>

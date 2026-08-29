@@ -1,3 +1,4 @@
+import hashlib
 import json
 import re
 import unittest
@@ -12,6 +13,10 @@ DATA = ROOT / "assets" / "data" / "nerivane-governance-replay.json"
 SCRIPT = ROOT / "assets" / "js" / "demo-nerivane.js"
 STYLE = ROOT / "assets" / "css" / "demo-nerivane.css"
 CATALOGUE = ROOT / "demonstrations.html"
+BUNDLE = ROOT / "assets" / "nerivane-public-v1"
+SITEMAP = ROOT / "sitemap.xml"
+WORKER = ROOT / "analytics-counter" / "src" / "worker.js"
+WORKFLOW = ROOT / ".github" / "workflows" / "site-ci.yml"
 ALLOWED_STATUSES = {"MESURÉ", "PLANIFIÉ", "BLOQUÉ", "EXÉCUTÉ_NON_VALIDÉ"}
 
 
@@ -42,6 +47,10 @@ def all_claims(data):
     ]
 
 
+def sha256(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 class NerivanePublicReplayTests(unittest.TestCase):
     def test_static_assets_and_catalogue_entry_exist(self):
         for path in (PAGE, DATA, SCRIPT, STYLE, CATALOGUE):
@@ -63,10 +72,16 @@ class NerivanePublicReplayTests(unittest.TestCase):
             "demonstrations/nerivane-distribution.html",
             CATALOGUE.read_text(encoding="utf-8"),
         )
+        catalogue = CATALOGUE.read_text(encoding="utf-8")
+        for preserved_demo in (
+            "demonstrations/ormevia-batiment.html",
+            "demonstrations/fissures.html",
+        ):
+            self.assertIn(preserved_demo, catalogue)
 
     def test_storyboard_has_exactly_seven_ordered_steps(self):
         data = load_data()
-        self.assertEqual(data["formatVersion"], "0.1.0")
+        self.assertEqual(data["formatVersion"], "0.2.0")
         self.assertEqual(len(data["steps"]), 7)
         self.assertEqual([step["order"] for step in data["steps"]], list(range(1, 8)))
         self.assertEqual(
@@ -102,6 +117,83 @@ class NerivanePublicReplayTests(unittest.TestCase):
                 self.assertTrue(proof_target.is_file(), proof["href"])
                 if claim["status"] == "MESURÉ":
                     self.assertRegex(proof["sha256"], r"^[0-9a-f]{64}$")
+                    self.assertEqual(proof["sha256"], sha256(proof_target))
+
+    def test_corpus_exposes_28_fingerprinted_documents_and_detailed_references(self):
+        corpus = load_data()["corpus"]
+        self.assertEqual(corpus["status"], "MESURÉ")
+        self.assertEqual(
+            corpus["counts"],
+            {
+                "documents": 28,
+                "people": 26,
+                "roles": 18,
+                "assignments": 37,
+                "sites": 10,
+                "sourceSystems": 4,
+            },
+        )
+        self.assertEqual(
+            [document["id"] for document in corpus["documents"]],
+            [f"DOC-{index:03d}" for index in range(1, 29)],
+        )
+        self.assertEqual(
+            len({document["href"] for document in corpus["documents"]}),
+            28,
+        )
+        for resource in (
+            corpus["manifest"],
+            corpus["references"],
+            corpus["package"],
+            *corpus["documents"],
+        ):
+            with self.subTest(resource=resource.get("id") or resource["label"]):
+                target = (PAGE.parent / urlsplit(resource["href"]).path).resolve()
+                self.assertTrue(target.is_file(), resource["href"])
+                self.assertRegex(resource["sha256"], r"^[0-9a-f]{64}$")
+                self.assertEqual(resource["sha256"], sha256(target))
+
+        manifest = json.loads((BUNDLE / "corpus-manifest.json").read_text(encoding="utf-8"))
+        references = json.loads((BUNDLE / "reference-registry.json").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["document_count"], 28)
+        self.assertTrue(manifest["fictional"])
+        self.assertEqual(len(references["people"]), 26)
+        self.assertEqual(len(references["roles"]), 18)
+        self.assertEqual(len(references["assignments"]), 37)
+        self.assertEqual(len(references["sites"]), 10)
+        self.assertEqual(len(references["source_systems"]), 4)
+
+    def test_copied_public_bundle_is_complete_and_immutable(self):
+        checksum_file = BUNDLE / "SHA256SUMS"
+        entries = []
+        for line in checksum_file.read_text(encoding="ascii").splitlines():
+            digest, relative = line.split("  ", 1)
+            entries.append((digest, relative))
+        self.assertEqual(len(entries), 128)
+        for expected, relative in entries:
+            with self.subTest(path=relative):
+                target = BUNDLE / relative
+                self.assertTrue(target.is_file(), relative)
+                self.assertEqual(sha256(target), expected)
+
+        replay = json.loads((BUNDLE / "replay-manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(replay["status"], "BLOCKED_CANDIDATE_AI_NOT_EXECUTED")
+        self.assertEqual(replay["counts"]["documents"], 28)
+        self.assertEqual(replay["counts"]["steps"], 7)
+
+    def test_stable_claims_link_to_their_piece_specific_proofs(self):
+        claims = {claim["id"]: claim for claim in all_claims(load_data())}
+        expected_suffixes = {
+            "definitions-corpus": "steps/01.html",
+            "kpi-candidate": "documents/DOC-026.html",
+            "pilot-v1": "evidence/gcp/sample-apply/20260826T070016Z/manifest.json",
+            "ai-gate": "documents/DOC-027.html",
+        }
+        for claim_id, suffix in expected_suffixes.items():
+            with self.subTest(claim=claim_id):
+                proof = claims[claim_id]["proof"]
+                self.assertTrue(proof["href"].endswith(suffix))
+                self.assertRegex(proof["sha256"], r"^[0-9a-f]{64}$")
 
     def test_visual_references_resolve_to_declared_claims(self):
         data = load_data()
@@ -157,6 +249,25 @@ class NerivanePublicReplayTests(unittest.TestCase):
         self.assertIn("Aucun résultat V16", claims["ai-v16"]["limitation"])
         self.assertEqual(claims["ai-v15"]["status"], "EXÉCUTÉ_NON_VALIDÉ")
 
+    def test_site_publication_plumbing_includes_nerivane(self):
+        canonical = "https://www.datapredict.org/demonstrations/nerivane-distribution.html"
+        self.assertIn(canonical, SITEMAP.read_text(encoding="utf-8"))
+        self.assertIn(
+            '"/demonstrations/nerivane-distribution.html": "Démo Nérivane"',
+            WORKER.read_text(encoding="utf-8"),
+        )
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        for marker in (
+            '"demonstrations/nerivane-distribution.html"',
+            '"assets/css/demo-nerivane.css"',
+            '"assets/data/nerivane-governance-replay.json"',
+            '"assets/js/demo-nerivane.js"',
+            '"assets/nerivane-public-v1/replay-manifest.json"',
+            "python3 -m unittest -q tests.test_nerivane_public_replay",
+            "node --check assets/js/demo-nerivane.js",
+        ):
+            self.assertIn(marker, workflow)
+
     def test_topology_and_resource_roles_are_explicit(self):
         data = load_data()
         topology = next(step for step in data["steps"] if step["id"] == "topologie")["visual"]
@@ -178,7 +289,14 @@ class NerivanePublicReplayTests(unittest.TestCase):
             re.compile(r"\b192\.168\.\d{1,3}\.\d{1,3}\b"),
             re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"),
         ]
-        for path in (PAGE, DATA, SCRIPT, STYLE):
+        public_files = (
+            PAGE,
+            DATA,
+            SCRIPT,
+            STYLE,
+            *(path for path in sorted(BUNDLE.rglob("*")) if path.is_file()),
+        )
+        for path in public_files:
             content = path.read_text(encoding="utf-8")
             for pattern in forbidden:
                 self.assertIsNone(pattern.search(content), f"private token in {path}: {pattern.pattern}")
