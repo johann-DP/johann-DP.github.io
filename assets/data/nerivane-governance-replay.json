@@ -1,0 +1,582 @@
+{
+  "formatVersion": "0.1.0",
+  "updatedAt": "2026-08-29",
+  "title": "Nérivane Distribution — gouverner un KPI à l’échelle Big Data",
+  "subtitle": "De trois définitions contradictoires à une décision traçable, reproductible et assumée",
+  "fictionNotice": "Nérivane Distribution, ses activités, ses personnes et ses documents métier sont fictifs. L’exécution technique et ses limites doivent être attestées par les artefacts publics liés.",
+  "mode": {
+    "label": "Projection publique pré-scellement",
+    "status": "BLOQUÉ",
+    "scope": "Replay public Nérivane Distribution, version de préparation du 29 août 2026",
+    "proof": {
+      "label": "Registre public de préparation",
+      "href": "../assets/data/nerivane-governance-replay.json",
+      "sha256": "NON_SCELLÉ"
+    },
+    "limitation": "Le replay décrit la chaîne attendue, mais ne vaut ni preuve finale H1, ni résultat BigQuery V2, ni qualification IA V16."
+  },
+  "statusDefinitions": {
+    "MESURÉ": "Une mesure et sa preuve publique assainie sont disponibles pour le périmètre indiqué.",
+    "PLANIFIÉ": "La cible ou la règle est définie, mais son exécution finale n’est pas attestée.",
+    "BLOQUÉ": "La conclusion reste volontairement fermée tant qu’une preuve requise manque.",
+    "EXÉCUTÉ_NON_VALIDÉ": "Une exécution a eu lieu, mais sa recette ou son scellement public n’est pas terminé."
+  },
+  "introduction": {
+    "kicker": "Replay de gouvernance · 7 décisions observables",
+    "headline": "Un chiffre n’est fiable que si l’on peut expliquer qui l’a défini, comment il a été calculé et pourquoi il a été publié.",
+    "lead": "Le Comité exécutif de Nérivane Distribution demande un KPI unique. Trois systèmes répondent différemment. Le parcours montre comment datapredict transforme cette divergence en décision gouvernée — et comment la preuve technique empêche une conclusion prématurée.",
+    "watch": [
+      "La distinction constante entre cible, exécution, mesure et validation",
+      "Le rôle réel des quatre nœuds et des stockages hétérogènes",
+      "Les contrôles qui peuvent refuser la publication du KPI",
+      "L’avis IA déterminant, sans effacer la responsabilité du Data Owner"
+    ],
+    "summaryClaims": [
+      {
+        "id": "intro-projection",
+        "label": "Cible H1 contractuelle",
+        "value": "1 919 118 297 934 octets",
+        "status": "PLANIFIÉ",
+        "scope": "Projection physique H1 complète, toutes couches on-prem confondues",
+        "proof": {
+          "label": "Contrat de projection public",
+          "href": "../assets/data/nerivane-governance-replay.json",
+          "sha256": "NON_SCELLÉ"
+        },
+        "limitation": "Cette valeur est une projection, soit environ 1,746 Tio. Elle ne doit jamais être présentée comme un volume effectivement produit."
+      },
+      {
+        "id": "intro-nodes",
+        "label": "Topologie visée",
+        "value": "4 nœuds · rôles différenciés",
+        "status": "PLANIFIÉ",
+        "scope": "r9, i7, r7 et i9 sur le parc de démonstration",
+        "proof": {
+          "label": "Registre topologique public",
+          "href": "../assets/data/nerivane-governance-replay.json",
+          "sha256": "NON_SCELLÉ"
+        },
+        "limitation": "La présence de quatre machines ne prouve pas leur contribution ; les recettes finales par nœud devront l’établir."
+      },
+      {
+        "id": "intro-publication",
+        "label": "KPI publiable",
+        "value": "NON — porte fermée",
+        "status": "BLOQUÉ",
+        "scope": "Décision publique finale de la démonstration",
+        "proof": {
+          "label": "Registre public de préparation",
+          "href": "../assets/data/nerivane-governance-replay.json",
+          "sha256": "NON_SCELLÉ"
+        },
+        "limitation": "Le KPI ne deviendra publiable qu’après convergence des preuves H1, BigQuery, IA et de l’arbitrage humain."
+      }
+    ]
+  },
+  "steps": [
+    {
+      "order": 1,
+      "id": "impasse-metier",
+      "kicker": "Décision 01 · Définir avant de calculer",
+      "title": "Trois systèmes, trois vérités apparentes",
+      "status": "PLANIFIÉ",
+      "businessQuestion": "Quel chiffre la Direction peut-elle réellement engager devant ses partenaires ?",
+      "summary": "Le CRM raisonne en commandes engagées, l’ERP en factures émises et la Finance en encaissements nets. Avant tout calcul massif, la gouvernance rend la contradiction visible et nomme les responsables de la trancher.",
+      "decision": "Le KPI reste candidat : aucune valeur ne peut être certifiée tant que définition, périmètre, date d’effet et responsable ne convergent pas.",
+      "visual": {
+        "type": "definitions",
+        "sources": [
+          {
+            "name": "CRM commercial",
+            "owner": "Direction commerciale",
+            "definition": "Commandes engagées, avec traitement propre des annulations tardives",
+            "claimId": "definitions-corpus"
+          },
+          {
+            "name": "ERP logistique",
+            "owner": "Direction des opérations",
+            "definition": "Factures émises après préparation et expédition",
+            "claimId": "definitions-corpus"
+          },
+          {
+            "name": "Clôture Finance",
+            "owner": "Direction financière",
+            "definition": "Encaissements nets rapprochés et corrigés des avoirs",
+            "claimId": "definitions-corpus"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "id": "definitions-corpus",
+          "label": "Définitions concurrentes documentées",
+          "value": "3 chaînes métier à rapprocher",
+          "status": "PLANIFIÉ",
+          "scope": "Corpus fictif Nérivane, périmètre S1 2021",
+          "proof": {
+            "label": "Corpus métier public — publication attendue",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "Les définitions sont le scénario gouverné ; elles ne prouveront la crédibilité du cas qu’après publication des documents fictifs associés."
+        },
+        {
+          "id": "kpi-candidate",
+          "label": "Statut de certification du KPI",
+          "value": "Candidat — publication refusée",
+          "status": "BLOQUÉ",
+          "scope": "KPI consolidé présenté au Comité exécutif fictif",
+          "proof": {
+            "label": "Dossier d’arbitrage public — en attente",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "Le refus actuel est une protection de préparation, pas encore la décision finale du Data Owner."
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "id": "h1-reel",
+      "kicker": "Décision 02 · Prouver l’échelle",
+      "title": "Une cible Big Data n’est pas une preuve Big Data",
+      "status": "BLOQUÉ",
+      "businessQuestion": "La gouvernance a-t-elle réellement été éprouvée sur un volume significatif ?",
+      "summary": "Le plan H1 fixe des nombres exacts et non ronds. Le replay sépare visuellement ce contrat de production du bilan physique final, qui restera vide tant que la campagne n’est pas scellée.",
+      "decision": "Le seuil commercial de 1,5 Tio ne sera revendiqué qu’à partir du manifeste final mesuré et vérifié, jamais à partir de la projection.",
+      "visual": {
+        "type": "h1",
+        "targetClaimId": "h1-projection",
+        "finalClaimId": "h1-final",
+        "target": [
+          {"label": "Triplets", "value": "1 320"},
+          {"label": "Fichiers", "value": "3 960"},
+          {"label": "Lignes physiques", "value": "2 004 364 194"},
+          {"label": "Octets physiques", "value": "1 919 118 297 934"}
+        ],
+        "final": [
+          {"label": "Triplets reçus", "value": "—"},
+          {"label": "Fichiers reçus", "value": "—"},
+          {"label": "Lignes mesurées", "value": "—"},
+          {"label": "Octets mesurés", "value": "—"}
+        ]
+      },
+      "claims": [
+        {
+          "id": "h1-projection",
+          "label": "Contrat de production H1",
+          "value": "1 320 triplets · 3 960 fichiers · 2 004 364 194 lignes · 1 919 118 297 934 octets",
+          "status": "PLANIFIÉ",
+          "scope": "Campagne on-prem complète 2021-H1, couches RAW, BRONZE et SILVER",
+          "proof": {
+            "label": "Projection contractuelle publique",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "Projection uniquement. Le volume correspond à environ 1,746 Tio mais ne prouve aucune donnée effectivement créée."
+        },
+        {
+          "id": "h1-final",
+          "label": "Bilan physique H1 scellé",
+          "value": "En attente du manifeste final",
+          "status": "BLOQUÉ",
+          "scope": "Campagne H1 réellement finalisée, reçus dédupliqués et fichiers inspectés",
+          "proof": {
+            "label": "Manifeste public H1 — indisponible avant scellement",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "Aucune quantité finale ne peut être affichée avant vérification des empreintes, des comptes exacts et du dépassement de 1,5 Tio."
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "id": "topologie",
+      "kicker": "Décision 03 · Affecter chaque ressource",
+      "title": "Quatre nœuds, des stockages différents, des rôles assumés",
+      "status": "EXÉCUTÉ_NON_VALIDÉ",
+      "businessQuestion": "Le parc est-il gouverné selon ses capacités réelles, ou seulement affiché sur un schéma ?",
+      "summary": "Le stockage durable principal reste sur r9. i7 apporte du calcul CPU et pourra recevoir une archive transverse après attestation de ses disques. r7 fournit calcul et cache borné. i9 privilégie CPU, RAM et GPU avec une empreinte de stockage minimale.",
+      "decision": "Ne pas utiliser un disque inconnu ou presque plein constitue une décision de gouvernance, pas une sous-utilisation.",
+      "visual": {
+        "type": "topology",
+        "nodes": [
+          {
+            "name": "r9",
+            "role": "Production et stockage durable principal",
+            "storage": "11 médias internes détectés · 7 rôles contractuels utiles",
+            "detail": "RAW sur HDD, BRONZE/SILVER sur NVMe distincts, contrôle sur SSD et trois shards d’archive.",
+            "status": "EXÉCUTÉ_NON_VALIDÉ",
+            "claimId": "r9-storage"
+          },
+          {
+            "name": "i7",
+            "role": "Worker CPU et archive transverse conditionnelle",
+            "storage": "SSD système + 3 HDD internes détectés",
+            "detail": "Aucune archive durable déclarée avant attestation de santé, montage contrôlé et inventaire des contenus.",
+            "status": "PLANIFIÉ",
+            "claimId": "i7-storage"
+          },
+          {
+            "name": "r7",
+            "role": "Worker CPU/GPU et cache borné",
+            "storage": "Cache WSL hébergé sur le SSD Windows",
+            "detail": "Le cache restera limité pour préserver la capacité d’usage normale de la machine.",
+            "status": "PLANIFIÉ",
+            "claimId": "edge-storage"
+          },
+          {
+            "name": "i9",
+            "role": "Calcul CPU/RAM/GPU prioritaire",
+            "storage": "Traces et cache léger uniquement",
+            "detail": "La puissance de calcul est privilégiée ; aucun stockage massif durable n’est attendu sur ce nœud.",
+            "status": "PLANIFIÉ",
+            "claimId": "edge-storage"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "id": "r9-storage",
+          "label": "Inventaire et affectation r9",
+          "value": "11 médias internes détectés · 7 rôles gouvernés",
+          "status": "EXÉCUTÉ_NON_VALIDÉ",
+          "scope": "Inventaire local r9 avant bilan H1 final",
+          "proof": {
+            "label": "Attestation topologique assainie — à sceller",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "L’inventaire a été observé, mais son attestation publique finale et la contribution H1 de chaque rôle ne sont pas encore scellées."
+        },
+        {
+          "id": "i7-storage",
+          "label": "Archive transverse i7",
+          "value": "Conditionnée à l’attestation des 3 HDD",
+          "status": "PLANIFIÉ",
+          "scope": "Trois disques internes non montés du nœud i7",
+          "proof": {
+            "label": "Contrôle de santé et de contenu — attendu",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "La présence matérielle ne suffit pas : santé, contenu, capacité libre et montage sûr doivent être attestés avant écriture."
+        },
+        {
+          "id": "edge-storage",
+          "label": "Empreinte de stockage r7/i9",
+          "value": "Bornée et non durable",
+          "status": "PLANIFIÉ",
+          "scope": "Caches, traces et artefacts de calcul des nœuds Windows/WSL",
+          "proof": {
+            "label": "Politique de capacité publique — à sceller",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "Les plafonds définitifs et les consommations réelles devront être publiés après la campagne."
+        }
+      ]
+    },
+    {
+      "order": 4,
+      "id": "ressources",
+      "kicker": "Décision 04 · Mesurer sans extrapoler",
+      "title": "L’efficacité se démontre fenêtre par fenêtre",
+      "status": "EXÉCUTÉ_NON_VALIDÉ",
+      "businessQuestion": "Les ressources du parc ont-elles été utilisées à bon escient ?",
+      "summary": "Une première fenêtre active sur r9 montre le profil réel du worker H1 : calcul CPU, mémoire et écritures disque, sans GPU. Le replay n’extrapole pas cette observation à toute la campagne ni aux autres nœuds.",
+      "decision": "Les GPU seront réservés aux traitements qui peuvent réellement en bénéficier, notamment la qualification IA ; les utiliser artificiellement pour fabriquer des Parquet serait contre-productif.",
+      "visual": {
+        "type": "resources",
+        "nodes": [
+          {
+            "name": "r9",
+            "role": "Génération H1 et I/O multi-stockages",
+            "metric": "15,068 s observées · 1 491 ticks CPU utilisateur · pic RSS 1 543 770 112 octets",
+            "gpu": "GPU non utilisé par H1",
+            "status": "EXÉCUTÉ_NON_VALIDÉ",
+            "claimId": "r9-window"
+          },
+          {
+            "name": "i7",
+            "role": "Worker H1 CPU",
+            "metric": "Fenêtre publique finale à collecter",
+            "gpu": "Aucun GPU NVIDIA déclaré",
+            "status": "BLOQUÉ",
+            "claimId": "other-windows"
+          },
+          {
+            "name": "r7",
+            "role": "Worker CPU · GPU pour tâches compatibles",
+            "metric": "Fenêtre publique finale à collecter",
+            "gpu": "RTX 4060 Laptop · preuve d’usage distincte requise",
+            "status": "BLOQUÉ",
+            "claimId": "other-windows"
+          },
+          {
+            "name": "i9",
+            "role": "Calcul CPU/RAM/GPU prioritaire",
+            "metric": "Fenêtre publique finale à collecter",
+            "gpu": "Quadro RTX 4000 · preuve d’usage distincte requise",
+            "status": "BLOQUÉ",
+            "claimId": "other-windows"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "id": "r9-window",
+          "label": "Fenêtre active r9",
+          "value": "15,068 s · 1 491 + 10 ticks CPU · 43 073 536 octets écrits",
+          "status": "EXÉCUTÉ_NON_VALIDÉ",
+          "scope": "Un worker H1 r9, fenêtre ponctuelle, horloge système à 100 ticks/s",
+          "proof": {
+            "label": "Capture de ressources assainie — archivage attendu",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_ARCHIVÉ"
+          },
+          "limitation": "Cette fenêtre ne décrit ni la campagne complète, ni les autres nœuds. Les compteurs réseau hôte ne sont pas attribuables au seul worker."
+        },
+        {
+          "id": "other-windows",
+          "label": "Mesures comparables i7/r7/i9",
+          "value": "À collecter et à sceller",
+          "status": "BLOQUÉ",
+          "scope": "Fenêtres actives comparables par nœud et par type de traitement",
+          "proof": {
+            "label": "Paquet de mesures multi-nœuds — indisponible",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "Aucune comparaison d’efficacité intermachine ne sera publiée avant des fenêtres homogènes et des périmètres explicites."
+        }
+      ]
+    },
+    {
+      "order": 5,
+      "id": "reprise",
+      "kicker": "Décision 05 · Rendre l’incident démontrable",
+      "title": "Une reprise gouvernée vaut mieux qu’un succès silencieux",
+      "status": "BLOQUÉ",
+      "businessQuestion": "Que se passe-t-il lorsqu’un worker disparaît au milieu d’un lot ?",
+      "summary": "Deux files WSL ont perdu leur processus sans produire de recette terminale. La détection ne se limite plus au compteur global d’erreurs : elle vérifie, par nœud, le processus engagé, la progression et le reçu final.",
+      "decision": "Les partiels sont préservés. La reprise doit repartir du checkpoint, avec le même runtime immuable, une topologie fraîche et une recette prouvant zéro perte et zéro doublon.",
+      "visual": {
+        "type": "recovery",
+        "events": [
+          {
+            "label": "Processus disparu détecté",
+            "detail": "r7 et i9 : ordre engagé sans recette terminale",
+            "status": "EXÉCUTÉ_NON_VALIDÉ",
+            "claimId": "incident-detected"
+          },
+          {
+            "label": "Partiels conservés",
+            "detail": "Aucune suppression ; quarantaine immuable prévue",
+            "status": "EXÉCUTÉ_NON_VALIDÉ",
+            "claimId": "incident-detected"
+          },
+          {
+            "label": "Reprise depuis checkpoint",
+            "detail": "Même contrôle, même runtime, topologie réattestée",
+            "status": "BLOQUÉ",
+            "claimId": "recovery-final"
+          },
+          {
+            "label": "Recette de convergence",
+            "detail": "Zéro perte, zéro doublon, empreintes conformes",
+            "status": "BLOQUÉ",
+            "claimId": "recovery-final"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "id": "incident-detected",
+          "label": "Anomalie de file prouvée",
+          "value": "2 files sans recette terminale",
+          "status": "EXÉCUTÉ_NON_VALIDÉ",
+          "scope": "Files H1 r7 et i9 au 29 août 2026",
+          "proof": {
+            "label": "Journal d’incident assaini — à publier",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "La disparition du processus est établie dans l’état de travail, mais le journal public et la cause finale ne sont pas encore scellés."
+        },
+        {
+          "id": "recovery-final",
+          "label": "Reprise H1 validée",
+          "value": "En attente",
+          "status": "BLOQUÉ",
+          "scope": "Reprise r7/i9 puis convergence de la campagne complète",
+          "proof": {
+            "label": "Recette de reprise — indisponible",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "Une reprise lancée sans recette finale resterait une exécution, pas une validation."
+        }
+      ]
+    },
+    {
+      "order": 6,
+      "id": "lignage",
+      "kicker": "Décision 06 · Relier la preuve au KPI",
+      "title": "Du H1 complet à BigQuery, sans raccourci pilote",
+      "status": "BLOQUÉ",
+      "businessQuestion": "Peut-on remonter du chiffre présenté jusqu’aux données qui le justifient ?",
+      "summary": "Le pont pilote a permis d’éprouver 17 tables et 36 contrôles, mais il ne dérive pas du H1 complet. La démonstration finale exigera un nouvel échantillon explicitement dérivé du manifeste H1 scellé.",
+      "decision": "Aucun KPI final ne citera le pont pilote comme preuve de volume. La mutation BigQuery V2 restera interdite sans autorisation explicite.",
+      "visual": {
+        "type": "lineage",
+        "nodes": [
+          {
+            "label": "H1 on-prem scellé",
+            "detail": "Manifeste physique et empreintes",
+            "status": "BLOQUÉ",
+            "claimId": "v2-lineage"
+          },
+          {
+            "label": "Échantillonnage reproductible",
+            "detail": "Sélection dérivée du H1 complet",
+            "status": "BLOQUÉ",
+            "claimId": "v2-lineage"
+          },
+          {
+            "label": "BigQuery V2",
+            "detail": "17 tables · mutation non autorisée",
+            "status": "BLOQUÉ",
+            "claimId": "v2-lineage"
+          },
+          {
+            "label": "36 contrôles",
+            "detail": "Recette à rejouer sur V2",
+            "status": "BLOQUÉ",
+            "claimId": "v2-lineage"
+          },
+          {
+            "label": "KPI certifié",
+            "detail": "Définition, lignage et décision",
+            "status": "BLOQUÉ",
+            "claimId": "v2-lineage"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "id": "pilot-v1",
+          "label": "Pont pilote BigQuery V1",
+          "value": "17 tables · 531 240 lignes · 36 contrôles passés",
+          "status": "EXÉCUTÉ_NON_VALIDÉ",
+          "scope": "Échantillon pilote uniquement, antérieur au H1 complet",
+          "proof": {
+            "label": "Preuve pilote assainie — à rattacher",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_RATTACHÉ"
+          },
+          "limitation": "Ce pont valide une mécanique de contrôle, pas le lignage H1 final ni le volume Big Data."
+        },
+        {
+          "id": "v2-lineage",
+          "label": "Échantillon BigQuery V2 dérivé de H1",
+          "value": "Non créé — non autorisé",
+          "status": "BLOQUÉ",
+          "scope": "Projet datapredict-nerivane-2026, dérivation du H1 complet",
+          "proof": {
+            "label": "Manifeste de dérivation V2 — indisponible",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "Aucun compte, aucune table et aucun résultat V2 ne sont inventés. Une validation explicite sera demandée avant toute mutation BigQuery."
+        }
+      ]
+    },
+    {
+      "order": 7,
+      "id": "ia-decision",
+      "kicker": "Décision 07 · Autoriser l’IA à bloquer",
+      "title": "Une IA déterminante, parce qu’elle peut fermer la porte",
+      "status": "BLOQUÉ",
+      "businessQuestion": "L’IA apporte-t-elle une décision utile, ou seulement une mise en scène ?",
+      "summary": "L’IA examine le corpus figé, classe les contradictions et cite leurs preuves. Sa sortie structurée est vérifiée mécaniquement. Un verdict BLOCK interdit la publication ; un verdict REVIEW impose l’arbitrage du Data Owner.",
+      "decision": "L’IA est déterminante sur la porte de publication, mais elle ne devient ni propriétaire du KPI ni responsable de l’arbitrage métier.",
+      "visual": {
+        "type": "ai",
+        "input": {
+          "label": "Corpus et lignage scellés",
+          "status": "BLOQUÉ",
+          "claimId": "ai-v16"
+        },
+        "model": {
+          "label": "Avis IA structuré et cité",
+          "status": "BLOQUÉ",
+          "claimId": "ai-v16"
+        },
+        "controls": {
+          "label": "Schéma, citations, cohérence",
+          "status": "PLANIFIÉ",
+          "claimId": "ai-gate"
+        },
+        "outcomes": [
+          {"label": "BLOCK", "detail": "Publication interdite", "tone": "danger"},
+          {"label": "REVIEW", "detail": "Arbitrage Data Owner", "tone": "warning"},
+          {"label": "PASS", "detail": "Poursuite des contrôles déterministes", "tone": "success"}
+        ]
+      },
+      "claims": [
+        {
+          "id": "ai-v15",
+          "label": "Calibration IA V15",
+          "value": "FAIL — porte publique restée fermée",
+          "status": "EXÉCUTÉ_NON_VALIDÉ",
+          "scope": "Calibration interne V15, distincte de la future qualification V16",
+          "proof": {
+            "label": "Rapport de calibration V15 — lien public à rattacher",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_RATTACHÉ"
+          },
+          "limitation": "Le FAIL observé montre le comportement fail-closed en préparation, mais sa preuve n’est pas encore rattachée au paquet public et ne qualifie pas le dispositif final."
+        },
+        {
+          "id": "ai-v16",
+          "label": "Qualification IA V16",
+          "value": "Non exécutée ou non scellée",
+          "status": "BLOQUÉ",
+          "scope": "Qualification finale sur politique préengagée et corpus gouverné",
+          "proof": {
+            "label": "Paquet de qualification V16 — indisponible",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "Aucun résultat V16 n’est anticipé. Le replay final restera bloqué si la qualification ne converge pas."
+        },
+        {
+          "id": "ai-gate",
+          "label": "Règle de décision IA",
+          "value": "BLOCK ferme la publication · REVIEW impose un arbitrage",
+          "status": "PLANIFIÉ",
+          "scope": "Gate de gouvernance appliqué au dossier de certification du KPI",
+          "proof": {
+            "label": "Contrat de décision public",
+            "href": "../assets/data/nerivane-governance-replay.json",
+            "sha256": "NON_SCELLÉ"
+          },
+          "limitation": "Même après PASS, SQL, contrôles déterministes et décision humaine restent obligatoires."
+        }
+      ]
+    }
+  ],
+  "conclusion": {
+    "title": "La démonstration finale sera une chaîne de preuves, pas une collection de captures d’écran.",
+    "lead": "À ce stade de préparation, les portes critiques restent volontairement fermées. Le passage au statut MESURÉ exigera un artefact public assaini, son empreinte, un périmètre explicite et une limite de preuve lisible.",
+    "gates": [
+      {"label": "H1 physique scellé et supérieur à 1,5 Tio", "status": "BLOQUÉ", "claimId": "h1-final"},
+      {"label": "Rôles et recettes prouvés sur les quatre nœuds", "status": "BLOQUÉ", "claimId": "recovery-final"},
+      {"label": "Échantillon BigQuery V2 dérivé du H1 complet", "status": "BLOQUÉ", "claimId": "v2-lineage"},
+      {"label": "Qualification IA V16 et arbitrage humain", "status": "BLOQUÉ", "claimId": "ai-v16"}
+    ],
+    "next": "Les valeurs finales, liens et empreintes seront remplacés dans ce seul fichier après chaque recette, sans modifier la mécanique du replay."
+  }
+}
