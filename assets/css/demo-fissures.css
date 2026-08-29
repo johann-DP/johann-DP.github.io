@@ -1,0 +1,877 @@
+.fissures-demo {
+  --content: 1380px;
+  --demo-deep: #102f3d;
+  --demo-ink: #193b49;
+  --demo-aqua: #0d7f88;
+  --demo-mint: #d7eff1;
+  --demo-pale: #eef6f7;
+  --demo-warm: #e8ecef;
+}
+
+.fissures-demo main {
+  overflow: clip;
+}
+
+.fissures-demo__breadcrumb {
+  border-bottom: 1px solid var(--color-border);
+  background: #e5ecef;
+}
+
+.fissures-demo__breadcrumb .wrap {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+.fissures-demo__breadcrumb a {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 7px;
+  text-decoration: none;
+}
+
+.fissures-demo__hero {
+  position: relative;
+  border-bottom: 1px solid var(--color-border);
+  background:
+    radial-gradient(circle at 84% 12%, rgba(17, 179, 191, 0.2), transparent 30%),
+    linear-gradient(145deg, #dce8eb 0%, #edf4f5 58%, #d5e5e8 100%);
+  padding-block: clamp(64px, 8vw, 118px);
+}
+
+.fissures-demo__hero::after {
+  position: absolute;
+  right: -100px;
+  bottom: -210px;
+  width: 440px;
+  height: 440px;
+  border: 1px solid rgba(13, 127, 136, 0.2);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.fissures-demo__hero-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(310px, 0.65fr);
+  align-items: center;
+  gap: clamp(40px, 7vw, 96px);
+}
+
+.fissures-demo__hero h1 {
+  max-width: 15ch;
+  font-size: clamp(2.7rem, 5.4vw, 5.25rem);
+}
+
+.fissures-demo__hero-copy .lead {
+  max-width: 700px;
+}
+
+.fissures-demo__hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
+  margin-top: 34px;
+}
+
+.fissures-demo__text-link {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 8px;
+  padding-inline: 5px;
+  text-decoration: none;
+}
+
+.fissures-demo__source-note {
+  max-width: 760px;
+  margin: 32px 0 0;
+  border-left: 3px solid var(--demo-aqua);
+  padding-left: 18px;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.fissures-demo__hero-panel {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  background: var(--demo-deep);
+  color: #dcecef;
+  padding: clamp(28px, 4vw, 48px);
+  box-shadow: var(--shadow-md);
+}
+
+.fissures-demo__hero-panel h2 {
+  margin-bottom: 28px;
+  color: #f6fbfc;
+  font-size: clamp(1.55rem, 2.5vw, 2.25rem);
+  line-height: 1.12;
+}
+
+.fissures-demo__panel-label,
+.fissures-demo__viewer-label {
+  margin: 0 0 12px;
+  color: #8edbe0;
+  font-size: 0.7rem;
+  font-weight: 820;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.fissures-demo__proof-path {
+  display: grid;
+  gap: 0;
+  margin: 0 0 26px;
+  padding: 0;
+  list-style: none;
+}
+
+.fissures-demo__proof-path li {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: start;
+  gap: 13px;
+  border-top: 1px solid rgba(215, 239, 241, 0.2);
+  padding-block: 15px;
+}
+
+.fissures-demo__proof-path span {
+  color: #8edbe0;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+}
+
+.fissures-demo__proof-path strong {
+  color: #eff8f9;
+  font-size: 0.93rem;
+  line-height: 1.4;
+}
+
+.fissures-demo__hero-panel > p:last-child {
+  margin: 0;
+  color: #b9ced4;
+  font-size: 0.86rem;
+}
+
+.fissures-demo__situation {
+  background: var(--surface-blue);
+}
+
+.fissures-demo__situation-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+  align-items: start;
+  gap: clamp(44px, 8vw, 120px);
+}
+
+.fissures-demo__situation .section-heading {
+  position: sticky;
+  top: 120px;
+  margin: 0;
+}
+
+.fissures-demo__situation .section-heading h2 {
+  max-width: 13ch;
+}
+
+.fissures-demo__object-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.fissures-demo__object-grid article {
+  min-height: 250px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.38);
+  padding: clamp(24px, 3vw, 34px);
+}
+
+.fissures-demo__object-grid h3 {
+  margin-top: 25px;
+}
+
+.fissures-demo__object-grid p {
+  margin-bottom: 0;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+.fissures-demo__object-index {
+  display: inline-grid;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--surface-aqua);
+  color: var(--color-number);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  place-items: center;
+}
+
+.fissures-demo__chain {
+  border-block: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--demo-deep);
+  color: #c8dadd;
+}
+
+.fissures-demo__chain h2,
+.fissures-demo__chain h3 {
+  color: #f3f9fa;
+}
+
+.fissures-demo__chain .eyebrow {
+  color: #8edbe0;
+}
+
+.fissures-demo__section-intro,
+.fissures-demo__figures-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.65fr);
+  align-items: end;
+  gap: clamp(32px, 7vw, 96px);
+  margin-bottom: clamp(42px, 6vw, 72px);
+}
+
+.fissures-demo__section-intro h2,
+.fissures-demo__figures-heading h2 {
+  max-width: 15ch;
+  margin-bottom: 0;
+}
+
+.fissures-demo__section-intro > p {
+  margin-bottom: 0;
+  color: #aac3c8;
+}
+
+.fissures-demo__chain-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 1px;
+  background: rgba(215, 239, 241, 0.16);
+  list-style: none;
+}
+
+.fissures-demo__chain-list li {
+  min-height: 275px;
+  background: var(--demo-deep);
+  padding: clamp(26px, 3.5vw, 42px);
+}
+
+.fissures-demo__chain-number {
+  display: block;
+  margin-bottom: 44px;
+  color: #8edbe0;
+  font-size: 0.8rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+
+.fissures-demo__chain-kind {
+  margin: 0 0 8px;
+  color: #86cbd0;
+  font-size: 0.68rem;
+  font-weight: 820;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.fissures-demo__chain-list h3 {
+  font-size: 1.18rem;
+}
+
+.fissures-demo__chain-list li p:last-child {
+  margin: 0;
+  color: #aac3c8;
+  font-size: 0.88rem;
+}
+
+.fissures-demo__governance-note {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.55fr) minmax(0, 1.45fr);
+  gap: 28px;
+  margin-top: 30px;
+  border: 1px solid rgba(142, 219, 224, 0.28);
+  border-radius: var(--radius-md);
+  background: rgba(142, 219, 224, 0.06);
+  padding: 24px 28px;
+}
+
+.fissures-demo__governance-note strong {
+  color: #e5f3f5;
+}
+
+.fissures-demo__governance-note p {
+  margin: 0;
+  color: #aac3c8;
+}
+
+.fissures-demo__figures {
+  background: #eef3f5;
+}
+
+.fissures-demo__validation-note {
+  border-left: 3px solid var(--demo-aqua);
+  padding: 4px 0 4px 20px;
+}
+
+.fissures-demo__validation-note strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--demo-ink);
+}
+
+.fissures-demo__validation-note p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.fissures-demo__family-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 34px;
+}
+
+.fissures-demo__family-nav a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: #e2eaed;
+  padding: 9px 15px;
+  font-size: 0.82rem;
+  text-decoration: none;
+}
+
+.fissures-demo__family-nav a:hover {
+  background: var(--surface-hover);
+}
+
+.fissures-demo__family-nav span {
+  display: inline-grid;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--state-active);
+  color: var(--color-on-control);
+  font-size: 0.68rem;
+  place-items: center;
+}
+
+.fissures-demo__catalogue {
+  display: grid;
+  gap: 28px;
+}
+
+.fissures-demo__figure-family {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: #f8fbfc;
+  box-shadow: var(--shadow-sm);
+  scroll-margin-top: 110px;
+}
+
+.fissures-demo__figure-family > header {
+  display: grid;
+  grid-template-columns: 105px 1fr auto;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--color-border);
+  background: #dde8eb;
+  padding: 22px clamp(22px, 4vw, 40px);
+}
+
+.fissures-demo__figure-family > header p,
+.fissures-demo__figure-family > header h3,
+.fissures-demo__figure-family > header span {
+  margin: 0;
+}
+
+.fissures-demo__figure-family > header p,
+.fissures-demo__figure-family > header span {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 820;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.fissures-demo__figure-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fissures-demo__figure-list > li + li {
+  border-top: 1px solid var(--line);
+}
+
+.fissures-demo__figure-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 28px;
+  padding: clamp(23px, 3vw, 36px) clamp(22px, 4vw, 40px);
+}
+
+.fissures-demo__figure-copy > span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--demo-aqua);
+  font-size: 0.68rem;
+  font-weight: 840;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.fissures-demo__figure-copy h4 {
+  margin: 0 0 8px;
+  color: var(--demo-ink);
+  font-size: clamp(1.05rem, 1.5vw, 1.28rem);
+  line-height: 1.25;
+}
+
+.fissures-demo__figure-copy p {
+  max-width: 76ch;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+}
+
+.fissures-demo__figure-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.fissures-demo__figure-actions button,
+.fissures-demo__figure-actions a,
+.fissures-demo__viewer-link,
+.fissures-demo__viewer-return {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #e2eaed;
+  color: var(--color-link);
+  padding: 9px 14px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 760;
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.fissures-demo__figure-actions button {
+  border-color: var(--state-active);
+  background: var(--state-active);
+  color: var(--color-on-control);
+}
+
+.fissures-demo__figure-actions button:hover,
+.fissures-demo__figure-actions button[aria-pressed="true"] {
+  background: var(--button-primary-hover);
+}
+
+.fissures-demo__figure-actions a:hover,
+.fissures-demo__viewer-link:hover,
+.fissures-demo__viewer-return:hover {
+  background: var(--surface-hover);
+}
+
+.fissures-demo__viewer {
+  margin-top: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-shadow: var(--shadow-md);
+  scroll-margin-top: 110px;
+}
+
+.fissures-demo__viewer-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid var(--color-border);
+  padding: 24px clamp(22px, 4vw, 40px);
+}
+
+.fissures-demo__viewer-label {
+  color: var(--demo-aqua);
+}
+
+.fissures-demo__viewer-header h3 {
+  margin-bottom: 7px;
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+}
+
+.fissures-demo__viewer-header p:last-child {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+}
+
+.fissures-demo__viewer-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.fissures-demo__viewer-mount {
+  position: relative;
+  min-height: 330px;
+  overflow: hidden;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: #f5f8fa;
+}
+
+.fissures-demo__viewer-empty,
+.fissures-demo__viewer-loading,
+.fissures-demo__viewer-error {
+  display: grid;
+  min-height: 330px;
+  align-content: center;
+  justify-items: center;
+  padding: 38px;
+  text-align: center;
+}
+
+.fissures-demo__viewer-empty span {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: #e0ebed;
+  color: var(--color-number);
+  font-size: 1.3rem;
+  font-weight: 850;
+  place-items: center;
+}
+
+.fissures-demo__viewer-empty p,
+.fissures-demo__viewer-loading p,
+.fissures-demo__viewer-error p {
+  max-width: 48ch;
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.fissures-demo__viewer-loading::before {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 18px;
+  border: 4px solid var(--demo-mint);
+  border-top-color: var(--demo-aqua);
+  border-radius: 50%;
+  animation: demo-fissures-spin 800ms linear infinite;
+  content: "";
+}
+
+@keyframes demo-fissures-spin {
+  to { transform: rotate(1turn); }
+}
+
+.fissures-demo__viewer-frame {
+  display: block;
+  width: 100%;
+  min-height: 760px;
+  border: 0;
+  background: #fff;
+}
+
+.fissures-demo__viewer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--color-border);
+  padding: 16px clamp(22px, 4vw, 40px);
+}
+
+.fissures-demo__scope-note {
+  max-width: 1060px;
+  margin: 28px auto 0;
+  color: var(--color-text-muted);
+  font-size: 0.83rem;
+  text-align: center;
+}
+
+.fissures-demo__interpretation {
+  background: var(--surface-blue);
+}
+
+.fissures-demo__interpretation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.fissures-demo__interpretation-grid article {
+  border-top: 4px solid var(--demo-aqua);
+  background: rgba(255, 255, 255, 0.35);
+  padding: 28px 24px;
+}
+
+.fissures-demo__interpretation-grid span {
+  display: block;
+  margin-bottom: 30px;
+  color: var(--demo-aqua);
+  font-size: 0.69rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.fissures-demo__interpretation-grid h3 {
+  font-size: 1.08rem;
+}
+
+.fissures-demo__interpretation-grid p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.87rem;
+}
+
+.fissures-demo__transfer {
+  border-block: 1px solid var(--color-border);
+  background: var(--demo-mint);
+  padding-block: clamp(68px, 8vw, 112px);
+}
+
+.fissures-demo__transfer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.7fr);
+  align-items: center;
+  gap: clamp(40px, 9vw, 130px);
+}
+
+.fissures-demo__transfer-layout h2 {
+  max-width: 16ch;
+}
+
+.fissures-demo__transfer-layout p:last-child {
+  max-width: 63ch;
+  margin-bottom: 0;
+}
+
+.fissures-demo__transfer-layout ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fissures-demo__transfer-layout li {
+  position: relative;
+  border-top: 1px solid rgba(64, 100, 124, 0.36);
+  padding: 14px 0 14px 28px;
+  color: var(--demo-ink);
+  font-weight: 690;
+}
+
+.fissures-demo__transfer-layout li::before {
+  position: absolute;
+  top: 21px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--demo-aqua);
+  content: "";
+}
+
+.fissures-demo__cta {
+  background: var(--demo-deep);
+  padding-block: clamp(60px, 7vw, 92px);
+}
+
+.fissures-demo__cta-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 42px;
+}
+
+.fissures-demo__cta .eyebrow {
+  color: #8edbe0;
+}
+
+.fissures-demo__cta h2 {
+  max-width: 21ch;
+  color: #f4fafb;
+  font-size: clamp(1.85rem, 3.5vw, 3.25rem);
+}
+
+.fissures-demo__cta p:last-child {
+  max-width: 72ch;
+  margin-bottom: 0;
+  color: #b5cbd0;
+}
+
+.fissures-demo__cta .btn {
+  border-color: #8edbe0;
+  background: #8edbe0;
+  color: var(--demo-deep);
+}
+
+@media (max-width: 1080px) {
+  .fissures-demo__hero-layout,
+  .fissures-demo__situation-layout,
+  .fissures-demo__transfer-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .fissures-demo__hero-panel {
+    max-width: 760px;
+  }
+
+  .fissures-demo__situation .section-heading {
+    position: static;
+  }
+
+  .fissures-demo__chain-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fissures-demo__interpretation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .fissures-demo .site-header {
+    position: static;
+  }
+
+  .fissures-demo__section-intro,
+  .fissures-demo__figures-heading,
+  .fissures-demo__governance-note,
+  .fissures-demo__cta-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .fissures-demo__object-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fissures-demo__figure-family > header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .fissures-demo__figure-family > header p {
+    grid-column: 1 / -1;
+  }
+
+  .fissures-demo__figure-card {
+    grid-template-columns: 1fr;
+  }
+
+  .fissures-demo__figure-actions {
+    justify-content: flex-start;
+  }
+
+  .fissures-demo__viewer-header {
+    grid-template-columns: 1fr;
+  }
+
+  .fissures-demo__cta-layout .btn {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 620px) {
+  .fissures-demo__breadcrumb .wrap {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0;
+    padding-block: 8px;
+  }
+
+  .fissures-demo__breadcrumb .wrap > span[aria-hidden="true"] {
+    display: none;
+  }
+
+  .fissures-demo__hero {
+    padding-top: 48px;
+  }
+
+  .fissures-demo__hero h1 {
+    font-size: clamp(2.35rem, 13vw, 3.45rem);
+  }
+
+  .fissures-demo__hero-actions,
+  .fissures-demo__figure-actions,
+  .fissures-demo__viewer-header-actions,
+  .fissures-demo__viewer-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .fissures-demo__hero-actions .btn,
+  .fissures-demo__figure-actions button,
+  .fissures-demo__figure-actions a,
+  .fissures-demo__viewer-link,
+  .fissures-demo__viewer-return {
+    width: 100%;
+  }
+
+  .fissures-demo__chain-list,
+  .fissures-demo__interpretation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fissures-demo__chain-list li {
+    min-height: 0;
+  }
+
+  .fissures-demo__chain-number {
+    margin-bottom: 25px;
+  }
+
+  .fissures-demo__family-nav {
+    display: grid;
+  }
+
+  .fissures-demo__family-nav a {
+    justify-content: space-between;
+  }
+
+  .fissures-demo__figure-family > header {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .fissures-demo__viewer-frame {
+    min-height: 620px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fissures-demo__viewer-loading::before {
+    animation: none;
+  }
+}

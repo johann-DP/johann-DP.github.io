@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mesures physiques et séries temporelles — démonstration | datapredict</title>
+  <meta name="description" content="Une démonstration datapredict fondée sur des mesures physiques réelles : instrumentation, acquisition, qualité des données, analyses et interprétation prudente.">
+  <link rel="canonical" href="https://www.datapredict.org/demonstrations/fissures.html">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/img/favicon-datapredict.png">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mesures physiques et séries temporelles — démonstration | datapredict">
+  <meta property="og:description" content="Du phénomène physique à une information compréhensible : quatorze restitutions de mesures réelles, leurs contrôles et leurs limites d’interprétation.">
+  <meta property="og:url" content="https://www.datapredict.org/demonstrations/fissures.html">
+  <meta property="og:image" content="https://www.datapredict.org/assets/img/social-datapredict.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="627">
+  <meta property="og:image:alt" content="Visuel datapredict : conseil, architecture Data et expertise industrielle.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mesures physiques et séries temporelles — démonstration | datapredict">
+  <meta name="twitter:description" content="Du terrain à l’analyse : instrumentation, acquisition, qualité des données, statistiques et interprétation prudente.">
+  <meta name="twitter:image" content="https://www.datapredict.org/assets/img/social-datapredict.png">
+  <meta name="twitter:image:alt" content="Visuel datapredict : conseil, architecture Data et expertise industrielle.">
+  <meta name="color-scheme" content="only light">
+  <meta name="theme-color" content="#102936">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="stylesheet" href="../assets/css/demo-fissures.css">
+  <script src="../assets/js/demo-fissures.js" defer></script>
+  <script src="../assets/js/audience-counter.js" defer></script>
+</head>
+<body class="fissures-demo">
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../index.html" aria-label="datapredict — accueil">
+        <img src="../assets/img/logo-datapredict.png" width="966" height="159" alt="datapredict">
+      </a>
+      <nav class="site-nav" aria-label="Navigation principale">
+        <a href="../index.html">Accueil</a>
+        <a href="../offres.html">Offres</a>
+        <a href="../methode.html">Méthode</a>
+        <a href="../cas-clients.html">Réalisations</a>
+        <a href="../demonstrations.html" aria-current="page">Démonstrations</a>
+        <a class="nav-contact" href="../contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu">
+    <nav class="fissures-demo__breadcrumb" aria-label="Fil d’Ariane">
+      <div class="wrap">
+        <a href="../demonstrations.html"><span aria-hidden="true">←</span> Toutes les démonstrations</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Mesures physiques et séries temporelles</span>
+      </div>
+    </nav>
+
+    <section class="fissures-demo__hero" aria-labelledby="fissures-title">
+      <div class="wrap fissures-demo__hero-layout">
+        <div class="fissures-demo__hero-copy">
+          <p class="kicker">Expertise industrielle · Mesures réelles</p>
+          <h1 id="fissures-title">Relier un phénomène physique à une donnée exploitable</h1>
+          <p class="lead">À partir du suivi de fissures, d’un joint de dilatation, d’un mur de soutènement et de leur environnement météorologique, cette démonstration rend visible toute la chaîne qui va du terrain à une interprétation responsable.</p>
+          <div class="fissures-demo__hero-actions">
+            <a class="btn primary" href="#figures">Explorer les quatorze restitutions</a>
+            <a class="fissures-demo__text-link" href="#chaine">Comprendre la chaîne de mesure <span aria-hidden="true">↓</span></a>
+          </div>
+          <p class="fissures-demo__source-note"><strong>Cadre de consultation.</strong> Les relevés sont réels et privés ; ils n’appartiennent à aucun client. Les résultats sont précalculés : la visite ne sollicite ni le Raspberry Pi, ni la station météo, ni une machine de calcul.</p>
+        </div>
+
+        <aside class="fissures-demo__hero-panel" aria-labelledby="proof-title">
+          <p class="fissures-demo__panel-label">Ce que ce cas démontre</p>
+          <h2 id="proof-title">Une continuité de compétences, pas un « produit fissures »</h2>
+          <ol class="fissures-demo__proof-path">
+            <li><span>01</span><strong>Comprendre ce que mesure réellement chaque instrument</strong></li>
+            <li><span>02</span><strong>Détecter les défauts avant de modéliser</strong></li>
+            <li><span>03</span><strong>Rendre les résultats lisibles sans masquer l’incertitude</strong></li>
+          </ol>
+          <p>Le cas sert de preuve transférable à d’autres capteurs, procédés et séries temporelles. Il ne constitue ni un diagnostic réglementaire de génie civil, ni une expertise de stabilité du bâtiment.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section fissures-demo__situation" aria-labelledby="situation-title">
+      <div class="wrap fissures-demo__situation-layout">
+        <header class="section-heading">
+          <p class="eyebrow">Situation étudiée</p>
+          <h2 id="situation-title">Plusieurs mesures pour instruire une même question</h2>
+          <p>Le suivi cherche à caractériser des évolutions lentes au milieu de mouvements environnementaux, de changements de protocole et d’incidents d’acquisition. Les séries ne sont donc pas fusionnées par défaut : leur sens dépend de l’objet, du point de mesure, de l’instrument et de la période considérés.</p>
+        </header>
+
+        <div class="fissures-demo__object-grid">
+          <article>
+            <span class="fissures-demo__object-index">01</span>
+            <h3>Fissures visibles</h3>
+            <p>Des mesures manuelles décrivent un historique par paliers et un suivi récent réalisé à un autre point. Cette différence de protocole interdit une comparaison directe non justifiée.</p>
+          </article>
+          <article>
+            <span class="fissures-demo__object-index">02</span>
+            <h3>Joint de dilatation</h3>
+            <p>Son mouvement périodique constitue une série physique distincte. L’ajustement décrit les observations disponibles ; il ne démontre pas à lui seul une relation avec la fissure.</p>
+          </article>
+          <article>
+            <span class="fissures-demo__object-index">03</span>
+            <h3>Mur de soutènement</h3>
+            <p>Un comparateur automatique mesure un déplacement relatif à haute fréquence. Le signal mêle mouvement quotidien, interruptions et artefacts avant toute recherche d’une tendance lente.</p>
+          </article>
+          <article>
+            <span class="fissures-demo__object-index">04</span>
+            <h3>Environnement météo</h3>
+            <p>Température, humidité, pluie, lumière, UV et vent apportent un contexte explicatif potentiel. Les relations observées entre variables ne valent pas preuve de causalité structurelle.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="chaine" class="section fissures-demo__chain" aria-labelledby="chain-title">
+      <div class="wrap">
+        <header class="fissures-demo__section-intro">
+          <div>
+            <p class="eyebrow">Chaîne de preuve</p>
+            <h2 id="chain-title">Du terrain à l’interprétation, sans saut logique</h2>
+          </div>
+          <p>La fiabilité ne vient pas d’un graphique isolé. Elle dépend de la continuité entre le phénomène, le protocole de mesure, les données conservées, les contrôles, les traitements et le niveau de conclusion réellement permis.</p>
+        </header>
+
+        <ol class="fissures-demo__chain-list">
+          <li>
+            <span class="fissures-demo__chain-number">01</span>
+            <div>
+              <p class="fissures-demo__chain-kind">Phénomène</p>
+              <h3>Formuler la question physique</h3>
+              <p>Distinguer l’évolution recherchée des mouvements périodiques, des événements ponctuels et des limites propres à chaque point de mesure.</p>
+            </div>
+          </li>
+          <li>
+            <span class="fissures-demo__chain-number">02</span>
+            <div>
+              <p class="fissures-demo__chain-kind">Instrumentation</p>
+              <h3>Connaître ce que produit chaque instrument</h3>
+              <p>Pied à coulisse numérique, comparateur automatique et station WeatherSense répondent à des protocoles et à des fréquences différents.</p>
+            </div>
+          </li>
+          <li>
+            <span class="fissures-demo__chain-number">03</span>
+            <div>
+              <p class="fissures-demo__chain-kind">Acquisition</p>
+              <h3>Organiser des flux manuels et automatiques</h3>
+              <p>Les relevés manuels sont ajoutés périodiquement. Le capteur mesure environ toutes les trente secondes via un Raspberry Pi ; la météo suit sa propre chaîne d’acquisition.</p>
+            </div>
+          </li>
+          <li>
+            <span class="fissures-demo__chain-number">04</span>
+            <div>
+              <p class="fissures-demo__chain-kind">Qualité</p>
+              <h3>Qualifier avant de corriger</h3>
+              <p>Coupures, lacunes, doublons, pics, sauts irréalistes, changements de pile et particularités d’horodatage sont rendus visibles avant tout calcul.</p>
+            </div>
+          </li>
+          <li>
+            <span class="fissures-demo__chain-number">05</span>
+            <div>
+              <p class="fissures-demo__chain-kind">Analyses</p>
+              <h3>Choisir un traitement adapté au signal</h3>
+              <p>Paliers, changements d’état, périodicités, distributions, relations entre variables et intervalles d’incertitude répondent à des questions différentes.</p>
+            </div>
+          </li>
+          <li>
+            <span class="fissures-demo__chain-number">06</span>
+            <div>
+              <p class="fissures-demo__chain-kind">Interprétation</p>
+              <h3>Séparer résultat, hypothèse et conclusion</h3>
+              <p>Un ajustement décrit une série ; une corrélation suggère une piste. Une explication physique n’est retenue que lorsque les données et les contrôles la soutiennent.</p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="fissures-demo__governance-note" role="note">
+          <strong>Une chaîne reproductible, sans transformer la page en registre technique.</strong>
+          <p>Les données brutes, les transformations et les versions d’artefacts sont conservées et contrôlées en amont. La page publique expose les résultats utiles au raisonnement ; elle ne relance aucun calcul et ne publie pas les observations privées.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="figures" class="section fissures-demo__figures" aria-labelledby="figures-title">
+      <div class="wrap">
+        <header class="fissures-demo__figures-heading">
+          <div>
+            <p class="eyebrow">Mesures et analyses</p>
+            <h2 id="figures-title">Quatorze restitutions à examiner à votre rythme</h2>
+          </div>
+          <div class="fissures-demo__validation-note" role="note">
+            <strong>Portée de la validation</strong>
+            <p>Ces quatorze restitutions HTML ont été validées visuellement pour leur présentation. Cette validation graphique ne signifie pas que chacune constitue, à elle seule, une conclusion scientifique validée.</p>
+          </div>
+        </header>
+
+        <nav class="fissures-demo__family-nav" aria-label="Familles de restitutions">
+          <a href="#famille-structure">Fissures, joint et mur <span>4</span></a>
+          <a href="#famille-meteo">Séries météorologiques <span>8</span></a>
+          <a href="#famille-qualite">Exploration et qualité <span>2</span></a>
+        </nav>
+
+        <div class="fissures-demo__catalogue">
+          <section id="famille-structure" class="fissures-demo__figure-family" aria-labelledby="structure-title">
+            <header>
+              <p>Famille 01</p>
+              <h3 id="structure-title">Fissures, joint et mur de soutènement</h3>
+              <span>4 restitutions</span>
+            </header>
+            <ul class="fissures-demo__figure-list">
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Mesure manuelle · Historique</span>
+                    <h4>Évolution historique de la fissure</h4>
+                    <p>Paliers observés, événements de 2016, ajustements descriptifs et intervalles d’incertitude. Les modèles ne démontrent pas un effet causal des travaux.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="crack-history" aria-label="Afficher l’évolution historique de la fissure dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/01-historical-crack-analysis-compacted-v2.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : évolution historique de la fissure</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Mesure manuelle · Suivi récent</span>
+                    <h4>Évolution récente de la fissure</h4>
+                    <p>Restitution du suivi récent et de sa dynamique propre. Le point de mesure n’est pas le même que dans l’historique : les deux séries restent séparées.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="crack-recent" aria-label="Afficher l’évolution récente de la fissure dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/fissure-recente-meme-format.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : évolution récente de la fissure</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Mesure manuelle · Périodicité</span>
+                    <h4>Joint de dilatation du mur de soutènement</h4>
+                    <p>Mesures observées, ajustement périodique et incertitude associée. Aucune causalité météo ni relation avec la fissure n’est démontrée par cette figure.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="expansion-joint" aria-label="Afficher le joint de dilatation du mur de soutènement dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/joint-dilatation-rendu-site.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : joint de dilatation</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Comparateur automatique · Valeurs brutes</span>
+                    <h4>Signal brut du comparateur automatique</h4>
+                    <p>Chaque point conserve une valeur source dans l’ordre des lignes physiques : « valeur source — unité à confirmer » et « temps source naïf — fuseau à confirmer », sans correction, conversion, interpolation, jointure, causalité ni diagnostic.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="retaining-wall-source-values" aria-label="Afficher le signal brut du comparateur automatique du mur côté route dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/retaining-wall-sensor-source-values.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : signal brut du comparateur automatique du mur côté route</span></a>
+                  </div>
+                </article>
+              </li>
+            </ul>
+          </section>
+
+          <section id="famille-meteo" class="fissures-demo__figure-family" aria-labelledby="meteo-title">
+            <header>
+              <p>Famille 02</p>
+              <h3 id="meteo-title">Séries météorologiques</h3>
+              <span>8 restitutions</span>
+            </header>
+            <ul class="fissures-demo__figure-list">
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Température · Série temporelle</span>
+                    <h4>Températures intérieure et extérieure</h4>
+                    <p>Évolution des mesures et de leurs moyennes mobiles, avec repérage des incidents d’acquisition documentés.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="weather-temperature" aria-label="Afficher les températures intérieure et extérieure dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/weather/legacy/meteo_temperature.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : températures intérieure et extérieure</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Température · Amplitudes</span>
+                    <h4>Températures minimales et maximales</h4>
+                    <p>Comparaison des minima et maxima intérieurs et extérieurs, en conservant les événements signalés dans la série.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="weather-temperature-range" aria-label="Afficher les températures minimales et maximales dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/weather/legacy/meteo_temp_minmax.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : températures minimales et maximales</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Humidité · Contenu en eau</span>
+                    <h4>Humidité et quantités d’eau dans l’air</h4>
+                    <p>Lecture conjointe de l’humidité et des contenus en eau intérieurs et extérieurs, avec leurs tendances lissées.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="weather-humidity" aria-label="Afficher l’humidité et les quantités d’eau dans l’air dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/weather/legacy/meteo_humidity.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : humidité et quantités d’eau dans l’air</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Lumière · Indice UV</span>
+                    <h4>Intensité lumineuse et indice UV</h4>
+                    <p>Évolution de deux mesures environnementales et de leur différence de ratio, présentées sans interprétation structurelle automatique.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="weather-light" aria-label="Afficher l’intensité lumineuse et l’indice UV dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/weather/legacy/meteo_light_uv.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : intensité lumineuse et indice UV</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Précipitations · Échelles comparées</span>
+                    <h4>Précipitations hebdomadaires et journalières</h4>
+                    <p>Moyennes hebdomadaires sur échelle normale et mesures détaillées sur échelle logarithmique pour conserver les faibles valeurs lisibles.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="weather-rainfall" aria-label="Afficher les précipitations hebdomadaires et journalières dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/weather/legacy/meteo_precipitation.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : précipitations</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Vent · Vitesse</span>
+                    <h4>Vitesses hebdomadaires et journalières du vent</h4>
+                    <p>Moyennes hebdomadaires et série détaillée sur deux échelles pour distinguer tendance générale et variabilité des mesures.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="weather-wind-speed" aria-label="Afficher les vitesses hebdomadaires et journalières du vent dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/weather/legacy/meteo_wind_speed.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : vitesse du vent</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Vent · Direction</span>
+                    <h4>Direction et vitesse du vent</h4>
+                    <p>Représentation radiale des directions observées, rapprochées des vitesses correspondantes.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="weather-wind-direction" aria-label="Afficher la direction et la vitesse du vent dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/weather/legacy/meteo_wind_dir.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : direction et vitesse du vent</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Relations croisées · Valeurs brutes</span>
+                    <h4>Scatterplots et distributions météo</h4>
+                    <p>Matrice des distributions et relations sur les valeurs affichées, sans transformation statistique supplémentaire ; le contenu en eau extérieur est une quantité dérivée.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="weather-pairplots" aria-label="Afficher les scatterplots et distributions météo dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/weather/legacy/meteo_pairplots.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : scatterplots et distributions météo</span></a>
+                  </div>
+                </article>
+              </li>
+            </ul>
+          </section>
+
+          <section id="famille-qualite" class="fissures-demo__figure-family" aria-labelledby="quality-title">
+            <header>
+              <p>Famille 03</p>
+              <h3 id="quality-title">Exploration et qualité des données météo</h3>
+              <span>2 restitutions</span>
+            </header>
+            <ul class="fissures-demo__figure-list">
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Données brutes · Exploration</span>
+                    <h4>Explorateur des vingt mesures retenues</h4>
+                    <p>Sélection directe d’une mesure météorologique pour examiner sa série brute, sans lissage, interpolation ni fusion de champs.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="weather-explorer" aria-label="Afficher l’explorateur des vingt mesures météo retenues dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/weather/complements/meteo_explorateur_toutes_mesures.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : explorateur des mesures météo</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Données brutes · Contrôles</span>
+                    <h4>Qualité et continuité de l’acquisition</h4>
+                    <p>Complétude, valeurs aberrantes, trous temporels, doublons et disponibilité des champs de vent : des constats avant correction, pas un nettoyage silencieux.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="weather-quality" aria-label="Afficher la qualité et la continuité de l’acquisition météo dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/weather/complements/meteo_qualite_acquisition.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : qualité de l’acquisition météo</span></a>
+                  </div>
+                </article>
+              </li>
+            </ul>
+          </section>
+        </div>
+
+        <section id="figure-viewer" class="fissures-demo__viewer" aria-labelledby="viewer-title">
+          <div class="fissures-demo__viewer-header">
+            <div>
+              <p class="fissures-demo__viewer-label">Lecteur de restitution</p>
+              <h3 id="viewer-title" tabindex="-1">Choisissez une restitution ci-dessus</h3>
+              <p id="viewer-description">Une seule figure sera chargée, uniquement après votre action. Vous pourrez ensuite en choisir une autre ou l’ouvrir dans une nouvelle fenêtre.</p>
+            </div>
+            <div class="fissures-demo__viewer-header-actions">
+              <a id="viewer-fallback" class="fissures-demo__viewer-link" target="_blank" rel="noopener noreferrer" hidden>Ouvrir la figure dans une nouvelle fenêtre</a>
+              <a class="fissures-demo__viewer-return" href="#figures">Revenir au choix des restitutions</a>
+            </div>
+          </div>
+          <div id="viewer-mount" class="fissures-demo__viewer-mount">
+            <div class="fissures-demo__viewer-empty">
+              <span aria-hidden="true">14</span>
+              <p>Aucune figure n’est chargée au démarrage afin de préserver la rapidité de la page.</p>
+            </div>
+          </div>
+          <p id="viewer-status" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+        </section>
+
+        <p class="fissures-demo__scope-note"><strong>Périmètre actuel des figures.</strong> Cette sélection couvre les mesures manuelles de fissures et du joint, le signal brut du comparateur automatique et la météo. Elle ne contient pas de vue géométrique du dispositif et ne permet ni conversion angulaire, ni causalité, ni diagnostic structurel.</p>
+      </div>
+    </section>
+
+    <section class="section fissures-demo__interpretation" aria-labelledby="interpretation-title">
+      <div class="wrap">
+        <header class="section-heading">
+          <p class="eyebrow">Lecture responsable</p>
+          <h2 id="interpretation-title">Savoir précisément ce que l’on regarde</h2>
+          <p>Une restitution utile indique la nature de chaque résultat et maintient une frontière nette entre mesure, correction, modèle et hypothèse.</p>
+        </header>
+        <div class="fissures-demo__interpretation-grid">
+          <article>
+            <span>Observé</span>
+            <h3>Les valeurs produites par un protocole identifié</h3>
+            <p>Chaque série reste rattachée à son objet, son instrument, son point de mesure, sa fréquence et sa période.</p>
+          </article>
+          <article>
+            <span>Contrôlé</span>
+            <h3>Les défauts rendus visibles avant traitement</h3>
+            <p>Un incident d’acquisition ou une valeur physiquement improbable est documenté avant toute exclusion ou correction.</p>
+          </article>
+          <article>
+            <span>Modélisé</span>
+            <h3>Une représentation assortie de ses hypothèses</h3>
+            <p>Paliers, périodicités ou intervalles d’incertitude décrivent les données dans un cadre explicite ; ils ne valent pas cause physique.</p>
+          </article>
+          <article>
+            <span>Non établi</span>
+            <h3>Ce que les données ne permettent pas encore d’affirmer</h3>
+            <p>La stabilité d’un ouvrage, l’effet causal d’un événement ou le lien entre deux séries exigent d’autres preuves qu’une proximité graphique.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="fissures-demo__transfer" aria-labelledby="transfer-title">
+      <div class="wrap fissures-demo__transfer-layout">
+        <div>
+          <p class="eyebrow">Transposabilité</p>
+          <h2 id="transfer-title">Votre sujet n’a pas besoin d’être une fissure</h2>
+          <p>La même démarche s’applique à une chaîne de capteurs, à un procédé industriel, à une série physico-chimique ou à un dispositif IoT dont il faut fiabiliser les mesures avant de décider.</p>
+        </div>
+        <ul>
+          <li>Auditer une chaîne de mesure et ses défauts d’acquisition</li>
+          <li>Étudier des séries temporelles et leurs facteurs explicatifs</li>
+          <li>Cadrer une architecture IoT, Data ou analytique</li>
+          <li>Transformer une analyse technique en information décisionnelle</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="fissures-demo__cta" aria-labelledby="cta-title">
+      <div class="wrap fissures-demo__cta-layout">
+        <div>
+          <p class="eyebrow">Premier échange</p>
+          <h2 id="cta-title">Partir de votre phénomène, de vos instruments et de la décision à instruire</h2>
+          <p>Un échange permet de qualifier les données disponibles, les contraintes du terrain et le niveau d’intervention utile : audit flash, étude de séries, architecture IoT/Data ou accompagnement plus long.</p>
+        </div>
+        <a class="btn primary" href="../contact.html">Échanger avec datapredict</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>datapredict — Conseil et réalisation Data, IA &amp; BI</p>
+      <nav class="footer-links" aria-label="Informations complémentaires">
+        <a href="../contact.html">Contact</a>
+        <a href="../contact.html#mentions-legales">Mentions légales</a>
+        <a href="../contact.html#donnees-personnelles">Données personnelles</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

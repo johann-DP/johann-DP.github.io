@@ -36,6 +36,7 @@ jobs:
           from html.parser import HTMLParser
           from pathlib import Path
           from urllib.parse import unquote, urlsplit
+          import hashlib
           import json
           import os
           import re
@@ -52,14 +53,19 @@ jobs:
               "methode.html",
               "cas-clients.html",
               "demonstrations.html",
+              "demonstrations/fissures.html",
               "demonstrations/ormevia-batiment.html",
               "contact.html",
               "assets/css/site.css",
               "assets/css/demonstrations.css",
+              "assets/css/demo-fissures.css",
               "assets/css/demo-ormevia.css",
               "assets/data/ormevia-scenarios.json",
               "assets/js/audience-counter.js",
+              "assets/js/demo-fissures.js",
               "assets/js/demo-ormevia.js",
+              "assets/figures/demo-2/content-manifest.json",
+              "assets/figures/demo-2/weather/content-manifest.json",
               "assets/img/favicon-datapredict.png",
               "assets/img/logo-datapredict.png",
               "assets/img/social-datapredict.png",
@@ -70,6 +76,83 @@ jobs:
           for relative_path in sorted(required):
               if not (root / relative_path).is_file():
                   errors.append(f"fichier obligatoire absent : {relative_path}")
+
+          figure_root = root / "assets/figures/demo-2"
+          expected_figure_manifests = {
+              "content-manifest.json": "bbd8baf95366ef0e0dc7516801f131d5335449ce9ac50baa37d231ea6995f8a8",
+              "weather/content-manifest.json": "9cf204d239d613b35139ed67da7004efb19466073aafbb106197fb0c740e703f",
+          }
+          immutable_figure_html = set()
+          expected_figure_files = {
+              (figure_root / relative).resolve()
+              for relative in expected_figure_manifests
+          }
+          figure_master_count = 0
+          for relative, expected_sha256 in expected_figure_manifests.items():
+              manifest_path = figure_root / relative
+              if not manifest_path.is_file():
+                  continue
+              manifest_bytes = manifest_path.read_bytes()
+              if hashlib.sha256(manifest_bytes).hexdigest() != expected_sha256:
+                  errors.append(f"manifeste de figures modifié : {manifest_path.relative_to(root)}")
+                  continue
+              try:
+                  manifest = json.loads(manifest_bytes.decode("utf-8"))
+              except (UnicodeError, json.JSONDecodeError) as exc:
+                  errors.append(f"manifeste de figures invalide : {relative} : {exc}")
+                  continue
+              entries = manifest.get("files")
+              if not isinstance(entries, list):
+                  errors.append(f"manifeste de figures sans liste de fichiers : {relative}")
+                  continue
+              for entry in entries:
+                  if not isinstance(entry, dict) or set(entry) != {"path", "role", "sha256", "size_bytes"}:
+                      errors.append(f"entrée de manifeste invalide : {relative}")
+                      continue
+                  candidate = (manifest_path.parent / entry["path"]).resolve()
+                  try:
+                      candidate.relative_to(figure_root.resolve())
+                  except ValueError:
+                      errors.append(f"chemin de figure hors racine : {entry['path']}")
+                      continue
+                  expected_figure_files.add(candidate)
+                  if not candidate.is_file():
+                      errors.append(f"figure absente : {candidate.relative_to(root)}")
+                      continue
+                  payload = candidate.read_bytes()
+                  if len(payload) != entry["size_bytes"]:
+                      errors.append(f"taille de figure divergente : {candidate.relative_to(root)}")
+                  if hashlib.sha256(payload).hexdigest() != entry["sha256"]:
+                      errors.append(f"empreinte de figure divergente : {candidate.relative_to(root)}")
+                  if candidate.suffix.lower() in {".html", ".htm"}:
+                      immutable_figure_html.add(candidate)
+                  if entry["role"] == "responsive_html_master":
+                      figure_master_count += 1
+
+          if figure_master_count != 14:
+              errors.append(f"14 maîtres HTML attendus, trouvé : {figure_master_count}")
+          observed_figure_files = {
+              path.resolve() for path in figure_root.rglob("*") if path.is_file()
+          }
+          if observed_figure_files != expected_figure_files:
+              errors.append("le sous-arbre des figures contient un fichier absent des manifestes")
+
+          sensor_figure = figure_root / "retaining-wall-sensor-source-values.html"
+          if sensor_figure.is_file():
+              sensor_text = sensor_figure.read_text(encoding="utf-8")
+              required_sensor_markers = (
+                  "temps source naïf — fuseau à confirmer",
+                  "valeur source — unité à confirmer",
+                  "Aucune correction, conversion, interpolation, jointure, causalité ni diagnostic.",
+                  'src="weather/assets/plotly-2.35.2.min.js"',
+              )
+              for marker in required_sensor_markers:
+                  if marker not in sensor_text:
+                      errors.append(
+                          f"figure brute D2-CAP : mention obligatoire absente : {marker}"
+                      )
+              if re.search(r'(?:src|href)=["\']https?://', sensor_text, re.IGNORECASE):
+                  errors.append("figure brute D2-CAP : dépendance réseau interdite")
 
           counter = root / "assets/js/audience-counter.js"
           if counter.is_file():
@@ -106,6 +189,7 @@ jobs:
                   self.ids = set()
                   self.references = []
                   self.script_sources = []
+                  self.figure_buttons = []
                   self.h1_count = 0
                   self.title_count = 0
                   self.lang = ""
@@ -134,6 +218,11 @@ jobs:
                       self.title_count += 1
                   elif tag == "script" and attributes.get("src"):
                       self.script_sources.append(attributes["src"].strip())
+                  elif tag == "button" and attributes.get("data-figure-id"):
+                      self.figure_buttons.append((
+                          attributes["data-figure-id"].strip(),
+                          attributes.get("aria-label", "").strip(),
+                      ))
 
                   for attribute in ("href", "src"):
                       value = attributes.get(attribute)
@@ -167,7 +256,7 @@ jobs:
                   errors.append(f"{relative}: attribut lang absent sur <html>")
               if document.title_count != 1:
                   errors.append(f"{relative}: {document.title_count} élément(s) <title>, attendu : 1")
-              if document.h1_count != 1:
+              if path.resolve() not in immutable_figure_html and document.h1_count != 1:
                   errors.append(f"{relative}: {document.h1_count} élément(s) <h1>, attendu : 1")
               expected_counter = {
                   "index.html": "assets/js/audience-counter.js",
@@ -175,6 +264,7 @@ jobs:
                   "methode.html": "assets/js/audience-counter.js",
                   "cas-clients.html": "assets/js/audience-counter.js",
                   "demonstrations.html": "assets/js/audience-counter.js",
+                  "demonstrations/fissures.html": "../assets/js/audience-counter.js",
                   "demonstrations/ormevia-batiment.html": "../assets/js/audience-counter.js",
                   "contact.html": "assets/js/audience-counter.js",
               }.get(relative.as_posix())
@@ -182,6 +272,27 @@ jobs:
                   errors.append(
                       f"{relative}: le compteur doit être chargé exactement une fois"
                   )
+
+              if relative.as_posix() == "demonstrations/fissures.html":
+                  figure_ids = [identifier for identifier, _ in document.figure_buttons]
+                  figure_labels = [label for _, label in document.figure_buttons]
+                  if len(figure_ids) != 14 or len(set(figure_ids)) != 14:
+                      errors.append(
+                          "demonstrations/fissures.html: 14 boutons de figures uniques attendus"
+                      )
+                  if any(not label for label in figure_labels) or len(set(figure_labels)) != 14:
+                      errors.append(
+                          "demonstrations/fissures.html: chaque bouton de figure doit avoir un libellé accessible unique"
+                      )
+                  demo_script = (root / "assets/js/demo-fissures.js").read_text(
+                      encoding="utf-8"
+                  )
+                  for identifier in figure_ids:
+                      if demo_script.count(f'"{identifier}": {{') != 1:
+                          errors.append(
+                              "assets/js/demo-fissures.js: correspondance absente ou dupliquée "
+                              f"pour {identifier}"
+                          )
 
           contact = root / "contact.html"
           if contact.is_file():
@@ -378,6 +489,7 @@ jobs:
         shell: bash
         run: |
           node --check assets/js/audience-counter.js
+          node --check assets/js/demo-fissures.js
           node --check assets/js/demo-ormevia.js
           npm ci --prefix analytics-counter
           npm run check --prefix analytics-counter
