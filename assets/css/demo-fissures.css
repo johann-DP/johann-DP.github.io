@@ -13,29 +13,25 @@
 }
 
 .fissures-demo__maintenance {
-  display: grid;
-  min-height: min(720px, calc(100vh - 190px));
-  place-items: center;
+  display: block;
   border-bottom: 1px solid var(--color-border);
-  background:
-    radial-gradient(circle at 84% 12%, rgba(17, 179, 191, 0.18), transparent 30%),
-    linear-gradient(145deg, #dce8eb 0%, #edf4f5 58%, #d5e5e8 100%);
-  padding-block: clamp(64px, 10vw, 132px);
+  background: #eaf3f4;
+  padding-block: clamp(20px, 3vw, 32px);
 }
 
 .fissures-demo__maintenance-card {
-  max-width: 860px;
+  max-width: none;
   border: 1px solid rgba(16, 47, 61, 0.13);
-  border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.88);
-  padding: clamp(32px, 6vw, 68px);
-  box-shadow: var(--shadow-md);
+  border-left: 4px solid var(--demo-aqua);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.78);
+  padding: clamp(20px, 3vw, 30px);
 }
 
-.fissures-demo__maintenance-card h1 {
-  max-width: 16ch;
-  margin-bottom: 24px;
-  font-size: clamp(2.4rem, 5.4vw, 4.8rem);
+.fissures-demo__maintenance-card h2 {
+  max-width: 34ch;
+  margin-bottom: 12px;
+  font-size: clamp(1.45rem, 3vw, 2.2rem);
 }
 
 .fissures-demo__maintenance-card > p:not(.kicker) {
@@ -47,7 +43,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 14px 22px;
-  margin-top: 34px;
+  margin-top: 20px;
 }
 
 .fissures-demo__breadcrumb {
