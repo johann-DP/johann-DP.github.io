@@ -106,7 +106,7 @@ class NerivanePublicReplayTests(unittest.TestCase):
         self.assertIn("Les travaux de finalisation ont repris", page)
         self.assertNotIn("à partir du 3 septembre 2026", page)
         self.assertIn("Les résultats finaux demeurent volontairement fermés", page)
-        self.assertIn(">Maintenance<", catalogue)
+        self.assertIn(">Disponible · maintenance<", catalogue)
         self.assertIn("Consulter la version de maintenance", catalogue)
         self.assertIn('headerState.dataset.maintenance !== "true"', script)
 

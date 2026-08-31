@@ -93,6 +93,14 @@ PLOTLY_LICENSE = f"{PLOTLY}.LICENSE.txt"
 WEATHER_PLOTLY = "assets/plotly-2.35.2.min.js"
 WEATHER_PLOTLY_LICENSE = f"{WEATHER_PLOTLY}.LICENSE.txt"
 
+
+def legacy_weather_rule(logical_figure_id: str, html_path: str) -> ReleaseRule:
+    return ReleaseRule(
+        logical_paths={logical_figure_id: html_path},
+        dependency_paths=(PLOTLY, PLOTLY_LICENSE),
+    )
+
+
 RELEASE_RULES: dict[str, ReleaseRule] = {
     "manual_measurement_review": ReleaseRule(
         logical_paths={
@@ -113,6 +121,38 @@ RELEASE_RULES: dict[str, ReleaseRule] = {
             "weather-quality": "complements/meteo_qualite_acquisition.html",
         },
         dependency_paths=(WEATHER_PLOTLY, WEATHER_PLOTLY_LICENSE),
+    ),
+    "weather_legacy_temperature_review": legacy_weather_rule(
+        "weather-temperature",
+        "weather/legacy/meteo_temperature.html",
+    ),
+    "weather_legacy_minmax_review": legacy_weather_rule(
+        "weather-temperature-range",
+        "weather/legacy/meteo_temp_minmax.html",
+    ),
+    "weather_legacy_humidity_review": legacy_weather_rule(
+        "weather-humidity",
+        "weather/legacy/meteo_humidity.html",
+    ),
+    "weather_legacy_light_uv_review": legacy_weather_rule(
+        "weather-light",
+        "weather/legacy/meteo_light_uv.html",
+    ),
+    "weather_legacy_precipitation_review": legacy_weather_rule(
+        "weather-rainfall",
+        "weather/legacy/meteo_precipitation.html",
+    ),
+    "weather_legacy_wind_speed_review": legacy_weather_rule(
+        "weather-wind-speed",
+        "weather/legacy/meteo_wind_speed.html",
+    ),
+    "weather_legacy_wind_direction_review": legacy_weather_rule(
+        "weather-wind-direction",
+        "weather/legacy/meteo_wind_dir.html",
+    ),
+    "weather_legacy_pairplots_review": legacy_weather_rule(
+        "weather-pairplots",
+        "weather/legacy/meteo_pairplots.html",
     ),
 }
 

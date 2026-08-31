@@ -273,6 +273,86 @@ class SiteReleaseImportTests(unittest.TestCase):
             self.protected_before,
         )
 
+    def test_accepts_each_legacy_weather_release_kind(self) -> None:
+        cases = (
+            (
+                "weather_legacy_temperature_review",
+                "weather-temperature",
+                "weather/legacy/meteo_temperature.html",
+            ),
+            (
+                "weather_legacy_minmax_review",
+                "weather-temperature-range",
+                "weather/legacy/meteo_temp_minmax.html",
+            ),
+            (
+                "weather_legacy_humidity_review",
+                "weather-humidity",
+                "weather/legacy/meteo_humidity.html",
+            ),
+            (
+                "weather_legacy_light_uv_review",
+                "weather-light",
+                "weather/legacy/meteo_light_uv.html",
+            ),
+            (
+                "weather_legacy_precipitation_review",
+                "weather-rainfall",
+                "weather/legacy/meteo_precipitation.html",
+            ),
+            (
+                "weather_legacy_wind_speed_review",
+                "weather-wind-speed",
+                "weather/legacy/meteo_wind_speed.html",
+            ),
+            (
+                "weather_legacy_wind_direction_review",
+                "weather-wind-direction",
+                "weather/legacy/meteo_wind_dir.html",
+            ),
+            (
+                "weather_legacy_pairplots_review",
+                "weather-pairplots",
+                "weather/legacy/meteo_pairplots.html",
+            ),
+        )
+        promotion_ids: set[str] = set()
+        for release_kind, logical_id, release_path in cases:
+            with self.subTest(release_kind=release_kind):
+                parent = self.sources / release_kind
+                parent.mkdir(mode=0o700)
+                source = build_source_bundle(
+                    parent,
+                    release_kind=release_kind,
+                    logical_id=logical_id,
+                    release_path=release_path,
+                )
+                result = importer.import_validated_release(
+                    source,
+                    site_root=self.site,
+                )
+                promotion_ids.add(result["promotion_id"])
+                destination = (
+                    self.site
+                    / "assets/validated-releases/demo-2"
+                    / result["promotion_id"]
+                )
+                self.assertTrue((destination / release_path).is_file())
+                self.assertEqual(result["state"], "IMPORTED_INACTIVE")
+
+        self.assertEqual(
+            set(importer.verify_imported_releases(site_root=self.site)),
+            promotion_ids,
+        )
+        self.assertEqual(
+            {
+                key: value
+                for key, value in tree_hashes(self.site).items()
+                if key in self.protected_before
+            },
+            self.protected_before,
+        )
+
     def test_identical_reimport_is_idempotent(self) -> None:
         source = build_source_bundle(self.sources)
         first = importer.import_validated_release(source, site_root=self.site)
