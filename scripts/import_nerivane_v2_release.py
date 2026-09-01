@@ -9,6 +9,8 @@ state.  Its only writable target is the content-addressed collection below
 from __future__ import annotations
 
 import argparse
+import ctypes
+import errno
 import hashlib
 import json
 import os
@@ -17,6 +19,7 @@ import re
 import shutil
 import stat
 import sys
+import tempfile
 from typing import Any, Iterable, Mapping
 
 
@@ -26,6 +29,8 @@ MANIFEST_PATH = "site-release-manifest.json"
 READY_PATH = ".READY"
 READY_CONTENT = b"nerivane-v2-inactive-site-import-ready\n"
 CONTRACT_ID = "DATAPREDICT-NERIVANE-INACTIVE-SITE-RELEASE-V2"
+REPLAY_CONTRACT_ID = "NERIVANE-PUBLIC-REPLAY-V2"
+REPLAY_STATUS = "SEALED_PUBLIC_REPLAY"
 REPOSITORY = "johann-DP/datapredict-governed-kpi-demo"
 STATE = "READY_FOR_INACTIVE_SITE_IMPORT"
 PUBLICATION = {
@@ -389,13 +394,11 @@ def _validate_replay(payload: bytes) -> None:
     counts = replay.get("counts") if isinstance(replay, dict) else None
     contract = replay.get("contract_id") if isinstance(replay, dict) else None
     if (
-        not isinstance(status, str)
-        or any(marker in status.upper() for marker in ("BLOCKED", "CANDIDATE", "NOT_EXECUTED"))
+        status != REPLAY_STATUS
         or not isinstance(counts, dict)
         or counts.get("steps") != 7
         or replay.get("fictional") is not True
-        or not isinstance(contract, str)
-        or not contract.startswith("NERIVANE-PUBLIC-REPLAY")
+        or contract != REPLAY_CONTRACT_ID
     ):
         raise _fail("NERIVANE_V2_REPLAY_INVALID")
 
@@ -494,8 +497,25 @@ def _collection(site_root: Path) -> Path:
         else:
             try:
                 current.mkdir(mode=0o755)
+            except FileExistsError:
+                try:
+                    metadata = current.lstat()
+                except OSError:
+                    raise _fail("NERIVANE_V2_DESTINATION_ROOT_INVALID") from None
+                if (
+                    not stat.S_ISDIR(metadata.st_mode)
+                    or stat.S_ISLNK(metadata.st_mode)
+                    or stat.S_IMODE(metadata.st_mode) != 0o755
+                ):
+                    raise _fail("NERIVANE_V2_DESTINATION_ROOT_INVALID")
             except OSError:
                 raise _fail("NERIVANE_V2_DESTINATION_ROOT_INVALID") from None
+            else:
+                try:
+                    os.chmod(current, 0o755, follow_symlinks=False)
+                    _fsync_directory(current.parent)
+                except OSError:
+                    raise _fail("NERIVANE_V2_DESTINATION_ROOT_INVALID") from None
     if current.resolve() != current:
         raise _fail("NERIVANE_V2_DESTINATION_ROOT_INVALID")
     return current
@@ -537,6 +557,41 @@ def _write_exclusive(path: Path, payload: bytes) -> None:
         os.close(descriptor)
 
 
+def _fsync_directory(path: Path) -> None:
+    descriptor = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def _rename_noreplace(source: Path, destination: Path) -> None:
+    try:
+        renameat2 = ctypes.CDLL(None, use_errno=True).renameat2
+    except AttributeError:
+        raise _fail("NERIVANE_V2_RENAME_NOREPLACE_UNAVAILABLE") from None
+    renameat2.argtypes = (
+        ctypes.c_int,
+        ctypes.c_char_p,
+        ctypes.c_int,
+        ctypes.c_char_p,
+        ctypes.c_uint,
+    )
+    renameat2.restype = ctypes.c_int
+    result = renameat2(
+        -100,
+        os.fsencode(source),
+        -100,
+        os.fsencode(destination),
+        1,
+    )
+    if result != 0:
+        error_number = ctypes.get_errno()
+        if error_number == errno.EEXIST:
+            raise FileExistsError(error_number, os.strerror(error_number), destination)
+        raise OSError(error_number, os.strerror(error_number), destination)
+
+
 def _public_inventory(root: Path) -> tuple[bytes, dict[str, bytes]]:
     observed = _inventory(
         root,
@@ -567,49 +622,101 @@ def _public_inventory(root: Path) -> tuple[bytes, dict[str, bytes]]:
     return manifest_payload, payloads
 
 
+def _verify_expected_destination(
+    destination: Path,
+    expected_manifest: bytes,
+    expected_payloads: Mapping[str, bytes],
+) -> None:
+    try:
+        observed_manifest, observed_payloads = _public_inventory(destination)
+    except NerivaneReleaseImportError as error:
+        raise _fail("NERIVANE_V2_DESTINATION_DIVERGED") from error
+    if observed_manifest != expected_manifest or observed_payloads != expected_payloads:
+        raise _fail("NERIVANE_V2_DESTINATION_DIVERGED")
+
+
+def _remove_incomplete_tree(root: Path) -> None:
+    try:
+        os.chmod(root, 0o700, follow_symlinks=False)
+        for path in root.rglob("*"):
+            if path.is_dir():
+                os.chmod(path, 0o700, follow_symlinks=False)
+        shutil.rmtree(root)
+    except OSError:
+        pass
+
+
 def _create_destination(
     destination: Path,
     manifest: bytes,
     payloads: Mapping[str, bytes],
 ) -> str:
     if destination.exists() or destination.is_symlink():
-        try:
-            observed_manifest, observed_payloads = _public_inventory(destination)
-        except NerivaneReleaseImportError as error:
-            raise _fail("NERIVANE_V2_DESTINATION_DIVERGED") from error
-        if observed_manifest != manifest or observed_payloads != payloads:
-            raise _fail("NERIVANE_V2_DESTINATION_DIVERGED")
+        _verify_expected_destination(destination, manifest, payloads)
         return "ALREADY_PRESENT"
+
+    container: Path | None = None
     try:
-        destination.mkdir(mode=0o700)
+        container = Path(
+            tempfile.mkdtemp(
+                prefix=f".nerivane-v2-{destination.name}.pending.",
+                dir=destination.parent.parent,
+            )
+        )
+        staging = container / destination.name
+        staging.mkdir(mode=0o700)
+    except OSError:
+        if container is not None:
+            _remove_incomplete_tree(container)
+        raise _fail("NERIVANE_V2_DESTINATION_CREATE_FAILED") from None
+
+    published = False
+    try:
         for relative, payload in sorted({**payloads, MANIFEST_PATH: manifest}.items()):
-            path = destination.joinpath(*PurePosixPath(relative).parts)
+            path = staging.joinpath(*PurePosixPath(relative).parts)
             path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
             _write_exclusive(path, payload)
         for directory in sorted(
-            (path for path in destination.rglob("*") if path.is_dir()),
+            (path for path in staging.rglob("*") if path.is_dir()),
             key=lambda path: len(path.parts),
             reverse=True,
         ):
-            directory.chmod(0o755)
-        destination.chmod(0o755)
-        _write_exclusive(destination / READY_PATH, READY_CONTENT)
+            os.chmod(directory, 0o755, follow_symlinks=False)
+            _fsync_directory(directory)
+        os.chmod(staging, 0o755, follow_symlinks=False)
+        _write_exclusive(staging / READY_PATH, READY_CONTENT)
+        _fsync_directory(staging)
+        try:
+            staged_manifest, staged_payloads = _public_inventory(staging)
+        except NerivaneReleaseImportError as error:
+            raise _fail("NERIVANE_V2_DESTINATION_CREATE_FAILED") from error
+        if staged_manifest != manifest or staged_payloads != payloads:
+            raise _fail("NERIVANE_V2_DESTINATION_CREATE_FAILED")
+        _fsync_directory(container)
+        try:
+            _rename_noreplace(staging, destination)
+        except FileExistsError:
+            _verify_expected_destination(destination, manifest, payloads)
+            _remove_incomplete_tree(container)
+            return "ALREADY_PRESENT"
+        published = True
+        _fsync_directory(container)
+        _fsync_directory(destination.parent)
     except Exception as error:
-        if not (destination / READY_PATH).exists():
+        if not published and (destination.exists() or destination.is_symlink()):
             try:
-                destination.chmod(0o700)
-                for path in destination.rglob("*"):
-                    if path.is_dir():
-                        path.chmod(0o700)
-                shutil.rmtree(destination)
-            except OSError:
+                _verify_expected_destination(destination, manifest, payloads)
+            except NerivaneReleaseImportError:
                 pass
+            else:
+                published = True
+        _remove_incomplete_tree(container)
         if isinstance(error, NerivaneReleaseImportError):
             raise
         raise _fail("NERIVANE_V2_DESTINATION_CREATE_FAILED") from error
-    observed_manifest, observed_payloads = _public_inventory(destination)
-    if observed_manifest != manifest or observed_payloads != payloads:
-        raise _fail("NERIVANE_V2_DESTINATION_DIVERGED")
+
+    _remove_incomplete_tree(container)
+    _verify_expected_destination(destination, manifest, payloads)
     return "CREATED"
 
 
