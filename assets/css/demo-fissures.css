@@ -351,6 +351,125 @@
   color: #aac3c8;
 }
 
+.fissures-demo__phases {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--surface-blue);
+}
+
+.fissures-demo__phases-intro {
+  align-items: start;
+}
+
+.fissures-demo__phases-intro h2 {
+  max-width: 18ch;
+}
+
+.fissures-demo__phases-intro > p {
+  color: var(--color-text-muted);
+}
+
+.fissures-demo__phase-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fissures-demo__phase-grid > li {
+  display: flex;
+  min-height: 420px;
+  border: 1px solid var(--color-border);
+  border-top: 4px solid var(--demo-aqua);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.48);
+  padding: clamp(26px, 3.5vw, 42px);
+  flex-direction: column;
+}
+
+.fissures-demo__phase-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 42px;
+}
+
+.fissures-demo__phase-number {
+  color: var(--demo-aqua);
+  font-size: 0.8rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+
+.fissures-demo__phase-state {
+  border: 1px solid rgba(13, 127, 136, 0.25);
+  border-radius: 999px;
+  background: rgba(215, 239, 241, 0.72);
+  color: var(--demo-ink);
+  padding: 7px 11px;
+  font-size: 0.67rem;
+  font-weight: 820;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.fissures-demo__phase-kind {
+  margin: 0 0 8px;
+  color: var(--demo-aqua);
+  font-size: 0.68rem;
+  font-weight: 820;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.fissures-demo__phase-grid h3 {
+  max-width: 28ch;
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+}
+
+.fissures-demo__phase-grid h3 + p {
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+.fissures-demo__phase-grid ul {
+  display: grid;
+  gap: 9px;
+  margin: auto 0 0;
+  padding: 24px 0 0;
+  list-style: none;
+}
+
+.fissures-demo__phase-grid ul li {
+  position: relative;
+  border-top: 1px solid rgba(64, 100, 124, 0.2);
+  padding: 10px 0 0 19px;
+  color: var(--demo-ink);
+  font-size: 0.82rem;
+  font-weight: 680;
+}
+
+.fissures-demo__phase-grid ul li::before {
+  position: absolute;
+  top: 16px;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--demo-aqua);
+  content: "";
+}
+
+.fissures-demo__phase-note {
+  max-width: 1020px;
+  margin: 28px auto 0;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  text-align: center;
+}
+
 .fissures-demo__figures {
   background: #eef3f5;
 }
@@ -697,6 +816,14 @@
 
   .fissures-demo__object-grid {
     grid-template-columns: 1fr;
+  }
+
+  .fissures-demo__phase-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fissures-demo__phase-grid > li {
+    min-height: 0;
   }
 
   .fissures-demo__figure-family > header {
