@@ -26,6 +26,8 @@ from typing import Any, Iterable, Mapping
 SITE_ROOT = Path(__file__).resolve().parents[1]
 DESTINATION_RELATIVE = PurePosixPath("assets/validated-releases/nerivane-v2")
 MANIFEST_PATH = "site-release-manifest.json"
+PROMOTION_MANIFEST_PATH = "site-promotion-manifest.json"
+PROMOTION_CONTRACT_PATH = SITE_ROOT / "contracts/nerivane-v2-site-promotion-v1.json"
 READY_PATH = ".READY"
 READY_CONTENT = b"nerivane-v2-inactive-site-import-ready\n"
 CONTRACT_ID = "DATAPREDICT-NERIVANE-INACTIVE-SITE-RELEASE-V2"
@@ -48,6 +50,12 @@ REQUIRED_FILES = {
     "SHA256SUMS": "public_checksum",
     "index.html": "public_html",
     "replay-manifest.json": "public_json",
+    PROMOTION_MANIFEST_PATH: "public_json",
+    "activation/assets/css/demo-nerivane.css": "public_stylesheet",
+    "activation/assets/data/nerivane-governance-replay.json": "public_json",
+    "activation/assets/js/demo-nerivane.js": "public_script",
+    "activation/demonstrations/nerivane-distribution.html": "public_html",
+    "activation/fragments/demonstrations-nerivane-card.html": "public_html",
     **{f"steps/{index:02d}.html": "public_html" for index in range(1, 8)},
 }
 ALLOWED_ROLES = {
@@ -356,8 +364,40 @@ def _validate_text(path: str, payload: bytes) -> None:
     for pattern in PRIVATE_TEXT_PATTERNS:
         if pattern.search(text):
             raise _fail("NERIVANE_V2_PUBLIC_TEXT_NOT_SANITIZED")
-    if suffix in {".html", ".htm"} and not text.lower().startswith("<!doctype html>"):
+    is_catalogue_fragment = path == "activation/fragments/demonstrations-nerivane-card.html"
+    if (
+        suffix in {".html", ".htm"}
+        and not is_catalogue_fragment
+        and not text.lower().startswith("<!doctype html>")
+    ):
         raise _fail("NERIVANE_V2_PUBLIC_HTML_INVALID")
+
+
+def _promotion_contract() -> tuple[bytes, dict[str, Any]]:
+    try:
+        payload = PROMOTION_CONTRACT_PATH.read_bytes()
+    except OSError:
+        raise _fail("NERIVANE_V2_PROMOTION_CONTRACT_UNAVAILABLE") from None
+    return payload, _canonical_json(payload, "NERIVANE_V2_PROMOTION_CONTRACT_INVALID")
+
+
+def _validate_promotion_contract(
+    payload: bytes,
+    records: Mapping[str, Mapping[str, object]],
+) -> None:
+    expected_payload, expected = _promotion_contract()
+    observed = _canonical_json(payload, "NERIVANE_V2_PROMOTION_CONTRACT_INVALID")
+    if payload != expected_payload or observed != expected:
+        raise _fail("NERIVANE_V2_PROMOTION_CONTRACT_INVALID")
+    mappings = observed.get("mappings")
+    if not isinstance(mappings, list):
+        raise _fail("NERIVANE_V2_PROMOTION_CONTRACT_INVALID")
+    for mapping in mappings:
+        if not isinstance(mapping, dict):
+            raise _fail("NERIVANE_V2_PROMOTION_CONTRACT_INVALID")
+        source = mapping.get("source")
+        if not isinstance(source, str) or source not in records:
+            raise _fail("NERIVANE_V2_PROMOTION_CONTRACT_INVALID")
 
 
 def _validate_checksums(payload: bytes, records: Mapping[str, Mapping[str, object]]) -> None:
@@ -456,6 +496,7 @@ def _verify_source(root: Path) -> tuple[str, bytes, dict[str, bytes]]:
         payloads[relative] = payload
     _validate_checksums(payloads["SHA256SUMS"], records)
     _validate_replay(payloads["replay-manifest.json"])
+    _validate_promotion_contract(payloads[PROMOTION_MANIFEST_PATH], records)
     after = _inventory(
         resolved,
         root_mode=root_mode,
@@ -619,6 +660,7 @@ def _public_inventory(root: Path) -> tuple[bytes, dict[str, bytes]]:
         payloads[relative] = payload
     _validate_checksums(payloads["SHA256SUMS"], records)
     _validate_replay(payloads["replay-manifest.json"])
+    _validate_promotion_contract(payloads[PROMOTION_MANIFEST_PATH], records)
     return manifest_payload, payloads
 
 

@@ -114,6 +114,36 @@ contenu et portant cinq validations finales explicites. L’import est créé so
 le retrait de la maintenance. Une promotion vers les chemins actifs constitue
 donc une opération ultérieure, distincte et contrôlée.
 
+Chaque futur paquet V2 doit aussi embarquer
+`site-promotion-manifest.json`, identique au contrat versionné
+`contracts/nerivane-v2-site-promotion-v1.json`. Ce contrat ferme la promotion à
+quatre fichiers propres à Nérivane et au seul fragment Nérivane du catalogue,
+borné par deux marqueurs HTML. Le paquet V1, Fissures, Demo2 et le socle visuel
+du site sont explicitement hors mapping et contrôlés par empreinte.
+
+Après un import inactif vérifié, l’outil de promotion s’utilise avec un
+`release_id` explicite :
+
+```bash
+python3 scripts/promote_nerivane_v2_release.py --attest-maintenance
+python3 scripts/promote_nerivane_v2_release.py --promote <release_id>
+python3 scripts/promote_nerivane_v2_release.py --attest-release <release_id>
+```
+
+La préparation et le journal sont durables, chaque fichier est remplacé
+atomiquement et la page qui retire la maintenance est écrite en dernier. Comme
+les cinq cibles sont dispersées dans le site, l’ensemble n’est pas un échange
+mono-syscall : une coupure en phase `COMMITTING` impose la reprise contrôlée,
+qui restaure exactement le snapshot avant une nouvelle tentative.
+
+```bash
+python3 scripts/promote_nerivane_v2_release.py --recover <release_id>
+python3 scripts/promote_nerivane_v2_release.py --rollback <release_id>
+```
+
+L’outil ne pousse, ne fusionne et ne déploie rien. La promotion et le rollback
+restent des actions explicites distinctes de l’import.
+
 La première démonstration, Ormévia Bâtiment, rejoue deux scénarios enregistrés : une proposition étayée et une abstention lorsque les sources ne permettent pas de répondre. Le navigateur charge uniquement une projection publique contrôlée ; il ne contacte ni les quatre machines d’origine, ni un backend privé, ni un réseau local. Les sources techniques sont classées `TEST`, ont reçu des corrections éditoriales après capture et ne sont pas présentées comme canoniques.
 
 La deuxième démonstration présente une investigation conduite à partir de mesures physiques réelles appartenant à leur auteur. Elle relie instrumentation, acquisitions manuelles et automatiques, météo, contrôles de qualité et visualisations précalculées. Les quatorze figures validées sont conservées octet pour octet et chargées une par une à la demande ; le navigateur ne contacte ni la station météo, ni le Raspberry Pi, ni les machines de calcul.

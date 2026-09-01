@@ -72,8 +72,10 @@ def source_payloads(
     *,
     replay_status: str = "SEALED_PUBLIC_REPLAY",
     replay_contract_id: str = importer.REPLAY_CONTRACT_ID,
+    promotion_contract_payload: bytes | None = None,
     private_token: str | None = None,
 ) -> dict[str, tuple[str, bytes]]:
+    release_placeholder = "__NERIVANE_V2_RELEASE_ID__"
     payloads: dict[str, tuple[str, bytes]] = {
         "index.html": (
             "public_html",
@@ -94,6 +96,61 @@ def source_payloads(
             "public_evidence",
             canonical({"status": "VALIDÉ", "volume": "1.75 Tio"}),
         ),
+        importer.PROMOTION_MANIFEST_PATH: (
+            "public_json",
+            promotion_contract_payload
+            if promotion_contract_payload is not None
+            else importer.PROMOTION_CONTRACT_PATH.read_bytes(),
+        ),
+        "activation/demonstrations/nerivane-distribution.html": (
+            "public_html",
+            (
+                "<!doctype html><html lang=\"fr\"><head>"
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+                "<link rel=\"stylesheet\" href=\"../assets/css/site.css\">"
+                "<link rel=\"stylesheet\" href=\"../assets/css/demo-nerivane.css\">"
+                "<script src=\"../assets/js/demo-nerivane.js\" defer></script>"
+                "<script src=\"../assets/js/audience-counter.js\" defer></script>"
+                "<title>Nerivane V2</title></head><body><h1>Nerivane V2 active</h1>"
+                "<a href=\"../assets/validated-releases/nerivane-v2/"
+                f"{release_placeholder}/index.html\">Replay V2</a></body></html>"
+            ).encode("utf-8"),
+        ),
+        "activation/assets/data/nerivane-governance-replay.json": (
+            "public_json",
+            canonical(
+                {
+                    "bundle": (
+                        "../assets/validated-releases/nerivane-v2/"
+                        f"{release_placeholder}/replay-manifest.json"
+                    ),
+                    "formatVersion": "2.0.0",
+                    "status": "SEALED_PUBLIC_REPLAY",
+                }
+            ),
+        ),
+        "activation/assets/js/demo-nerivane.js": (
+            "public_script",
+            b'"use strict"; document.documentElement.dataset.nerivane = "v2";\n',
+        ),
+        "activation/assets/css/demo-nerivane.css": (
+            "public_stylesheet",
+            b".nerivane-demo-page { display: block; }\n@media (max-width: 48rem) { .nerivane-demo-page { width: 100%; } }\n",
+        ),
+        "activation/fragments/demonstrations-nerivane-card.html": (
+            "public_html",
+            (
+                "<li><article class=\"demonstrations-page__card\">"
+                "<a class=\"demonstrations-page__card-link\" "
+                "href=\"demonstrations/nerivane-distribution.html\" "
+                "aria-labelledby=\"nerivane-title\">"
+                "<h3 id=\"nerivane-title\">Nérivane Distribution</h3>"
+                "<span class=\"demonstrations-page__card-status\">Disponible</span>"
+                "<span data-release=\""
+                f"assets/validated-releases/nerivane-v2/{release_placeholder}"
+                "\">Consulter la démonstration</span></a></article></li>"
+            ).encode("utf-8"),
+        ),
     }
     for index in range(1, 8):
         body = f"<!doctype html><html lang='fr'><title>Etape {index}</title></html>"
@@ -113,12 +170,14 @@ def build_source(
     *,
     replay_status: str = "SEALED_PUBLIC_REPLAY",
     replay_contract_id: str = importer.REPLAY_CONTRACT_ID,
+    promotion_contract_payload: bytes | None = None,
     private_token: str | None = None,
     gates: dict[str, str] | None = None,
 ) -> Path:
     payloads = source_payloads(
         replay_status=replay_status,
         replay_contract_id=replay_contract_id,
+        promotion_contract_payload=promotion_contract_payload,
         private_token=private_token,
     )
     identity: dict[str, object] = {
@@ -164,13 +223,33 @@ def build_source(
 
 def build_site(root: Path) -> None:
     active = {
-        "demonstrations/nerivane-distribution.html": b"maintenance page",
+        "demonstrations/nerivane-distribution.html": (
+            b'<!doctype html><html lang="fr"><head><meta name="viewport" '
+            b'content="width=device-width, initial-scale=1"></head><body>'
+            b'<span data-maintenance="true">Maintenance</span><h1>Nerivane</h1>'
+            b'</body></html>'
+        ),
         "assets/data/nerivane-governance-replay.json": b"maintenance data",
         "assets/js/demo-nerivane.js": b"maintenance js",
         "assets/css/demo-nerivane.css": b"maintenance css",
-        "demonstrations.html": b"maintenance catalogue",
+        "demonstrations.html": (
+            b'<!doctype html><html lang="fr"><body><ul>\n'
+            b'<!-- NERIVANE_CATALOGUE_CARD_START -->\n'
+            b'<li><a aria-labelledby="nerivane-title"><h3 id="nerivane-title">'
+            b'Nerivane</h3><span>Maintenance</span></a></li>\n'
+            b'<!-- NERIVANE_CATALOGUE_CARD_END -->\n'
+            b'<li id="fissures">Fissures</li></ul></body></html>'
+        ),
         "assets/nerivane-public-v1/SHA256SUMS": b"legacy sums",
         "assets/nerivane-public-v1/index.html": b"legacy replay",
+        "demonstrations/fissures.html": b"protected fissures page",
+        "assets/css/demo-fissures.css": b"protected fissures css",
+        "assets/css/site.css": b"protected responsive site css",
+        "assets/js/audience-counter.js": b"protected audience counter",
+        "assets/js/demo-fissures.js": b"protected fissures js",
+        "assets/figures/demo-2/content-manifest.json": b"protected demo2 figures",
+        "assets/img/demo-2-thumbnails/figure.webp": b"protected demo2 thumbnail",
+        "assets/validated-releases/demo-2/release/.READY": b"protected demo2 release",
     }
     for relative, payload in active.items():
         path = root / relative
@@ -207,7 +286,7 @@ class NerivaneV2ImportTests(unittest.TestCase):
 
         self.assertEqual(result["status"], "CREATED")
         self.assertEqual(result["state"], "IMPORTED_INACTIVE")
-        self.assertEqual(result["published_file_count"], 11)
+        self.assertEqual(result["published_file_count"], 17)
         self.assertEqual(
             importer.verify_imported_releases(site_root=self.site),
             (result["release_id"],),
@@ -284,6 +363,20 @@ class NerivaneV2ImportTests(unittest.TestCase):
                     "NERIVANE_V2_REPLAY_INVALID",
                 ):
                     importer.import_release(source, site_root=self.site)
+
+    def test_rejects_any_promotion_contract_other_than_the_versioned_exact_mapping(self) -> None:
+        altered = json.loads(importer.PROMOTION_CONTRACT_PATH.read_bytes())
+        altered["contract_id"] = "DATAPREDICT-NERIVANE-ACTIVE-SITE-PROMOTION-V2"
+        source = build_source(
+            self.sources,
+            promotion_contract_payload=canonical(altered),
+        )
+
+        with self.assertRaisesRegex(
+            importer.NerivaneReleaseImportError,
+            "NERIVANE_V2_PROMOTION_CONTRACT_INVALID",
+        ):
+            importer.import_release(source, site_root=self.site)
 
     def test_rejects_private_tokens_in_public_text(self) -> None:
         source = build_source(self.sources, private_token=" /home/jo/private ")
