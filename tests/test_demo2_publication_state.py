@@ -3,7 +3,12 @@ from __future__ import annotations
 from html.parser import HTMLParser
 from pathlib import Path
 import re
+import sys
 import unittest
+
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import validate_nerivane_site_state as nerivane_states  # noqa: E402
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -84,9 +89,25 @@ class Demo2PublicationStateTests(unittest.TestCase):
         self.assertIn("Quinze restitutions consultables à la demande", demo2_card)
         self.assertNotIn("Quatorze restitutions consultables à la demande", demo2_card)
 
-        self.assertIn('data-maintenance="true"', (ROOT / "demonstrations" / "nerivane-distribution.html").read_text(encoding="utf-8"))
-        self.assertIn("Disponible · maintenance", catalogue)
-        self.assertIn("Consulter la version de maintenance", catalogue)
+        nerivane = nerivane_states.validate_site_state(site_root=ROOT)
+        nerivane_page = (
+            ROOT / "demonstrations" / "nerivane-distribution.html"
+        ).read_text(encoding="utf-8")
+        if nerivane["state"] == nerivane_states.MAINTENANCE_STATE:
+            self.assertIn('data-maintenance="true"', nerivane_page)
+            self.assertIn("Disponible · maintenance", catalogue)
+            self.assertIn("Consulter la version de maintenance", catalogue)
+        else:
+            self.assertEqual(nerivane["state"], nerivane_states.ACTIVE_STATE)
+            self.assertIn(
+                f'data-release-id="{nerivane["release_id"]}"',
+                nerivane_page,
+            )
+            self.assertNotIn("maintenance", nerivane_page.lower())
+            self.assertIn(
+                f'data-release="assets/validated-releases/nerivane-v2/{nerivane["release_id"]}"',
+                catalogue,
+            )
 
     def test_fifteen_static_lazy_previews_replace_the_interactive_viewer(self) -> None:
         parser = FigureInventory()

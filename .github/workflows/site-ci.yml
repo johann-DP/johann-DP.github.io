@@ -74,6 +74,7 @@ jobs:
               "assets/nerivane-public-v1/references.html",
               "assets/nerivane-public-v1/replay-manifest.json",
               "contracts/nerivane-v2-site-promotion-v1.json",
+              "scripts/validate_nerivane_site_state.py",
               "assets/figures/demo-2/content-manifest.json",
               "assets/figures/demo-2/weather/content-manifest.json",
               "assets/img/favicon-datapredict.png",
@@ -558,14 +559,9 @@ jobs:
 
       - name: Vérifier le replay Nérivane
         shell: bash
-        run: python3 -m unittest -q tests.test_nerivane_public_replay
-
-      - name: Tester l’attestation et les imports inactifs hors réseau
-        shell: bash
         run: |
-          python3 -m unittest discover -s tests -p 'test_*.py'
-          python3 scripts/import_demo2_validated_release.py --verify-existing
-          python3 scripts/import_nerivane_v2_release.py --verify-existing
+          python3 scripts/validate_nerivane_site_state.py
+          python3 -m unittest -q tests.test_nerivane_public_replay
 
       - name: Préparer Node.js
         uses: actions/setup-node@v6
@@ -573,6 +569,13 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: analytics-counter/package-lock.json
+
+      - name: Tester l’attestation et les imports inactifs hors réseau
+        shell: bash
+        run: |
+          python3 -m unittest discover -s tests -p 'test_*.py'
+          python3 scripts/import_demo2_validated_release.py --verify-existing
+          python3 scripts/import_nerivane_v2_release.py --verify-existing
 
       - name: Tester le compteur
         shell: bash
