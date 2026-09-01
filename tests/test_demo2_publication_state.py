@@ -38,7 +38,7 @@ class FigureInventory(HTMLParser):
 
 
 class Demo2PublicationStateTests(unittest.TestCase):
-    def test_demo2_is_available_without_altering_demo3_maintenance(self) -> None:
+    def test_demo2_remains_in_maintenance_without_altering_demo3(self) -> None:
         page = PAGE.read_text(encoding="utf-8")
         catalogue = CATALOGUE.read_text(encoding="utf-8")
         demo2_card_match = re.search(
@@ -50,11 +50,13 @@ class Demo2PublicationStateTests(unittest.TestCase):
         self.assertIsNotNone(demo2_card_match)
         demo2_card = demo2_card_match.group(0)
 
-        self.assertNotIn("maintenance", page.lower())
-        self.assertNotIn("finalisation", page.lower())
-        self.assertIn("<span class=\"demonstrations-page__card-status\">Disponible</span>", demo2_card)
-        self.assertNotIn("maintenance", demo2_card.lower())
-        self.assertNotIn("finalisation", demo2_card.lower())
+        self.assertIn('<body class="fissures-demo" data-maintenance="true">', page)
+        self.assertIn("Démonstration 2 · En maintenance", page)
+        self.assertIn("Les restitutions déjà validées restent consultables", page)
+        self.assertNotIn("<div hidden>", page)
+        self.assertIn("<span class=\"demonstrations-page__card-status\">En maintenance</span>", demo2_card)
+        self.assertIn("Consulter la version en maintenance", demo2_card)
+        self.assertNotIn("<span class=\"demonstrations-page__card-status\">Disponible</span>", demo2_card)
 
         self.assertIn('data-maintenance="true"', (ROOT / "demonstrations" / "nerivane-distribution.html").read_text(encoding="utf-8"))
         self.assertIn("Disponible · maintenance", catalogue)
