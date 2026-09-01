@@ -17,6 +17,7 @@ BUNDLE = ROOT / "assets" / "nerivane-public-v1"
 SITEMAP = ROOT / "sitemap.xml"
 WORKER = ROOT / "analytics-counter" / "src" / "worker.js"
 WORKFLOW = ROOT / ".github" / "workflows" / "site-ci.yml"
+V2_IMPORTER = ROOT / "scripts" / "import_nerivane_v2_release.py"
 ALLOWED_STATUSES = {"MESURÉ", "PLANIFIÉ", "BLOQUÉ", "EXÉCUTÉ_NON_VALIDÉ"}
 
 
@@ -183,6 +184,14 @@ class NerivanePublicReplayTests(unittest.TestCase):
             digest, relative = line.split("  ", 1)
             entries.append((digest, relative))
         self.assertEqual(len(entries), 128)
+        self.assertEqual(
+            {
+                path.relative_to(BUNDLE).as_posix()
+                for path in BUNDLE.rglob("*")
+                if path.is_file()
+            },
+            {relative for _, relative in entries} | {"SHA256SUMS"},
+        )
         for expected, relative in entries:
             with self.subTest(path=relative):
                 target = BUNDLE / relative
@@ -301,9 +310,11 @@ class NerivanePublicReplayTests(unittest.TestCase):
             '"assets/js/demo-nerivane.js"',
             '"assets/nerivane-public-v1/replay-manifest.json"',
             "python3 -m unittest -q tests.test_nerivane_public_replay",
+            "python3 scripts/import_nerivane_v2_release.py --verify-existing",
             "node --check assets/js/demo-nerivane.js",
         ):
             self.assertIn(marker, workflow)
+        self.assertTrue(V2_IMPORTER.is_file())
 
     def test_topology_and_resource_roles_are_explicit(self):
         data = load_data()

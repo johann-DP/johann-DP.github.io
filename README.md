@@ -77,6 +77,9 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
     │   ├── reference-registry.json
     │   ├── SHA256SUMS
     │   └── replay-manifest.json
+    ├── validated-releases/
+    │   ├── demo-2/
+    │   └── nerivane-v2/
     ├── figures/
     │   └── demo-2/
     └── img/
@@ -102,6 +105,14 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
 La page `demonstrations.html` constitue le catalogue public. Chaque démonstration possède sa propre page et ses ressources isolées afin que de nouveaux cas puissent être ajoutés sans modifier les lecteurs existants.
 
 La démonstration Nérivane Distribution expose un replay prospect en sept étapes. Son corpus public contient 28 documents métier fictifs reliés pièce par pièce, ainsi que les référentiels détaillés des personnes, rôles, responsabilités, sites et systèmes sources. Le navigateur vérifie les statuts et les empreintes annoncés dans `assets/data/nerivane-governance-replay.json`. Le paquet `assets/nerivane-public-v1/` est une projection assainie et autonome : les résultats dépendant du scellement H1, de l’échantillon BigQuery V2 ou de l’avis IA final restent explicitement fermés tant que leurs preuves finales ne sont pas intégrées.
+
+Le script `scripts/import_nerivane_v2_release.py` prépare la relève sans modifier
+ce replay actif. Il n’accepte qu’un paquet V2 fermé, assaini, adressé par son
+contenu et portant cinq validations finales explicites. L’import est créé sous
+`assets/validated-releases/nerivane-v2/<release_id>/` avec un marqueur final
+`.READY`. Il demeure inactif : le contrat interdit l’activation automatique et
+le retrait de la maintenance. Une promotion vers les chemins actifs constitue
+donc une opération ultérieure, distincte et contrôlée.
 
 La première démonstration, Ormévia Bâtiment, rejoue deux scénarios enregistrés : une proposition étayée et une abstention lorsque les sources ne permettent pas de répondre. Le navigateur charge uniquement une projection publique contrôlée ; il ne contacte ni les quatre machines d’origine, ni un backend privé, ni un réseau local. Les sources techniques sont classées `TEST`, ont reçu des corrections éditoriales après capture et ne sont pas présentées comme canoniques.
 
