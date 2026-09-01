@@ -73,6 +73,7 @@ jobs:
               "assets/nerivane-public-v1/reference-registry.json",
               "assets/nerivane-public-v1/references.html",
               "assets/nerivane-public-v1/replay-manifest.json",
+              "contracts/nerivane-v2-site-promotion-v1.json",
               "assets/figures/demo-2/content-manifest.json",
               "assets/figures/demo-2/weather/content-manifest.json",
               "assets/img/favicon-datapredict.png",
@@ -262,7 +263,12 @@ jobs:
                   "validated-releases",
                   "demo-2",
               )
-              return inactive_demo2_release or any(
+              inactive_nerivane_v2_release = parts[:3] == (
+                  "assets",
+                  "validated-releases",
+                  "nerivane-v2",
+              )
+              return inactive_demo2_release or inactive_nerivane_v2_release or any(
                   part.startswith(".") or part == "node_modules" for part in parts
               )
 
@@ -361,6 +367,23 @@ jobs:
                       errors.append(
                           f"contact.html contient encore la mention obsolète : {claim}"
                       )
+
+          catalogue = root / "demonstrations.html"
+          if catalogue.is_file():
+              catalogue_text = catalogue.read_text(encoding="utf-8")
+              start_marker = "<!-- NERIVANE_CATALOGUE_CARD_START -->"
+              end_marker = "<!-- NERIVANE_CATALOGUE_CARD_END -->"
+              if (
+                  catalogue_text.count(start_marker) != 1
+                  or catalogue_text.count(end_marker) != 1
+                  or catalogue_text.index(start_marker) >= catalogue_text.index(end_marker)
+                  or "nerivane-title" not in catalogue_text[
+                      catalogue_text.index(start_marker):catalogue_text.index(end_marker)
+                  ]
+              ):
+                  errors.append(
+                      "demonstrations.html : bornes exactes de la carte Nérivane absentes"
+                  )
 
           def local_target(source, raw_reference):
               parsed = urlsplit(raw_reference)
@@ -542,6 +565,7 @@ jobs:
         run: |
           python3 -m unittest discover -s tests -p 'test_*.py'
           python3 scripts/import_demo2_validated_release.py --verify-existing
+          python3 scripts/import_nerivane_v2_release.py --verify-existing
 
       - name: Préparer Node.js
         uses: actions/setup-node@v6
