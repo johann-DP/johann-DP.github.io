@@ -15,6 +15,8 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import attest_production as production  # noqa: E402
+import import_nerivane_v2_release as nerivane_v2  # noqa: E402
+from tests.test_import_nerivane_v2_release import build_source  # noqa: E402
 
 
 FIGURES = (
@@ -96,6 +98,30 @@ def build_tree(root: Path) -> None:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(f"integration:{relative}".encode())
 
+    for relative in production.NERIVANE_INTEGRATION_PATHS:
+        path = root / Path(*relative.parts)
+        if not path.exists():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(f"nerivane-integration:{relative}".encode())
+
+    bundle = root / Path(*production.NERIVANE_BUNDLE_ROOT.parts)
+    payloads = {
+        "index.html": b"<!doctype html><title>Nerivane</title>",
+        "replay-manifest.json": b'{"status":"maintenance"}\n',
+        "steps/01.html": b"<!doctype html><title>Step 1</title>",
+    }
+    for relative, payload in payloads.items():
+        path = bundle / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(payload)
+    (bundle / "SHA256SUMS").write_text(
+        "".join(
+            f"{hashlib.sha256(payload).hexdigest()}  {relative}\n"
+            for relative, payload in sorted(payloads.items())
+        ),
+        encoding="ascii",
+    )
+
 
 class ProductionAttestationTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -109,13 +135,24 @@ class ProductionAttestationTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.temporary.cleanup()
 
-    def test_attests_exactly_fifteen_figures_and_twenty_two_integration_files(self) -> None:
+    def test_attests_demo2_and_the_complete_active_nerivane_tree(self) -> None:
         with serve(self.remote) as base_url, redirect_stdout(StringIO()):
             observed = production.attest(self.expected, base_url, timeout_seconds=2)
 
-        self.assertEqual(len(observed), 37)
+        self.assertEqual(len(observed), 45)
         self.assertEqual(sum(item.category == "figure" for item in observed), 15)
-        self.assertEqual(sum(item.category == "integration" for item in observed), 22)
+        self.assertEqual(
+            sum(item.category == "demo2_integration" for item in observed),
+            21,
+        )
+        self.assertEqual(
+            sum(item.category == "nerivane_integration" for item in observed),
+            5,
+        )
+        self.assertEqual(
+            sum(item.category == "nerivane_bundle" for item in observed),
+            4,
+        )
 
     def test_rejects_remote_content_divergence_explicitly(self) -> None:
         relative = Path("assets/figures/demo-2/fissure-recente-meme-format.html")
@@ -171,6 +208,44 @@ class ProductionAttestationTests(unittest.TestCase):
             "exactement 15 maîtres HTML uniques attendus",
         ):
             production.load_expected_files(self.expected)
+
+    def test_rejects_an_unlisted_file_in_the_active_nerivane_subtree(self) -> None:
+        stray = self.expected / "assets/nerivane-public-v1/stray.json"
+        stray.write_text("{}\n", encoding="utf-8")
+
+        with self.assertRaisesRegex(
+            production.AttestationError,
+            "inventaire local divergent des sommes",
+        ):
+            production.load_expected_files(self.expected)
+
+    def test_rejects_remote_nerivane_data_divergence(self) -> None:
+        relative = Path("assets/data/nerivane-governance-replay.json")
+        (self.remote / relative).write_bytes(b"divergent")
+
+        with serve(self.remote) as base_url, redirect_stdout(StringIO()):
+            with self.assertRaisesRegex(
+                production.AttestationError,
+                r"nerivane-governance-replay\.json non attesté.*contenu divergent",
+            ):
+                production.attest(self.expected, base_url, timeout_seconds=2)
+
+    def test_attests_every_file_of_a_staged_nerivane_v2_release(self) -> None:
+        sources = Path(self.temporary.name) / "sources"
+        sources.mkdir()
+        source = build_source(sources)
+        result = nerivane_v2.import_release(source, site_root=self.expected)
+        shutil.rmtree(self.remote)
+        shutil.copytree(self.expected, self.remote)
+
+        with serve(self.remote) as base_url, redirect_stdout(StringIO()):
+            observed = production.attest(self.expected, base_url, timeout_seconds=2)
+
+        staged = [item for item in observed if item.category == "nerivane_v2_staged"]
+        self.assertEqual(len(staged), 13)
+        self.assertTrue(
+            all(result["release_id"] in item.path.parts for item in staged)
+        )
 
 
 if __name__ == "__main__":

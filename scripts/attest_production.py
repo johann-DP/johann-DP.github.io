@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Attest that the deployed Demo 2 files match the versioned site tree."""
+"""Attest that deployed demonstration files match the versioned site tree."""
 
 from __future__ import annotations
 
@@ -8,12 +8,15 @@ from dataclasses import dataclass
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
+import stat
 import sys
 import time
 from typing import Iterable
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
+
+import import_nerivane_v2_release as nerivane_v2
 
 
 FIGURE_ROOT = PurePosixPath("assets/figures/demo-2")
@@ -41,7 +44,6 @@ THUMBNAIL_NAMES = (
 )
 INTEGRATION_PATHS = (
     PurePosixPath("demonstrations/fissures.html"),
-    PurePosixPath("demonstrations.html"),
     PurePosixPath("assets/js/demo-fissures.js"),
     PurePosixPath("assets/css/demo-fissures.css"),
     FIGURE_ROOT / "content-manifest.json",
@@ -49,6 +51,15 @@ INTEGRATION_PATHS = (
     PurePosixPath("sitemap.xml"),
     *(THUMBNAIL_ROOT / name for name in THUMBNAIL_NAMES),
 )
+NERIVANE_INTEGRATION_PATHS = (
+    PurePosixPath("demonstrations/nerivane-distribution.html"),
+    PurePosixPath("assets/data/nerivane-governance-replay.json"),
+    PurePosixPath("assets/js/demo-nerivane.js"),
+    PurePosixPath("assets/css/demo-nerivane.css"),
+    PurePosixPath("demonstrations.html"),
+)
+NERIVANE_BUNDLE_ROOT = PurePosixPath("assets/nerivane-public-v1")
+NERIVANE_CHECKSUMS = NERIVANE_BUNDLE_ROOT / "SHA256SUMS"
 EXPECTED_FIGURE_COUNT = 15
 CHUNK_SIZE = 1024 * 1024
 
@@ -136,6 +147,115 @@ def _load_manifest(root: Path, relative: PurePosixPath) -> list[ExpectedFile]:
     return expected
 
 
+def _expected_local_file(
+    root: Path,
+    relative: PurePosixPath,
+    category: str,
+) -> ExpectedFile:
+    local_path = _repository_path(root, relative)
+    if not local_path.is_file() or local_path.is_symlink():
+        raise AttestationError(f"fichier local absent ou non sûr : {relative}")
+    observed = _digest_file(local_path)
+    return ExpectedFile(relative, observed.sha256, observed.size_bytes, category)
+
+
+def _load_checksum_subtree(
+    root: Path,
+    subtree: PurePosixPath,
+    checksum_relative: PurePosixPath,
+    category: str,
+) -> list[ExpectedFile]:
+    subtree_path = _repository_path(root, subtree)
+    checksum_path = _repository_path(root, checksum_relative)
+    if (
+        not subtree_path.is_dir()
+        or subtree_path.is_symlink()
+        or not checksum_path.is_file()
+        or checksum_path.is_symlink()
+    ):
+        raise AttestationError(f"sous-arbre local absent ou non sûr : {subtree}")
+    try:
+        lines = checksum_path.read_text(encoding="ascii").splitlines()
+    except (OSError, UnicodeError) as exc:
+        raise AttestationError(f"sommes locales illisibles : {checksum_relative} : {exc}") from exc
+    if not lines:
+        raise AttestationError(f"sommes locales vides : {checksum_relative}")
+
+    entries: dict[PurePosixPath, str] = {}
+    ordered: list[str] = []
+    for line in lines:
+        parts = line.split("  ", 1)
+        if len(parts) != 2:
+            raise AttestationError(f"ligne SHA-256 invalide dans {checksum_relative}")
+        digest, raw_relative = parts
+        payload_relative = PurePosixPath(raw_relative)
+        if (
+            len(digest) != 64
+            or any(character not in "0123456789abcdef" for character in digest)
+            or not raw_relative
+            or "\\" in raw_relative
+            or payload_relative.is_absolute()
+            or payload_relative.as_posix() != raw_relative
+            or any(part in {"", ".", ".."} for part in payload_relative.parts)
+            or payload_relative in entries
+        ):
+            raise AttestationError(f"ligne SHA-256 invalide dans {checksum_relative}")
+        entries[payload_relative] = digest
+        ordered.append(raw_relative)
+    if ordered != sorted(ordered):
+        raise AttestationError(f"sommes locales non triées : {checksum_relative}")
+
+    actual_files: set[PurePosixPath] = set()
+    for path in subtree_path.rglob("*"):
+        try:
+            metadata = path.lstat()
+        except OSError as exc:
+            raise AttestationError(f"entrée locale illisible dans {subtree}") from exc
+        if stat.S_ISLNK(metadata.st_mode):
+            raise AttestationError(f"lien symbolique interdit dans {subtree}")
+        if stat.S_ISDIR(metadata.st_mode):
+            continue
+        if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
+            raise AttestationError(f"entrée locale non régulière dans {subtree}")
+        actual_files.add(PurePosixPath(path.relative_to(subtree_path).as_posix()))
+    if actual_files != set(entries) | {PurePosixPath(checksum_relative.name)}:
+        raise AttestationError(f"inventaire local divergent des sommes : {subtree}")
+
+    expected: list[ExpectedFile] = []
+    for payload_relative, digest in entries.items():
+        deployed_path = subtree / payload_relative
+        local_path = _repository_path(root, deployed_path)
+        observed = _digest_file(local_path)
+        if observed.sha256 != digest:
+            raise AttestationError(f"empreinte locale divergente : {deployed_path}")
+        expected.append(
+            ExpectedFile(deployed_path, digest, observed.size_bytes, category)
+        )
+    expected.append(_expected_local_file(root, checksum_relative, category))
+    return expected
+
+
+def _load_staged_nerivane_v2(root: Path) -> list[ExpectedFile]:
+    try:
+        release_ids = nerivane_v2.verify_imported_releases(site_root=root)
+    except nerivane_v2.NerivaneReleaseImportError as exc:
+        raise AttestationError(f"import Nérivane V2 local invalide : {exc.code}") from exc
+    collection = PurePosixPath(nerivane_v2.DESTINATION_RELATIVE)
+    expected: list[ExpectedFile] = []
+    for release_id in release_ids:
+        release_relative = collection / release_id
+        release_root = _repository_path(root, release_relative)
+        for path in sorted(release_root.rglob("*")):
+            if path.is_file():
+                relative = release_relative / PurePosixPath(
+                    path.relative_to(release_root).as_posix()
+                )
+                expected.append(
+                    _expected_local_file(root, relative, "nerivane_v2_staged")
+                )
+    return expected
+
+
 def load_expected_files(root: Path) -> tuple[ExpectedFile, ...]:
     """Load and validate the closed set of figures and integration assets."""
     root = root.resolve()
@@ -151,20 +271,33 @@ def load_expected_files(root: Path) -> tuple[ExpectedFile, ...]:
             f"trouvé : {len(figures)} ({len(set(figure_paths))} uniques)"
         )
 
-    integrations: list[ExpectedFile] = []
-    for relative in INTEGRATION_PATHS:
-        local_path = _repository_path(root, relative)
-        if not local_path.is_file():
-            raise AttestationError(f"fichier d’intégration local absent : {relative}")
-        observed = _digest_file(local_path)
-        integrations.append(
-            ExpectedFile(relative, observed.sha256, observed.size_bytes, "integration")
-        )
+    integrations = [
+        _expected_local_file(root, relative, "demo2_integration")
+        for relative in INTEGRATION_PATHS
+    ]
+    nerivane_integrations = [
+        _expected_local_file(root, relative, "nerivane_integration")
+        for relative in NERIVANE_INTEGRATION_PATHS
+    ]
+    nerivane_bundle = _load_checksum_subtree(
+        root,
+        NERIVANE_BUNDLE_ROOT,
+        NERIVANE_CHECKSUMS,
+        "nerivane_bundle",
+    )
+    nerivane_v2_staged = _load_staged_nerivane_v2(root)
 
-    all_paths = [expected.path for expected in (*figures, *integrations)]
+    all_expected = (
+        *figures,
+        *integrations,
+        *nerivane_integrations,
+        *nerivane_bundle,
+        *nerivane_v2_staged,
+    )
+    all_paths = [expected.path for expected in all_expected]
     if len(set(all_paths)) != len(all_paths):
-        raise AttestationError("chemin dupliqué entre figures et fichiers d’intégration")
-    return tuple((*figures, *integrations))
+        raise AttestationError("chemin dupliqué dans l’inventaire d’attestation")
+    return tuple(all_expected)
 
 
 def _download_digest(url: str, timeout_seconds: float) -> ObservedFile:
@@ -265,12 +398,24 @@ def main(argv: Iterable[str] | None = None) -> int:
         print(f"ATTESTATION_FAILED: {exc}", file=sys.stderr)
         return 1
 
-    figure_count = sum(item.category == "figure" for item in expected)
-    integration_count = sum(item.category == "integration" for item in expected)
+    category_counts = {
+        category: sum(item.category == category for item in expected)
+        for category in (
+            "figure",
+            "demo2_integration",
+            "nerivane_integration",
+            "nerivane_bundle",
+            "nerivane_v2_staged",
+        )
+    }
     total_size = sum(item.size_bytes for item in expected)
     print(
         "ATTESTATION_OK "
-        f"figures={figure_count} integration={integration_count} "
+        f"figures={category_counts['figure']} "
+        f"demo2_integration={category_counts['demo2_integration']} "
+        f"nerivane_integration={category_counts['nerivane_integration']} "
+        f"nerivane_bundle={category_counts['nerivane_bundle']} "
+        f"nerivane_v2_staged={category_counts['nerivane_v2_staged']} "
         f"fichiers={len(expected)} octets={total_size} base={args.base_url.rstrip('/')}"
     )
     return 0
