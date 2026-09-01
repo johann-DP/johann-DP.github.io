@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mesures physiques et séries temporelles — démonstration | datapredict</title>
-  <meta name="description" content="Explorez quatorze restitutions validées de mesures physiques réelles : fissures, joint de dilatation, capteur automatique et météo.">
+  <meta name="description" content="Explorez quinze restitutions validées de mesures physiques réelles : fissures, joint de dilatation, capteur automatique et météo.">
   <link rel="canonical" href="https://www.datapredict.org/demonstrations/fissures.html">
   <link rel="icon" type="image/png" sizes="96x96" href="../assets/img/favicon-datapredict.png">
   <meta property="og:locale" content="fr_FR">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Mesures physiques et séries temporelles — démonstration | datapredict">
-  <meta property="og:description" content="Explorez quatorze restitutions validées de mesures physiques réelles, du terrain à une interprétation responsable.">
+  <meta property="og:description" content="Explorez quinze restitutions validées de mesures physiques réelles, du terrain à une interprétation responsable.">
   <meta property="og:url" content="https://www.datapredict.org/demonstrations/fissures.html">
   <meta property="og:image" content="https://www.datapredict.org/assets/img/social-datapredict.png">
   <meta property="og:image:type" content="image/png">
@@ -19,7 +19,7 @@
   <meta property="og:image:alt" content="Visuel datapredict : conseil, architecture Data et expertise industrielle.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Mesures physiques et séries temporelles — démonstration | datapredict">
-  <meta name="twitter:description" content="Explorez quatorze restitutions validées de mesures physiques réelles, du terrain à une interprétation responsable.">
+  <meta name="twitter:description" content="Explorez quinze restitutions validées de mesures physiques réelles, du terrain à une interprétation responsable.">
   <meta name="twitter:image" content="https://www.datapredict.org/assets/img/social-datapredict.png">
   <meta name="twitter:image:alt" content="Visuel datapredict : conseil, architecture Data et expertise industrielle.">
   <meta name="color-scheme" content="only light">
@@ -64,7 +64,7 @@
           <h1 id="fissures-title">Relier un phénomène physique à une donnée exploitable</h1>
           <p class="lead">À partir du suivi de fissures, d’un joint de dilatation, d’un mur de soutènement et de leur environnement météorologique, cette démonstration rend visible toute la chaîne qui va du terrain à une interprétation responsable.</p>
           <div class="fissures-demo__hero-actions">
-            <a class="btn primary" href="#figures">Explorer les quatorze restitutions</a>
+            <a class="btn primary" href="#figures">Explorer les quinze restitutions</a>
             <a class="fissures-demo__text-link" href="#chaine">Comprendre la chaîne de mesure <span aria-hidden="true">↓</span></a>
           </div>
           <p class="fissures-demo__source-note"><strong>Cadre de consultation.</strong> Les relevés sont réels et privés ; ils n’appartiennent à aucun client. Les résultats sont précalculés : la visite ne sollicite ni le Raspberry Pi, ni la station météo, ni une machine de calcul.</p>
@@ -189,16 +189,16 @@
         <header class="fissures-demo__figures-heading">
           <div>
             <p class="eyebrow">Mesures et analyses</p>
-            <h2 id="figures-title">Quatorze restitutions à examiner à votre rythme</h2>
+            <h2 id="figures-title">Quinze restitutions à examiner à votre rythme</h2>
           </div>
           <div class="fissures-demo__validation-note" role="note">
             <strong>Portée de la validation</strong>
-            <p>Ces quatorze restitutions HTML ont été validées visuellement pour leur présentation. Cette validation graphique ne signifie pas que chacune constitue, à elle seule, une conclusion scientifique validée.</p>
+            <p>Ces quinze restitutions HTML ont été validées visuellement pour leur présentation. Cette validation graphique ne signifie pas que chacune constitue, à elle seule, une conclusion scientifique validée.</p>
           </div>
         </header>
 
         <nav class="fissures-demo__family-nav" aria-label="Familles de restitutions">
-          <a href="#famille-structure">Fissures, joint et mur <span>4</span></a>
+          <a href="#famille-structure">Fissures, joint et mur <span>5</span></a>
           <a href="#famille-meteo">Séries météorologiques <span>8</span></a>
           <a href="#famille-qualite">Exploration et qualité <span>2</span></a>
         </nav>
@@ -208,9 +208,22 @@
             <header>
               <p>Famille 01</p>
               <h3 id="structure-title">Fissures, joint et mur de soutènement</h3>
-              <span>4 restitutions</span>
+              <span>5 restitutions</span>
             </header>
             <ul class="fissures-demo__figure-list">
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Repérage · Géométrie</span>
+                    <h4>Plan du bâtiment et du mur routier</h4>
+                    <p>Deux élévations vectorielles à la même échelle situent le bâtiment, le mur routier et le capteur S1, sans transformer le schéma en diagnostic structurel.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <button type="button" data-figure-id="building-geometry" aria-label="Afficher le plan du bâtiment et du mur routier dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <a href="../assets/figures/demo-2/building-geometry.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : plan du bâtiment et du mur routier</span></a>
+                  </div>
+                </article>
+              </li>
               <li>
                 <article class="fissures-demo__figure-card">
                   <div class="fissures-demo__figure-copy">
@@ -431,14 +444,14 @@
           </div>
           <div id="viewer-mount" class="fissures-demo__viewer-mount">
             <div class="fissures-demo__viewer-empty">
-              <span aria-hidden="true">14</span>
+              <span aria-hidden="true">15</span>
               <p>Aucune figure n’est chargée au démarrage afin de préserver la rapidité de la page.</p>
             </div>
           </div>
           <p id="viewer-status" class="sr-only" aria-live="polite" aria-atomic="true"></p>
         </section>
 
-        <p class="fissures-demo__scope-note"><strong>Périmètre actuel des figures.</strong> Cette sélection couvre les mesures manuelles de fissures et du joint, le signal brut du comparateur automatique et la météo. Elle ne contient pas de vue géométrique du dispositif et ne permet ni conversion angulaire, ni causalité, ni diagnostic structurel.</p>
+        <p class="fissures-demo__scope-note"><strong>Périmètre actuel des figures.</strong> Cette sélection couvre la vue géométrique du dispositif, les mesures manuelles de fissures et du joint, le signal brut du comparateur automatique et la météo. Elle ne permet ni conversion angulaire, ni causalité, ni diagnostic structurel.</p>
       </div>
     </section>
 

@@ -2,6 +2,11 @@
   "use strict";
 
   const figures = Object.freeze({
+    "building-geometry": {
+      title: "Plan du bâtiment et du mur routier",
+      description: "Deux élévations vectorielles à la même échelle pour situer le dispositif.",
+      path: "../assets/figures/demo-2/building-geometry.html",
+    },
     "crack-history": {
       title: "Évolution historique de la fissure",
       description: "Mesures historiques, paliers, ajustements descriptifs et incertitudes.",

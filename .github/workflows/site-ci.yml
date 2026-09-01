@@ -88,8 +88,8 @@ jobs:
 
           figure_root = root / "assets/figures/demo-2"
           expected_figure_manifests = {
-              "content-manifest.json": "7c62161664b7ef41efe8778767de4c94ae5f5eb06150ed2ab52ba24b581c0b05",
-              "weather/content-manifest.json": "03d7007df52a1f2854ae2cc2915d305c86de69b0642ca462666052788aec7111",
+              "content-manifest.json": "c26c3f1226cd153bef2068e959c381e88fe109bbdd2911ef05560d11be99deac",
+              "weather/content-manifest.json": "749bc1ff0279224e348269cb4b0a70c6080840d5ae6c22d09ac2133dcae09c22",
           }
           immutable_figure_html = set()
           expected_figure_files = {
@@ -138,8 +138,8 @@ jobs:
                   if entry["role"] == "responsive_html_master":
                       figure_master_count += 1
 
-          if figure_master_count != 14:
-              errors.append(f"14 maîtres HTML attendus, trouvé : {figure_master_count}")
+          if figure_master_count != 15:
+              errors.append(f"15 maîtres HTML attendus, trouvé : {figure_master_count}")
           observed_figure_files = {
               path.resolve() for path in figure_root.rglob("*") if path.is_file()
           }
@@ -293,11 +293,11 @@ jobs:
               if relative.as_posix() == "demonstrations/fissures.html":
                   figure_ids = [identifier for identifier, _ in document.figure_buttons]
                   figure_labels = [label for _, label in document.figure_buttons]
-                  if len(figure_ids) != 14 or len(set(figure_ids)) != 14:
+                  if len(figure_ids) != 15 or len(set(figure_ids)) != 15:
                       errors.append(
-                          "demonstrations/fissures.html: 14 boutons de figures uniques attendus"
+                          "demonstrations/fissures.html: 15 boutons de figures uniques attendus"
                       )
-                  if any(not label for label in figure_labels) or len(set(figure_labels)) != 14:
+                  if any(not label for label in figure_labels) or len(set(figure_labels)) != 15:
                       errors.append(
                           "demonstrations/fissures.html: chaque bouton de figure doit avoir un libellé accessible unique"
                       )

@@ -45,12 +45,12 @@ class Demo2PublicationStateTests(unittest.TestCase):
         self.assertIn("Disponible · maintenance", catalogue)
         self.assertIn("Consulter la version de maintenance", catalogue)
 
-    def test_fourteen_validated_figure_controls_are_preserved(self) -> None:
+    def test_fifteen_validated_figure_controls_are_preserved(self) -> None:
         parser = FigureInventory()
         parser.feed(PAGE.read_text(encoding="utf-8"))
         parser.close()
-        self.assertEqual(len(parser.figure_ids), 14)
-        self.assertEqual(len(set(parser.figure_ids)), 14)
+        self.assertEqual(len(parser.figure_ids), 15)
+        self.assertEqual(len(set(parser.figure_ids)), 15)
 
 
 if __name__ == "__main__":
