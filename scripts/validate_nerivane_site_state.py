@@ -2,7 +2,7 @@
 """Validate the two and only two publishable Nérivane site states.
 
 The maintenance baseline is byte-bound to the protected site tree updated as
-``96ebe4313c65284b7f86c708015d62df482f9008``.  The active state is accepted
+``a0cfc1dda472e1d7b592a5f23a5bfc06b3515f7c``.  The active state is accepted
 only when its five promoted targets are exactly derivable from one verified,
 content-addressed V2 release and its public data obey the complete closed V2
 schema.
@@ -85,12 +85,12 @@ ACTIVE_SEO_MARKERS = (
     '<meta name="twitter:card" content="summary_large_image">',
 )
 
-# Exact maintenance/protected baseline at 96ebe431.  The values are populated
+# Exact maintenance/protected baseline at a0cfc1dd.  The values are populated
 # and causally tested below; changing a protected byte requires a deliberate
 # review of this contract rather than broadening one of the two states.
 DEFAULT_BASELINE: dict[str, Any] = {
     "contract_id": "DATAPREDICT-NERIVANE-SITE-STATES-V1",
-    "source_commit": "96ebe4313c65284b7f86c708015d62df482f9008",
+    "source_commit": "a0cfc1dda472e1d7b592a5f23a5bfc06b3515f7c",
     "maintenance_targets": {
         PAGE_RELATIVE: "561362e06e1d7f60bfe875f71dd5cccccd0b766abacd40abdaa45028679215c6",
         DATA_RELATIVE: "1d2e423d11be19e7884c509654264433c32d4d2227f908e764e9689e8152def9",
@@ -98,8 +98,8 @@ DEFAULT_BASELINE: dict[str, Any] = {
         STYLE_RELATIVE: "1a9334a0d4fea1d3062186861c3460cab1af4b07c66072cbe5f7e542c86ce214",
     },
     "maintenance_catalogue_fragment_sha256": "24f984b4ce8bfe678b0dc175331337623fd9c9fae2cde36a900dcd78d69d90f1",
-    "catalogue_outside_sha256": "957f81a06a825d09ff2bb61d64ca5c1cef521a1830c01a51b5d791ad321b7c82",
-    "protected_snapshot_sha256": "919b6eccc5e66a6bcda146bf80697eb4bde1bb9ceb7b07a855ad171213ae6907",
+    "catalogue_outside_sha256": "d17e64629f82359d613415c5b7e096dcf252d95ad81ed9cef3464f27403422f5",
+    "protected_snapshot_sha256": "ec892c5bbc7519d22ff6840b02239b3946af0b934a1c9e6c4911b5b3be964f75",
 }
 
 
