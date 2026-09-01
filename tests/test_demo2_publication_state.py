@@ -21,6 +21,8 @@ VALIDATED_FIGURE_LINKS = (
     "../assets/figures/demo-2/fissure-recente-meme-format.html",
     "../assets/figures/demo-2/joint-dilatation-rendu-site.html",
     "../assets/figures/demo-2/retaining-wall-sensor-source-values.html",
+    "../assets/figures/demo-2/retaining-wall-extrema-hours.html",
+    "../assets/figures/demo-2/retaining-wall-median-day.html",
     "../assets/figures/demo-2/weather/legacy/meteo_temperature.html",
     "../assets/figures/demo-2/weather/legacy/meteo_temp_minmax.html",
     "../assets/figures/demo-2/weather/legacy/meteo_humidity.html",
@@ -34,9 +36,7 @@ VALIDATED_FIGURE_LINKS = (
 )
 
 UNVALIDATED_SENSOR_CANDIDATES = (
-    "retaining-wall-extrema-hours.html",
     "retaining-wall-mean-day.html",
-    "retaining-wall-median-day.html",
 )
 
 
@@ -86,8 +86,8 @@ class Demo2PublicationStateTests(unittest.TestCase):
         self.assertIn("<span class=\"demonstrations-page__card-status\">En maintenance</span>", demo2_card)
         self.assertIn("Consulter la version en maintenance", demo2_card)
         self.assertNotIn("<span class=\"demonstrations-page__card-status\">Disponible</span>", demo2_card)
-        self.assertIn("Quinze restitutions consultables à la demande", demo2_card)
-        self.assertNotIn("Quatorze restitutions consultables à la demande", demo2_card)
+        self.assertIn("Dix-sept restitutions consultables à la demande", demo2_card)
+        self.assertNotIn("Quinze restitutions consultables à la demande", demo2_card)
 
         nerivane = nerivane_states.validate_site_state(site_root=ROOT)
         nerivane_page = (
@@ -109,16 +109,16 @@ class Demo2PublicationStateTests(unittest.TestCase):
                 catalogue,
             )
 
-    def test_fifteen_static_lazy_previews_replace_the_interactive_viewer(self) -> None:
+    def test_seventeen_static_lazy_previews_replace_the_interactive_viewer(self) -> None:
         parser = FigureInventory()
         page = PAGE.read_text(encoding="utf-8")
         parser.feed(page)
         parser.close()
 
         identifiers = [preview["data-figure-id"] for preview in parser.previews]
-        self.assertEqual(len(identifiers), 15)
-        self.assertEqual(len(set(identifiers)), 15)
-        self.assertEqual(parser.figure_card_count, 15)
+        self.assertEqual(len(identifiers), 17)
+        self.assertEqual(len(set(identifiers)), 17)
+        self.assertEqual(parser.figure_card_count, 17)
         self.assertEqual(tuple(parser.external_figure_links), VALIDATED_FIGURE_LINKS)
         self.assertEqual(parser.iframe_count, 0)
         self.assertNotIn("Lecteur de restitution", page)
