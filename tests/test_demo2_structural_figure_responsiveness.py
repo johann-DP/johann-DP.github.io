@@ -11,9 +11,28 @@ FIGURES = (
     ROOT / "assets/figures/demo-2/joint-dilatation-rendu-site.html",
 )
 BUILDING_GEOMETRY = ROOT / "assets/figures/demo-2/building-geometry.html"
+WALL_ANALYSIS_FIGURES = (
+    ROOT / "assets/figures/demo-2/retaining-wall-extrema-hours.html",
+    ROOT / "assets/figures/demo-2/retaining-wall-median-day.html",
+)
 
 
 class StructuralFigureResponsivenessTests(unittest.TestCase):
+    def test_validated_wall_analysis_figures_are_responsive_and_public(self) -> None:
+        for figure in WALL_ANALYSIS_FIGURES:
+            with self.subTest(figure=figure.name):
+                html = figure.read_text(encoding="utf-8")
+                self.assertIn(
+                    'name="viewport" content="width=device-width, initial-scale=1"',
+                    html,
+                )
+                self.assertIn("main { width: 100%; max-width: none;", html)
+                self.assertIn(".plot { width: 100%;", html)
+                self.assertIn('src="weather/assets/plotly-2.35.2.min.js"', html)
+                self.assertIn('"review_status":"VALIDÉ"', html)
+                self.assertNotIn("EXÉCUTÉ_NON_VALIDÉ", html)
+                self.assertNotIn('data-review-state=', html)
+
     def test_building_geometry_shrinks_without_horizontal_scrolling_on_mobile(self) -> None:
         html = BUILDING_GEOMETRY.read_text(encoding="utf-8")
         figure_rule = re.search(r"\.primary-figure\s*\{(?P<body>[^}]*)\}", html)

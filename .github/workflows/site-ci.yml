@@ -90,7 +90,7 @@ jobs:
 
           figure_root = root / "assets/figures/demo-2"
           expected_figure_manifests = {
-              "content-manifest.json": "0b2f3426a3a0251162ef981ebcfc6d73cdedebba5538358f7d354b7ad2424eb9",
+              "content-manifest.json": "924cadf659cda13240d07542affc8f0e74e85311c6aba68a179996a5a2b267d1",
               "weather/content-manifest.json": "749bc1ff0279224e348269cb4b0a70c6080840d5ae6c22d09ac2133dcae09c22",
           }
           immutable_figure_html = set()
@@ -140,8 +140,8 @@ jobs:
                   if entry["role"] == "responsive_html_master":
                       figure_master_count += 1
 
-          if figure_master_count != 15:
-              errors.append(f"15 maîtres HTML attendus, trouvé : {figure_master_count}")
+          if figure_master_count != 17:
+              errors.append(f"17 maîtres HTML attendus, trouvé : {figure_master_count}")
           observed_figure_files = {
               path.resolve() for path in figure_root.rglob("*") if path.is_file()
           }
@@ -316,20 +316,20 @@ jobs:
                       preview.get("data-figure-id", "").strip()
                       for preview in document.figure_previews
                   ]
-                  if len(figure_ids) != 15 or len(set(figure_ids)) != 15:
+                  if len(figure_ids) != 17 or len(set(figure_ids)) != 17:
                       errors.append(
-                          "demonstrations/fissures.html: 15 miniatures de figures uniques attendues"
+                          "demonstrations/fissures.html: 17 miniatures de figures uniques attendues"
                       )
-                  if document.figure_card_count != 15:
+                  if document.figure_card_count != 17:
                       errors.append(
-                          "demonstrations/fissures.html: 15 cartes de figures attendues"
+                          "demonstrations/fissures.html: 17 cartes de figures attendues"
                       )
                   if (
-                      len(document.figure_external_links) != 15
-                      or len(set(document.figure_external_links)) != 15
+                      len(document.figure_external_links) != 17
+                      or len(set(document.figure_external_links)) != 17
                   ):
                       errors.append(
-                          "demonstrations/fissures.html: 15 liens plein écran uniques attendus"
+                          "demonstrations/fissures.html: 17 liens plein écran uniques attendus"
                       )
                   if document.iframe_count:
                       errors.append(
