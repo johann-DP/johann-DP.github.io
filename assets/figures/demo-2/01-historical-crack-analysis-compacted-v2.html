@@ -18,14 +18,14 @@
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     #d2-historical-responsive-v1 .d2-production-wrap {
-      width: min(1280px, calc(100% - clamp(36px, 6vw, 96px)));
+      width: calc(100% - clamp(36px, 6vw, 96px));
       min-width: 0;
       margin-inline: auto;
     }
     #d2-historical-responsive-v1-plot { width: 100%; min-width: 0; background: #ffffff; }
     @media (max-width: 720px) {
       #d2-historical-responsive-v1 { padding: 16px 0; }
-      #d2-historical-responsive-v1 .d2-production-wrap { width: min(1280px, calc(100% - 32px)); }
+      #d2-historical-responsive-v1 .d2-production-wrap { width: calc(100% - 32px); }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>

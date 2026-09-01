@@ -30,7 +30,7 @@ INTEGRATION_PATHS = (
     FIGURE_ROOT / "weather/content-manifest.json",
     PurePosixPath("sitemap.xml"),
 )
-EXPECTED_FIGURE_COUNT = 14
+EXPECTED_FIGURE_COUNT = 15
 CHUNK_SIZE = 1024 * 1024
 
 
@@ -118,7 +118,7 @@ def _load_manifest(root: Path, relative: PurePosixPath) -> list[ExpectedFile]:
 
 
 def load_expected_files(root: Path) -> tuple[ExpectedFile, ...]:
-    """Load and validate the closed set of 14 figures and 7 integration files."""
+    """Load and validate the closed set of 15 figures and 7 integration files."""
     root = root.resolve()
     figures = [
         expected

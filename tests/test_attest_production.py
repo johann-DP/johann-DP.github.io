@@ -18,6 +18,7 @@ import attest_production as production  # noqa: E402
 
 
 FIGURES = (
+    "building-geometry.html",
     "01-historical-crack-analysis-compacted-v2.html",
     "fissure-recente-meme-format.html",
     "joint-dilatation-rendu-site.html",
@@ -108,12 +109,12 @@ class ProductionAttestationTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.temporary.cleanup()
 
-    def test_attests_exactly_fourteen_figures_and_seven_integration_files(self) -> None:
+    def test_attests_exactly_fifteen_figures_and_seven_integration_files(self) -> None:
         with serve(self.remote) as base_url, redirect_stdout(StringIO()):
             observed = production.attest(self.expected, base_url, timeout_seconds=2)
 
-        self.assertEqual(len(observed), 21)
-        self.assertEqual(sum(item.category == "figure" for item in observed), 14)
+        self.assertEqual(len(observed), 22)
+        self.assertEqual(sum(item.category == "figure" for item in observed), 15)
         self.assertEqual(sum(item.category == "integration" for item in observed), 7)
 
     def test_rejects_remote_content_divergence_explicitly(self) -> None:
@@ -159,7 +160,7 @@ class ProductionAttestationTests(unittest.TestCase):
         self.assertIn("ATTESTATION_FAILED", stderr.getvalue())
         self.assertRegex(stderr.getvalue(), r"sitemap\.xml non attesté.*HTTP Error 404")
 
-    def test_rejects_a_local_manifest_without_fourteen_unique_masters(self) -> None:
+    def test_rejects_a_local_manifest_without_fifteen_unique_masters(self) -> None:
         manifest = self.expected / "assets/figures/demo-2/content-manifest.json"
         document = json.loads(manifest.read_text(encoding="utf-8"))
         document["files"].pop()
@@ -167,7 +168,7 @@ class ProductionAttestationTests(unittest.TestCase):
 
         with self.assertRaisesRegex(
             production.AttestationError,
-            "exactement 14 maîtres HTML uniques attendus",
+            "exactement 15 maîtres HTML uniques attendus",
         ):
             production.load_expected_files(self.expected)
 
