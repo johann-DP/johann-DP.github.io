@@ -1,10 +1,15 @@
 import hashlib
 import json
 import re
+import sys
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
+
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import validate_nerivane_site_state as site_states  # noqa: E402
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,6 +24,8 @@ WORKER = ROOT / "analytics-counter" / "src" / "worker.js"
 WORKFLOW = ROOT / ".github" / "workflows" / "site-ci.yml"
 V2_IMPORTER = ROOT / "scripts" / "import_nerivane_v2_release.py"
 ALLOWED_STATUSES = {"MESURÉ", "PLANIFIÉ", "BLOQUÉ", "EXÉCUTÉ_NON_VALIDÉ"}
+SITE_RESULT = site_states.validate_site_state(site_root=ROOT)
+SITE_STATE = SITE_RESULT["state"]
 
 
 class MarkupInventory(HTMLParser):
@@ -53,6 +60,16 @@ def sha256(path):
 
 
 class NerivanePublicReplayTests(unittest.TestCase):
+    def maintenance_v1_is_active_contract(self) -> bool:
+        """Branch only after the exact dual-state validator has closed the state."""
+
+        if SITE_STATE == site_states.MAINTENANCE_STATE:
+            self.assertIsNone(SITE_RESULT["release_id"])
+            return True
+        self.assertEqual(SITE_STATE, site_states.ACTIVE_STATE)
+        self.assertRegex(str(SITE_RESULT["release_id"]), r"^[0-9a-f]{64}$")
+        return False
+
     def test_static_assets_and_catalogue_entry_exist(self):
         for path in (PAGE, DATA, SCRIPT, STYLE, CATALOGUE):
             self.assertTrue(path.is_file(), path)
@@ -81,6 +98,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
             self.assertIn(preserved_demo, catalogue)
 
     def test_storyboard_has_exactly_seven_ordered_steps(self):
+        if not self.maintenance_v1_is_active_contract():
+            return
         data = load_data()
         self.assertEqual(data["formatVersion"], "0.2.0")
         self.assertEqual(len(data["steps"]), 7)
@@ -99,6 +118,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
         )
 
     def test_maintenance_state_is_explicit_on_page_and_catalogue(self):
+        if not self.maintenance_v1_is_active_contract():
+            return
         page = PAGE.read_text(encoding="utf-8")
         catalogue = CATALOGUE.read_text(encoding="utf-8")
         script = SCRIPT.read_text(encoding="utf-8")
@@ -112,6 +133,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
         self.assertIn('headerState.dataset.maintenance !== "true"', script)
 
     def test_every_claim_has_status_scope_proof_fingerprint_and_limit(self):
+        if not self.maintenance_v1_is_active_contract():
+            return
         data = load_data()
         claims = all_claims(data)
         self.assertEqual(len(claims), 20)
@@ -134,6 +157,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
                     self.assertEqual(proof["sha256"], sha256(proof_target))
 
     def test_corpus_exposes_28_fingerprinted_documents_and_detailed_references(self):
+        if not self.maintenance_v1_is_active_contract():
+            return
         corpus = load_data()["corpus"]
         self.assertEqual(corpus["status"], "MESURÉ")
         self.assertEqual(
@@ -204,6 +229,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
         self.assertEqual(replay["counts"]["steps"], 7)
 
     def test_stable_claims_link_to_their_piece_specific_proofs(self):
+        if not self.maintenance_v1_is_active_contract():
+            return
         claims = {claim["id"]: claim for claim in all_claims(load_data())}
         expected_suffixes = {
             "definitions-corpus": "steps/01.html",
@@ -218,6 +245,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
                 self.assertRegex(proof["sha256"], r"^[0-9a-f]{64}$")
 
     def test_visual_references_resolve_to_declared_claims(self):
+        if not self.maintenance_v1_is_active_contract():
+            return
         data = load_data()
         ids = {claim["id"] for claim in all_claims(data)}
         references = []
@@ -243,6 +272,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
         self.assertEqual(set(references) - ids, set())
 
     def test_main_story_surfaces_financial_values_bridges_and_dama_reference(self):
+        if not self.maintenance_v1_is_active_contract():
+            return
         data = load_data()
         first = data["steps"][0]
         amounts = [source["amount"] for source in first["visual"]["sources"]]
@@ -265,6 +296,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
         self.assertIn("ne revendique ni certification", data["introduction"]["framework"])
 
     def test_projection_is_never_presented_as_realized(self):
+        if not self.maintenance_v1_is_active_contract():
+            return
         data = load_data()
         claims = {claim["id"]: claim for claim in all_claims(data)}
         projection = claims["h1-projection"]
@@ -287,6 +320,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
             self.assertNotIn(projection_literal, path.read_text(encoding="utf-8"), path)
 
     def test_bigquery_v2_and_ai_v16_remain_closed(self):
+        if not self.maintenance_v1_is_active_contract():
+            return
         claims = {claim["id"]: claim for claim in all_claims(load_data())}
         self.assertEqual(claims["v2-lineage"]["status"], "BLOQUÉ")
         self.assertIn("Non créé", claims["v2-lineage"]["value"])
@@ -309,6 +344,7 @@ class NerivanePublicReplayTests(unittest.TestCase):
             '"assets/data/nerivane-governance-replay.json"',
             '"assets/js/demo-nerivane.js"',
             '"assets/nerivane-public-v1/replay-manifest.json"',
+            "python3 scripts/validate_nerivane_site_state.py",
             "python3 -m unittest -q tests.test_nerivane_public_replay",
             "python3 scripts/import_nerivane_v2_release.py --verify-existing",
             "node --check assets/js/demo-nerivane.js",
@@ -317,6 +353,8 @@ class NerivanePublicReplayTests(unittest.TestCase):
         self.assertTrue(V2_IMPORTER.is_file())
 
     def test_topology_and_resource_roles_are_explicit(self):
+        if not self.maintenance_v1_is_active_contract():
+            return
         data = load_data()
         topology = next(step for step in data["steps"] if step["id"] == "topologie")["visual"]
         nodes = {node["name"]: node for node in topology["nodes"]}
