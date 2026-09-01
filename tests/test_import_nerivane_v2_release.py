@@ -379,13 +379,18 @@ class NerivaneV2ImportTests(unittest.TestCase):
             importer.import_release(source, site_root=self.site)
 
     def test_rejects_private_tokens_in_public_text(self) -> None:
-        source = build_source(self.sources, private_token=" /home/jo/private ")
-
-        with self.assertRaisesRegex(
-            importer.NerivaneReleaseImportError,
-            "NERIVANE_V2_PUBLIC_TEXT_NOT_SANITIZED",
+        for private_token in (
+            " /home/jo/private ",
+            " /run/user/1000/private/socket ",
         ):
-            importer.import_release(source, site_root=self.site)
+            with self.subTest(private_token=private_token):
+                source = build_source(self.sources, private_token=private_token)
+
+                with self.assertRaisesRegex(
+                    importer.NerivaneReleaseImportError,
+                    "NERIVANE_V2_PUBLIC_TEXT_NOT_SANITIZED",
+                ):
+                    importer.import_release(source, site_root=self.site)
 
     def test_rejects_unmanifested_file(self) -> None:
         source = build_source(self.sources)

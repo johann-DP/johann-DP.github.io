@@ -84,7 +84,7 @@ ALLOWED_BINARY_SUFFIXES = {".gif", ".jpeg", ".jpg", ".pdf", ".png", ".webp", ".w
 HASH_PATTERN = re.compile(r"[0-9a-f]{64}", flags=re.ASCII)
 COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}", flags=re.ASCII)
 PRIVATE_TEXT_PATTERNS = (
-    re.compile(r"/(?:home|media|run/media)/", flags=re.IGNORECASE),
+    re.compile(r"/(?:home|media|run)/", flags=re.IGNORECASE),
     re.compile(
         r"\b(?:10|127)\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"
         r"|\b172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}\b"
