@@ -88,7 +88,7 @@ jobs:
 
           figure_root = root / "assets/figures/demo-2"
           expected_figure_manifests = {
-              "content-manifest.json": "c26c3f1226cd153bef2068e959c381e88fe109bbdd2911ef05560d11be99deac",
+              "content-manifest.json": "8ab070fb2c2229c6aa28445863beace60f91c1d25936c929b14e660cd49a225d",
               "weather/content-manifest.json": "749bc1ff0279224e348269cb4b0a70c6080840d5ae6c22d09ac2133dcae09c22",
           }
           immutable_figure_html = set()
@@ -152,7 +152,7 @@ jobs:
               required_sensor_markers = (
                   "temps source naïf — fuseau à confirmer",
                   "valeur source — unité à confirmer",
-                  "Aucune correction, conversion, interpolation, jointure, causalité ni diagnostic.",
+                  "Aucune correction, conversion, interpolation, jointure, causalité ni diagnostic",
                   'src="weather/assets/plotly-2.35.2.min.js"',
               )
               for marker in required_sensor_markers:
@@ -198,7 +198,10 @@ jobs:
                   self.ids = set()
                   self.references = []
                   self.script_sources = []
-                  self.figure_buttons = []
+                  self.figure_previews = []
+                  self.figure_external_links = []
+                  self.figure_card_count = 0
+                  self.iframe_count = 0
                   self.h1_count = 0
                   self.title_count = 0
                   self.lang = ""
@@ -227,11 +230,22 @@ jobs:
                       self.title_count += 1
                   elif tag == "script" and attributes.get("src"):
                       self.script_sources.append(attributes["src"].strip())
-                  elif tag == "button" and attributes.get("data-figure-id"):
-                      self.figure_buttons.append((
-                          attributes["data-figure-id"].strip(),
-                          attributes.get("aria-label", "").strip(),
-                      ))
+                  elif tag == "img" and attributes.get("data-figure-id"):
+                      self.figure_previews.append(attributes)
+                  elif tag == "article" and "fissures-demo__figure-card" in (
+                      attributes.get("class", "").split()
+                  ):
+                      self.figure_card_count += 1
+                  elif (
+                      tag == "a"
+                      and attributes.get("target") == "_blank"
+                      and attributes.get("href", "").startswith(
+                          "../assets/figures/demo-2/"
+                      )
+                  ):
+                      self.figure_external_links.append(attributes["href"].strip())
+                  elif tag == "iframe":
+                      self.iframe_count += 1
 
                   for attribute in ("href", "src"):
                       value = attributes.get(attribute)
@@ -291,23 +305,47 @@ jobs:
                   )
 
               if relative.as_posix() == "demonstrations/fissures.html":
-                  figure_ids = [identifier for identifier, _ in document.figure_buttons]
-                  figure_labels = [label for _, label in document.figure_buttons]
+                  figure_ids = [
+                      preview.get("data-figure-id", "").strip()
+                      for preview in document.figure_previews
+                  ]
                   if len(figure_ids) != 15 or len(set(figure_ids)) != 15:
                       errors.append(
-                          "demonstrations/fissures.html: 15 boutons de figures uniques attendus"
+                          "demonstrations/fissures.html: 15 miniatures de figures uniques attendues"
                       )
-                  if any(not label for label in figure_labels) or len(set(figure_labels)) != 15:
+                  if document.figure_card_count != 15:
                       errors.append(
-                          "demonstrations/fissures.html: chaque bouton de figure doit avoir un libellé accessible unique"
+                          "demonstrations/fissures.html: 15 cartes de figures attendues"
                       )
-                  demo_script = (root / "assets/js/demo-fissures.js").read_text(
-                      encoding="utf-8"
-                  )
-                  for identifier in figure_ids:
-                      if demo_script.count(f'"{identifier}": {{') != 1:
+                  if (
+                      len(document.figure_external_links) != 15
+                      or len(set(document.figure_external_links)) != 15
+                  ):
+                      errors.append(
+                          "demonstrations/fissures.html: 15 liens plein écran uniques attendus"
+                      )
+                  if document.iframe_count:
+                      errors.append(
+                          "demonstrations/fissures.html: aucun iframe ne doit être chargé"
+                      )
+                  for preview in document.figure_previews:
+                      identifier = preview.get("data-figure-id", "").strip()
+                      expected_source = (
+                          f"../assets/img/demo-2-thumbnails/{identifier}.webp"
+                      )
+                      if preview.get("src") != expected_source:
                           errors.append(
-                              "assets/js/demo-fissures.js: correspondance absente ou dupliquée "
+                              "demonstrations/fissures.html: source de miniature invalide "
+                              f"pour {identifier}"
+                          )
+                      if preview.get("loading") != "lazy":
+                          errors.append(
+                              "demonstrations/fissures.html: miniature non différée "
+                              f"pour {identifier}"
+                          )
+                      if not preview.get("alt", "").strip():
+                          errors.append(
+                              "demonstrations/fissures.html: miniature sans texte alternatif "
                               f"pour {identifier}"
                           )
 

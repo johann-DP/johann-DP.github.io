@@ -14,12 +14,27 @@ CATALOGUE = ROOT / "demonstrations.html"
 class FigureInventory(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
-        self.figure_ids: list[str] = []
+        self.previews: list[dict[str, str]] = []
+        self.external_figure_links: list[str] = []
+        self.figure_card_count = 0
+        self.iframe_count = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attributes = dict(attrs)
-        if tag == "button" and attributes.get("data-figure-id"):
-            self.figure_ids.append(attributes["data-figure-id"] or "")
+        if tag == "img" and attributes.get("data-figure-id"):
+            self.previews.append({key: value or "" for key, value in attributes.items()})
+        elif tag == "article" and "fissures-demo__figure-card" in (
+            attributes.get("class") or ""
+        ).split():
+            self.figure_card_count += 1
+        elif (
+            tag == "a"
+            and attributes.get("target") == "_blank"
+            and (attributes.get("href") or "").startswith("../assets/figures/demo-2/")
+        ):
+            self.external_figure_links.append(attributes.get("href") or "")
+        elif tag == "iframe":
+            self.iframe_count += 1
 
 
 class Demo2PublicationStateTests(unittest.TestCase):
@@ -45,12 +60,48 @@ class Demo2PublicationStateTests(unittest.TestCase):
         self.assertIn("Disponible · maintenance", catalogue)
         self.assertIn("Consulter la version de maintenance", catalogue)
 
-    def test_fifteen_validated_figure_controls_are_preserved(self) -> None:
+    def test_fifteen_static_lazy_previews_replace_the_interactive_viewer(self) -> None:
         parser = FigureInventory()
-        parser.feed(PAGE.read_text(encoding="utf-8"))
+        page = PAGE.read_text(encoding="utf-8")
+        parser.feed(page)
         parser.close()
-        self.assertEqual(len(parser.figure_ids), 15)
-        self.assertEqual(len(set(parser.figure_ids)), 15)
+
+        identifiers = [preview["data-figure-id"] for preview in parser.previews]
+        self.assertEqual(len(identifiers), 15)
+        self.assertEqual(len(set(identifiers)), 15)
+        self.assertEqual(parser.figure_card_count, 15)
+        self.assertEqual(len(parser.external_figure_links), 15)
+        self.assertEqual(len(set(parser.external_figure_links)), 15)
+        self.assertEqual(parser.iframe_count, 0)
+        self.assertNotIn("Lecteur de restitution", page)
+        self.assertNotIn("Afficher dans la page", page)
+        self.assertNotIn("demo-fissures.js", page)
+
+        for preview in parser.previews:
+            identifier = preview["data-figure-id"]
+            self.assertEqual(
+                preview["src"],
+                f"../assets/img/demo-2-thumbnails/{identifier}.webp",
+            )
+            self.assertEqual(preview["loading"], "lazy")
+            self.assertEqual(preview["decoding"], "async")
+            self.assertEqual(preview["width"], "800")
+            self.assertEqual(preview["height"], "500")
+            self.assertTrue(preview["alt"].strip())
+
+        script = (ROOT / "assets" / "js" / "demo-fissures.js").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn("iframe", script.lower())
+        self.assertNotIn("querySelector", script)
+        self.assertNotIn("addEventListener", script)
+
+        stylesheet = (ROOT / "assets" / "css" / "demo-fissures.css").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("aspect-ratio: 8 / 5", stylesheet)
+        self.assertIn("object-fit: contain", stylesheet)
+        self.assertNotIn("fissures-demo__viewer", stylesheet)
 
 
 if __name__ == "__main__":
