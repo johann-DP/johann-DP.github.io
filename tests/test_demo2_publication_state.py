@@ -10,6 +10,30 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "demonstrations" / "fissures.html"
 CATALOGUE = ROOT / "demonstrations.html"
 
+VALIDATED_FIGURE_LINKS = (
+    "../assets/figures/demo-2/building-geometry.html",
+    "../assets/figures/demo-2/01-historical-crack-analysis-compacted-v2.html",
+    "../assets/figures/demo-2/fissure-recente-meme-format.html",
+    "../assets/figures/demo-2/joint-dilatation-rendu-site.html",
+    "../assets/figures/demo-2/retaining-wall-sensor-source-values.html",
+    "../assets/figures/demo-2/weather/legacy/meteo_temperature.html",
+    "../assets/figures/demo-2/weather/legacy/meteo_temp_minmax.html",
+    "../assets/figures/demo-2/weather/legacy/meteo_humidity.html",
+    "../assets/figures/demo-2/weather/legacy/meteo_light_uv.html",
+    "../assets/figures/demo-2/weather/legacy/meteo_precipitation.html",
+    "../assets/figures/demo-2/weather/legacy/meteo_wind_speed.html",
+    "../assets/figures/demo-2/weather/legacy/meteo_wind_dir.html",
+    "../assets/figures/demo-2/weather/legacy/meteo_pairplots.html",
+    "../assets/figures/demo-2/weather/complements/meteo_explorateur_toutes_mesures.html",
+    "../assets/figures/demo-2/weather/complements/meteo_qualite_acquisition.html",
+)
+
+UNVALIDATED_SENSOR_CANDIDATES = (
+    "retaining-wall-extrema-hours.html",
+    "retaining-wall-mean-day.html",
+    "retaining-wall-median-day.html",
+)
+
 
 class FigureInventory(HTMLParser):
     def __init__(self) -> None:
@@ -57,6 +81,8 @@ class Demo2PublicationStateTests(unittest.TestCase):
         self.assertIn("<span class=\"demonstrations-page__card-status\">En maintenance</span>", demo2_card)
         self.assertIn("Consulter la version en maintenance", demo2_card)
         self.assertNotIn("<span class=\"demonstrations-page__card-status\">Disponible</span>", demo2_card)
+        self.assertIn("Quinze restitutions consultables à la demande", demo2_card)
+        self.assertNotIn("Quatorze restitutions consultables à la demande", demo2_card)
 
         self.assertIn('data-maintenance="true"', (ROOT / "demonstrations" / "nerivane-distribution.html").read_text(encoding="utf-8"))
         self.assertIn("Disponible · maintenance", catalogue)
@@ -72,8 +98,7 @@ class Demo2PublicationStateTests(unittest.TestCase):
         self.assertEqual(len(identifiers), 15)
         self.assertEqual(len(set(identifiers)), 15)
         self.assertEqual(parser.figure_card_count, 15)
-        self.assertEqual(len(parser.external_figure_links), 15)
-        self.assertEqual(len(set(parser.external_figure_links)), 15)
+        self.assertEqual(tuple(parser.external_figure_links), VALIDATED_FIGURE_LINKS)
         self.assertEqual(parser.iframe_count, 0)
         self.assertNotIn("Lecteur de restitution", page)
         self.assertNotIn("Afficher dans la page", page)
@@ -90,6 +115,15 @@ class Demo2PublicationStateTests(unittest.TestCase):
             self.assertEqual(preview["width"], "800")
             self.assertEqual(preview["height"], "500")
             self.assertTrue(preview["alt"].strip())
+
+        for href in VALIDATED_FIGURE_LINKS:
+            with self.subTest(href=href):
+                self.assertTrue((PAGE.parent / href).resolve().is_file())
+
+        self.assertIn("building-geometry", identifiers)
+        for candidate in UNVALIDATED_SENSOR_CANDIDATES:
+            with self.subTest(candidate=candidate):
+                self.assertNotIn(candidate, page)
 
         script = (ROOT / "assets" / "js" / "demo-fissures.js").read_text(
             encoding="utf-8"
