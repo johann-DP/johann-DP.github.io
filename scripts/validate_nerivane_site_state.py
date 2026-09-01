@@ -99,7 +99,7 @@ DEFAULT_BASELINE: dict[str, Any] = {
     },
     "maintenance_catalogue_fragment_sha256": "24f984b4ce8bfe678b0dc175331337623fd9c9fae2cde36a900dcd78d69d90f1",
     "catalogue_outside_sha256": "d17e64629f82359d613415c5b7e096dcf252d95ad81ed9cef3464f27403422f5",
-    "protected_snapshot_sha256": "ec892c5bbc7519d22ff6840b02239b3946af0b934a1c9e6c4911b5b3be964f75",
+    "protected_snapshot_sha256": "e74b19014a100321b5d9c02a52a5300b4e1c362aec85fefda259def2b3ba8c14",
 }
 
 
