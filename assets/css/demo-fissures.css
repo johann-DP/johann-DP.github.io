@@ -149,8 +149,7 @@
   line-height: 1.12;
 }
 
-.fissures-demo__panel-label,
-.fissures-demo__viewer-label {
+.fissures-demo__panel-label {
   margin: 0 0 12px;
   color: #8edbe0;
   font-size: 0.7rem;
@@ -459,7 +458,7 @@
 
 .fissures-demo__figure-card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
   align-items: center;
   gap: 28px;
   padding: clamp(23px, 3vw, 36px) clamp(22px, 4vw, 40px);
@@ -490,17 +489,31 @@
 }
 
 .fissures-demo__figure-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 9px;
+  display: grid;
+  gap: 12px;
+  width: 100%;
 }
 
-.fissures-demo__figure-actions button,
-.fissures-demo__figure-actions a,
-.fissures-demo__viewer-link,
-.fissures-demo__viewer-return {
+.fissures-demo__figure-thumbnail {
+  display: grid;
+  aspect-ratio: 8 / 5;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: #f6f8f9;
+  place-items: center;
+}
+
+.fissures-demo__figure-thumbnail img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fissures-demo__figure-actions a {
   display: inline-flex;
+  width: 100%;
   min-height: 44px;
   align-items: center;
   justify-content: center;
@@ -517,134 +530,8 @@
   cursor: pointer;
 }
 
-.fissures-demo__figure-actions button {
-  border-color: var(--state-active);
-  background: var(--state-active);
-  color: var(--color-on-control);
-}
-
-.fissures-demo__figure-actions button:hover,
-.fissures-demo__figure-actions button[aria-pressed="true"] {
-  background: var(--button-primary-hover);
-}
-
-.fissures-demo__figure-actions a:hover,
-.fissures-demo__viewer-link:hover,
-.fissures-demo__viewer-return:hover {
+.fissures-demo__figure-actions a:hover {
   background: var(--surface-hover);
-}
-
-.fissures-demo__viewer {
-  margin-top: 36px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: #fff;
-  box-shadow: var(--shadow-md);
-  scroll-margin-top: 110px;
-}
-
-.fissures-demo__viewer-header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 24px;
-  border-bottom: 1px solid var(--color-border);
-  padding: 24px clamp(22px, 4vw, 40px);
-}
-
-.fissures-demo__viewer-label {
-  color: var(--demo-aqua);
-}
-
-.fissures-demo__viewer-header h3 {
-  margin-bottom: 7px;
-  font-size: clamp(1.25rem, 2vw, 1.65rem);
-}
-
-.fissures-demo__viewer-header p:last-child {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 0.86rem;
-}
-
-.fissures-demo__viewer-header-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-.fissures-demo__viewer-mount {
-  position: relative;
-  min-height: 330px;
-  overflow: hidden;
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-  background: #f5f8fa;
-}
-
-.fissures-demo__viewer-empty,
-.fissures-demo__viewer-loading,
-.fissures-demo__viewer-error {
-  display: grid;
-  min-height: 330px;
-  align-content: center;
-  justify-items: center;
-  padding: 38px;
-  text-align: center;
-}
-
-.fissures-demo__viewer-empty span {
-  display: grid;
-  width: 72px;
-  height: 72px;
-  margin-bottom: 18px;
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-  background: #e0ebed;
-  color: var(--color-number);
-  font-size: 1.3rem;
-  font-weight: 850;
-  place-items: center;
-}
-
-.fissures-demo__viewer-empty p,
-.fissures-demo__viewer-loading p,
-.fissures-demo__viewer-error p {
-  max-width: 48ch;
-  margin: 0;
-  color: var(--color-text-muted);
-}
-
-.fissures-demo__viewer-loading::before {
-  width: 42px;
-  height: 42px;
-  margin-bottom: 18px;
-  border: 4px solid var(--demo-mint);
-  border-top-color: var(--demo-aqua);
-  border-radius: 50%;
-  animation: demo-fissures-spin 800ms linear infinite;
-  content: "";
-}
-
-@keyframes demo-fissures-spin {
-  to { transform: rotate(1turn); }
-}
-
-.fissures-demo__viewer-frame {
-  display: block;
-  width: 100%;
-  min-height: 760px;
-  border: 0;
-  background: #fff;
-}
-
-.fissures-demo__viewer-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 12px;
-  border-top: 1px solid var(--color-border);
-  padding: 16px clamp(22px, 4vw, 40px);
 }
 
 .fissures-demo__scope-note {
@@ -824,14 +711,6 @@
     grid-template-columns: 1fr;
   }
 
-  .fissures-demo__figure-actions {
-    justify-content: flex-start;
-  }
-
-  .fissures-demo__viewer-header {
-    grid-template-columns: 1fr;
-  }
-
   .fissures-demo__cta-layout .btn {
     justify-self: start;
   }
@@ -858,18 +737,13 @@
   }
 
   .fissures-demo__hero-actions,
-  .fissures-demo__figure-actions,
-  .fissures-demo__viewer-header-actions,
-  .fissures-demo__viewer-actions {
+  .fissures-demo__figure-actions {
     align-items: stretch;
     flex-direction: column;
   }
 
   .fissures-demo__hero-actions .btn,
-  .fissures-demo__figure-actions button,
-  .fissures-demo__figure-actions a,
-  .fissures-demo__viewer-link,
-  .fissures-demo__viewer-return {
+  .fissures-demo__figure-actions a {
     width: 100%;
   }
 
@@ -897,15 +771,5 @@
   .fissures-demo__figure-family > header {
     grid-template-columns: 1fr;
     gap: 6px;
-  }
-
-  .fissures-demo__viewer-frame {
-    min-height: 620px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fissures-demo__viewer-loading::before {
-    animation: none;
   }
 }

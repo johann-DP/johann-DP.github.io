@@ -109,13 +109,13 @@ class ProductionAttestationTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.temporary.cleanup()
 
-    def test_attests_exactly_fifteen_figures_and_seven_integration_files(self) -> None:
+    def test_attests_exactly_fifteen_figures_and_twenty_two_integration_files(self) -> None:
         with serve(self.remote) as base_url, redirect_stdout(StringIO()):
             observed = production.attest(self.expected, base_url, timeout_seconds=2)
 
-        self.assertEqual(len(observed), 22)
+        self.assertEqual(len(observed), 37)
         self.assertEqual(sum(item.category == "figure" for item in observed), 15)
-        self.assertEqual(sum(item.category == "integration" for item in observed), 7)
+        self.assertEqual(sum(item.category == "integration" for item in observed), 22)
 
     def test_rejects_remote_content_divergence_explicitly(self) -> None:
         relative = Path("assets/figures/demo-2/fissure-recente-meme-format.html")

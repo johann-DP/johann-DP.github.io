@@ -26,7 +26,6 @@
   <meta name="theme-color" content="#102936">
   <link rel="stylesheet" href="../assets/css/site.css">
   <link rel="stylesheet" href="../assets/css/demo-fissures.css">
-  <script src="../assets/js/demo-fissures.js" defer></script>
   <script src="../assets/js/audience-counter.js" defer></script>
 </head>
 <body class="fissures-demo">
@@ -219,7 +218,9 @@
                     <p>Deux élévations vectorielles à la même échelle situent le bâtiment, le mur routier et le capteur S1, sans transformer le schéma en diagnostic structurel.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="building-geometry" aria-label="Afficher le plan du bâtiment et du mur routier dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="building-geometry" src="../assets/img/demo-2-thumbnails/building-geometry.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu du plan du bâtiment et du mur routier">
+                    </div>
                     <a href="../assets/figures/demo-2/building-geometry.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : plan du bâtiment et du mur routier</span></a>
                   </div>
                 </article>
@@ -232,7 +233,9 @@
                     <p>Paliers observés, événements de 2016, ajustements descriptifs et intervalles d’incertitude. Les modèles ne démontrent pas un effet causal des travaux.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="crack-history" aria-label="Afficher l’évolution historique de la fissure dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="crack-history" src="../assets/img/demo-2-thumbnails/crack-history.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu de l’évolution historique de la fissure">
+                    </div>
                     <a href="../assets/figures/demo-2/01-historical-crack-analysis-compacted-v2.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : évolution historique de la fissure</span></a>
                   </div>
                 </article>
@@ -245,7 +248,9 @@
                     <p>Restitution du suivi récent et de sa dynamique propre. Le point de mesure n’est pas le même que dans l’historique : les deux séries restent séparées.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="crack-recent" aria-label="Afficher l’évolution récente de la fissure dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="crack-recent" src="../assets/img/demo-2-thumbnails/crack-recent.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu de l’évolution récente de la fissure">
+                    </div>
                     <a href="../assets/figures/demo-2/fissure-recente-meme-format.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : évolution récente de la fissure</span></a>
                   </div>
                 </article>
@@ -258,7 +263,9 @@
                     <p>Mesures observées, ajustement périodique et incertitude associée. Aucune causalité météo ni relation avec la fissure n’est démontrée par cette figure.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="expansion-joint" aria-label="Afficher le joint de dilatation du mur de soutènement dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="expansion-joint" src="../assets/img/demo-2-thumbnails/expansion-joint.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu du suivi du joint de dilatation du mur de soutènement">
+                    </div>
                     <a href="../assets/figures/demo-2/joint-dilatation-rendu-site.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : joint de dilatation</span></a>
                   </div>
                 </article>
@@ -271,7 +278,9 @@
                     <p>Chaque point conserve une valeur source dans l’ordre des lignes physiques : « valeur source — unité à confirmer » et « temps source naïf — fuseau à confirmer », sans correction, conversion, interpolation, jointure, causalité ni diagnostic.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="retaining-wall-source-values" aria-label="Afficher le signal brut du comparateur automatique du mur côté route dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="retaining-wall-source-values" src="../assets/img/demo-2-thumbnails/retaining-wall-source-values.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu du signal brut du comparateur automatique du mur côté route">
+                    </div>
                     <a href="../assets/figures/demo-2/retaining-wall-sensor-source-values.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : signal brut du comparateur automatique du mur côté route</span></a>
                   </div>
                 </article>
@@ -294,7 +303,9 @@
                     <p>Évolution des mesures et de leurs moyennes mobiles, avec repérage des incidents d’acquisition documentés.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="weather-temperature" aria-label="Afficher les températures intérieure et extérieure dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="weather-temperature" src="../assets/img/demo-2-thumbnails/weather-temperature.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu des températures intérieure et extérieure">
+                    </div>
                     <a href="../assets/figures/demo-2/weather/legacy/meteo_temperature.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : températures intérieure et extérieure</span></a>
                   </div>
                 </article>
@@ -307,7 +318,9 @@
                     <p>Comparaison des minima et maxima intérieurs et extérieurs, en conservant les événements signalés dans la série.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="weather-temperature-range" aria-label="Afficher les températures minimales et maximales dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="weather-temperature-range" src="../assets/img/demo-2-thumbnails/weather-temperature-range.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu des températures minimales et maximales">
+                    </div>
                     <a href="../assets/figures/demo-2/weather/legacy/meteo_temp_minmax.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : températures minimales et maximales</span></a>
                   </div>
                 </article>
@@ -320,7 +333,9 @@
                     <p>Lecture conjointe de l’humidité et des contenus en eau intérieurs et extérieurs, avec leurs tendances lissées.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="weather-humidity" aria-label="Afficher l’humidité et les quantités d’eau dans l’air dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="weather-humidity" src="../assets/img/demo-2-thumbnails/weather-humidity.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu de l’humidité et des quantités d’eau dans l’air">
+                    </div>
                     <a href="../assets/figures/demo-2/weather/legacy/meteo_humidity.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : humidité et quantités d’eau dans l’air</span></a>
                   </div>
                 </article>
@@ -333,7 +348,9 @@
                     <p>Évolution de deux mesures environnementales et de leur différence de ratio, présentées sans interprétation structurelle automatique.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="weather-light" aria-label="Afficher l’intensité lumineuse et l’indice UV dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="weather-light" src="../assets/img/demo-2-thumbnails/weather-light.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu de l’intensité lumineuse et de l’indice UV">
+                    </div>
                     <a href="../assets/figures/demo-2/weather/legacy/meteo_light_uv.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : intensité lumineuse et indice UV</span></a>
                   </div>
                 </article>
@@ -346,7 +363,9 @@
                     <p>Moyennes hebdomadaires sur échelle normale et mesures détaillées sur échelle logarithmique pour conserver les faibles valeurs lisibles.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="weather-rainfall" aria-label="Afficher les précipitations hebdomadaires et journalières dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="weather-rainfall" src="../assets/img/demo-2-thumbnails/weather-rainfall.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu des précipitations hebdomadaires et journalières">
+                    </div>
                     <a href="../assets/figures/demo-2/weather/legacy/meteo_precipitation.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : précipitations</span></a>
                   </div>
                 </article>
@@ -359,7 +378,9 @@
                     <p>Moyennes hebdomadaires et série détaillée sur deux échelles pour distinguer tendance générale et variabilité des mesures.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="weather-wind-speed" aria-label="Afficher les vitesses hebdomadaires et journalières du vent dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="weather-wind-speed" src="../assets/img/demo-2-thumbnails/weather-wind-speed.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu des vitesses hebdomadaires et journalières du vent">
+                    </div>
                     <a href="../assets/figures/demo-2/weather/legacy/meteo_wind_speed.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : vitesse du vent</span></a>
                   </div>
                 </article>
@@ -372,7 +393,9 @@
                     <p>Représentation radiale des directions observées, rapprochées des vitesses correspondantes.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="weather-wind-direction" aria-label="Afficher la direction et la vitesse du vent dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="weather-wind-direction" src="../assets/img/demo-2-thumbnails/weather-wind-direction.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu de la direction et de la vitesse du vent">
+                    </div>
                     <a href="../assets/figures/demo-2/weather/legacy/meteo_wind_dir.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : direction et vitesse du vent</span></a>
                   </div>
                 </article>
@@ -385,7 +408,9 @@
                     <p>Matrice des distributions et relations sur les valeurs affichées, sans transformation statistique supplémentaire ; le contenu en eau extérieur est une quantité dérivée.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="weather-pairplots" aria-label="Afficher les scatterplots et distributions météo dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="weather-pairplots" src="../assets/img/demo-2-thumbnails/weather-pairplots.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu des scatterplots et distributions météo">
+                    </div>
                     <a href="../assets/figures/demo-2/weather/legacy/meteo_pairplots.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : scatterplots et distributions météo</span></a>
                   </div>
                 </article>
@@ -408,7 +433,9 @@
                     <p>Sélection directe d’une mesure météorologique pour examiner sa série brute, sans lissage, interpolation ni fusion de champs.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="weather-explorer" aria-label="Afficher l’explorateur des vingt mesures météo retenues dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="weather-explorer" src="../assets/img/demo-2-thumbnails/weather-explorer.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu de l’explorateur des vingt mesures météorologiques retenues">
+                    </div>
                     <a href="../assets/figures/demo-2/weather/complements/meteo_explorateur_toutes_mesures.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : explorateur des mesures météo</span></a>
                   </div>
                 </article>
@@ -421,7 +448,9 @@
                     <p>Complétude, valeurs aberrantes, trous temporels, doublons et disponibilité des champs de vent : des constats avant correction, pas un nettoyage silencieux.</p>
                   </div>
                   <div class="fissures-demo__figure-actions">
-                    <button type="button" data-figure-id="weather-quality" aria-label="Afficher la qualité et la continuité de l’acquisition météo dans la page" aria-controls="figure-viewer" aria-pressed="false">Afficher dans la page</button>
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="weather-quality" src="../assets/img/demo-2-thumbnails/weather-quality.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu des contrôles de qualité et de continuité de l’acquisition météorologique">
+                    </div>
                     <a href="../assets/figures/demo-2/weather/complements/meteo_qualite_acquisition.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : qualité de l’acquisition météo</span></a>
                   </div>
                 </article>
@@ -429,27 +458,6 @@
             </ul>
           </section>
         </div>
-
-        <section id="figure-viewer" class="fissures-demo__viewer" aria-labelledby="viewer-title">
-          <div class="fissures-demo__viewer-header">
-            <div>
-              <p class="fissures-demo__viewer-label">Lecteur de restitution</p>
-              <h3 id="viewer-title" tabindex="-1">Choisissez une restitution ci-dessus</h3>
-              <p id="viewer-description">Une seule figure sera chargée, uniquement après votre action. Vous pourrez ensuite en choisir une autre ou l’ouvrir dans une nouvelle fenêtre.</p>
-            </div>
-            <div class="fissures-demo__viewer-header-actions">
-              <a id="viewer-fallback" class="fissures-demo__viewer-link" target="_blank" rel="noopener noreferrer" hidden>Ouvrir la figure dans une nouvelle fenêtre</a>
-              <a class="fissures-demo__viewer-return" href="#figures">Revenir au choix des restitutions</a>
-            </div>
-          </div>
-          <div id="viewer-mount" class="fissures-demo__viewer-mount">
-            <div class="fissures-demo__viewer-empty">
-              <span aria-hidden="true">15</span>
-              <p>Aucune figure n’est chargée au démarrage afin de préserver la rapidité de la page.</p>
-            </div>
-          </div>
-          <p id="viewer-status" class="sr-only" aria-live="polite" aria-atomic="true"></p>
-        </section>
 
         <p class="fissures-demo__scope-note"><strong>Périmètre actuel des figures.</strong> Cette sélection couvre la vue géométrique du dispositif, les mesures manuelles de fissures et du joint, le signal brut du comparateur automatique et la météo. Elle ne permet ni conversion angulaire, ni causalité, ni diagnostic structurel.</p>
       </div>

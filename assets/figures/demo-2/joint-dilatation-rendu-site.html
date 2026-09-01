@@ -8,6 +8,10 @@
 <body>
 <div id="d2-joint-production-preview-v2">
   <style>
+    html, body {
+      margin: 0;
+      min-width: 0;
+    }
     #d2-joint-production-preview-v2 {
       width: 100%;
       min-width: 0;
@@ -18,7 +22,7 @@
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     #d2-joint-production-preview-v2 .d2-production-wrap {
-      width: min(1280px, calc(100% - clamp(36px, 6vw, 96px)));
+      width: calc(100% - clamp(32px, 4vw, 80px));
       min-width: 0;
       margin-inline: auto;
     }
@@ -32,7 +36,7 @@
         padding: 16px 0;
       }
       #d2-joint-production-preview-v2 .d2-production-wrap {
-        width: min(1280px, calc(100% - 32px));
+        width: calc(100% - 32px);
       }
     }
   </style>
@@ -70,7 +74,7 @@
         layout.autosize = true;
         layout.width = width;
         layout.height = mode === "desktop"
-          ? Math.round(Math.max(620, Math.min(760, width * 0.6)))
+          ? Math.round(width * 0.6)
           : mode === "tablet"
             ? 620
             : 720;
@@ -80,7 +84,7 @@
         } else if (mode !== lastMode) {
           Plotly.react(plot, payload.data, layout, config);
         } else {
-          Plotly.relayout(plot, { width, autosize: true });
+          Plotly.relayout(plot, { width, height: layout.height, autosize: true });
         }
         lastMode = mode;
       }

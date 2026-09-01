@@ -21,6 +21,24 @@ FIGURE_MANIFESTS = (
     FIGURE_ROOT / "content-manifest.json",
     FIGURE_ROOT / "weather/content-manifest.json",
 )
+THUMBNAIL_ROOT = PurePosixPath("assets/img/demo-2-thumbnails")
+THUMBNAIL_NAMES = (
+    "building-geometry.webp",
+    "crack-history.webp",
+    "crack-recent.webp",
+    "expansion-joint.webp",
+    "retaining-wall-source-values.webp",
+    "weather-temperature.webp",
+    "weather-temperature-range.webp",
+    "weather-humidity.webp",
+    "weather-light.webp",
+    "weather-rainfall.webp",
+    "weather-wind-speed.webp",
+    "weather-wind-direction.webp",
+    "weather-pairplots.webp",
+    "weather-explorer.webp",
+    "weather-quality.webp",
+)
 INTEGRATION_PATHS = (
     PurePosixPath("demonstrations/fissures.html"),
     PurePosixPath("demonstrations.html"),
@@ -29,6 +47,7 @@ INTEGRATION_PATHS = (
     FIGURE_ROOT / "content-manifest.json",
     FIGURE_ROOT / "weather/content-manifest.json",
     PurePosixPath("sitemap.xml"),
+    *(THUMBNAIL_ROOT / name for name in THUMBNAIL_NAMES),
 )
 EXPECTED_FIGURE_COUNT = 15
 CHUNK_SIZE = 1024 * 1024
@@ -118,7 +137,7 @@ def _load_manifest(root: Path, relative: PurePosixPath) -> list[ExpectedFile]:
 
 
 def load_expected_files(root: Path) -> tuple[ExpectedFile, ...]:
-    """Load and validate the closed set of 15 figures and 7 integration files."""
+    """Load and validate the closed set of figures and integration assets."""
     root = root.resolve()
     figures = [
         expected
