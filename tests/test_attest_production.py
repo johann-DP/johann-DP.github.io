@@ -244,7 +244,7 @@ class ProductionAttestationTests(unittest.TestCase):
             observed = production.attest(self.expected, base_url, timeout_seconds=2)
 
         staged = [item for item in observed if item.category == "nerivane_v2_staged"]
-        self.assertEqual(len(staged), 26)
+        self.assertEqual(len(staged), 27)
         self.assertTrue(
             all(result["release_id"] in item.path.parts for item in staged)
         )

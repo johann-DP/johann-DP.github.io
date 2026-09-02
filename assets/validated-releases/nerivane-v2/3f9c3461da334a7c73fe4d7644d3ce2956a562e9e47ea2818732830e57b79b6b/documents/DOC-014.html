@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Table de correspondance des identifiants sources — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-014</nav>
+<p class="eyebrow">Document synthétique · DOC-014</p>
+<h1>Table de correspondance des identifiants sources</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Salomé Vial</dd></div>
+  <div><dt>Rôle</dt><dd>Data Steward</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>4f80fc6439d6b1ddc4709aeb64c8e0a8c35783d97d14da3c559bb1c8dcf27ca4</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Document de démonstration — données, organisation et signatures entièrement fictives.</strong></blockquote>
+<h3 id="DOC-014-OBJET">Objet</h3>
+<p>Cette table de correspondance définit comment les lignes financières de CRM, ERP et FINANCE rejoignent une ligne canonique gouvernée. Elle décrit les clés et les cardinalités ; elle ne contient aucune donnée client réelle et ne remplace pas les fichiers physiques de preuve.</p>
+<p>Le corpus réduit comporte 421 763 lignes sources : 164 487 CRM, 139 182 ERP et 118 094 FINANCE. Après exclusion explicite de 8 452 exceptions de pont, les lignes incluses se rattachent à 100 823 lignes canonical_financial_line. Les contrôles exécutés vérifient qu'une ligne source incluse possède exactement une correspondance canonique et que chaque ligne canonique attendue est représentée dans les trois sources.</p>
+<h3 id="DOC-014-CLES">Clés de correspondance</h3>
+<div class="table-wrap"><table><thead><tr><th>Source</th><th>Identifiant d'entrée</th><th>Identifiant gouverné</th><th>Attributs de contrôle</th></tr></thead><tbody>
+<tr><td>CRM</td><td>source_record_id de crm_order_line</td><td>canonical_line_id</td><td>business_date, site_id, channel, amount_cents</td></tr>
+<tr><td>ERP</td><td>source_record_id de erp_invoice_line</td><td>canonical_line_id</td><td>business_date, site_id, channel, amount_cents</td></tr>
+<tr><td>FINANCE</td><td>source_record_id de finance_ledger_line</td><td>canonical_line_id</td><td>business_date, site_id, channel, amount_cents</td></tr>
+<tr><td>Canonique</td><td>canonical_line_id</td><td>canonical_line_id</td><td>date, agence, canal, montant gouverné</td></tr>
+</tbody></table></div>
+<p>source_record_id est stable dans sa source mais n'est pas comparé directement entre systèmes. canonical_line_id fournit l'identité transverse. payload_sha256 protège le contenu canonique de chaque ligne source. Le rapprochement utilise des montants en centimes entiers ; aucune tolérance d'arrondi ne peut rendre deux montants artificiellement égaux.</p>
+<h3 id="DOC-014-CARDINALITES">Cardinalités admises</h3>
+<p>Une ligne avec record_status INCLUDED doit porter un seul canonical_line_id. Une ligne avec record_status BRIDGE_EXCEPTION ne porte pas de canonical_line_id et doit porter exactement un bridge_rule_id. Une même référence source ne peut pointer vers deux lignes canoniques actives. Une ligne canonique du périmètre de juillet doit être représentée dans CRM, ERP et FINANCE avant la convergence finale.</p>
+<p>Les correspondances ne sont pas modifiées pour forcer les totaux. Si une relation est absente ou multiple, la ligne reste observable dans le périmètre source, mais elle est écartée du périmètre canonique jusqu'à résolution. Le pont conserve le nombre de lignes et le montant concernés.</p>
+<h3 id="DOC-014-RESOLUTION">Règles de résolution</h3>
+<ol><li>Vérifier l'existence et la période de validité de site_id et channel.</li><li>Vérifier l'unicité de source_record_id dans la source.</li><li>Comparer date métier, agence, canal, montant et empreinte de contenu.</li><li>Affecter canonical_line_id seulement lorsque la relation est univoque.</li><li>Affecter une règle de pont terminale lorsqu'une exclusion gouvernée s'applique.</li><li>Conserver la cause et la source de toute relation non résolue.</li><li>Rejouer les contrôles de correspondance et de convergence après arbitrage.</li></ol>
+<p>Le steward porté par ASN-029 instruit la correspondance transverse. Les contrôleurs ASN-024, ASN-025 et ASN-026 qualifient respectivement les aspects FINANCE, CRM et PRICING. La conception technique relève de ASN-010 et la production reproductible de ASN-011.</p>
+<h3 id="DOC-014-C009">Conflit de multiplicité</h3>
+<p><strong>Matière à arbitrer C-009.</strong> Le jeu de conflits conserve une référence source injectée qui pointe vers deux lignes canoniques. La table ne choisit pas arbitrairement l'une des deux relations. Le cas est bloquant parce qu'une sélection silencieuse pourrait déplacer un montant entre agence, canal ou date tout en conservant le total global.</p>
+<p>L'extrait primaire synthétique figé ci-dessous matérialise l'ambiguïté observée dans le dossier pré-arbitrage. Les deux propositions portent volontairement le même <code>source_record_id</code> et deux <code>canonical_line_id</code> distincts ; aucune n'est désignée gagnante.</p>
+<div class="table-wrap"><table><thead><tr><th>observation_ref</th><th>source_system</th><th>source_record_id</th><th>canonical_line_id proposé</th><th>statut d'observation</th></tr></thead><tbody>
+<tr><td>MAP-C009-A</td><td>ERP</td><td>ERP-20260718-004921</td><td>CAN-20260718-001207</td><td>QUARANTINED_PRE_ARBITRATION</td></tr>
+<tr><td>MAP-C009-B</td><td>ERP</td><td>ERP-20260718-004921</td><td>CAN-20260718-001844</td><td>QUARANTINED_PRE_ARBITRATION</td></tr>
+</tbody></table></div>
+<p>Cet extrait appartient uniquement au jeu de conflit fictif : il n'est pas compté parmi les correspondances canoniques admises et ne constitue pas une ligne exécutée dans BigQuery.</p>
+<p>La question soumise au steward et au Data Owner est : quelle correspondance canonique doit être conservée, sur la base de quelle preuve et avec quelle règle reproductible ? Jusqu'à cet arbitrage, le cas reste hors du périmètre certifiable. Le contrôle du corpus sain démontre l'unicité des lignes admises ; il ne supprime pas l'existence du conflit pré-arbitrage documenté.</p>
+<h3 id="DOC-014-C010">Conflit de référence absente</h3>
+<p><strong>Matière à arbitrer C-010.</strong> Un autre cas injecté présente un site ou un motif absent des référentiels gouvernés. DOC-013 interdit de compléter cette valeur sans autorité. BR-FIN-04 conserve les références orphelines en exception.</p>
+<p>L'extrait primaire synthétique figé rend cette absence vérifiable sans inventer une valeur maître valide :</p>
+<div class="table-wrap"><table><thead><tr><th>observation_ref</th><th>source_system</th><th>source_record_id</th><th>valeur source non gouvernée</th><th>type de référence</th><th>résultat de recherche</th><th>statut d'observation</th></tr></thead><tbody>
+<tr><td>MAP-C010-A</td><td>FINANCE</td><td>FIN-20260718-000084</td><td>SITE_HORS_REFERENTIEL_09</td><td>site</td><td>AUCUNE_CIBLE</td><td>QUARANTINED_PRE_ARBITRATION</td></tr>
+<tr><td>MAP-C010-B</td><td>FINANCE</td><td>FIN-20260718-000084</td><td>MOTIF_REMISE_RETRO_V0</td><td>motif</td><td>AUCUNE_CIBLE</td><td>QUARANTINED_PRE_ARBITRATION</td></tr>
+</tbody></table></div>
+<p>Ces valeurs sont des libellés fautifs du cas de test, non des identifiants de référence autorisés. Elles ne sont ni ajoutées aux référentiels ni comptées comme données canoniques exécutées.</p>
+<p>Deux issues restent possibles : compléter le référentiel avec une période de validité et une autorité prouvées, ou maintenir l'exclusion. Ce snapshot ne tranche pas rétroactivement. La décision humaine devra être enregistrée puis traduite en règle déterministe avant toute levée du blocage.</p>
+<h3 id="DOC-014-RESULTATS">Résultats vérifiés sur le corpus réduit</h3>
+<div class="table-wrap"><table><thead><tr><th>Mesure</th><th>Valeur vérifiée</th></tr></thead><tbody>
+<tr><td>Lignes sources</td><td>421 763</td></tr>
+<tr><td>Lignes canoniques</td><td>100 823</td></tr>
+<tr><td>Exceptions de pont</td><td>8 452</td></tr>
+<tr><td>Dates</td><td>31</td></tr>
+<tr><td>Agences</td><td>8</td></tr>
+<tr><td>Canaux</td><td>3</td></tr>
+<tr><td>Strates date-agence-canal</td><td>744</td></tr>
+</tbody></table></div>
+<p>Ces mesures ont été contrôlées dans BigQuery. Les 36 contrôles sont conformes, y compris le contrôle qui attend un gate de publication BLOCKED. Les conflits C-009 et C-010 sont présents dans le dossier sémantique pour tester la détection et l'arbitrage ; ils ne sont pas introduits silencieusement dans les lignes canoniques certifiables.</p>
+<h3 id="DOC-014-LIMITES">Limites et traçabilité</h3>
+<p>La <a href="../evidence/gcp/sample-apply/20260826T070016Z/manifest.json">preuve BigQuery assainie</a> atteste les nombres ci-dessus. Le pilote on-premise validé contient 421 763 ancres dont l'équivalence de contenu avec les trois sources gouvernées est vérifiée. Cette relation ne constitue pas une affirmation selon laquelle le pilote aurait précédé le chargement BigQuery.</p>
+<p>La table ne prouve pas le plein volume de 7 404 704 501 lignes, qui reste proposé. Elle ne permet pas non plus à une IA de créer une correspondance : l'IA peut seulement signaler l'ambiguïté et citer les éléments concernés.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

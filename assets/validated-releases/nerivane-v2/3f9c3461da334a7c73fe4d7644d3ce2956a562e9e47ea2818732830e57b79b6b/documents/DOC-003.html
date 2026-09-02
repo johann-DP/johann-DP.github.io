@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>RACI de reprise et de RUN — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-003</nav>
+<p class="eyebrow">Document synthétique · DOC-003</p>
+<h1>RACI de reprise et de RUN</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Pauline Marchal</dd></div>
+  <div><dt>Rôle</dt><dd>PMO Lead</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>c0a451c3e8da022f67ffaf6ccc469f132942bb1673af7d4bf470ac9ca524056e</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Données, organisation et signatures entièrement fictives.</strong> Ce RACI est la version candidate volontairement incomplète soumise au contrôle sémantique. La vacance signalée ci-dessous ne décrit pas la gouvernance cible.</blockquote>
+<h3 id="LEGENDE">Légende</h3>
+<p><code>A</code> désigne l'autorité redevable, <code>R</code> le responsable de réalisation, <code>C</code> une partie consultée et <code>I</code> une partie informée. Une activité doit avoir exactement une autorité <code>A</code> opposable à la date métier.</p>
+<h3 id="RACI-CANDIDAT">RACI candidat</h3>
+<div class="table-wrap"><table><thead><tr><th>Activité</th><th>R001 Sponsor</th><th>R002 DAF</th><th>R003 CDO</th><th>R004 Transition</th><th>R005 PMO</th><th>R008 Data Owner</th><th>R009 Qualité</th><th>R011 Tech Lead</th><th>R015 RUN</th></tr></thead><tbody>
+<tr><td>Mandat et priorité</td><td>A</td><td>C</td><td>C</td><td>R</td><td>R</td><td>I</td><td>I</td><td>I</td><td>I</td></tr>
+<tr><td>Périmètre du programme</td><td>C</td><td>C</td><td>A</td><td>R</td><td>R</td><td>I</td><td>C</td><td>C</td><td>I</td></tr>
+<tr><td>Définition du KPI</td><td>I</td><td>R</td><td>C</td><td>C</td><td>C</td><td><strong>VACANT</strong></td><td>C</td><td>I</td><td>I</td></tr>
+<tr><td>Contrats de données</td><td>I</td><td>C</td><td>A</td><td>C</td><td>I</td><td>C</td><td>R</td><td>R</td><td>I</td></tr>
+<tr><td>Rapprochement financier</td><td>I</td><td>A</td><td>C</td><td>I</td><td>C</td><td><strong>VACANT</strong></td><td>R</td><td>R</td><td>I</td></tr>
+<tr><td>Veto sémantique</td><td>I</td><td>C</td><td>C</td><td>I</td><td>C</td><td><strong>VACANT</strong></td><td>R</td><td>C</td><td>I</td></tr>
+<tr><td>Certification métier</td><td>I</td><td>R</td><td>C</td><td>I</td><td>C</td><td><strong>VACANT</strong></td><td>C</td><td>I</td><td>I</td></tr>
+<tr><td>Passage au RUN</td><td>A</td><td>C</td><td>C</td><td>R</td><td>R</td><td>I</td><td>C</td><td>C</td><td>R</td></tr>
+</tbody></table></div>
+<h3 id="CONFLIT-C-005">Conflit volontaire C-005</h3>
+<p>La version de juin laisse l'autorité <code>R008</code> vacante alors que <code>ASN-027</code> désigne Claire Delmas (<code>PER-002</code>) comme Data Owner de <code>KPI-CA-NET-001</code> à compter du 1er juillet 2026. Ce défaut est injecté pour vérifier que le gate détecte une responsabilité documentaire obsolète.</p>
+<p>Cette vacance ne doit jamais être interprétée comme l'état courant après arbitrage. Tant qu'une nouvelle version du RACI n'intègre pas <code>ASN-027</code>, la certification et la levée du veto ne sont pas opposables.</p>
+<h3 id="RESPONSABILITES-REPRISE">Responsabilités de reprise</h3>
+<p>Hugo Perrin (<code>PER-004</code>) organise la reprise, Pauline Marchal (<code>PER-005</code>) tient les dépendances et Sophie Valençay (<code>PER-003</code>) contrôle la cohérence des rôles. Les responsables de sources apportent les règles et les contrôleurs métier réalisent les rapprochements.</p>
+<h3 id="RESPONSABILITES-RUN">Responsabilités de RUN</h3>
+<p>Le responsable RUN <code>R015</code> accepte l'exploitabilité, le Data Quality Lead <code>R009</code> conserve la propriété du dispositif de contrôle et le Data Owner <code>R008</code> doit rester l'autorité métier du KPI. Le RUN n'est pas autorisé à modifier silencieusement une définition ou une règle de pont.</p>
+<h3 id="REGLES-MAINTIEN">Règles de maintien</h3>
+<ul><li>toute affectation doit être active à la date de l'action ;</li><li>toute délégation doit être référencée dans <code>DOC-004</code> ;</li><li>toute ligne sans <code>A</code> ou avec plusieurs <code>A</code> bloque le gate concerné ;</li><li>une correction produit une nouvelle version, sans effacer le RACI candidat ;</li><li><code>CTRL-023</code> vérifie les références, mais la décision humaine demeure nécessaire pour rendre le rôle opposable.</li></ul>
+<h3 id="CONDITION-RESOLUTION">Condition de résolution</h3>
+<p>Le conflit est résolu lorsque la version suivante attribue explicitement <code>A</code> à <code>R008</code>, cite <code>ASN-027</code>, conserve une seule autorité par activité et rattache la décision au journal des arbitrages.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

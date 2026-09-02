@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Spécification du lignage de bout en bout — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-018</nav>
+<p class="eyebrow">Document synthétique · DOC-018</p>
+<h1>Spécification du lignage de bout en bout</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Inès Caron</dd></div>
+  <div><dt>Rôle</dt><dd>Tech Lead Data</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>06ef4a5e4a02f57e24f7402b8b4c6253d0d6805ce6166686c219c7743a10b77c</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Document de démonstration — données, organisation et signatures entièrement fictives.</strong></blockquote>
+<h3 id="DOC-018-OBJET">Objet</h3>
+<p>Cette spécification décrit le chemin de preuve depuis les contrats et sources synthétiques jusqu'au gate de publication. Le lignage doit permettre à un décideur de comprendre l'origine du chiffre et à un technicien de retrouver la transformation, le contrôle et l'artefact associés.</p>
+<p>Le registre réduit comporte 18 arêtes de lignage chargées dans BigQuery. Le statut DESIGNED_LOCAL_V1 porté par les lignes décrit la nature du modèle de lignage ; la preuve de chargement atteste séparément leur présence dans le corpus exécuté.</p>
+<h3 id="DOC-018-PRINCIPES">Principes</h3>
+<p>Chaque arête possède un edge_id, un from_asset, un to_asset, un transformation_id, un statut et un evidence_id. Les actifs et transformations sont nommés de façon stable. Une arête ne prétend pas prouver le contenu de sa transformation : elle donne le chemin vers le contrôle et la preuve qui l'attestent.</p>
+<p>Le lignage sépare la production du KPI de la décision de publication. kpi_certified peut être déterministiquement réconcilié tandis que publication_gate reste BLOCKED. Le modèle d'IA intervient seulement entre semantic_case et publication_gate ; il ne produit aucune ligne financière.</p>
+<h3 id="DOC-018-SOURCES">Construction des sources et du canonique</h3>
+<div class="table-wrap"><table><thead><tr><th>Arête</th><th>De</th><th>Vers</th><th>Transformation</th></tr></thead><tbody>
+<tr><td>EDGE-001</td><td>config/scenario.json</td><td>canonical_financial_line</td><td>GEN-CANONICAL</td></tr>
+<tr><td>EDGE-002</td><td>nerivane_reference.site</td><td>canonical_financial_line</td><td>ASSIGN-STRATA</td></tr>
+<tr><td>EDGE-003</td><td>canonical_financial_line</td><td>crm_order_line</td><td>SPLIT-CRM</td></tr>
+<tr><td>EDGE-004</td><td>canonical_financial_line</td><td>erp_invoice_line</td><td>SPLIT-ERP</td></tr>
+<tr><td>EDGE-005</td><td>canonical_financial_line</td><td>finance_ledger_line</td><td>SPLIT-FINANCE</td></tr>
+</tbody></table></div>
+<p>Cette direction reflète la génération synthétique déterministe : le canonique sert à construire des sources contrôlées et leurs anomalies injectées. Dans une entreprise réelle, le sens d'ingestion pourrait être inverse. Le replay doit conserver cette distinction pour ne pas présenter les données fictives comme des extractions de systèmes clients.</p>
+<h3 id="DOC-018-EXCEPTIONS">Extraction des exceptions et agrégation</h3>
+<div class="table-wrap"><table><thead><tr><th>Arête</th><th>De</th><th>Vers</th><th>Transformation</th></tr></thead><tbody>
+<tr><td>EDGE-006</td><td>crm_order_line</td><td>bridge_exception</td><td>EXTRACT-CRM-EXCEPTIONS</td></tr>
+<tr><td>EDGE-007</td><td>erp_invoice_line</td><td>bridge_exception</td><td>EXTRACT-ERP-EXCEPTIONS</td></tr>
+<tr><td>EDGE-008</td><td>finance_ledger_line</td><td>bridge_exception</td><td>EXTRACT-FINANCE-EXCEPTIONS</td></tr>
+<tr><td>EDGE-009</td><td>crm_order_line</td><td>kpi_source_value</td><td>AGGREGATE-CRM</td></tr>
+<tr><td>EDGE-010</td><td>erp_invoice_line</td><td>kpi_source_value</td><td>AGGREGATE-ERP</td></tr>
+<tr><td>EDGE-011</td><td>finance_ledger_line</td><td>kpi_source_value</td><td>AGGREGATE-FINANCE</td></tr>
+<tr><td>EDGE-012</td><td>bridge_exception</td><td>kpi_bridge_adjustment</td><td>AGGREGATE-BRIDGE</td></tr>
+</tbody></table></div>
+<p>Les exceptions restent visibles et conservent leur règle terminale. Les agrégats utilisent des centimes entiers. Les contrôles de correspondance empêchent une ligne incluse d'être reliée à plusieurs lignes canoniques et exigent la représentation des lignes canoniques dans les trois sources.</p>
+<h3 id="DOC-018-PUBLICATION">Convergence et publication</h3>
+<div class="table-wrap"><table><thead><tr><th>Arête</th><th>De</th><th>Vers</th><th>Transformation</th></tr></thead><tbody>
+<tr><td>EDGE-013</td><td>kpi_source_value</td><td>kpi_certified</td><td>ASSERT-CONVERGENCE</td></tr>
+<tr><td>EDGE-014</td><td>kpi_bridge_adjustment</td><td>kpi_certified</td><td>ASSERT-BRIDGES</td></tr>
+<tr><td>EDGE-015</td><td>ai_release_gate_policy</td><td>semantic_case</td><td>BUILD-GOLD-SET</td></tr>
+<tr><td>EDGE-016</td><td>semantic_case</td><td>publication_gate</td><td>EXPECTED-AI-VETO</td></tr>
+<tr><td>EDGE-017</td><td>control_result</td><td>publication_gate</td><td>ASSERT-CONTROLS</td></tr>
+<tr><td>EDGE-018</td><td>kpi_certified</td><td>publication_gate</td><td>SUBMIT-FOR-PUBLICATION</td></tr>
+</tbody></table></div>
+<p>ASSERT-CONVERGENCE et ASSERT-BRIDGES expliquent comment les trois valeurs aboutissent à 1 228 645 000 centimes. EXPECTED-AI-VETO décrit l'état attendu du jeu d'or tant que l'inférence n'est pas exécutée ; ce n'est pas une preuve de sortie modèle. SUBMIT-FOR-PUBLICATION transmet une valeur candidate au gate, sans autoriser sa diffusion.</p>
+<h3 id="DOC-018-ONPREM">Lignage on-premise et ancres</h3>
+<p>Le pilote massif couvre 12 domaines sur 25 000 000 lignes dans chacune des couches RAW, BRONZE et SILVER, soit 75 000 000 lignes physiques cumulées. Les lignes CRM, ERP et FINANCE qui correspondent au corpus réduit portent 421 763 ancres. La preuve vérifie leurs ordinaux, leurs payloads et trois empreintes de contenu. Elle permet de relier les sources BigQuery au pilote sans publier les Parquet.</p>
+<p>Cette relation est une équivalence de contenu, pas une preuve de chronologie. Aucun écran, document ou graphe ne doit suggérer que l'échantillon BigQuery a nécessairement été prélevé après la génération du pilote.</p>
+<h3 id="DOC-018-CONTROLES">Contrôles et rupture de lignage</h3>
+<p>Une arête est non recevable si son actif amont ou aval n'existe pas, si transformation_id est inconnu, si une clé source devient multiple, si une empreinte ne correspond pas, ou si la preuve citée est absente. Une rupture sur le chemin financier bloque la certification déterministe. Une rupture sur le chemin sémantique bloque la publication.</p>
+<p>Les contrôles BigQuery vérifient les correspondances, la convergence, les références et le gate. Le générateur massif vérifie en plus les causalités temporelles et les relations transverses nécessaires aux domaines volumineux.</p>
+<h3 id="DOC-018-REPLAY">Sécurité et replay public</h3>
+<p>Le replay public utilise un export statique du graphe. Il ne se connecte ni à BigQuery, ni aux machines on-premise, ni à un modèle. Les identifiants exposés sont synthétiques ou assainis. Les journaux bruts d'identité, chemins de stockage et secrets éventuels ne sont pas des nœuds publics.</p>
+<p>Les preuves actuelles couvrent 531 240 lignes et 36 contrôles BigQuery, ainsi que le pilote de 25 000 000 lignes par couche — 75 000 000 lignes physiques cumulées. Le plein volume de 7 404 704 501 lignes par couche reste proposé. Le graphe peut montrer cette cible en pointillé, mais ne doit jamais la présenter comme une arête exécutée.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

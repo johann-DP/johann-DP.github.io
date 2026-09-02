@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Rapport du veto sémantique IA — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-027</nav>
+<p class="eyebrow">Document synthétique · DOC-027</p>
+<h1>Rapport du veto sémantique IA</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_EXECUTED</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Salomé Vial</dd></div>
+  <div><dt>Rôle</dt><dd>Data Quality Lead</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>b5c5d6af74983c0e49923bf857d3b9d8c7a4f5880dce245115f4931c2adf27ac</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Démonstration — document entièrement fictif.</strong> Ce rapport est un <strong>rapport de préparation NON_EXÉCUTÉ</strong>. Il ne contient aucune inférence réelle, aucun finding produit par un modèle et aucun arbitrage humain réalisé. Les personnes, l’organisation et les dates métier sont synthétiques.</blockquote>
+<h2>Rapport du veto sémantique IA</h2>
+<h3 id="DOC-027-STATUT">Statut d'exécution</h3>
+<p><strong>Statut au snapshot : <code>NOT_EXECUTED_EXPECTED_VETO</code>.</strong></p>
+<p>Le corpus V1 contient un résultat attendu <code>BLOCK</code> afin de tester le comportement fail-closed de <code>CTRL-024</code>. Ce résultat est une donnée de conception et non la sortie d’un modèle. Aucun <code>run_id</code>, aucune révision de poids exécutée, aucun prompt exécuté, aucune sortie JSON brute et aucune métrique d’inférence ne sont disponibles dans ce snapshot.</p>
+<p>En conséquence, ce document ne présente pas les 7 cas critiques et les 5 cas majeurs comme des détections IA. Il les décrit uniquement comme la vérité attendue du jeu d’or candidat.</p>
+<h3 id="DOC-027-ROLE">Rôle déterminant prévu</h3>
+<p>Le gate sémantique est conçu comme un veto asymétrique. Une sortie <code>BLOCK</code>, une citation introuvable, une sortie invalide, un timeout ou une erreur technique interdit la publication. Une sortie <code>ADMISSIBLE</code> ne publie rien : elle permet seulement au dossier de poursuivre vers l’arbitrage humain, les contrôles déterministes et le procès-verbal.</p>
+<p>Cette asymétrie donne à l’IA un effet métier réel sans lui attribuer le calcul du KPI ni une autorité de signature.</p>
+<h3 id="DOC-027-CORPUS">Corpus candidat et séparation aveugle</h3>
+<p>Le corpus cible comprend les versions documentaires, les référentiels de responsabilités, les ponts de rapprochement, les résultats de contrôles et les manifestes publics. Chaque contenu doit être normalisé, découpé en ancres et verrouillé par SHA-256.</p>
+<p>Le jeu d’or comprend 12 cas de conflit et 12 témoins sains. Pour une exécution recevable, l’entrée du modèle ne doit contenir ni <code>expected_verdict</code>, ni sévérité attendue, ni formulation qui révèle déjà la conclusion. La vérité attendue reste dans un paquet séparé utilisé seulement par l’évaluateur après l’inférence.</p>
+<h3 id="DOC-027-VERITE-ATTENDUE">Matrice de vérité attendue</h3>
+<div class="table-wrap"><table><thead><tr><th>Catégorie</th><th>Cas de conflit</th><th>Résultat attendu de conception</th><th>Témoins sains</th></tr></thead><tbody>
+<tr><td>Définition du KPI</td><td>C-001,C-002</td><td>1 BLOCK, 1 REVIEW</td><td>2</td></tr>
+<tr><td>Version documentaire</td><td>C-003,C-004</td><td>1 BLOCK, 1 REVIEW</td><td>2</td></tr>
+<tr><td>Rôle et délégation</td><td>C-005,C-006</td><td>1 BLOCK, 1 REVIEW</td><td>2</td></tr>
+<tr><td>Priorité des sources</td><td>C-007,C-008</td><td>1 BLOCK, 1 REVIEW</td><td>2</td></tr>
+<tr><td>Correspondance des références</td><td>C-009,C-010</td><td>1 BLOCK, 1 REVIEW</td><td>2</td></tr>
+<tr><td>Assertion non soutenue</td><td>C-011,C-012</td><td>2 BLOCK</td><td>2</td></tr>
+</tbody></table></div>
+<p>Cette table est une spécification d’évaluation. Elle ne prouve pas qu’un modèle a retrouvé ces résultats.</p>
+<h3 id="DOC-027-SORTIE">Contrat de sortie prévu</h3>
+<p>La sortie attendue est un JSON fermé contenant l’identifiant du run, le modèle et sa révision immuable, les empreintes du corpus, du prompt et du schéma, le verdict proposé et la liste structurée des findings. Chaque finding doit fournir une catégorie autorisée, une sévérité, une assertion, une question d’arbitrage et des citations vérifiables.</p>
+<p>Une citation recevable doit désigner le document, sa version, son empreinte et une ancre résolue. Le vérificateur dérive ensuite le statut du gate à partir des findings. Il rejette toute incohérence entre une sévérité critique et un verdict non bloquant. Aucune correction manuelle silencieuse du JSON n’est admise.</p>
+<h3 id="DOC-027-CRITERES">Critères du jeu d'or</h3>
+<p>L’exécution candidate devra démontrer simultanément :</p>
+<ul><li>24 sorties correctement classées : 7 <code>BLOCK</code>, 5 <code>REVIEW</code>, 12 <code>ADMISSIBLE</code> ;</li><li>rappel critique de 7 sur 7 ;</li><li>zéro faux <code>BLOCK</code> sur les témoins sains ;</li><li>conformité JSON de 100 % ;</li><li>citations critiques résolues avec une précision de 100 % ;</li><li>zéro assertion critique sans preuve ;</li><li>cinq replays donnant les mêmes verdicts, findings structurés et citations canoniques ;</li><li>un run plein corpus aboutissant à <code>BLOCK</code> tant que les conflits attendus subsistent.</li></ul>
+<p>Le modèle local est exclu de la démonstration déterminante s’il échoue à l’un de ces critères.</p>
+<h3 id="DOC-027-ARBITRAGE">Arbitrage humain prévu</h3>
+<p>Après validation déterministe de la sortie, chaque finding majeur ou critique ouvre un dossier dans <code>DOC-021</code>. Le rôle responsable choisit une règle, motive la décision et cite les preuves consultées. Le Tech Lead traduit la décision en contrôle ; la Data Quality Lead vérifie le rejeu ; le Data Owner décide si le dossier peut être représenté au sponsor.</p>
+<p>La sortie IA historique reste immuable. L’arbitrage produit une nouvelle version du corpus et un nouveau replay. Cette séparation empêche de faire disparaître un finding simplement parce qu’il est devenu gênant.</p>
+<h3 id="DOC-027-REPLAY">Contenu du futur replay public</h3>
+<p>Le replay public devra présenter le manifeste d’entrée assaini, le prompt versionné, le schéma, le modèle et sa révision, les paramètres de décodage, la sortie brute, le rapport de conformité, la résolution des citations, les métriques du jeu d’or, les décisions fictives et les transitions du gate. Aucun service IA, aucune machine locale et aucune API ne seront nécessaires au visiteur.</p>
+<h3 id="DOC-027-CONCLUSION">Conclusion au snapshot</h3>
+<p>Le veto sémantique est une conception crédible et déterminante, mais son exécution reste <strong>À FAIRE</strong>. <code>EVID-CTRL-024</code> prouve que le dispositif V1 est bloqué conformément au scénario ; il ne prouve pas une analyse de modèle. Toute présentation commerciale doit conserver cette distinction jusqu’à la publication d’une preuve d’exécution dédiée.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

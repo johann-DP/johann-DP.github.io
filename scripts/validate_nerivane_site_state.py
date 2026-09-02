@@ -11,6 +11,7 @@ schema.
 from __future__ import annotations
 
 import argparse
+from datetime import date
 import hashlib
 import json
 import os
@@ -18,7 +19,7 @@ from pathlib import Path, PurePosixPath
 import re
 import stat
 import sys
-from typing import Any, Iterable, Mapping
+from typing import Any, Callable, Iterable, Mapping
 
 import import_nerivane_v2_release as importer
 import promote_nerivane_v2_release as promoter
@@ -126,6 +127,20 @@ def _canonical(value: object) -> bytes:
             ensure_ascii=False,
             allow_nan=False,
             separators=(",", ":"),
+            sort_keys=True,
+        )
+    except (TypeError, ValueError):
+        raise _fail("NERIVANE_SITE_STATE_JSON_INVALID") from None
+    return f"{rendered}\n".encode("utf-8")
+
+
+def _canonical_pretty(value: object) -> bytes:
+    try:
+        rendered = json.dumps(
+            value,
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=2,
             sort_keys=True,
         )
     except (TypeError, ValueError):
@@ -353,13 +368,18 @@ def _resolve_release_reference(
     return resolved
 
 
-def _evidence_json(path: Path, code: str) -> tuple[dict[str, Any], bytes]:
+def _evidence_json(
+    path: Path,
+    code: str,
+    *,
+    canonicalizer: Callable[[object], bytes] = _canonical,
+) -> tuple[dict[str, Any], bytes]:
     try:
         payload = path.read_bytes()
         value = json.loads(payload)
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
         raise _fail(code) from None
-    if not isinstance(value, dict) or payload != _canonical(value):
+    if not isinstance(value, dict) or payload != canonicalizer(value):
         raise _fail(code)
     return value, payload
 
@@ -414,13 +434,15 @@ def _validate_replay_evidence(
         or value.get("evidence") != {
             "ai_local_fail_closed": "evidence/ai-local-fail-closed.json",
             "bigquery_h1_sample": "evidence/bigquery-h1-sample-public.json",
+            "bigquery_h1_remote_execution": "evidence/bigquery-full-h1-v2-execution-proof.json",
             "full_h1": "evidence/full-h1-final-public.json",
             "park_resource_windows": "evidence/resource-windows/manifest.json",
         }
         or value.get("steps") != [f"steps/{index:02d}.html" for index in range(1, 8)]
         or value.get("limitations") != [
             "INACTIVE_SITE_IMPORT_ONLY", "NO_AUTOMATIC_ACTIVATION",
-            "NO_MAINTENANCE_REMOVAL", "NO_GCP_V2_LOAD_CLAIM_LOCAL_SAMPLE_ONLY",
+            "NO_MAINTENANCE_REMOVAL",
+            "GCP_V2_EXECUTION_DOES_NOT_UNBLOCK_BUSINESS_PUBLICATION",
             "SELECTED_AI_MODEL_REJECTED_NOT_DEPLOYED",
         ]
     ):
@@ -437,7 +459,9 @@ def _validate_replay_evidence(
             "ai_fail_closed_overlay_sha256", "full_h1_public_report_sha256",
             "h1_resource_windows_manifest_sha256",
             "full_h1_sample_selection_plan_sha256", "local_36_controls_proof_sha256",
-            "local_materialization_proof_sha256", "replay_candidate_v1_tree_sha256",
+            "local_materialization_proof_sha256",
+            "remote_bigquery_execution_proof_sha256",
+            "replay_candidate_v1_tree_sha256",
         },
         code,
     )
@@ -449,6 +473,73 @@ def _validate_replay_evidence(
     ):
         raise _fail(code)
     return normalized
+
+
+def _validate_remote_bigquery_evidence(value: Mapping[str, Any]) -> dict[str, Any]:
+    code = "NERIVANE_ACTIVE_REMOTE_BIGQUERY_EVIDENCE_INVALID"
+    _strict_object(
+        value,
+        {
+            "controlled_manifest_sha256", "controlled_proof_sha256",
+            "evidence_class", "execution", "final_table_fingerprint_set_sha256",
+            "identity_disclosure", "ingestion_date_utc", "journal_head_sha256",
+            "local_paths_disclosed", "location", "private_apply_manifest_sha256",
+            "project_id", "results", "sample_id", "schema_version", "status",
+        },
+        code,
+    )
+    ingestion_date = value.get("ingestion_date_utc")
+    if not isinstance(ingestion_date, str):
+        raise _fail(code)
+    try:
+        parsed_ingestion_date = date.fromisoformat(ingestion_date)
+    except ValueError:
+        raise _fail(code) from None
+    if parsed_ingestion_date.isoformat() != ingestion_date:
+        raise _fail(code)
+    results = _strict_object(
+        value.get("results"),
+        {
+            "billing_enabled", "final_controls_passed", "physical_rows",
+            "publication_status", "stage_controls_passed", "table_count",
+            "transient_tables",
+        },
+        code,
+    )
+    expected_results = {
+        "table_count": 17,
+        "physical_rows": 210_724,
+        "stage_controls_passed": 36,
+        "final_controls_passed": 36,
+        "transient_tables": 0,
+        "billing_enabled": False,
+        "publication_status": "BLOCKED",
+    }
+    if (
+        value.get("schema_version") != 2
+        or value.get("status") != "PASS_REMOTE_EXECUTION_PROVED_PUBLICATION_BLOCKED"
+        or value.get("evidence_class") != "PUBLIC_SANITIZED"
+        or value.get("execution") != "EXECUTED"
+        or value.get("project_id") != "datapredict-nerivane-2026"
+        or value.get("location") != "europe-west9"
+        or value.get("sample_id") != "NERIVANE-2021-H1-GCP-V2"
+        or results != expected_results
+        or value.get("identity_disclosure") != "SANITIZED_SHA256_ONLY"
+        or value.get("local_paths_disclosed") is not False
+    ):
+        raise _fail(code)
+    for key in (
+        "controlled_manifest_sha256", "controlled_proof_sha256",
+        "private_apply_manifest_sha256", "journal_head_sha256",
+        "final_table_fingerprint_set_sha256",
+    ):
+        _digest_value(value.get(key), code)
+    return {
+        "ingestion_date_utc": ingestion_date,
+        "location": value["location"],
+        "project_id": value["project_id"],
+        "results": dict(results),
+    }
 
 
 def _validate_h1_evidence(value: Mapping[str, Any]) -> dict[str, Any]:
@@ -626,6 +717,8 @@ def _validate_sample_evidence(
     *,
     h1: Mapping[str, Any],
     replay_bindings: Mapping[str, str],
+    remote_bigquery: Mapping[str, Any],
+    remote_bigquery_sha256: str,
 ) -> None:
     code = "NERIVANE_ACTIVE_SAMPLE_EVIDENCE_INVALID"
     _strict_object(
@@ -633,27 +726,32 @@ def _validate_sample_evidence(
         {
             "cloud_boundary", "contract_id", "deterministic_controls",
             "fictional_scenario", "materialization", "period", "publication_boundary",
-            "sample_id", "sanitization", "schema_version", "source_bindings", "status",
+            "remote_execution", "sample_id", "sanitization", "schema_version",
+            "source_bindings", "status",
         },
         code,
     )
     if (
-        value.get("schema_version") != 2
-        or value.get("contract_id") != "NERIVANE-BIGQUERY-H1-SAMPLE-PUBLIC-EVIDENCE-V2"
-        or value.get("status") != "VALIDÉ_LOCAL_H1_SAMPLE_AND_36_CONTROLS"
+        value.get("schema_version") != 3
+        or value.get("contract_id") != "NERIVANE-BIGQUERY-H1-SAMPLE-PUBLIC-EVIDENCE-V3"
+        or value.get("status") != "VALIDÉ_BIGQUERY_H1_SAMPLE_AND_36_CONTROLS"
         or value.get("fictional_scenario") is not True
         or value.get("sample_id") != "NERIVANE-2021-H1-GCP-V2"
         or value.get("period") != {"start_month": "2021-01", "end_month": "2021-06", "month_count": 6}
         or value.get("materialization") != {
-            "execution_surface": "LOCAL_ONLY_NO_GCP_ACCESS", "table_count": 17,
+            "execution_surface": "FULL_H1_LOCAL_MATERIALIZATION_THEN_BIGQUERY_LOAD",
+            "table_count": 17,
             "physical_rows": 210_724, "rows_are_non_round": True,
             "source_scope": "FULL_H1_RECEIPT_BOUND_LOCAL_MATERIALIZATION",
             "pilot_25m_inputs_used": False,
         }
         or value.get("cloud_boundary") != {
-            "bigquery_project_mutated": False, "gcp_accessed_or_modified": False,
-            "gcp_load_claimed": False,
-            "meaning": "L'échantillon au schéma BigQuery a été matérialisé et contrôlé localement; ce paquet ne prétend ni chargement ni mutation GCP.",
+            "bigquery_project_mutated": True,
+            "gcp_accessed_or_modified": True,
+            "gcp_load_claimed": True,
+            "billing_enabled": False,
+            "publication_status": "BLOCKED",
+            "meaning": "Les 17 tables FULL-H1 V2 ont été chargées dans BigQuery puis validées par 36 contrôles sur la zone de préparation et 36 sur les tables finales, sans compte de facturation lié.",
         }
         or value.get("publication_boundary") != {
             "kpi_deterministically_certified": True,
@@ -661,6 +759,24 @@ def _validate_sample_evidence(
         }
         or value.get("sanitization") != {"status": "PASS", "private_paths_included": False}
     ):
+        raise _fail(code)
+    remote_execution = _strict_object(
+        value.get("remote_execution"),
+        {
+            "ingestion_date_utc", "location", "project_id", "proof_path",
+            "proof_sha256", "results", "status",
+        },
+        code,
+    )
+    if remote_execution != {
+        "status": "EXECUTED_AND_PROVED",
+        "proof_path": "evidence/bigquery-full-h1-v2-execution-proof.json",
+        "proof_sha256": remote_bigquery_sha256,
+        "project_id": remote_bigquery["project_id"],
+        "location": remote_bigquery["location"],
+        "ingestion_date_utc": remote_bigquery["ingestion_date_utc"],
+        "results": remote_bigquery["results"],
+    }:
         raise _fail(code)
     controls = _strict_object(
         value.get("deterministic_controls"),
@@ -680,7 +796,14 @@ def _validate_sample_evidence(
     _digest_value(controls.get("measurement_sha256"), code)
     bindings = _strict_object(
         value.get("source_bindings"),
-        {"deterministic_controls_proof_sha256", "full_h1_proof_sha256", "materialization_proof_sha256", "receipt_anchor_set_sha256", "selection_plan_sha256"},
+        {
+            "deterministic_controls_proof_sha256",
+            "full_h1_proof_sha256",
+            "materialization_proof_sha256",
+            "receipt_anchor_set_sha256",
+            "remote_bigquery_execution_proof_sha256",
+            "selection_plan_sha256",
+        },
         code,
     )
     normalized = {key: _digest_value(item, code) for key, item in bindings.items()}
@@ -691,6 +814,10 @@ def _validate_sample_evidence(
         or normalized["selection_plan_sha256"] != replay_bindings["full_h1_sample_selection_plan_sha256"]
         or normalized["materialization_proof_sha256"] != replay_bindings["local_materialization_proof_sha256"]
         or normalized["deterministic_controls_proof_sha256"] != replay_bindings["local_36_controls_proof_sha256"]
+        or normalized["remote_bigquery_execution_proof_sha256"]
+        != remote_bigquery_sha256
+        or remote_bigquery_sha256
+        != replay_bindings["remote_bigquery_execution_proof_sha256"]
     ):
         raise _fail(code)
 
@@ -997,6 +1124,8 @@ def validate_active_data(
         or metrics[1]["value"] != "2\u202f004\u202f364\u202f194"
         or metrics[2]["value"] != "1\u202f320 triplets"
         or metrics[3]["value"] != "210\u202f724 lignes · 36/36 PASS"
+        or metrics[3]["scope"]
+        != "17 tables BigQuery, 36/36 PASS avant et après promotion"
     ):
         raise _fail("NERIVANE_ACTIVE_DATA_METRICS_INVALID")
 
@@ -1056,7 +1185,7 @@ def validate_active_data(
         ("replay-v2", "Manifeste du replay V2", "replay-manifest.json"),
         ("full-h1", "Preuve H1 finale assainie", "evidence/full-h1-final-public.json"),
         ("park-resources", "Fenêtres CPU et mémoire du parc H1", "evidence/resource-windows/manifest.json"),
-        ("sample-controls", "Synthèse de l’échantillon et des 36 contrôles", "evidence/bigquery-h1-sample-public.json"),
+        ("sample-controls", "Preuve BigQuery FULL-H1 V2 et contrôles", "evidence/bigquery-h1-sample-public.json"),
         ("ai-fail-closed", "Overlay IA local fail-closed", "evidence/ai-local-fail-closed.json"),
     )
     if not isinstance(evidence, list) or len(evidence) != 5:
@@ -1103,10 +1232,27 @@ def validate_active_data(
         resource_sha256=resource_sha256,
         ai_sha256=_sha256(evidence_payloads["ai-fail-closed"]),
     )
+    remote_relative = "evidence/bigquery-full-h1-v2-execution-proof.json"
+    remote_href = f"{release_reference}/{remote_relative}"
+    remote_target = _resolve_release_reference(
+        release_root,
+        release_id,
+        remote_href,
+        remote_relative,
+    )
+    remote_value, remote_payload = _evidence_json(
+        remote_target,
+        "NERIVANE_ACTIVE_REMOTE_BIGQUERY_EVIDENCE_INVALID",
+        canonicalizer=_canonical_pretty,
+    )
+    remote_sha256 = _sha256(remote_payload)
+    remote_semantics = _validate_remote_bigquery_evidence(remote_value)
     _validate_sample_evidence(
         evidence_values["sample-controls"],
         h1=h1_semantics,
         replay_bindings=replay_bindings,
+        remote_bigquery=remote_semantics,
+        remote_bigquery_sha256=remote_sha256,
     )
     encoded_value = f"{h1_semantics['encoded_bytes']:,}".replace(",", "\u202f") + " octets"
     if (
@@ -1120,7 +1266,7 @@ def validate_active_data(
     boundaries = data.get("boundaries")
     expected_boundaries = {
         "KPI métier": "Rapproché par règles déterministes, mais publication bloquée par le modèle IA rejeté.",
-        "Cloud": "Échantillon au schéma BigQuery contrôlé localement; aucun chargement GCP V2 revendiqué.",
+        "Cloud": "17 tables et 210 724 lignes chargées dans BigQuery; 36/36 contrôles réussis avant et après promotion, facturation désactivée.",
         "IA locale": "Inférence capturée, qualification échouée, modèle non déployé et porte fail-closed.",
     }
     if not isinstance(boundaries, list) or len(boundaries) != 3:
@@ -1150,7 +1296,7 @@ def validate_active_data(
     )
     if publication != {
         "ai_model_deployment_status": "NOT_DEPLOYED",
-        "gcp_v2_load_status": "NOT_CLAIMED_LOCAL_ONLY",
+        "gcp_v2_load_status": "EXECUTED_17_TABLES_STAGE_36_FINAL_36_PASS_BILLING_DISABLED",
         "kpi_publication_status": "BLOCKED_BY_REJECTED_AI_MODEL",
         "site_replay_status": "ACTIVE",
     }:
