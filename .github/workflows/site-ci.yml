@@ -90,8 +90,8 @@ jobs:
 
           figure_root = root / "assets/figures/demo-2"
           expected_figure_manifests = {
-              "content-manifest.json": "924cadf659cda13240d07542affc8f0e74e85311c6aba68a179996a5a2b267d1",
-              "weather/content-manifest.json": "749bc1ff0279224e348269cb4b0a70c6080840d5ae6c22d09ac2133dcae09c22",
+              "content-manifest.json": "cf04223a690b77a8da017a98929d326a3605409c18144cde165726609b4e0915",
+              "weather/content-manifest.json": "4e81b0db6dead0cf6031aa67e75a7b8f92ac0dd8cdec7eb959893c32bf3cbecd",
           }
           immutable_figure_html = set()
           expected_figure_files = {
