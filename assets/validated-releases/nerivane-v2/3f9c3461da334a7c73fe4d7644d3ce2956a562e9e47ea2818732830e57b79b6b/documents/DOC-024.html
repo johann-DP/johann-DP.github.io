@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Plan de transition vers le RUN — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-024</nav>
+<p class="eyebrow">Document synthétique · DOC-024</p>
+<h1>Plan de transition vers le RUN</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Hugo Perrin</dd></div>
+  <div><dt>Rôle</dt><dd>Directeur de transition</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>d8bf5a458dab65be96c91345bd46c19f8e5bd32f2fa516af4f080a63ab947ed7</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Démonstration — document entièrement fictif.</strong> Ce plan représente une transition simulée de Nérivane Distribution. Les jalons, personnes et décisions métier ne correspondent à aucune organisation réelle.</blockquote>
+<h2>Plan de transition vers le RUN</h2>
+<h3 id="DOC-024-FINALITE">Finalité et état de départ</h3>
+<p>La transition vise un RUN capable de reproduire le KPI de juillet 2026, de surveiller ses preuves et d’empêcher sa publication lorsqu’un contrôle ou un arbitrage manque. L’état de départ est volontairement dissocié : <code>CTRL-022</code> démontre la convergence de la valeur candidate, tandis que <code>CTRL-024</code> maintient la publication bloquée.</p>
+<p>Le présent plan n’autorise pas la mise en service. Il définit les conditions qui permettraient au procès-verbal candidat de passer ultérieurement d’un refus motivé à une acceptation.</p>
+<h3 id="DOC-024-VAGUES">Vagues de transition</h3>
+<div class="table-wrap"><table><thead><tr><th>Vague</th><th>Objectif</th><th>Livrables</th><th>Responsable</th><th>Critère de sortie</th></tr></thead><tbody>
+<tr><td>T0 — Baseline</td><td>Figer le périmètre et les preuves existantes.</td><td>Catalogue, KPI, contrôles, index public.</td><td>R005</td><td>Empreintes et portées de preuve explicites.</td></tr>
+<tr><td>T1 — Corpus</td><td>Produire les documents publics adressables.</td><td><code>DOC-001</code> à <code>DOC-028</code>, manifeste et ancres.</td><td>R005</td><td>Zéro document manquant ou incohérent.</td></tr>
+<tr><td>T2 — Gate local</td><td>Exécuter le jeu d’or aveugle et le plein corpus.</td><td>Prompt, runtime, cinq replays, sorties JSON.</td><td>R011,R009</td><td>Tous les critères P0 du backlog sont satisfaits.</td></tr>
+<tr><td>T3 — Arbitrage</td><td>Trancher les findings et mettre à jour les règles.</td><td>Journal, décisions, règles et contrôles rejoués.</td><td>R008</td><td>Aucun finding bloquant sans décision.</td></tr>
+<tr><td>T4 — Pré-RUN</td><td>Tester exploitation, sécurité et reprise.</td><td>Runbook, alertes, exercice de reprise.</td><td>R015,R016</td><td>Exploitabilité et assainissement acceptés.</td></tr>
+<tr><td>T5 — Acceptation</td><td>Statuer formellement.</td><td><code>DOC-026</code> révisé et signé dans le scénario.</td><td>R001,R008</td><td>Gate publiable et réserves closes.</td></tr>
+</tbody></table></div>
+<h3 id="DOC-024-GATES">Conditions cumulatives de passage</h3>
+<p>Le passage entre les vagues est cumulatif. Les contrôles déterministes doivent être <code>PASS</code>; l’avis IA doit avoir un statut d’exécution vérifié; ses citations doivent être résolues; les findings doivent être arbitrés; les règles résultantes doivent être testées; le responsable RUN et le relecteur sécurité doivent accepter le dispositif.</p>
+<p>Un état <code>ADMISSIBLE</code> du modèle ne déclenche pas la publication. Il signifie uniquement que l’IA n’a pas détecté de nouveau bloqueur dans le corpus fourni. Inversement, un <code>BLOCK</code>, une indisponibilité ou une preuve non résolue arrête la transition.</p>
+<h3 id="DOC-024-MODELE-OPERATIONNEL">Modèle opérationnel cible</h3>
+<p>Le Product Owner tient les critères de service. Le Tech Lead maintient le runner et ses dépendances épinglées. La Data Quality Lead supervise le jeu d’or et instruit les findings. Le Data Owner porte les décisions métier. Le Responsable RUN surveille les exécutions et la conservation des preuves. Le RSSI contrôle l’exposition publique. Le PMO tient les dépendances, risques et décisions.</p>
+<p>La séparation des rôles évite qu’une même personne produise la donnée, accepte la qualité, arbitre le sens et autorise la publication sans relecture.</p>
+<h3 id="DOC-024-REPRISE">Reprise et retour arrière</h3>
+<p>Le RUN cible est idempotent : chaque exécution possède un identifiant, un manifeste d’entrée et des empreintes immuables. Une reprise ne réutilise que les étapes dont l’intention et le résultat ont été attestés. Une sortie partielle ou invalide est conservée comme preuve d’échec et ne remplace jamais le dernier replay validé.</p>
+<p>Il n’existe pas de rollback automatique d’une décision métier. Une correction crée une nouvelle version du corpus, un nouveau replay et une nouvelle décision. La version antérieure reste consultable pour expliquer la transition.</p>
+<h3 id="DOC-024-INDICATEURS">Indicateurs de RUN</h3>
+<p>Les indicateurs minimaux sont : fraîcheur du corpus, taux de sorties conformes au schéma, citations résolues, temps de traitement, stabilité des cinq replays, findings par sévérité, arbitrages en retard et statut du gate. Les volumes techniques sont suivis séparément afin de ne pas confondre performance et certification métier.</p>
+<h3 id="DOC-024-DECISION-SNAPSHOT">Décision de transition au snapshot</h3>
+<p>La transition reste en T1. Les preuves techniques GCP et on-premise existantes peuvent être montrées dans leur périmètre exact, mais le gate IA n’a pas encore été exécuté et le procès-verbal est non signé. La décision candidate est donc : <strong>ne pas passer en RUN public</strong>.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

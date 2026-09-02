@@ -1,0 +1,26 @@
+{
+  "controlled_manifest_sha256": "7667d46147e5af36434c549f3aa244515f33e554b571327a8b682ff7c9386745",
+  "controlled_proof_sha256": "9fc966ed9885ed5f05c097a3d16d1696e2234848c031dec79490ca401aee3ba7",
+  "evidence_class": "PUBLIC_SANITIZED",
+  "execution": "EXECUTED",
+  "final_table_fingerprint_set_sha256": "fe5071e0edcdf80d981db70de2ef1a5f8a6baa500dc86cae9a8ad8ea803eec71",
+  "identity_disclosure": "SANITIZED_SHA256_ONLY",
+  "ingestion_date_utc": "2026-09-02",
+  "journal_head_sha256": "95b5065bd66871b8952ab51b22714bdec78a80a1a7d7f5a83bd398328d436e4b",
+  "local_paths_disclosed": false,
+  "location": "europe-west9",
+  "private_apply_manifest_sha256": "6dd2b7a583ead66aa1afcc892399899637b4b809eb8d86b5049857c186992a6d",
+  "project_id": "datapredict-nerivane-2026",
+  "results": {
+    "billing_enabled": false,
+    "final_controls_passed": 36,
+    "physical_rows": 210724,
+    "publication_status": "BLOCKED",
+    "stage_controls_passed": 36,
+    "table_count": 17,
+    "transient_tables": 0
+  },
+  "sample_id": "NERIVANE-2021-H1-GCP-V2",
+  "schema_version": 2,
+  "status": "PASS_REMOTE_EXECUTION_PROVED_PUBLICATION_BLOCKED"
+}

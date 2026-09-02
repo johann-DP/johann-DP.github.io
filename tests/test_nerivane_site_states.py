@@ -21,6 +21,7 @@ from tests.test_import_nerivane_v2_release import (  # noqa: E402
     build_site,
     build_source,
     canonical,
+    pretty_canonical,
 )
 
 
@@ -256,6 +257,8 @@ class NerivaneClosedSiteStatesTests(unittest.TestCase):
             ("full-h1", "evidence/full-h1-final-public.json", lambda value: value["execution"].update({"triplet_count": 1_319}), "NERIVANE_ACTIVE_H1_EVIDENCE_INVALID"),
             ("park-resources", "evidence/resource-windows/manifest.json", lambda value: value["summary"].update({"active_process_windows": 4}), "NERIVANE_ACTIVE_RESOURCE_EVIDENCE_INVALID"),
             ("sample-controls", "evidence/bigquery-h1-sample-public.json", lambda value: value["materialization"].update({"table_count": 16}), "NERIVANE_ACTIVE_SAMPLE_EVIDENCE_INVALID"),
+            ("sample-controls", "evidence/bigquery-h1-sample-public.json", lambda value: value["remote_execution"].update({"proof_sha256": "f" * 64}), "NERIVANE_ACTIVE_SAMPLE_EVIDENCE_INVALID"),
+            ("sample-controls", "evidence/bigquery-h1-sample-public.json", lambda value: value["source_bindings"].update({"remote_bigquery_execution_proof_sha256": "f" * 64}), "NERIVANE_ACTIVE_SAMPLE_EVIDENCE_INVALID"),
             ("ai-fail-closed", "evidence/ai-local-fail-closed.json", lambda value: value["model"].update({"deployment_status": "DEPLOYED"}), "NERIVANE_ACTIVE_AI_EVIDENCE_INVALID"),
             ("ai-fail-closed", "evidence/ai-local-fail-closed.json", lambda value: value["publication_gate"].update({"status": "UNBLOCKED"}), "NERIVANE_ACTIVE_AI_EVIDENCE_INVALID"),
             ("ai-fail-closed", "evidence/ai-local-fail-closed.json", lambda value: value["safety"].update({"kpi_calculated_or_certified_by_ai": True}), "NERIVANE_ACTIVE_AI_EVIDENCE_INVALID"),
@@ -284,6 +287,34 @@ class NerivaneClosedSiteStatesTests(unittest.TestCase):
                     target.chmod(0o600)
                     target.write_bytes(original_payload)
                     target.chmod(original_mode)
+
+    def test_rejects_a_forged_remote_bigquery_execution_proof(self) -> None:
+        self.promote()
+        active_payload = (self.site / states.DATA_RELATIVE).read_bytes()
+        release_root = self.site / "assets/validated-releases/nerivane-v2" / self.release_id
+        target = release_root / "evidence/bigquery-full-h1-v2-execution-proof.json"
+        original_payload = target.read_bytes()
+        original_mode = stat.S_IMODE(target.stat().st_mode)
+        forged = json.loads(original_payload)
+        forged["results"]["table_count"] = 16
+        target.chmod(0o600)
+        target.write_bytes(pretty_canonical(forged))
+        target.chmod(original_mode)
+        try:
+            with self.assertRaisesRegex(
+                states.NerivaneSiteStateError,
+                "NERIVANE_ACTIVE_REMOTE_BIGQUERY_EVIDENCE_INVALID",
+            ):
+                states.validate_active_data(
+                    active_payload,
+                    release_id=self.release_id,
+                    release_root=release_root,
+                    expected_source_commit="a" * 40,
+                )
+        finally:
+            target.chmod(0o600)
+            target.write_bytes(original_payload)
+            target.chmod(original_mode)
 
     def test_rejects_an_evidence_digest_not_bound_to_the_release(self) -> None:
         self.promote()

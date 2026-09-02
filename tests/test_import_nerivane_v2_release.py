@@ -55,6 +55,19 @@ def canonical(value: object) -> bytes:
     ).encode("utf-8")
 
 
+def pretty_canonical(value: object) -> bytes:
+    return (
+        json.dumps(
+            value,
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n"
+    ).encode("utf-8")
+
+
 def digest(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
 
@@ -232,11 +245,41 @@ def ai_evidence() -> dict[str, object]:
     }
 
 
-def sample_evidence() -> dict[str, object]:
+def remote_bigquery_evidence() -> dict[str, object]:
     return {
         "schema_version": 2,
-        "contract_id": "NERIVANE-BIGQUERY-H1-SAMPLE-PUBLIC-EVIDENCE-V2",
-        "status": "VALIDÉ_LOCAL_H1_SAMPLE_AND_36_CONTROLS",
+        "status": "PASS_REMOTE_EXECUTION_PROVED_PUBLICATION_BLOCKED",
+        "evidence_class": "PUBLIC_SANITIZED",
+        "execution": "EXECUTED",
+        "project_id": "datapredict-nerivane-2026",
+        "location": "europe-west9",
+        "sample_id": "NERIVANE-2021-H1-GCP-V2",
+        "ingestion_date_utc": "2026-09-02",
+        "controlled_manifest_sha256": "a" * 64,
+        "controlled_proof_sha256": "b" * 64,
+        "private_apply_manifest_sha256": "c" * 64,
+        "journal_head_sha256": "d" * 64,
+        "final_table_fingerprint_set_sha256": "e" * 64,
+        "results": {
+            "table_count": 17,
+            "physical_rows": 210_724,
+            "stage_controls_passed": 36,
+            "final_controls_passed": 36,
+            "transient_tables": 0,
+            "billing_enabled": False,
+            "publication_status": "BLOCKED",
+        },
+        "identity_disclosure": "SANITIZED_SHA256_ONLY",
+        "local_paths_disclosed": False,
+    }
+
+
+def sample_evidence(*, remote_payload: bytes) -> dict[str, object]:
+    remote = json.loads(remote_payload)
+    return {
+        "schema_version": 3,
+        "contract_id": "NERIVANE-BIGQUERY-H1-SAMPLE-PUBLIC-EVIDENCE-V3",
+        "status": "VALIDÉ_BIGQUERY_H1_SAMPLE_AND_36_CONTROLS",
         "fictional_scenario": True, "sample_id": "NERIVANE-2021-H1-GCP-V2",
         "period": {"start_month": "2021-01", "end_month": "2021-06", "month_count": 6},
         "source_bindings": {
@@ -245,9 +288,11 @@ def sample_evidence() -> dict[str, object]:
             "selection_plan_sha256": "5" * 64,
             "materialization_proof_sha256": "6" * 64,
             "deterministic_controls_proof_sha256": "7" * 64,
+            "remote_bigquery_execution_proof_sha256": digest(remote_payload),
         },
         "materialization": {
-            "execution_surface": "LOCAL_ONLY_NO_GCP_ACCESS", "table_count": 17,
+            "execution_surface": "FULL_H1_LOCAL_MATERIALIZATION_THEN_BIGQUERY_LOAD",
+            "table_count": 17,
             "physical_rows": 210_724, "rows_are_non_round": True,
             "source_scope": "FULL_H1_RECEIPT_BOUND_LOCAL_MATERIALIZATION",
             "pilot_25m_inputs_used": False,
@@ -259,9 +304,21 @@ def sample_evidence() -> dict[str, object]:
             "certification_status": "DETERMINISTICALLY_RECONCILED_PUBLICATION_BLOCKED_PENDING_AI_HUMAN",
         },
         "cloud_boundary": {
-            "bigquery_project_mutated": False, "gcp_accessed_or_modified": False,
-            "gcp_load_claimed": False,
-            "meaning": "L'échantillon au schéma BigQuery a été matérialisé et contrôlé localement; ce paquet ne prétend ni chargement ni mutation GCP.",
+            "bigquery_project_mutated": True,
+            "gcp_accessed_or_modified": True,
+            "gcp_load_claimed": True,
+            "billing_enabled": False,
+            "publication_status": "BLOCKED",
+            "meaning": "Les 17 tables FULL-H1 V2 ont été chargées dans BigQuery puis validées par 36 contrôles sur la zone de préparation et 36 sur les tables finales, sans compte de facturation lié.",
+        },
+        "remote_execution": {
+            "status": "EXECUTED_AND_PROVED",
+            "proof_path": "evidence/bigquery-full-h1-v2-execution-proof.json",
+            "proof_sha256": digest(remote_payload),
+            "project_id": remote["project_id"],
+            "location": remote["location"],
+            "ingestion_date_utc": remote["ingestion_date_utc"],
+            "results": remote["results"],
         },
         "publication_boundary": {
             "kpi_deterministically_certified": True,
@@ -330,6 +387,7 @@ def resource_window_evidence() -> dict[str, bytes]:
 
 def replay_evidence(
     *, h1_payload: bytes, ai_payload: bytes, resource_manifest_payload: bytes,
+    remote_payload: bytes,
 ) -> dict[str, object]:
     return {
         "schema_version": 2, "contract_id": "NERIVANE-PUBLIC-REPLAY-V2",
@@ -344,13 +402,14 @@ def replay_evidence(
             "full_h1_sample_selection_plan_sha256": "5" * 64,
             "local_materialization_proof_sha256": "6" * 64,
             "local_36_controls_proof_sha256": "7" * 64,
+            "remote_bigquery_execution_proof_sha256": digest(remote_payload),
             "ai_fail_closed_overlay_sha256": digest(ai_payload),
             "h1_resource_windows_manifest_sha256": digest(resource_manifest_payload),
         },
         "publication": {"automatic_activation_permitted": False, "maintenance_removal_permitted": False},
-        "evidence": {"full_h1": "evidence/full-h1-final-public.json", "park_resource_windows": "evidence/resource-windows/manifest.json", "bigquery_h1_sample": "evidence/bigquery-h1-sample-public.json", "ai_local_fail_closed": "evidence/ai-local-fail-closed.json"},
+        "evidence": {"full_h1": "evidence/full-h1-final-public.json", "park_resource_windows": "evidence/resource-windows/manifest.json", "bigquery_h1_sample": "evidence/bigquery-h1-sample-public.json", "bigquery_h1_remote_execution": "evidence/bigquery-full-h1-v2-execution-proof.json", "ai_local_fail_closed": "evidence/ai-local-fail-closed.json"},
         "steps": [f"steps/{index:02d}.html" for index in range(1, 8)],
-        "limitations": ["INACTIVE_SITE_IMPORT_ONLY", "NO_AUTOMATIC_ACTIVATION", "NO_MAINTENANCE_REMOVAL", "NO_GCP_V2_LOAD_CLAIM_LOCAL_SAMPLE_ONLY", "SELECTED_AI_MODEL_REJECTED_NOT_DEPLOYED"],
+        "limitations": ["INACTIVE_SITE_IMPORT_ONLY", "NO_AUTOMATIC_ACTIVATION", "NO_MAINTENANCE_REMOVAL", "GCP_V2_EXECUTION_DOES_NOT_UNBLOCK_BUSINESS_PUBLICATION", "SELECTED_AI_MODEL_REJECTED_NOT_DEPLOYED"],
     }
 
 
@@ -406,7 +465,7 @@ def active_data_payload(
                     "title": "KPI métier",
                 },
                 {
-                    "text": "Échantillon au schéma BigQuery contrôlé localement; aucun chargement GCP V2 revendiqué.",
+                    "text": "17 tables et 210 724 lignes chargées dans BigQuery; 36/36 contrôles réussis avant et après promotion, facturation désactivée.",
                     "title": "Cloud",
                 },
                 {
@@ -437,7 +496,7 @@ def active_data_payload(
                 {
                     "href": f"{release_root}/evidence/bigquery-h1-sample-public.json",
                     "id": "sample-controls",
-                    "label": "Synthèse de l’échantillon et des 36 contrôles",
+                    "label": "Preuve BigQuery FULL-H1 V2 et contrôles",
                     "sha256": digest(sample_payload),
                 },
                 {
@@ -467,13 +526,13 @@ def active_data_payload(
                 },
                 {
                     "label": "Échantillon gouverné",
-                    "scope": "17 tables, matérialisation et contrôles locaux",
+                    "scope": "17 tables BigQuery, 36/36 PASS avant et après promotion",
                     "value": "210\u202f724 lignes · 36/36 PASS",
                 },
             ],
             "publication_boundary": {
                 "ai_model_deployment_status": "NOT_DEPLOYED",
-                "gcp_v2_load_status": "NOT_CLAIMED_LOCAL_ONLY",
+                "gcp_v2_load_status": "EXECUTED_17_TABLES_STAGE_36_FINAL_36_PASS_BILLING_DISABLED",
                 "kpi_publication_status": "BLOCKED_BY_REJECTED_AI_MODEL",
                 "site_replay_status": "ACTIVE",
             },
@@ -497,12 +556,14 @@ def source_payloads(
     release_placeholder = "__NERIVANE_V2_RELEASE_ID__"
     h1_payload = canonical(h1_evidence())
     ai_payload = canonical(ai_evidence())
-    sample_payload = canonical(sample_evidence())
+    remote_payload = pretty_canonical(remote_bigquery_evidence())
+    sample_payload = canonical(sample_evidence(remote_payload=remote_payload))
     resource_payloads = resource_window_evidence()
     replay_value = replay_evidence(
         h1_payload=h1_payload,
         ai_payload=ai_payload,
         resource_manifest_payload=resource_payloads["evidence/resource-windows/manifest.json"],
+        remote_payload=remote_payload,
     )
     replay_value["contract_id"] = replay_contract_id
     replay_value["status"] = replay_status
@@ -523,6 +584,10 @@ def source_payloads(
         "evidence/bigquery-h1-sample-public.json": (
             "public_evidence",
             sample_payload,
+        ),
+        "evidence/bigquery-full-h1-v2-execution-proof.json": (
+            "public_evidence",
+            remote_payload,
         ),
         "evidence/ai-local-fail-closed.json": (
             "public_evidence",
@@ -830,7 +895,7 @@ class NerivaneV2ImportTests(unittest.TestCase):
 
         self.assertEqual(result["status"], "CREATED")
         self.assertEqual(result["state"], "IMPORTED_INACTIVE")
-        self.assertEqual(result["published_file_count"], 24)
+        self.assertEqual(result["published_file_count"], 25)
         self.assertEqual(
             importer.verify_imported_releases(site_root=self.site),
             (result["release_id"],),
