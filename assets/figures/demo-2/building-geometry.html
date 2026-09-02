@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Revue de la géométrie du système de mesure</title>
+  <title>Géométrie du système de mesure</title>
   <style>
     :root {
       color-scheme: light;
@@ -104,64 +104,54 @@
   </figure>
 
   <main class="review">
-    <h1>Revue de la géométrie du système de mesure</h1>
+    <h1>Géométrie du système de mesure</h1>
     <p class="lede">
-      La composition historique est régénérée depuis un modèle métrique commun. Le mur routier
-      et S1 appartiennent uniquement à la coupe latérale ; aucune chaussée et aucune cote ne
-      figurent dans le dessin.
+      Ce schéma situe le bâtiment, les fissures observées, le mur routier et le capteur S1
+      dans deux vues complémentaires construites à la même échelle.
     </p>
 
-    <div class="status" aria-label="Invariants de la correction">
-      <span>TWO_VIEWS_ONLY=YES</span>
-      <span>VECTOR_REGENERATED=YES</span>
-      <span>ISOTROPIC_SCALE=YES</span>
-      <span>ROAD_DRAWN=NO</span>
-      <span>VISIBLE_DIMENSIONS=NO</span>
-      <span>SENSOR_METRIC_POSITION=YES</span>
-      <span>ROAD_WALL_BOTH_FACES_INCLINED=YES</span>
-      <span>CRACK_FINE_MODEL_RESTORED=YES</span>
+    <div class="status" aria-label="Principaux repères du schéma">
+      <span>Deux vues complémentaires</span>
+      <span>Échelle commune</span>
+      <span>Mur routier représenté en coupe</span>
+      <span>Position du capteur S1 reportée</span>
     </div>
 
     <div class="grid">
       <section>
         <h2>Repère et continuité</h2>
         <p>
-          Les deux vues utilisent le même <code>PX_PER_M</code> et le même niveau vertical
-          <code>z = 0</code>. Dans la coupe, l’ordre reste colline, mur du bâtiment, dernier
-          IPN, puis mur routier. Le remblai jaune et la colline verte atteignent le niveau
-          commun sans cavité.
+          Les deux vues utilisent la même échelle et le même niveau vertical de référence.
+          Dans la coupe, l’ordre est colline, mur du bâtiment, dernier poteau métallique,
+          puis mur routier. Les terrains sont raccordés à ce niveau commun.
         </p>
       </section>
 
       <section>
         <h2>Mur routier et S1</h2>
         <p>
-          Les deux faces du mur routier sont inclinées en sens opposés autour du même axe ;
-          son sommet et sa face exposée restent inchangés. S1 est placé à
-          <code>z = 5,20 m</code> sur cette face exposée et conserve son abscisse métrique
-          dérivée, soit environ <code>5,0967 m</code> dans le repère de coupe.
+          Le mur routier est représenté avec ses deux faces inclinées. Le capteur S1 est placé
+          sur sa face exposée, à une hauteur de 5,20 m dans le repère de la coupe.
         </p>
       </section>
     </div>
 
     <section>
-      <h2>Transposition du croquis</h2>
+      <h2>Lecture des deux vues</h2>
       <p>
-        La topologie propriétaire est interprétée après
-        <code>ROTATE_90_CCW_THEN_MAP_OPPOSITE_VIEWPOINT</code>, avec <code>R1</code> pour le
-        dernier IPN visible et <code>R2</code> pour la poutre en béton. La vue historique n’est
-        pas inversée. Le seul repère lié à la chaussée est le court trait local « Niveau de
-        la route » au pied du mur.
+        La vue de face reprend les principaux repères du bâtiment et les fissures suivies.
+        La coupe latérale prolonge cette lecture jusqu’au mur routier et au capteur. Le niveau
+        de la route est indiqué localement au pied du mur, sans dessiner la chaussée complète.
       </p>
     </section>
 
     <section class="note">
       <h2>Mesures distinctes</h2>
       <p>
-        Le joint manuel reste absent de la figure parce que sa position physique n’a pas été
-        fournie. Sa série, son protocole et son axe qualitatif restent dans le registre des
-        mesures. Les ancrages détaillés de S1, la stabilité de sa référence, le signe et
-        l’unité de la série automatique restent à confirmer.
+        Le joint de dilatation mesuré manuellement n’apparaît pas sur ce schéma, car sa position
+        physique précise n’est pas documentée. Ses mesures restent donc présentées séparément.
+        L’unité, le sens positif et la stabilité de la référence du capteur automatique restent
+        également à confirmer avant toute interprétation structurelle.
       </p>
     </section>
   </main>

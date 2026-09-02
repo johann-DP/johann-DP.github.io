@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 import unittest
 
 
@@ -11,12 +12,14 @@ PAGE = ROOT / "demonstrations/fissures.html"
 
 VALIDATED_FIGURE_IDS = (
     "building-geometry",
+    "retaining-wall-source-values",
+    "weather-explorer",
+    "weather-quality",
     "crack-history",
     "crack-recent",
     "expansion-joint",
-    "retaining-wall-source-values",
-    "retaining-wall-extrema-hours",
     "retaining-wall-median-day",
+    "retaining-wall-extrema-hours",
     "weather-temperature",
     "weather-temperature-range",
     "weather-humidity",
@@ -25,8 +28,6 @@ VALIDATED_FIGURE_IDS = (
     "weather-wind-speed",
     "weather-wind-direction",
     "weather-pairplots",
-    "weather-explorer",
-    "weather-quality",
 )
 
 VALIDATED_THUMBNAIL_SHA256 = {
@@ -62,14 +63,59 @@ class FigureIdParser(HTMLParser):
             self.identifiers.append(identifier)
 
 
+class VisibleTextParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.hidden_depth = 0
+        self.parts: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        del attrs
+        if tag in {"script", "style"}:
+            self.hidden_depth += 1
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in {"script", "style"}:
+            self.hidden_depth -= 1
+
+    def handle_data(self, data: str) -> None:
+        if self.hidden_depth == 0:
+            self.parts.append(data)
+
+    @property
+    def text(self) -> str:
+        return " ".join(" ".join(self.parts).split())
+
+
 class Demo2FourPhasePresentationTests(unittest.TestCase):
-    def test_four_phases_are_explicit_without_reordering_validated_catalogue(self) -> None:
+    def test_public_catalogue_follows_the_three_requested_steps(self) -> None:
         page = PAGE.read_text(encoding="utf-8")
         parser = FigureIdParser()
         parser.feed(page)
         parser.close()
 
         self.assertEqual(tuple(parser.identifiers), VALIDATED_FIGURE_IDS)
+        self.assertIn('id="etape-1"', page)
+        self.assertIn('id="etape-2"', page)
+        self.assertIn('id="etape-3"', page)
+        self.assertIn("Étape 1 · Présentation, acquisition et qualité", page)
+        self.assertIn("Étape 2 · Traitement et dataviz", page)
+        self.assertIn("Étape 3 · Analyses et prévisions", page)
+        self.assertIn('class="fissures-demo__family-nav-disabled" aria-disabled="true"', page)
+        self.assertNotIn("Famille 01", page)
+        self.assertNotIn("Famille 02", page)
+        self.assertNotIn("Famille 03", page)
+        self.assertNotIn("Validation requise", page)
+        step_1 = re.search(r'<section id="etape-1".*?</section>', page, re.DOTALL)
+        step_2 = re.search(r'<section id="etape-2".*?</section>', page, re.DOTALL)
+        step_3 = re.search(r'<section id="etape-3".*?</section>', page, re.DOTALL)
+        self.assertIsNotNone(step_1)
+        self.assertIsNotNone(step_2)
+        self.assertIsNotNone(step_3)
+        self.assertEqual(step_1.group(0).count('data-figure-id='), 4)
+        self.assertEqual(step_2.group(0).count('data-figure-id='), 13)
+        self.assertNotIn('<a ', step_3.group(0))
+        self.assertIn("En maintenance", step_3.group(0))
         self.assertIn('id="demarche"', page)
         self.assertIn("Mise à jour · Acquisition · Qualité", page)
         self.assertIn("Mesures · Analyses", page)
@@ -84,6 +130,37 @@ class Demo2FourPhasePresentationTests(unittest.TestCase):
             with self.subTest(identifier=identifier):
                 payload = (thumbnail_root / f"{identifier}.webp").read_bytes()
                 self.assertEqual(hashlib.sha256(payload).hexdigest(), expected_sha256)
+
+    def test_public_pages_do_not_expose_internal_review_vocabulary(self) -> None:
+        page = PAGE.read_text(encoding="utf-8")
+        public_pages = tuple(
+            (PAGE.parent / href).resolve()
+            for href in re.findall(
+                r'href="(\.\./assets/figures/demo-2/[^"]+\.html)"',
+                page,
+            )
+        )
+        self.assertEqual(len(public_pages), 17)
+        forbidden = (
+            "validation requise",
+            "candidat de revue",
+            "exécuté_non_validé",
+            "agrégation legacy",
+            "calculs legacy",
+            "hors cluster",
+            "two_views_only",
+            "rotate_90_ccw",
+            "revue de la géométrie",
+        )
+
+        for path in public_pages:
+            with self.subTest(path=path.name):
+                parser = VisibleTextParser()
+                parser.feed(path.read_text(encoding="utf-8"))
+                parser.close()
+                public_text = parser.text.casefold()
+                for term in forbidden:
+                    self.assertNotIn(term, public_text)
 
 
 if __name__ == "__main__":

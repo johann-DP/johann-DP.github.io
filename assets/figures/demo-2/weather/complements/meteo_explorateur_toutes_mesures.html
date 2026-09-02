@@ -12,12 +12,12 @@
 </head>
 <body><main><article class="panel">
 <h1>Explorateur des mesures météorologiques brutes</h1>
-<p class="lede">Valeurs source lues numériquement et validées en amont, présentées sans interpolation, sans lissage, sans conversion d’unité et sans interprétation causale. Les lexèmes exacts restent dans la génération source.</p>
+<p class="lede">Valeurs issues directement du fichier d’acquisition, présentées sans interpolation, sans lissage, sans conversion d’unité et sans interprétation causale. Les libellés et les valeurs restent identiques à ceux de la source.</p>
 <div class="facts">
 <div class="fact"><strong>20</strong>mesures affichables</div>
 <div class="fact"><strong>23,833</strong>horodatages source</div>
-<div class="fact"><strong>19</strong>séries exclues du menu par la politique d’affichage</div>
-<div class="fact"><strong>+0800</strong>offset source conservé</div>
+<div class="fact"><strong>19</strong>canaux techniques non affichés</div>
+<div class="fact"><strong>+0800</strong>décalage horaire source conservé</div>
 </div>
 <div class="control"><label>Mesure affichée<select id="measure"><option value="0">Indoor Tem(°C)</option><option value="1">Indoor Tem.Max(°C)</option><option value="2">Indoor Tem.Min(°C)</option><option value="3">Indoor Hum(%)</option><option value="4">Indoor Hum.Max(%)</option><option value="5">Indoor Hum.Min(%)</option><option value="6">Outdoor Tem(°C)</option><option value="7">Outdoor Tem.Max(°C)</option><option value="8">Outdoor Hum(%)</option><option value="9">Outdoor Hum.Max(%)</option><option value="10">Outdoor Hum.Min(%)</option><option value="11">Rainfull(Hour)(mm)</option><option value="12">Rainfull(Day)(mm)</option><option value="13">Wind speed(km/h)</option><option value="14">Wind speed(Hour)(km/h)</option><option value="15">Wind speed(Day)(km/h)</option><option value="16">Wind direction</option><option value="17">Light intensity</option><option value="18">UV rating</option><option value="19">Pressure(hpa)</option></select></label><div id="readout" class="readout" aria-live="polite"></div></div>
 <h2 id="chart-title"></h2><div id="chart" class="chart" role="img" aria-labelledby="chart-title"></div>
