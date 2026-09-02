@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Registre des preuves — Nérivane Distribution</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="index.html">datapredict · Nérivane Distribution</a><span>Replay technique scellé · scénario fictif</span></header>
+  <main id="contenu">
+    <p class="eyebrow">Preuve technique assainie</p>
+    
+    <h1>Les preuves derrière le replay</h1>
+    <p class="lead">Chaque preuve finale est assainie, fermée par SHA-256 et reliée à une limite explicite.</p>
+    <section class="evidence-grid">
+      <article class="evidence-card"><span class="status demonstrated">VALIDÉ</span><h2>H1 massif</h2><p>1 320 triplets, 3 960 fichiers, quatre nœuds et trois tiers physiques hétérogènes; volume encodé supérieur à 1,5 Tio.</p><p><a href="evidence/full-h1-final-public.json">Ouvrir la preuve H1 assainie</a></p></article>
+      <article class="evidence-card"><span class="status demonstrated">VALIDÉ · FENÊTRES</span><h2>Ressources du parc</h2><p>Quatre nœuds couverts; des compteurs CPU et mémoire ont été relevés sur les deux processus encore actifs. Ces fenêtres ponctuelles ne constituent ni une campagne complète ni un benchmark.</p><p><a href="evidence/resource-windows/manifest.json">Ouvrir le manifeste ressource assaini</a></p></article>
+      <article class="evidence-card"><span class="status demonstrated">VALIDÉ</span><h2>Exécution BigQuery FULL-H1 V2</h2><p>17 tables et 210 724 lignes dérivées du H1 ont été chargées; 36 contrôles passent avant et après promotion, sans compte de facturation lié.</p><p><a href="evidence/bigquery-h1-sample-public.json">Ouvrir la synthèse assainie</a> · <a href="evidence/bigquery-full-h1-v2-execution-proof.json">Ouvrir la preuve d’exécution</a></p></article>
+      <article class="evidence-card"><span class="status demonstrated">VALIDÉ FAIL-CLOSED</span><h2>Veto IA local</h2><p>L'inférence locale est authentifiée. Le holdout rejette le modèle, qui reste non déployé et incapable de débloquer la publication.</p><p><a href="evidence/ai-local-fail-closed.json">Ouvrir l'overlay IA assaini</a></p></article>
+      <article class="evidence-card"><span class="status demonstrated">VALIDÉ</span><h2>Corpus et responsabilités</h2><p>28 documents, 26 personnes, 18 rôles, 37 affectations, 10 sites et 4 systèmes sources sont conservés.</p><p><a href="references.html">Explorer les références</a></p></article>
+    </section>
+    <section class="boundary"><h2>Ce que les preuves ne disent pas</h2><p>Elles ne transforment pas des fenêtres CPU et mémoire en benchmark, ne prétendent pas que le GPU a servi au H1, que le modèle rejeté est déployable, que l’exécution BigQuery débloque la publication métier, ni que ce paquet peut activer le site.</p></section>
+    <p><a class="button" href="index.html">Revenir au parcours</a></p>
+    
+  </main>
+  <footer><strong>Portée :</strong> preuve technique détaillée assainie; import site inactif uniquement.</footer>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Contrat de données CRM — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-009</nav>
+<p class="eyebrow">Document synthétique · DOC-009</p>
+<h1>Contrat de données CRM</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Nadia Gervais</dd></div>
+  <div><dt>Rôle</dt><dd>Directeur commercial</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>f51a265cc0977e3c0b2ab92e735d83afbf9e486177c1abd739479f08a505104f</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Données, organisation et signatures entièrement fictives.</strong> Ce contrat appartient au snapshot candidat. La clause d'autorité finale signalée <code>C-007</code> est volontairement contradictoire et ne doit jamais être appliquée comme règle courante.</blockquote>
+<h3 id="OBJET-CONTRAT">Objet du contrat</h3>
+<p>Le contrat décrit les lignes commerciales CRM utilisées pour reconstituer le périmètre de juillet 2026. Nadia Gervais (<code>PER-006</code>) répond du domaine CRM et Victor Schmitt (<code>PER-025</code>, <code>ASN-035</code>) contribue au stewardship des références CRM.</p>
+<h3 id="GRAIN-CLES">Grain et clés</h3>
+<p>Le grain est une ligne de commande ou d'ajustement commercial issue du CRM. Chaque enregistrement possède un <code>source_record_id</code> stable. Lorsqu'il est retenu, il référence un <code>canonical_line_id</code>. Une ligne exclue porte un <code>bridge_rule_id</code> terminal et ne peut pas être simultanément retenue dans le montant gouverné.</p>
+<p>Les dimensions obligatoires sont la date métier, l'agence de service, le canal, le montant en centimes, la devise et le statut. Le marqueur synthétique est toujours vrai et l'empreinte de payload permet de contrôler la stabilité du contenu.</p>
+<h3 id="SCHEMA-FONCTIONNEL">Schéma fonctionnel</h3>
+<div class="table-wrap"><table><thead><tr><th>Champ</th><th>Règle candidate</th></tr></thead><tbody>
+<tr><td>source_record_id</td><td>obligatoire et unique dans CRM</td></tr>
+<tr><td>canonical_line_id</td><td>présent pour une ligne incluse, absent pour une exception terminale</td></tr>
+<tr><td>business_date</td><td>date de l'événement commercial de juillet 2026</td></tr>
+<tr><td>site_id</td><td>une valeur de AG01 à AG08</td></tr>
+<tr><td>channel</td><td>agency, ecommerce ou key_accounts</td></tr>
+<tr><td>amount_cents</td><td>entier signé en centimes</td></tr>
+<tr><td>record_status</td><td>INCLUDED ou BRIDGE_EXCEPTION</td></tr>
+<tr><td>bridge_rule_id</td><td>BR-CRM-01, BR-CRM-02, BR-CRM-03 ou BR-CRM-04 pour une exception</td></tr>
+<tr><td>payload_sha256</td><td>empreinte du payload canonique de la ligne</td></tr>
+</tbody></table></div>
+<h3 id="VALEURS-CONTRACTUELLES">Valeurs contractuelles</h3>
+<p>Le contrat attend 164 487 lignes CRM et une somme source de 1 284 261 000 centimes. Les quatre familles d'ajustement totalisent -55 616 000 centimes :</p>
+<div class="table-wrap"><table><thead><tr><th>Règle</th><th>Motif</th><th>Lignes</th><th>Ajustement en centimes</th></tr></thead><tbody>
+<tr><td>BR-CRM-01</td><td>commandes annulées avant exécution</td><td>1 204</td><td>-21 478 340</td></tr>
+<tr><td>BR-CRM-02</td><td>retours en attente de netting</td><td>683</td><td>-14 936 825</td></tr>
+<tr><td>BR-CRM-03</td><td>composantes hors définition nette</td><td>3 412</td><td>-11 284 710</td></tr>
+<tr><td>BR-CRM-04</td><td>doublons de cycle de vie</td><td>587</td><td>-7 916 125</td></tr>
+</tbody></table></div>
+<p>Ces valeurs sont contractuelles dans cette pièce ; leur exécution doit être établie par les résultats de <code>CTRL-003</code>, <code>CTRL-014</code> et <code>CTRL-019</code> dans un manifeste distinct.</p>
+<h3 id="CONFLIT-C-007">Clause candidate conflictuelle C-007</h3>
+<blockquote>Dans cette version candidate, le CRM est présenté comme autorité finale du chiffre d'affaires net dès lors que la ligne commerciale possède un statut actif.</blockquote>
+<p>Cette clause est intentionnellement erronée. Elle reproduit un défaut de gouvernance à détecter : <code>DOC-008</code> impose un rapprochement gouverné et ne reconnaît aucune source unique comme autorité finale. Elle recoupe également le conflit de définition <code>C-001</code> lorsque des commandes annulées restent actives dans le CRM.</p>
+<h3 id="QUALITE-REJETS">Qualité et traitement des rejets</h3>
+<ul><li>unicité du <code>source_record_id</code> ;</li><li>validité de la date, de l'agence et du canal ;</li><li>devise EUR et calcul en centimes entiers ;</li><li>mapping unique vers une ligne canonique pour chaque ligne incluse ;</li><li>exactement une règle terminale pour chaque exception ;</li><li>empreinte de payload reproductible ;</li><li>quarantaine de toute référence non résolue.</li></ul>
+<h3 id="RESPONSABILITES">Responsabilités</h3>
+<p><code>R006</code> répond de la règle commerciale et de la source CRM. <code>R017</code> qualifie les références. <code>R009</code> définit les contrôles et instruit les non-conformités. <code>R008</code> reste seul responsable de la définition finale et de la certification métier.</p>
+<h3 id="CONDITION-CORRECTION">Condition de correction</h3>
+<p>Une version résolue doit supprimer la clause d'autorité finale, limiter CRM à la capture commerciale et citer la matrice d'autorité de <code>DOC-008</code>. La correction doit être versionnée et contrôlée ; elle ne doit pas effacer le présent état candidat.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

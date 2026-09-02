@@ -1,0 +1,290 @@
+[
+  {
+    "control_id": "CTRL-001",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "531240",
+    "group_id": "CG-01",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 1
+  },
+  {
+    "control_id": "CTRL-002",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "421763",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 2
+  },
+  {
+    "control_id": "CTRL-003",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "164487",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 3
+  },
+  {
+    "control_id": "CTRL-004",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "139182",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 4
+  },
+  {
+    "control_id": "CTRL-005",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "118094",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 5
+  },
+  {
+    "control_id": "CTRL-006",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "100823",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 6
+  },
+  {
+    "control_id": "CTRL-007",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "31",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 7
+  },
+  {
+    "control_id": "CTRL-008",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "8",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 8
+  },
+  {
+    "control_id": "CTRL-009",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "3",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 9
+  },
+  {
+    "control_id": "CTRL-010",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "744",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 10
+  },
+  {
+    "control_id": "CTRL-011",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "PASS",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 11
+  },
+  {
+    "control_id": "CTRL-012",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "PASS",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 12
+  },
+  {
+    "control_id": "CTRL-013",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "1228645000",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 13
+  },
+  {
+    "control_id": "CTRL-014",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "1284261000",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 14
+  },
+  {
+    "control_id": "CTRL-015",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "1249738000",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 15
+  },
+  {
+    "control_id": "CTRL-016",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "1237194000",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 16
+  },
+  {
+    "control_id": "CTRL-017",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "8452",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 17
+  },
+  {
+    "control_id": "CTRL-018",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "12",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 18
+  },
+  {
+    "control_id": "CTRL-019",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "-55616000",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 19
+  },
+  {
+    "control_id": "CTRL-020",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "-21093000",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 20
+  },
+  {
+    "control_id": "CTRL-021",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "-8549000",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 21
+  },
+  {
+    "control_id": "CTRL-022",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "1228645000",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 22
+  },
+  {
+    "control_id": "CTRL-023",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "PASS",
+    "group_id": "CG-03",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 23
+  },
+  {
+    "control_id": "CTRL-024",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "BLOCKED",
+    "group_id": "CG-03",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 24
+  },
+  {
+    "control_id": "BRIDGE-BR-CRM-01",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=1204;stage_adjustment=-21478340;mart_rows=1;mart_lines=1204;mart_adjustment=-21478340",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 25
+  },
+  {
+    "control_id": "BRIDGE-BR-CRM-02",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=683;stage_adjustment=-14936825;mart_rows=1;mart_lines=683;mart_adjustment=-14936825",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 26
+  },
+  {
+    "control_id": "BRIDGE-BR-CRM-03",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=3412;stage_adjustment=-11284710;mart_rows=1;mart_lines=3412;mart_adjustment=-11284710",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 27
+  },
+  {
+    "control_id": "BRIDGE-BR-CRM-04",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=587;stage_adjustment=-7916125;mart_rows=1;mart_lines=587;mart_adjustment=-7916125",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 28
+  },
+  {
+    "control_id": "BRIDGE-BR-ERP-01",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=442;stage_adjustment=-8763412;mart_rows=1;mart_lines=442;mart_adjustment=-8763412",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 29
+  },
+  {
+    "control_id": "BRIDGE-BR-ERP-02",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=588;stage_adjustment=-4208788;mart_rows=1;mart_lines=588;mart_adjustment=-4208788",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 30
+  },
+  {
+    "control_id": "BRIDGE-BR-ERP-03",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=326;stage_adjustment=-6941535;mart_rows=1;mart_lines=326;mart_adjustment=-6941535",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 31
+  },
+  {
+    "control_id": "BRIDGE-BR-ERP-04",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=217;stage_adjustment=-1179265;mart_rows=1;mart_lines=217;mart_adjustment=-1179265",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 32
+  },
+  {
+    "control_id": "BRIDGE-BR-FIN-01",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=193;stage_adjustment=-3712480;mart_rows=1;mart_lines=193;mart_adjustment=-3712480",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 33
+  },
+  {
+    "control_id": "BRIDGE-BR-FIN-02",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=128;stage_adjustment=-2638905;mart_rows=1;mart_lines=128;mart_adjustment=-2638905",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 34
+  },
+  {
+    "control_id": "BRIDGE-BR-FIN-03",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=588;stage_adjustment=-1402315;mart_rows=1;mart_lines=588;mart_adjustment=-1402315",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 35
+  },
+  {
+    "control_id": "BRIDGE-BR-FIN-04",
+    "execution_status": "DEFERRED_UNTIL_TABLES_EXIST",
+    "expected_value": "stage_lines=84;stage_adjustment=-795300;mart_rows=1;mart_lines=84;mart_adjustment=-795300",
+    "group_id": "CG-02",
+    "maximum_bytes_billed": 100000000,
+    "sequence": 36
+  }
+]

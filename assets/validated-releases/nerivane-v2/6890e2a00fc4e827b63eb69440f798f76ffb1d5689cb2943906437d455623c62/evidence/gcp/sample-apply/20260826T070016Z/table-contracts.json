@@ -1,0 +1,434 @@
+[
+  {
+    "clustering": [
+      "site_id",
+      "channel",
+      "bridge_rule_id"
+    ],
+    "expiration_delta_ms": 5184000000,
+    "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+    "expiration_source": "timePartitioning.expirationMs",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "raw",
+      "sample": "v1",
+      "source": "crm"
+    },
+    "logical_bytes": 25166652,
+    "partition_expiration_ms": 5184000000,
+    "partition_field": "business_date",
+    "partition_type": "DAY",
+    "require_partition_filter": true,
+    "rows": 164487,
+    "schema_sha256": "51f0f64414a1e6d5818d5a148d7117de0a2d65c3767609508d95c35a0ba39d83",
+    "status": "PASS",
+    "table": "nerivane_raw.crm_order_line"
+  },
+  {
+    "clustering": [
+      "site_id",
+      "channel",
+      "bridge_rule_id"
+    ],
+    "expiration_delta_ms": 5184000000,
+    "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+    "expiration_source": "timePartitioning.expirationMs",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "raw",
+      "sample": "v1",
+      "source": "erp"
+    },
+    "logical_bytes": 21294756,
+    "partition_expiration_ms": 5184000000,
+    "partition_field": "business_date",
+    "partition_type": "DAY",
+    "require_partition_filter": true,
+    "rows": 139182,
+    "schema_sha256": "e92ec771ee679cee409939ac584009aa573435972332c8fefde7be3093430e29",
+    "status": "PASS",
+    "table": "nerivane_raw.erp_invoice_line"
+  },
+  {
+    "clustering": [
+      "site_id",
+      "channel",
+      "bridge_rule_id"
+    ],
+    "expiration_delta_ms": 5184000000,
+    "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+    "expiration_source": "timePartitioning.expirationMs",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "raw",
+      "sample": "v1",
+      "source": "finance"
+    },
+    "logical_bytes": 18068031,
+    "partition_expiration_ms": 5184000000,
+    "partition_field": "business_date",
+    "partition_type": "DAY",
+    "require_partition_filter": true,
+    "rows": 118094,
+    "schema_sha256": "129825dfd47552470535b09fc3eb88321f163d8404b8ebe171a9a13211389841",
+    "status": "PASS",
+    "table": "nerivane_raw.finance_ledger_line"
+  },
+  {
+    "clustering": [],
+    "expiration_delta_ms": 2592000000,
+    "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+    "expiration_source": "expirationTime_minus_creationTime",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "organization",
+      "environment": "sandbox",
+      "layer": "reference",
+      "sample": "v1"
+    },
+    "logical_bytes": 576,
+    "partition_expiration_ms": null,
+    "partition_field": null,
+    "partition_type": null,
+    "require_partition_filter": false,
+    "rows": 10,
+    "schema_sha256": "20a081f566a226c189797a03c67bbf6b14234d8458ff2092f37cd4010f1246cc",
+    "status": "PASS",
+    "table": "nerivane_reference.site"
+  },
+  {
+    "clustering": [],
+    "expiration_delta_ms": 2592000000,
+    "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+    "expiration_source": "expirationTime_minus_creationTime",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "governance",
+      "environment": "sandbox",
+      "layer": "reference",
+      "sample": "v1"
+    },
+    "logical_bytes": 1441,
+    "partition_expiration_ms": null,
+    "partition_field": null,
+    "partition_type": null,
+    "require_partition_filter": false,
+    "rows": 18,
+    "schema_sha256": "2a66b64c8269265915939e1a55892c187444d06dbee813cec6b818c73f122e28",
+    "status": "PASS",
+    "table": "nerivane_reference.role"
+  },
+  {
+    "clustering": [
+      "primary_role_id",
+      "site_id"
+    ],
+    "expiration_delta_ms": 2592000000,
+    "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+    "expiration_source": "expirationTime_minus_creationTime",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "governance",
+      "environment": "sandbox",
+      "layer": "reference",
+      "sample": "v1"
+    },
+    "logical_bytes": 1198,
+    "partition_expiration_ms": null,
+    "partition_field": null,
+    "partition_type": null,
+    "require_partition_filter": false,
+    "rows": 26,
+    "schema_sha256": "d07bdb324b38ddb77a212af571a4b562da6bb793c5f112a7602aa7c8196b88aa",
+    "status": "PASS",
+    "table": "nerivane_reference.person"
+  },
+  {
+    "clustering": [
+      "role_id",
+      "scope_id"
+    ],
+    "expiration_delta_ms": 2592000000,
+    "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+    "expiration_source": "expirationTime_minus_creationTime",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "governance",
+      "environment": "sandbox",
+      "layer": "reference",
+      "sample": "v1"
+    },
+    "logical_bytes": 1574,
+    "partition_expiration_ms": null,
+    "partition_field": null,
+    "partition_type": null,
+    "require_partition_filter": false,
+    "rows": 37,
+    "schema_sha256": "d004e20bd8a063fe854666298424e4a173abdecd8f5fd3723c2479ac4cfaf6e6",
+    "status": "PASS",
+    "table": "nerivane_reference.assignment"
+  },
+  {
+    "clustering": [
+      "owner_role_id",
+      "status"
+    ],
+    "expiration_delta_ms": 2592000000,
+    "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+    "expiration_source": "expirationTime_minus_creationTime",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "documents",
+      "environment": "sandbox",
+      "layer": "reference",
+      "sample": "v1"
+    },
+    "logical_bytes": 2599,
+    "partition_expiration_ms": null,
+    "partition_field": null,
+    "partition_type": null,
+    "require_partition_filter": false,
+    "rows": 28,
+    "schema_sha256": "40e2f4bcd1299c3e0e5c0e781bb9fc4cb2e274637efa9d2234a44902dec45a76",
+    "status": "PASS",
+    "table": "nerivane_reference.document"
+  },
+  {
+    "clustering": [
+      "site_id",
+      "channel"
+    ],
+    "expiration_delta_ms": 5184000000,
+    "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+    "expiration_source": "timePartitioning.expirationMs",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "finance",
+      "environment": "sandbox",
+      "layer": "staging",
+      "sample": "v1"
+    },
+    "logical_bytes": 12502049,
+    "partition_expiration_ms": 5184000000,
+    "partition_field": "business_date",
+    "partition_type": "DAY",
+    "require_partition_filter": true,
+    "rows": 100823,
+    "schema_sha256": "4f0e477755a0172df99163ffb447e49f71892d20142248427ea8467f943b6051",
+    "status": "PASS",
+    "table": "nerivane_staging.canonical_financial_line"
+  },
+  {
+    "clustering": [
+      "source_system",
+      "bridge_rule_id"
+    ],
+    "expiration_delta_ms": 5184000000,
+    "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+    "expiration_source": "timePartitioning.expirationMs",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "governance",
+      "environment": "sandbox",
+      "layer": "staging",
+      "sample": "v1"
+    },
+    "logical_bytes": 1863312,
+    "partition_expiration_ms": 5184000000,
+    "partition_field": "business_date",
+    "partition_type": "DAY",
+    "require_partition_filter": true,
+    "rows": 8452,
+    "schema_sha256": "90ce36952340418be37dd5d978d50a9b3887c3a73fa04dda704c74d4e076d1db",
+    "status": "PASS",
+    "table": "nerivane_staging.bridge_exception"
+  },
+  {
+    "clustering": [
+      "source_system"
+    ],
+    "expiration_delta_ms": 5184000000,
+    "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+    "expiration_source": "timePartitioning.expirationMs",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "kpi",
+      "environment": "sandbox",
+      "layer": "mart",
+      "sample": "v1"
+    },
+    "logical_bytes": 257,
+    "partition_expiration_ms": 5184000000,
+    "partition_field": "kpi_month",
+    "partition_type": "MONTH",
+    "require_partition_filter": true,
+    "rows": 3,
+    "schema_sha256": "2af02d7033501d9d3c925b2f3605856f21a7a9aed6cfdbc5cea7ca86f122f723",
+    "status": "PASS",
+    "table": "nerivane_mart.kpi_source_value"
+  },
+  {
+    "clustering": [
+      "source_system",
+      "bridge_rule_id"
+    ],
+    "expiration_delta_ms": 5184000000,
+    "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+    "expiration_source": "timePartitioning.expirationMs",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "kpi",
+      "environment": "sandbox",
+      "layer": "mart",
+      "sample": "v1"
+    },
+    "logical_bytes": 1567,
+    "partition_expiration_ms": 5184000000,
+    "partition_field": "kpi_month",
+    "partition_type": "MONTH",
+    "require_partition_filter": true,
+    "rows": 12,
+    "schema_sha256": "495a338e23c7312121b516f6fd4d8c06ee0163b8cd8b9830e66ddc3d0519ee9e",
+    "status": "PASS",
+    "table": "nerivane_mart.kpi_bridge_adjustment"
+  },
+  {
+    "clustering": [],
+    "expiration_delta_ms": 5184000000,
+    "expiration_mode": "SANDBOX_PARTITION_EXPIRATION_60_DAYS",
+    "expiration_source": "timePartitioning.expirationMs",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "kpi",
+      "environment": "sandbox",
+      "layer": "mart",
+      "sample": "v1"
+    },
+    "logical_bytes": 131,
+    "partition_expiration_ms": 5184000000,
+    "partition_field": "kpi_month",
+    "partition_type": "MONTH",
+    "require_partition_filter": true,
+    "rows": 1,
+    "schema_sha256": "48241f64e0ec84c99374c943a06f596c06526754356e9e6a64d48fa91148a0d7",
+    "status": "PASS",
+    "table": "nerivane_mart.kpi_certified"
+  },
+  {
+    "clustering": [
+      "category",
+      "status"
+    ],
+    "expiration_delta_ms": 2592000000,
+    "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+    "expiration_source": "expirationTime_minus_creationTime",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "controls",
+      "environment": "sandbox",
+      "layer": "evidence",
+      "sample": "v1"
+    },
+    "logical_bytes": 4169,
+    "partition_expiration_ms": null,
+    "partition_field": null,
+    "partition_type": null,
+    "require_partition_filter": false,
+    "rows": 24,
+    "schema_sha256": "a2d4398ff8bcee7df13757bf7d245b42dacbb05b7d714b87c509c15a60779088",
+    "status": "PASS",
+    "table": "nerivane_evidence.control_result"
+  },
+  {
+    "clustering": [
+      "from_asset",
+      "to_asset"
+    ],
+    "expiration_delta_ms": 2592000000,
+    "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+    "expiration_source": "expirationTime_minus_creationTime",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "lineage",
+      "environment": "sandbox",
+      "layer": "evidence",
+      "sample": "v1"
+    },
+    "logical_bytes": 2333,
+    "partition_expiration_ms": null,
+    "partition_field": null,
+    "partition_type": null,
+    "require_partition_filter": false,
+    "rows": 18,
+    "schema_sha256": "4100ba9657da1dc788745370d7e40b8b2f943872ef5a98b56a3f57f4ae773ee6",
+    "status": "PASS",
+    "table": "nerivane_evidence.lineage_edge"
+  },
+  {
+    "clustering": [
+      "case_kind",
+      "category"
+    ],
+    "expiration_delta_ms": 2592000000,
+    "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+    "expiration_source": "expirationTime_minus_creationTime",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "ai_gate",
+      "environment": "sandbox",
+      "layer": "evidence",
+      "sample": "v1"
+    },
+    "logical_bytes": 5356,
+    "partition_expiration_ms": null,
+    "partition_field": null,
+    "partition_type": null,
+    "require_partition_filter": false,
+    "rows": 24,
+    "schema_sha256": "e1b05e6ff23ef8aa135a71d8b665b56cb50714252e0c31d7940bbc13be6f228a",
+    "status": "PASS",
+    "table": "nerivane_evidence.semantic_case"
+  },
+  {
+    "clustering": [],
+    "expiration_delta_ms": 2592000000,
+    "expiration_mode": "CONFIGURED_TABLE_EXPIRATION_30_DAYS",
+    "expiration_source": "expirationTime_minus_creationTime",
+    "labels": {
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "domain": "publication",
+      "environment": "sandbox",
+      "layer": "evidence",
+      "sample": "v1"
+    },
+    "logical_bytes": 172,
+    "partition_expiration_ms": null,
+    "partition_field": null,
+    "partition_type": null,
+    "require_partition_filter": false,
+    "rows": 1,
+    "schema_sha256": "7cfc129279912dd77becc3becd79b18eb327a339619a2734792099573af846a1",
+    "status": "PASS",
+    "table": "nerivane_evidence.publication_gate"
+  }
+]

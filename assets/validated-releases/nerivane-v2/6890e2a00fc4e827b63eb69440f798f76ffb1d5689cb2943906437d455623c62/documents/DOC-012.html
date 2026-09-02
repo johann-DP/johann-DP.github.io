@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Contrat de données WMS — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-012</nav>
+<p class="eyebrow">Document synthétique · DOC-012</p>
+<h1>Contrat de données WMS</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Thomas Rivière</dd></div>
+  <div><dt>Rôle</dt><dd>Directeur des opérations</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>81af9082fcb1c99edf7e112275a55b41db75b6d23795a38245e31d5f347a210f</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Document de démonstration — données, organisation et signatures entièrement fictives.</strong></blockquote>
+<h3 id="DOC-012-OBJET">Objet et périmètre</h3>
+<p>Le contrat WMS décrit les événements logistiques nécessaires pour démontrer la réalité opérationnelle d'une vente : scans de manutention, variations de stock et rattachement à la plateforme WH01. Il ne fournit pas directement le montant du chiffre d'affaires net. Sa fonction est de soutenir le cut-off livré, d'expliquer les écarts entre commande, facture et réalisation, et de rendre la chaîne de preuve contrôlable à grande échelle.</p>
+<p>Le domaine wms_handling_scan représente 2 458 731 604 lignes dans le plan complet, et inventory_state_event 1 762 498 331 lignes. Ces nombres sont des objectifs déterministes du plein volume, pas des volumes exécutés. Dans la couche RAW du pilote on-premise validé de 25 000 000 lignes par couche — 75 000 000 lignes physiques sur RAW, BRONZE et SILVER —, 7 494 909 lignes wms_handling_scan et 5 372 593 lignes inventory_state_event ont effectivement été produites et vérifiées. Les fichiers Parquet restent hors du dépôt public ; leurs tailles et empreintes sont inscrites dans le manifeste de preuve.</p>
+<h3 id="DOC-012-RESPONSABILITES">Responsabilités opérationnelles</h3>
+<div class="table-wrap"><table><thead><tr><th>Responsabilité</th><th>Porteur</th><th>Attendu</th></tr></thead><tbody>
+<tr><td>Propriété des règles WMS</td><td>PER-007 dans ASN-007</td><td>Définir les événements logistiques opposables</td></tr>
+<tr><td>Production et preuve</td><td>PER-011 dans ASN-011</td><td>Générer les événements synthétiques et conserver les manifestes</td></tr>
+<tr><td>Qualité</td><td>PER-008 dans ASN-008</td><td>Qualifier incohérences temporelles, doublons et orphelins</td></tr>
+<tr><td>Conception du lignage</td><td>PER-010 dans ASN-010</td><td>Garantir les relations entre commande, scan et stock</td></tr>
+<tr><td>Exploitabilité</td><td>PER-014 dans ASN-014</td><td>Accepter la reprise, la surveillance et les seuils du RUN</td></tr>
+</tbody></table></div>
+<p>Le périmètre opérationnel couvre la plateforme WH01 et les huit agences AG01 à AG08 qui servent les trois canaux du scénario. Une agence ou un entrepôt non résolu dans le référentiel maître rend l'événement non admissible.</p>
+<h3 id="DOC-012-GRAIN">Grain et modèle d'événement</h3>
+<p>Un enregistrement wms_handling_scan correspond à un geste logistique horodaté sur une ligne de commande. Il porte un scan_id stable, un order_line_id, un event_ts, un event_date, WH01, un produit, une quantité, un type de scan et un device_id synthétique. Un enregistrement inventory_state_event décrit une variation de stock ; il porte une quantité delta, une quantité après mouvement, une cause et, lorsqu'il existe, le scan_id causal.</p>
+<p>Les invariants sont les suivants :</p>
+<ul><li>event_date est dérivée de event_ts sans changement de jour implicite ;</li><li>un scan ne peut précéder la commande dont il dépend ;</li><li>un événement de stock référant un scan ne peut précéder ce scan ;</li><li>WH01 doit être ouvert à la date de l'événement ;</li><li>les quantités sont des entiers et leur signe est cohérent avec la cause ;</li><li>synthetic vaut toujours true ;</li><li>une clé causale absente est conservée comme anomalie, jamais complétée silencieusement.</li></ul>
+<h3 id="DOC-012-CONTROLES">Typologie de contrôles</h3>
+<div class="table-wrap"><table><thead><tr><th>Famille</th><th>Exemple de défaut</th><th>Traitement</th></tr></thead><tbody>
+<tr><td>Chronologie</td><td>Scan antérieur à la commande ou mouvement antérieur au scan</td><td>Rejet du lot concerné</td></tr>
+<tr><td>Référentiel</td><td>Entrepôt, agence ou type d'événement inconnu</td><td>Quarantaine et revue steward</td></tr>
+<tr><td>Unicité</td><td>scan_id ou inventory_event_id dupliqué</td><td>Blocage de la partition</td></tr>
+<tr><td>Causalité</td><td>Mouvement lié à un scan inexistant</td><td>Quarantaine, sans fabrication de clé</td></tr>
+<tr><td>Cohérence</td><td>Quantité après mouvement incompatible avec le delta</td><td>Blocage du contrôle métier</td></tr>
+<tr><td>Volumétrie</td><td>Nombre de lignes différent du plan ou du manifeste</td><td>Run non publiable</td></tr>
+</tbody></table></div>
+<p>Les contrôles de causalité du générateur massif sont distincts des 36 contrôles BigQuery du corpus KPI réduit. La preuve BigQuery n'embarque pas les milliards d'événements WMS ; elle démontre un entrepôt gouverné minimal. Le pilote on-premise démontre pour sa part la génération physique à une volumétrie mesurée.</p>
+<h3 id="DOC-012-KPI">Relation avec le KPI</h3>
+<p>WMS apporte un élément de preuve sur la réalisation logistique, mais ne décide ni seul du cut-off ni du montant. La chaîne attendue relie la commande commerciale, la facture ERP, les événements WMS et l'écriture Finance. Une livraison observée peut rendre une facture éligible ; elle ne remplace pas la définition du KPI portée par le Data Owner.</p>
+<p>Le contrat refuse trois raccourcis : assimiler toute commande scannée à du chiffre d'affaires, utiliser le dernier état de stock comme preuve comptable, ou conclure à l'exécution complète du plan à partir du seul pilote. Toute restitution doit indiquer le périmètre réellement mesuré.</p>
+<h3 id="DOC-012-RUN">Rétention, reprise et exploitation</h3>
+<p>Les partitions sont ordonnées par date métier et les fichiers achevés sont immuables. Une interruption peut être reprise à partir du journal des fichiers vérifiés. Un fichier partiel ou orphelin est mis en quarantaine puis régénéré ; il n'est ni adopté ni écrasé. La vérification relit le schéma, les nombres de lignes, les empreintes et les invariants métier avant de produire un statut PASS.</p>
+<p>Le contrat prévoit une alerte lorsque l'occupation du volume approche le plafond du profil, lorsque le débit projeté dépasse la fenêtre autorisée ou lorsque la causalité exige un index non borné. Ces garde-fous expliquent pourquoi le profil complet reste bloqué tant que sa stratégie de stockage et d'indexation n'est pas validée.</p>
+<h3 id="DOC-012-PREUVES">Preuves et limites</h3>
+<p>La <a href="../evidence/onprem-lake-pilot-dcff45d/manifest.json">preuve publique du pilote</a> atteste 25 000 000 lignes par couche, 75 000 000 lignes physiques et 2 394 fichiers sur RAW, BRONZE et SILVER, dont les deux populations WMS mesurées ci-dessus dans RAW. Elle ne revendique aucun KPI. La <a href="../evidence/gcp/sample-apply/20260826T070016Z/manifest.json">preuve BigQuery</a> atteste séparément 531 240 lignes physiques et 36 contrôles, sans compte de facturation lié.</p>
+<p>La chronologie entre le chargement BigQuery et la génération du pilote on-premise n'est pas revendiquée. Le plein plan de 7 404 704 501 lignes reste proposé. Aucune conclusion ne doit remplacer ces statuts par une formule commerciale plus large.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

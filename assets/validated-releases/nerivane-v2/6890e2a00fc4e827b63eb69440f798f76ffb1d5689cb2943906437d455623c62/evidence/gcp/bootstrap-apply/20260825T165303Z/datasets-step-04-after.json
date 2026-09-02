@@ -1,0 +1,70 @@
+[
+  {
+    "datasetReference": {
+      "datasetId": "nerivane_mart",
+      "projectId": "datapredict-nerivane-2026"
+    },
+    "id": "datapredict-nerivane-2026:nerivane_mart",
+    "kind": "bigquery#dataset",
+    "labels": {
+      "billing_mode": "unlinked",
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "mart"
+    },
+    "location": "europe-west9",
+    "type": "DEFAULT"
+  },
+  {
+    "datasetReference": {
+      "datasetId": "nerivane_raw",
+      "projectId": "datapredict-nerivane-2026"
+    },
+    "id": "datapredict-nerivane-2026:nerivane_raw",
+    "kind": "bigquery#dataset",
+    "labels": {
+      "billing_mode": "unlinked",
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "raw"
+    },
+    "location": "europe-west9",
+    "type": "DEFAULT"
+  },
+  {
+    "datasetReference": {
+      "datasetId": "nerivane_reference",
+      "projectId": "datapredict-nerivane-2026"
+    },
+    "id": "datapredict-nerivane-2026:nerivane_reference",
+    "kind": "bigquery#dataset",
+    "labels": {
+      "billing_mode": "unlinked",
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "reference"
+    },
+    "location": "europe-west9",
+    "type": "DEFAULT"
+  },
+  {
+    "datasetReference": {
+      "datasetId": "nerivane_staging",
+      "projectId": "datapredict-nerivane-2026"
+    },
+    "id": "datapredict-nerivane-2026:nerivane_staging",
+    "kind": "bigquery#dataset",
+    "labels": {
+      "billing_mode": "unlinked",
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "staging"
+    },
+    "location": "europe-west9",
+    "type": "DEFAULT"
+  }
+]

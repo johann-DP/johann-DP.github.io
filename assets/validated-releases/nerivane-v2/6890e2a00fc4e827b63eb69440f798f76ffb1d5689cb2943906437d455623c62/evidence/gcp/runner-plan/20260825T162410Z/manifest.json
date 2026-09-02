@@ -1,0 +1,196 @@
+{
+  "bigquery": {
+    "datasets_after": [],
+    "datasets_before": [],
+    "location": "europe-west9"
+  },
+  "billing": {
+    "billing_account_name": null,
+    "billing_enabled": false
+  },
+  "dry_runs": [
+    {
+      "arguments": [
+        "bq",
+        "--quiet",
+        "--headless=true",
+        "--project_id=datapredict-nerivane-2026",
+        "--location=europe-west9",
+        "--format=prettyjson",
+        "query",
+        "--use_legacy_sql=false",
+        "--dry_run=true",
+        "--maximum_bytes_billed=10000000"
+      ],
+      "dataset_id": "nerivane_raw",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "public_summary": null,
+      "returncode": 0,
+      "sequence": 1,
+      "statement_sha256": "d601e5b56c1aba73e5ebbf4d76dcff4418019513cc82a23d613504e5a3fd41b6",
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdin_transport": true,
+      "stdout_sha256": "80ad9efc0cff049dc1878e94515718be4ee49ecd09bf57ef059d4c4688edd278"
+    },
+    {
+      "arguments": [
+        "bq",
+        "--quiet",
+        "--headless=true",
+        "--project_id=datapredict-nerivane-2026",
+        "--location=europe-west9",
+        "--format=prettyjson",
+        "query",
+        "--use_legacy_sql=false",
+        "--dry_run=true",
+        "--maximum_bytes_billed=10000000"
+      ],
+      "dataset_id": "nerivane_reference",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "public_summary": null,
+      "returncode": 0,
+      "sequence": 2,
+      "statement_sha256": "9491d84743948f30249413b36af479009d156983da5e15f4c3869a6f60c51733",
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdin_transport": true,
+      "stdout_sha256": "5697c1af188c72233fc7579de45f7b1e0dea2af59ec3cd4076fc2051c47c91f2"
+    },
+    {
+      "arguments": [
+        "bq",
+        "--quiet",
+        "--headless=true",
+        "--project_id=datapredict-nerivane-2026",
+        "--location=europe-west9",
+        "--format=prettyjson",
+        "query",
+        "--use_legacy_sql=false",
+        "--dry_run=true",
+        "--maximum_bytes_billed=10000000"
+      ],
+      "dataset_id": "nerivane_staging",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "public_summary": null,
+      "returncode": 0,
+      "sequence": 3,
+      "statement_sha256": "b90e9c503b9bb3df516b047857bb3dc2d6b6333a7e1595e92077bdf39029732a",
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdin_transport": true,
+      "stdout_sha256": "f7aee2c4c5491a523f423ab0decdfb070b7398b6a4213c84177893548320db70"
+    },
+    {
+      "arguments": [
+        "bq",
+        "--quiet",
+        "--headless=true",
+        "--project_id=datapredict-nerivane-2026",
+        "--location=europe-west9",
+        "--format=prettyjson",
+        "query",
+        "--use_legacy_sql=false",
+        "--dry_run=true",
+        "--maximum_bytes_billed=10000000"
+      ],
+      "dataset_id": "nerivane_mart",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "public_summary": null,
+      "returncode": 0,
+      "sequence": 4,
+      "statement_sha256": "589c4f2a67cda9332f7e3128ea83fbc943c8880deb63e15976be045cfc457f35",
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdin_transport": true,
+      "stdout_sha256": "c37bc9cb721c43bef821516295098e391d8a09985a3ecbe866e8f6dbf8335951"
+    },
+    {
+      "arguments": [
+        "bq",
+        "--quiet",
+        "--headless=true",
+        "--project_id=datapredict-nerivane-2026",
+        "--location=europe-west9",
+        "--format=prettyjson",
+        "query",
+        "--use_legacy_sql=false",
+        "--dry_run=true",
+        "--maximum_bytes_billed=10000000"
+      ],
+      "dataset_id": "nerivane_evidence",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "public_summary": null,
+      "returncode": 0,
+      "sequence": 5,
+      "statement_sha256": "b61abb91f316763c376dd30a2e1b9297a53561bdadd5ca9c909ae87813cd2536",
+      "status": "PASS_BEST_EFFORT_DRY_RUN",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdin_transport": true,
+      "stdout_sha256": "06a77eb6d13e2b91d45a2073ef9984d3c80f122a4b14d6782a9e5db7439ebb1b"
+    }
+  ],
+  "execution_gate": {
+    "reason": "MUTATION_PATH_NOT_IMPLEMENTED_AND_NO_EXPLICIT_USER_ORDER_BOUND_TO_A_PLAN",
+    "status": "BLOCKED"
+  },
+  "generated_at": "2026-08-25T16:24:10.496312+00:00",
+  "git": {
+    "commit": "90c9fd3868d5f63d510dd8c91696703b5ad79134",
+    "tree": "b938d3fc7dd9e7a571af069399c9c5b4e09263bf",
+    "worktree_clean_before_preflight": true
+  },
+  "identity": {
+    "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+    "raw_observations_public": false,
+    "sole_active_account": true
+  },
+  "mode": "PLAN_ONLY",
+  "mutations_performed": [],
+  "policy": {
+    "apply_available": false,
+    "policy_id": "NERIVANE-GCP-BOOTSTRAP-RUNNER-V1",
+    "policy_sha256": "d190c1f18502dd05a8887c428f3035ec11cd06a07521eef71f61c16fcf3c3296"
+  },
+  "project": {
+    "display_name": "datapredict-nerivane-sandbox",
+    "lifecycle_state": "ACTIVE",
+    "parent": null,
+    "project_id": "datapredict-nerivane-2026",
+    "project_number": "1094152932383"
+  },
+  "proof_scope": "READ_ONLY_GCP_BOOTSTRAP_PLAN",
+  "schema_version": 1,
+  "source_sha256": {
+    "billing-after.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-before.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "datasets-after.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "datasets-before.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "dry-run-01.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "dry-run-01.stdout.txt": "80ad9efc0cff049dc1878e94515718be4ee49ecd09bf57ef059d4c4688edd278",
+    "dry-run-02.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "dry-run-02.stdout.txt": "5697c1af188c72233fc7579de45f7b1e0dea2af59ec3cd4076fc2051c47c91f2",
+    "dry-run-03.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "dry-run-03.stdout.txt": "f7aee2c4c5491a523f423ab0decdfb070b7398b6a4213c84177893548320db70",
+    "dry-run-04.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "dry-run-04.stdout.txt": "c37bc9cb721c43bef821516295098e391d8a09985a3ecbe866e8f6dbf8335951",
+    "dry-run-05.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "dry-run-05.stdout.txt": "06a77eb6d13e2b91d45a2073ef9984d3c80f122a4b14d6782a9e5db7439ebb1b",
+    "dry-runs.json": "0262ea88eefa99f1235e0d10ea3d73d15f38a6dcf127516b5608f59af67d2684",
+    "identity-after.json": "6e7327026269aa05584c978a71346ef199e746e329f5e7587fbe004331f63113",
+    "identity-before.json": "6e7327026269aa05584c978a71346ef199e746e329f5e7587fbe004331f63113",
+    "project-after.json": "1962e0654c1928ca19ca0bd94b5f536540ee00afd524a255cadfe960cd3de0a5",
+    "project-before.json": "1962e0654c1928ca19ca0bd94b5f536540ee00afd524a255cadfe960cd3de0a5"
+  },
+  "sql": {
+    "path": "gcp/sql/00_bootstrap_datasets.sql",
+    "sha256": "afef83e646a0c80415d4964fa954b1705f94fb5d25a46296a998cc4940596752",
+    "statement_count": 5
+  },
+  "status": "PASS"
+}

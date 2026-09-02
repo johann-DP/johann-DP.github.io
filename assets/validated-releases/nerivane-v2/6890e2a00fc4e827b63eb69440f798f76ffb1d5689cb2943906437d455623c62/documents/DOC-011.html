@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Contrat de données Finance — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-011</nav>
+<p class="eyebrow">Document synthétique · DOC-011</p>
+<h1>Contrat de données Finance</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Claire Delmas</dd></div>
+  <div><dt>Rôle</dt><dd>Sponsor métier DAF</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>fc7aee147567985590f5f5044c2c1ee42a491c74fedfb3a9cde0636bc7a73f81</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Document de démonstration — données, organisation et signatures entièrement fictives.</strong></blockquote>
+<h3 id="DOC-011-OBJET">Objet et portée</h3>
+<p>Le présent contrat définit ce que la source FINANCE remet au data product KPI-CA-NET-001, les règles d'acceptation applicables et la responsabilité portée par R002. Il couvre les écritures nécessaires au rapprochement du chiffre d'affaires net de juillet 2026. Il ne transforme pas la comptabilité en source unique de vérité pour toutes les dimensions commerciales : il décrit l'engagement de la fonction Finance sur les écritures comptabilisées, leur période de rattachement et leur traçabilité.</p>
+<p>Le périmètre réduit prouvé contient 118 094 lignes dans finance_ledger_line. Leur somme source est de 1 237 194 000 centimes. Après application de quatre règles explicites totalisant -8 549 000 centimes, la valeur gouvernée converge vers 1 228 645 000 centimes. Ces résultats ont été vérifiés dans BigQuery sur le corpus réduit ; ils ne constituent pas une preuve d'exécution du plein volume historique.</p>
+<h3 id="DOC-011-RESPONSABILITES">Responsabilités</h3>
+<div class="table-wrap"><table><thead><tr><th>Responsabilité</th><th>Porteur</th><th>Engagement</th></tr></thead><tbody>
+<tr><td>Propriété métier du contrat</td><td>PER-002 dans ASN-002</td><td>Approuver le périmètre financier et instruire les divergences de cut-off</td></tr>
+<tr><td>Contrôle métier Finance</td><td>PER-024 dans ASN-024</td><td>Rapprocher écritures, avoirs, provisions et références sources</td></tr>
+<tr><td>Contrôle qualité transverse</td><td>PER-008 dans ASN-008</td><td>Qualifier les non-conformités et empêcher une publication prématurée</td></tr>
+<tr><td>Conception technique</td><td>PER-010 dans ASN-010</td><td>Préserver types, clés, lignage et contrôles exécutables</td></tr>
+</tbody></table></div>
+<p>Toute évolution de définition susceptible de modifier KPI-CA-NET-001 doit être arbitrée par le Data Owner porté par ASN-027. L'approbation du présent contrat ne vaut pas certification du KPI ni autorisation de publication.</p>
+<h3 id="DOC-011-GRAIN">Grain, clés et champs obligatoires</h3>
+<p>Le grain est une écriture financière élémentaire rattachée à une date métier et à une date de comptabilisation. Une ligne incluse doit permettre de retrouver sans ambiguïté sa référence source, sa ligne canonique et, lorsqu'elle est exclue, la règle de pont terminale.</p>
+<div class="table-wrap"><table><thead><tr><th>Champ logique</th><th>Exigence</th></tr></thead><tbody>
+<tr><td>source_record_id</td><td>Identifiant stable de la ligne FINANCE synthétique</td></tr>
+<tr><td>canonical_line_id</td><td>Présent pour une ligne incluse ; absent pour une exception de pont</td></tr>
+<tr><td>business_date</td><td>Date de l'activité économique dans juillet 2026 pour le corpus réduit</td></tr>
+<tr><td>posting_date</td><td>Date de comptabilisation utilisée pour contrôler le cut-off</td></tr>
+<tr><td>site_id</td><td>Référence résolue dans le référentiel des dix sites</td></tr>
+<tr><td>channel</td><td>Valeur parmi agency, ecommerce et key_accounts</td></tr>
+<tr><td>amount_cents</td><td>Montant signé en centimes entiers</td></tr>
+<tr><td>currency</td><td>EUR pour le scénario courant</td></tr>
+<tr><td>record_status</td><td>INCLUDED ou BRIDGE_EXCEPTION</td></tr>
+<tr><td>bridge_rule_id</td><td>Obligatoire pour une exception et absent pour une ligne incluse</td></tr>
+<tr><td>payload_sha256</td><td>Empreinte déterministe du contenu canonique de la ligne</td></tr>
+<tr><td>synthetic</td><td>Toujours true</td></tr>
+</tbody></table></div>
+<p>Les montants ne sont jamais calculés en virgule flottante. Une correction conserve la référence d'origine ; elle ne remplace pas silencieusement une écriture antérieure.</p>
+<h3 id="DOC-011-PONTS">Règles de pont Finance</h3>
+<div class="table-wrap"><table><thead><tr><th>Règle</th><th>Qualification</th><th>Lignes</th><th>Ajustement en centimes</th></tr></thead><tbody>
+<tr><td>BR-FIN-01</td><td>Écritures intercompagnies ou non opérationnelles</td><td>193</td><td>-3 712 480</td></tr>
+<tr><td>BR-FIN-02</td><td>Provisions hors définition</td><td>128</td><td>-2 638 905</td></tr>
+<tr><td>BR-FIN-03</td><td>Journaux manuels dupliqués</td><td>588</td><td>-1 402 315</td></tr>
+<tr><td>BR-FIN-04</td><td>Références orphelines exclues</td><td>84</td><td>-795 300</td></tr>
+</tbody></table></div>
+<p>Les 993 lignes concernées restent observables dans bridge_exception. Elles ne sont pas effacées et ne sont pas intégrées aux 100 823 lignes canoniques. Le détail des quatre règles se rapproche du pont DOC-020 ; toute différence de comptage, de signe ou de montant interdit la convergence.</p>
+<h3 id="DOC-011-QUALITE">Qualité et acceptation</h3>
+<p>Le contrat est accepté pour un snapshot seulement si les conditions suivantes convergent : le nombre de lignes FINANCE est celui du manifeste ; les montants sont en centimes entiers ; les clés de site et de canal sont résolues ; une ligne incluse possède une correspondance canonique unique ; une exception porte une seule règle terminale ; le total source et le pont redonnent exactement la valeur gouvernée ; les empreintes de contenu correspondent au manifeste figé.</p>
+<p>Le corpus BigQuery réduit a satisfait ces contrôles : 531 240 lignes physiques réparties dans 17 tables et 36 résultats de contrôle conformes. Le contrôle de publication est lui aussi conforme parce qu'il observe l'état attendu BLOCKED. Un résultat PASS sur ce contrôle ne signifie donc pas que la publication est autorisée.</p>
+<h3 id="DOC-011-C008">Autorité de source et conflit pré-arbitrage</h3>
+<p><strong>Matière à arbitrer C-008.</strong> À la date d'effet du présent contrat, Finance revendique l'autorité sur la comptabilisation des crédits et sur la période comptable. DOC-010 attribue parallèlement à ERP la maîtrise du cut-off opérationnel et des crédits issus de la facturation. Les deux responsabilités se chevauchent lorsque la date de livraison, la date de facture et la date de comptabilisation divergent.</p>
+<p>Ce chevauchement est conservé comme état pré-arbitrage : il n'est ni masqué ni corrigé rétroactivement dans ce document approuvé le 10 juillet 2026. La question à soumettre au Data Owner est la suivante : ERP tranche-t-il l'éligibilité opérationnelle et Finance la comptabilisation, ou une autre règle de priorité doit-elle être rendue opposable ? Tant que cette question n'est pas formellement arbitrée, les cas concernés restent en revue ou en pont et ne justifient aucune publication autonome.</p>
+<h3 id="DOC-011-PREUVES">Preuves et limites</h3>
+<p>Les éléments probants sont les agrégats FINANCE, les quatre ponts, les contrôles de correspondance et le résultat de convergence conservés dans la preuve BigQuery assainie. Le périmètre prouvé est exclusivement le corpus réduit de juillet 2026. Le pilote on-premise est validé séparément sur 25 000 000 lignes par couche — RAW, BRONZE et SILVER — soit 75 000 000 lignes physiques cumulées ; il contient les ancres de contenu du corpus gouverné. Aucune antériorité entre sa génération et le chargement BigQuery n'est revendiquée.</p>
+<p>Le plein volume de 7 404 704 501 lignes demeure proposé et bloqué faute de validation du dispositif de stockage complet. Le présent contrat ne transforme ni cette projection en exécution, ni un rapprochement déterministe en certification humaine, ni une sortie attendue du veto sémantique en inférence IA réellement exécutée.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>
