@@ -1,0 +1,37 @@
+{
+  "scenario_id": "NERIVANE-KPI-2026-07",
+  "status": "DESIGN_LOCKED_NOT_EXECUTED",
+  "organization": "Nérivane Distribution",
+  "fictional": true,
+  "canonical_seed": 202607310823,
+  "period": {
+    "history_start": "2021-01-01",
+    "history_end": "2026-07-31",
+    "kpi_month": "2026-07",
+    "history_days_inclusive": 2038
+  },
+  "operating_model": {
+    "agency_count": 8,
+    "warehouse_count": 1,
+    "headquarters_count": 1,
+    "channels": ["agency", "ecommerce", "key_accounts"]
+  },
+  "kpi": {
+    "kpi_id": "KPI-CA-NET-001",
+    "label": "Chiffre d'affaires net gouverné",
+    "currency": "EUR",
+    "unit": "cent",
+    "financial_lines_in_scope": 421763,
+    "source_values_cents": {
+      "crm": 1284261000,
+      "erp": 1249738000,
+      "finance": 1237194000
+    },
+    "certified_value_cents": 1228645000,
+    "bridge_deltas_to_certified_cents": {
+      "crm": -55616000,
+      "erp": -21093000,
+      "finance": -8549000
+    }
+  }
+}

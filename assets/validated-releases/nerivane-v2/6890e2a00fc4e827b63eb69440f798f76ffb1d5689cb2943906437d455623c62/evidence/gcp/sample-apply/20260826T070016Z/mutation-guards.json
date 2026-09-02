@@ -1,0 +1,1590 @@
+[
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "after-ddl-dry-runs",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-01-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-01-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-01-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-02-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-02-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-02-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-03-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-03-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-03-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-04-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-04-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-04-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-05-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-05-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-05-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-06-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-06-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-06-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-07-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-07-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-07-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-08-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-08-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-08-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-09-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-09-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-09-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-10-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-10-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-10-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-11-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-11-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-11-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-12-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-12-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-12-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-13-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-13-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-13-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-14-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-14-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-14-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-15-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-15-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_evidence.lineage_edge",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-15-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_evidence.lineage_edge",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-16-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_evidence.lineage_edge",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-16-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_evidence.lineage_edge",
+      "nerivane_evidence.semantic_case",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-16-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_evidence.lineage_edge",
+      "nerivane_evidence.semantic_case",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-17-before-ddl",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_evidence.lineage_edge",
+      "nerivane_evidence.semantic_case",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-17-after-ddl-before-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_evidence.lineage_edge",
+      "nerivane_evidence.publication_gate",
+      "nerivane_evidence.semantic_case",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  },
+  {
+    "billing": {
+      "billing_account_name": null,
+      "billing_enabled": false
+    },
+    "checkpoint": "table-17-after-load",
+    "datasets": [
+      "nerivane_evidence",
+      "nerivane_mart",
+      "nerivane_raw",
+      "nerivane_reference",
+      "nerivane_staging"
+    ],
+    "identity": {
+      "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+      "raw_observation_public": false,
+      "sole_active_account": true
+    },
+    "status": "PASS",
+    "tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_evidence.lineage_edge",
+      "nerivane_evidence.publication_gate",
+      "nerivane_evidence.semantic_case",
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ]
+  }
+]

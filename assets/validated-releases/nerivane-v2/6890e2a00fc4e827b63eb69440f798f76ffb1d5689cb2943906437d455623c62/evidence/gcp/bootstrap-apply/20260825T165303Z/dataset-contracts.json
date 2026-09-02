@@ -1,0 +1,97 @@
+[
+  {
+    "acl_entry_count": 4,
+    "approved_user_owner_present": true,
+    "cross_resource_acl_present": false,
+    "dataset_id": "nerivane_raw",
+    "default_table_expiration_ms": "2592000000",
+    "description": "Nérivane — données sources synthétiques, couche raw",
+    "labels": {
+      "billing_mode": "unlinked",
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "raw"
+    },
+    "location": "europe-west9",
+    "max_time_travel_hours": "48",
+    "project_id": "datapredict-nerivane-2026",
+    "status": "PASS"
+  },
+  {
+    "acl_entry_count": 4,
+    "approved_user_owner_present": true,
+    "cross_resource_acl_present": false,
+    "dataset_id": "nerivane_reference",
+    "default_table_expiration_ms": "2592000000",
+    "description": "Nérivane — référentiels synthétiques gouvernés",
+    "labels": {
+      "billing_mode": "unlinked",
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "reference"
+    },
+    "location": "europe-west9",
+    "max_time_travel_hours": "48",
+    "project_id": "datapredict-nerivane-2026",
+    "status": "PASS"
+  },
+  {
+    "acl_entry_count": 4,
+    "approved_user_owner_present": true,
+    "cross_resource_acl_present": false,
+    "dataset_id": "nerivane_staging",
+    "default_table_expiration_ms": "2592000000",
+    "description": "Nérivane — normalisation et contrôles intermédiaires",
+    "labels": {
+      "billing_mode": "unlinked",
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "staging"
+    },
+    "location": "europe-west9",
+    "max_time_travel_hours": "48",
+    "project_id": "datapredict-nerivane-2026",
+    "status": "PASS"
+  },
+  {
+    "acl_entry_count": 4,
+    "approved_user_owner_present": true,
+    "cross_resource_acl_present": false,
+    "dataset_id": "nerivane_mart",
+    "default_table_expiration_ms": "2592000000",
+    "description": "Nérivane — produits de données et KPI gouverné",
+    "labels": {
+      "billing_mode": "unlinked",
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "mart"
+    },
+    "location": "europe-west9",
+    "max_time_travel_hours": "48",
+    "project_id": "datapredict-nerivane-2026",
+    "status": "PASS"
+  },
+  {
+    "acl_entry_count": 4,
+    "approved_user_owner_present": true,
+    "cross_resource_acl_present": false,
+    "dataset_id": "nerivane_evidence",
+    "default_table_expiration_ms": "2592000000",
+    "description": "Nérivane — preuves techniques assainies et décisions",
+    "labels": {
+      "billing_mode": "unlinked",
+      "data_class": "synthetic",
+      "demo": "nerivane",
+      "environment": "sandbox",
+      "layer": "evidence"
+    },
+    "location": "europe-west9",
+    "max_time_travel_hours": "48",
+    "project_id": "datapredict-nerivane-2026",
+    "status": "PASS"
+  }
+]

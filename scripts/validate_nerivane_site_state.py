@@ -74,13 +74,13 @@ ACTIVE_HEADER_MARKER = (
     '<span aria-hidden="true">●</span><span data-state-label>Vérification…</span></span>'
 ).encode("utf-8")
 ACTIVE_SEO_MARKERS = (
-    '<title>Nérivane Distribution — gouvernance d’un KPI à l’échelle Big Data | datapredict</title>',
-    '<meta name="description" content="Explorez une reprise de gouvernance Data étayée par un corpus H1 massif, un lignage contrôlé et un veto IA local fail-closed.">',
+    '<title>Nérivane Distribution — démonstration de gouvernance Data &amp; Big Data | datapredict</title>',
+    '<meta name="description" content="Découvrez comment datapredict reprend un KPI contesté sous contrôle, prouve plus de 1,5 Tio de traitement Big Data et bloque une IA non qualifiée.">',
     '<link rel="canonical" href="https://www.datapredict.org/demonstrations/nerivane-distribution.html">',
     '<meta property="og:locale" content="fr_FR">',
     '<meta property="og:type" content="website">',
-    '<meta property="og:title" content="Nérivane Distribution — gouvernance d’un KPI à l’échelle Big Data | datapredict">',
-    '<meta property="og:description" content="Un replay en sept étapes pour examiner une gouvernance Data prouvée à grande échelle et son veto IA fail-closed.">',
+    '<meta property="og:title" content="Nérivane Distribution — démonstration de gouvernance Data &amp; Big Data | datapredict">',
+    '<meta property="og:description" content="Un KPI contesté, plus de 1,5 Tio réellement produits et une IA non qualifiée bloquée par la gouvernance datapredict.">',
     '<meta property="og:url" content="https://www.datapredict.org/demonstrations/nerivane-distribution.html">',
     '<meta property="og:image" content="https://www.datapredict.org/assets/img/social-datapredict.png">',
     '<meta name="twitter:card" content="summary_large_image">',

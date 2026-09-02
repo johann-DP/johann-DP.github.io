@@ -1,0 +1,38 @@
+{
+  "bigquery": {
+    "datasets_before_bootstrap": [],
+    "location_required": "europe-west9"
+  },
+  "billing": {
+    "billing_account_name": null,
+    "billing_enabled": false
+  },
+  "checked_at": "2026-08-25T15:48:23.911089+00:00",
+  "git": {
+    "commit": "70c35dc2f86c447e132cef3f36c479f264208750",
+    "tree": "749b62e34e0b9d82a3c06ac113c33d1dcd43fd35",
+    "worktree_clean_before_preflight": true
+  },
+  "identity": {
+    "expected_account_sha256": "ccae21db1469f97f1ca7065ca5b1f3cbe09cbbfe81c03e8fdf79e73a5a8c4110",
+    "raw_observation_sha256": "6e7327026269aa05584c978a71346ef199e746e329f5e7587fbe004331f63113",
+    "sole_active_account": true
+  },
+  "mutations_performed": [],
+  "project": {
+    "display_name": "datapredict-nerivane-sandbox",
+    "lifecycle_state": "ACTIVE",
+    "parent": null,
+    "project_id": "datapredict-nerivane-2026",
+    "project_number": "1094152932383"
+  },
+  "proof_scope": "READ_ONLY_GCP_SANDBOX_PREFLIGHT",
+  "schema_version": 1,
+  "source_sha256": {
+    "billing.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "datasets.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "identity.json": "6e7327026269aa05584c978a71346ef199e746e329f5e7587fbe004331f63113",
+    "project.json": "1962e0654c1928ca19ca0bd94b5f536540ee00afd524a255cadfe960cd3de0a5"
+  },
+  "status": "PASS"
+}

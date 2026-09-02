@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Manifeste des anomalies injectées — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-016</nav>
+<p class="eyebrow">Document synthétique · DOC-016</p>
+<h1>Manifeste des anomalies injectées</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Salomé Vial</dd></div>
+  <div><dt>Rôle</dt><dd>Data Quality Lead</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>4867ba910a7d2c0859729c7154e5134b18091670577ccf8bc0764880cec49ee8</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Document de démonstration — données, organisation et signatures entièrement fictives.</strong></blockquote>
+<h3 id="DOC-016-FINALITE">Finalité du manifeste</h3>
+<p>Le scénario injecte des anomalies connues pour rendre la qualité, le rapprochement et la gouvernance démontrables. Ce manifeste fixe leur nombre, leur montant, leur sévérité attendue et leur traitement. Les anomalies ne sont pas des accidents dissimulés : elles sont déterministes, reproductibles avec la graine 202607310823 et observables dans les preuves.</p>
+<p>Deux familles sont distinguées. Les anomalies de données produisent 8 452 lignes de pont dans le corpus réduit. Les anomalies sémantiques produisent 12 cas de conflit et 12 témoins sains destinés au gate IA. Une ligne de pont n'est pas automatiquement un conflit sémantique, et un conflit sémantique ne modifie jamais directement le montant du KPI.</p>
+<h3 id="DOC-016-CRM">Anomalies CRM</h3>
+<div class="table-wrap"><table><thead><tr><th>Règle</th><th>Description</th><th>Lignes</th><th>Ajustement en centimes</th></tr></thead><tbody>
+<tr><td>BR-CRM-01</td><td>Commandes annulées avant exécution</td><td>1 204</td><td>-21 478 340</td></tr>
+<tr><td>BR-CRM-02</td><td>Retours en attente de netting</td><td>683</td><td>-14 936 825</td></tr>
+<tr><td>BR-CRM-03</td><td>Composantes hors définition nette</td><td>3 412</td><td>-11 284 710</td></tr>
+<tr><td>BR-CRM-04</td><td>Doublons de cycle de vie</td><td>587</td><td>-7 916 125</td></tr>
+</tbody></table></div>
+<p>Les 5 886 lignes CRM expliquent un pont total de -55 616 000 centimes. Elles restent dans la source CRM et dans bridge_exception, mais ne sont pas ajoutées aux lignes canoniques incluses.</p>
+<h3 id="DOC-016-ERP">Anomalies ERP</h3>
+<div class="table-wrap"><table><thead><tr><th>Règle</th><th>Description</th><th>Lignes</th><th>Ajustement en centimes</th></tr></thead><tbody>
+<tr><td>BR-ERP-01</td><td>Factures provisoires ou annulées</td><td>442</td><td>-8 763 412</td></tr>
+<tr><td>BR-ERP-02</td><td>Factures dupliquées</td><td>588</td><td>-4 208 788</td></tr>
+<tr><td>BR-ERP-03</td><td>Éléments hors cut-off livré</td><td>326</td><td>-6 941 535</td></tr>
+<tr><td>BR-ERP-04</td><td>Périmètre entité ou canal exclu</td><td>217</td><td>-1 179 265</td></tr>
+</tbody></table></div>
+<p>Les 1 573 lignes ERP expliquent un pont total de -21 093 000 centimes. Les règles de cut-off et de crédit restent soumises au conflit pré-arbitrage C-008 entre DOC-010 et DOC-011.</p>
+<h3 id="DOC-016-FINANCE">Anomalies Finance</h3>
+<div class="table-wrap"><table><thead><tr><th>Règle</th><th>Description</th><th>Lignes</th><th>Ajustement en centimes</th></tr></thead><tbody>
+<tr><td>BR-FIN-01</td><td>Écritures intercompagnies ou non opérationnelles</td><td>193</td><td>-3 712 480</td></tr>
+<tr><td>BR-FIN-02</td><td>Provisions hors définition</td><td>128</td><td>-2 638 905</td></tr>
+<tr><td>BR-FIN-03</td><td>Journaux manuels dupliqués</td><td>588</td><td>-1 402 315</td></tr>
+<tr><td>BR-FIN-04</td><td>Références orphelines exclues</td><td>84</td><td>-795 300</td></tr>
+</tbody></table></div>
+<p>Les 993 lignes FINANCE expliquent un pont total de -8 549 000 centimes. BR-FIN-04 conserve notamment le cas de référence non résolue associé à C-010.</p>
+<h3 id="DOC-016-RECONCILIATION">Réconciliation quantitative</h3>
+<p>Les douze règles totalisent 8 452 lignes. Chacune est vérifiée entre staging et mart sur le nombre de lignes et l'ajustement en centimes. Les trois sommes de pont ramènent respectivement CRM, ERP et FINANCE à 1 228 645 000 centimes. Aucune compensation entre règles n'est admise : deux erreurs opposées ne peuvent pas produire un faux PASS.</p>
+<p>Le corpus BigQuery réduit a confirmé les douze contrôles détaillés et les contrôles agrégés. Le pilote on-premise contient les 421 763 ancres du corpus source gouverné, mais ne revendique pas la certification du KPI.</p>
+<h3 id="DOC-016-SEMANTIQUE">Cas sémantiques injectés</h3>
+<div class="table-wrap"><table><thead><tr><th>Cas</th><th>Catégorie</th><th>Sévérité attendue</th><th>Verdict attendu</th></tr></thead><tbody>
+<tr><td>C-001</td><td>KPI_DEFINITION</td><td>CRITICAL</td><td>BLOCK</td></tr>
+<tr><td>C-002</td><td>KPI_DEFINITION</td><td>MAJOR</td><td>REVIEW</td></tr>
+<tr><td>C-003</td><td>DOCUMENT_VERSION</td><td>CRITICAL</td><td>BLOCK</td></tr>
+<tr><td>C-004</td><td>DOCUMENT_VERSION</td><td>MAJOR</td><td>REVIEW</td></tr>
+<tr><td>C-005</td><td>ROLE_DELEGATION</td><td>CRITICAL</td><td>BLOCK</td></tr>
+<tr><td>C-006</td><td>ROLE_DELEGATION</td><td>MAJOR</td><td>REVIEW</td></tr>
+<tr><td>C-007</td><td>SOURCE_PRIORITY</td><td>CRITICAL</td><td>BLOCK</td></tr>
+<tr><td>C-008</td><td>SOURCE_PRIORITY</td><td>MAJOR</td><td>REVIEW</td></tr>
+<tr><td>C-009</td><td>REFERENCE_MAPPING</td><td>CRITICAL</td><td>BLOCK</td></tr>
+<tr><td>C-010</td><td>REFERENCE_MAPPING</td><td>MAJOR</td><td>REVIEW</td></tr>
+<tr><td>C-011</td><td>UNSUPPORTED_ASSERTION</td><td>CRITICAL</td><td>BLOCK</td></tr>
+<tr><td>C-012</td><td>UNSUPPORTED_ASSERTION</td><td>CRITICAL</td><td>BLOCK</td></tr>
+</tbody></table></div>
+<p>Sept cas critiques doivent produire BLOCK et cinq cas majeurs REVIEW. Les douze témoins sains H-001 à H-012 doivent produire ADMISSIBLE. Ces verdicts sont les attentes du jeu d'or, pas le résultat d'une inférence déjà exécutée.</p>
+<h3 id="DOC-016-C008-C012">Conflits C-008 à C-012</h3>
+<p>Les cinq conflits sont volontairement conservés dans leur état pré-arbitrage : chevauchement d'autorité ERP et Finance sur crédits et cut-off ; correspondance source multiple ; référence maître absente ; affirmation de qualité sans preuve citée ; affirmation non soutenue d'exécution du plein volume. Le présent manifeste les rend visibles, mais ne les corrige pas rétroactivement.</p>
+<p>La levée de chaque conflit exige une décision humaine traçable. Lorsqu'une décision modifie une règle, celle-ci doit être compilée en contrôle déterministe puis rejouée. Un texte généré par IA ne peut ni attribuer une autorité, ni créer une correspondance, ni transformer une projection en mesure.</p>
+<h3 id="DOC-016-GATE">Gate et traitement</h3>
+<p>Les lignes de pont sont isolées puis rapprochées par règle. Les cas sémantiques sont soumis au gate de publication. Dans le snapshot courant, ai_execution_status reste NOT_EXECUTED_EXPECTED_VETO, human_arbitration_complete reste false et publication_status reste BLOCKED.</p>
+<p>Le contrôle de publication est PASS parce que BLOCKED est précisément la valeur attendue tant que les conflits subsistent. Cette convention évite de présenter un contrôle réussi comme une autorisation de publier.</p>
+<h3 id="DOC-016-LIMITES">Limites de preuve</h3>
+<p>Les 531 240 lignes et 36 contrôles BigQuery sont validés. La calibration de 1 000 000 lignes par couche — 3 000 000 cumulées — et le pilote de 25 000 000 lignes par couche — 75 000 000 cumulées — sont validés. Le plein plan de 7 404 704 501 lignes par couche reste proposé et bloqué. La chronologie entre les exécutions GCP et on-premise n'est pas revendiquée.</p>
+<p>Le manifeste décrit des anomalies fictives conçues pour la démonstration. Il ne contient aucune donnée personnelle réelle et ne doit pas être présenté comme un registre d'incidents client.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

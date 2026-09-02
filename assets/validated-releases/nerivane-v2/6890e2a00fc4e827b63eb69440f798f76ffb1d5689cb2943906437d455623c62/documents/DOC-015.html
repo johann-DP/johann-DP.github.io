@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Référentiel des règles de qualité — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-015</nav>
+<p class="eyebrow">Document synthétique · DOC-015</p>
+<h1>Référentiel des règles de qualité</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Salomé Vial</dd></div>
+  <div><dt>Rôle</dt><dd>Data Quality Lead</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>64eea529e77ef90fe02f84a20e4a99a06acf5e5eccfb62be17752f5e7706c8f9</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Document de démonstration — données, organisation et signatures entièrement fictives.</strong></blockquote>
+<h3 id="DOC-015-OBJET">Objet du référentiel</h3>
+<p>Ce référentiel rend les règles de qualité opposables, reproductibles et lisibles par les métiers. Une règle possède un identifiant stable, une expression attendue, une valeur observée, un statut et une preuve. Une règle ne peut être remplacée par l'appréciation libre d'un modèle de langage.</p>
+<p>Le corpus BigQuery réduit a exécuté 36 contrôles en trois jobs bornés : 24 contrôles transverses et 12 contrôles détaillés de pont. Tous ont produit le résultat attendu. Cela démontre la conformité du corpus réduit aux règles ci-dessous ; cela ne démontre ni l'exécution du plein volume ni l'autorisation de publier le KPI.</p>
+<h3 id="DOC-015-GOUVERNANCE">Gouvernance des règles</h3>
+<p>R009 possède le référentiel et instruit les échecs. R011 traduit les décisions en contrôles techniques. R015 vérifie que les règles sont exploitables et rejouables en RUN. R003 approuve les changements de politique transverse. Les responsables de source restent redevables des corrections dans leur périmètre.</p>
+<p>Chaque évolution suit quatre opérations : versionner la règle, justifier le changement, rejouer le test causal et les contrôles affectés, puis conserver les nouvelles preuves. Une modification de seuil destinée uniquement à faire passer un lot est interdite. Une décision humaine qui lève un veto IA doit d'abord être compilée en règle déterministe.</p>
+<h3 id="DOC-015-VOLUMETRIE">Contrôles de volumétrie et de couverture</h3>
+<div class="table-wrap"><table><thead><tr><th>Contrôles</th><th>Attendu</th></tr></thead><tbody>
+<tr><td>CTRL-001</td><td>531 240 lignes physiques</td></tr>
+<tr><td>CTRL-002</td><td>421 763 lignes sources</td></tr>
+<tr><td>CTRL-003</td><td>164 487 lignes CRM</td></tr>
+<tr><td>CTRL-004</td><td>139 182 lignes ERP</td></tr>
+<tr><td>CTRL-005</td><td>118 094 lignes FINANCE</td></tr>
+<tr><td>CTRL-006</td><td>100 823 lignes canoniques</td></tr>
+<tr><td>CTRL-007</td><td>31 dates de juillet 2026</td></tr>
+<tr><td>CTRL-008</td><td>8 agences</td></tr>
+<tr><td>CTRL-009</td><td>3 canaux</td></tr>
+<tr><td>CTRL-010</td><td>744 strates date-agence-canal</td></tr>
+</tbody></table></div>
+<p>Un écart de comptage est bloquant parce qu'il peut signaler un lot manquant, une duplication ou un changement de périmètre. Le respect du total global ne compense jamais l'échec d'une source ou d'une strate.</p>
+<h3 id="DOC-015-MAPPING">Correspondance et complétude</h3>
+<p>CTRL-011 exige que chaque ligne source incluse se rattache à exactement une ligne canonique. CTRL-012 exige que chaque ligne canonique attendue soit représentée dans CRM, ERP et FINANCE. CTRL-023 vérifie les clés étrangères des référentiels et la chaîne de remplacement des documents.</p>
+<p>Une relation multiple, absente ou hors période est mise en quarantaine. Elle ne reçoit aucune valeur par défaut. Les conflits de correspondance décrits dans DOC-014 restent des objets d'arbitrage, même lorsque le témoin sain satisfait les contrôles.</p>
+<h3 id="DOC-015-MONETAIRE">Contrôles monétaires</h3>
+<div class="table-wrap"><table><thead><tr><th>Contrôle</th><th>Valeur attendue en centimes</th></tr></thead><tbody>
+<tr><td>CTRL-013</td><td>1 228 645 000 sur la ligne canonique</td></tr>
+<tr><td>CTRL-014</td><td>1 284 261 000 dans CRM</td></tr>
+<tr><td>CTRL-015</td><td>1 249 738 000 dans ERP</td></tr>
+<tr><td>CTRL-016</td><td>1 237 194 000 dans FINANCE</td></tr>
+<tr><td>CTRL-019</td><td>-55 616 000 pour le pont CRM</td></tr>
+<tr><td>CTRL-020</td><td>-21 093 000 pour le pont ERP</td></tr>
+<tr><td>CTRL-021</td><td>-8 549 000 pour le pont FINANCE</td></tr>
+<tr><td>CTRL-022</td><td>1 228 645 000 après convergence des trois sources</td></tr>
+</tbody></table></div>
+<p>Tous les calculs utilisent des centimes entiers. CTRL-017 fixe à 8 452 le nombre de lignes d'exception et CTRL-018 fixe à 12 le nombre de règles de pont. Les douze contrôles BRIDGE-BR vérifient, règle par règle, le nombre de lignes et l'ajustement entre staging et mart.</p>
+<h3 id="DOC-015-PUBLICATION">Contrôle de publication</h3>
+<p>CTRL-024 attend que les conflits sémantiques maintiennent publication_gate à BLOCKED. Son statut PASS signifie que le comportement de sûreté attendu est observé ; il ne signifie pas ADMISSIBLE et n'autorise aucune publication. Le KPI déterministe peut être réconcilié alors que son dossier de publication reste bloqué.</p>
+<p>Le gate ne peut être levé qu'après une inférence réellement exécutée et conforme au jeu d'or, un arbitrage humain tracé, la mise à jour déterministe des règles et le rejeu des contrôles. Dans le snapshot courant, l'inférence IA n'est pas exécutée et l'arbitrage humain n'est pas terminé.</p>
+<h3 id="DOC-015-SEVERITE">Sévérité et traitement</h3>
+<div class="table-wrap"><table><thead><tr><th>Niveau</th><th>Conséquence minimale</th></tr></thead><tbody>
+<tr><td>INFO</td><td>Observation conservée ; aucune correction nécessaire</td></tr>
+<tr><td>MINOR</td><td>Correction planifiée et suivie sans modifier le périmètre certifié</td></tr>
+<tr><td>MAJOR</td><td>Revue métier obligatoire ; publication en attente</td></tr>
+<tr><td>CRITICAL</td><td>Blocage technique de publication et arbitrage obligatoire</td></tr>
+</tbody></table></div>
+<p>Un contrôle quantitatif ou monétaire en échec est bloquant. Un conflit sémantique CRITICAL produit BLOCK. Un conflit MAJOR produit REVIEW. Une anomalie ne disparaît du registre qu'après correction et preuve de non-régression ; elle n'est pas close par simple commentaire.</p>
+<h3 id="DOC-015-MASSIF">Contrôles du générateur massif</h3>
+<p>Le générateur on-premise applique en plus des contrôles de schéma Parquet, d'ordre chronologique, de causalité, de références ouvertes, d'empreintes, de reprise, de quarantaine et de budget disque. La calibration est validée sur 1 000 000 lignes par couche, soit 3 000 000 lignes physiques. Le pilote est validé sur 25 000 000 lignes par couche, soit 75 000 000 lignes physiques. Le profil complet reste bloqué par la stratégie de stockage et d'indexation, donc aucun contrôle ne peut annoncer 7 404 704 501 lignes exécutées.</p>
+<p>Les ancres du pilote prouvent une équivalence de contenu avec les 421 763 lignes sources gouvernées du corpus BigQuery. Elles ne prouvent pas que le pilote a été généré avant le chargement GCP, et cette chronologie n'est pas requise pour la preuve d'équivalence.</p>
+<h3 id="DOC-015-PREUVES">Preuves publiques</h3>
+<p>La <a href="../evidence/gcp/sample-apply/20260826T070016Z/controls.json">preuve des 36 contrôles BigQuery</a> conserve valeur attendue, valeur observée et statut. Le <a href="../evidence/onprem-lake-pilot-dcff45d/manifest.json">manifeste public du pilote trois couches</a>, sa vérification et son inventaire conservent nombres de lignes, fichiers, tailles et empreintes sans publier les Parquet.</p>
+<p>Ces preuves sont assainies. Les journaux bruts d'identité et d'exécution restent privés. Toute restitution publique doit conserver les mêmes limites de portée.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>
