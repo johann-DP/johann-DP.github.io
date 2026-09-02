@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Registre RAID — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-022</nav>
+<p class="eyebrow">Document synthétique · DOC-022</p>
+<h1>Registre RAID</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Pauline Marchal</dd></div>
+  <div><dt>Rôle</dt><dd>PMO Lead</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>7fa4387856270bed8fea9f5af9506b8bc8dd6214c35ce0d5858701ae7e308b9a</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Démonstration — document entièrement fictif.</strong> Ce registre, son organisation, ses personnes, ses risques et ses échéances métier sont synthétiques. Les états indiquent la situation du scénario candidat et non celle d’un client réel.</blockquote>
+<h2>Registre RAID</h2>
+<h3 id="DOC-022-COTATION">Cadre de cotation</h3>
+<p>Le registre couvre les risques, actions, incidents et dépendances susceptibles d’empêcher une publication gouvernée. La probabilité et l’impact sont cotés de 1 à 4. Une exposition de 12 à 16 est critique, de 8 à 11 majeure, de 4 à 7 modérée et de 1 à 3 faible. Tout risque touchant l’intégrité des preuves ou le gate de publication est traité en mode fail-closed, quelle que soit sa cotation.</p>
+<h3 id="DOC-022-RISQUES">Risques actifs</h3>
+<div class="table-wrap"><table><thead><tr><th>ID</th><th>Risque</th><th>P</th><th>I</th><th>Exposition</th><th>Propriétaire</th><th>Réponse</th><th>État</th></tr></thead><tbody>
+<tr><td>RSK-001</td><td>Une définition historique reste présentée comme courante.</td><td>4</td><td>4</td><td>16</td><td>R008</td><td>Publier la chaîne de versions et arbitrer C-001 à C-004.</td><td>OUVERT</td></tr>
+<tr><td>RSK-002</td><td>Une délégation active n’est pas reflétée dans les matrices de gouvernance.</td><td>3</td><td>4</td><td>12</td><td>R005</td><td>Rapprocher <code>DOC-003</code>, <code>DOC-004</code>, <code>ASN-027</code> et <code>ASN-031</code>.</td><td>OUVERT</td></tr>
+<tr><td>RSK-003</td><td>Le public confond le pilote de 25 millions de lignes avec le plein volume proposé.</td><td>3</td><td>4</td><td>12</td><td>R005</td><td>Afficher systématiquement le périmètre de preuve et le statut du plein run.</td><td>MITIGÉ</td></tr>
+<tr><td>RSK-004</td><td>Une sortie IA valide en JSON cite une preuve inexistante ou non pertinente.</td><td>3</td><td>4</td><td>12</td><td>R009</td><td>Vérifier chaque ancre et bloquer si une citation ne se résout pas.</td><td>OUVERT</td></tr>
+<tr><td>RSK-005</td><td>Une indisponibilité du modèle est interprétée comme absence de conflit.</td><td>2</td><td>4</td><td>8</td><td>R011</td><td>Convertir timeout, erreur et schéma invalide en blocage technique.</td><td>OUVERT</td></tr>
+<tr><td>RSK-006</td><td>Un document public expose une identité, un secret ou un chemin local.</td><td>2</td><td>4</td><td>8</td><td>R016</td><td>Contrôle d’assainissement et index public limité aux preuves autorisées.</td><td>EN TRAITEMENT</td></tr>
+<tr><td>RSK-007</td><td>Le KPI est techniquement juste mais publié avant arbitrage métier.</td><td>3</td><td>4</td><td>12</td><td>R008</td><td>Rendre cumulatifs contrôles, avis IA, arbitrage et acceptation RUN.</td><td>OUVERT</td></tr>
+</tbody></table></div>
+<h3 id="DOC-022-ACTIONS">Actions de réduction</h3>
+<p>Les états de la table suivante sont ceux du scénario fictif arrêté au 31 juillet 2026. Ils ne décrivent pas l'avancement technique observé lors de la construction du replay le 26 août 2026.</p>
+<div class="table-wrap"><table><thead><tr><th>ID</th><th>Action</th><th>Responsable</th><th>Critère de résultat</th><th>Dépendance</th><th>État</th></tr></thead><tbody>
+<tr><td>ACT-001</td><td>Produire les corps documentaires publics avec ancres stables.</td><td>R005</td><td>Chaque ID du catalogue se résout vers un contenu versionné.</td><td>Aucune</td><td>EN COURS</td></tr>
+<tr><td>ACT-002</td><td>Séparer les entrées aveugles des réponses attendues du jeu d’or.</td><td>R009</td><td>Le modèle ne reçoit ni sévérité ni verdict attendu.</td><td>ACT-001</td><td>À FAIRE</td></tr>
+<tr><td>ACT-003</td><td>Exécuter cinq replays locaux sur un runtime épinglé.</td><td>R011</td><td>Sorties structurées et citations canoniques reproductibles.</td><td>ACT-002</td><td>À FAIRE</td></tr>
+<tr><td>ACT-004</td><td>Arbitrer les six dossiers du journal <code>DOC-021</code>.</td><td>R008</td><td>Chaque conflit majeur ou critique possède une décision tracée.</td><td>ACT-003</td><td>À FAIRE</td></tr>
+<tr><td>ACT-005</td><td>Rejouer les contrôles après transcription des décisions.</td><td>R009</td><td>Règles déterministes et gate cohérents.</td><td>ACT-004</td><td>À FAIRE</td></tr>
+<tr><td>ACT-006</td><td>Signer le procès-verbal uniquement après convergence.</td><td>R001</td><td><code>DOC-026</code> ne contient plus de réserve bloquante.</td><td>ACT-005</td><td>À FAIRE</td></tr>
+</tbody></table></div>
+<h3 id="DOC-022-INCIDENTS">Incidents et non-conformités</h3>
+<div class="table-wrap"><table><thead><tr><th>ID</th><th>Observation</th><th>Qualification</th><th>Traitement candidat</th></tr></thead><tbody>
+<tr><td>INC-001</td><td><code>DOC-019</code> affirme une qualité sans citer de résultat exécutable.</td><td>Assertion non soutenue liée à C-011.</td><td>Retirer l’affirmation ou rattacher les contrôles exacts.</td></tr>
+<tr><td>INC-002</td><td>Le gate stocké contient un verdict attendu sans exécution du modèle.</td><td>État transitoire légitime mais facilement mal interprété.</td><td>Afficher <code>NOT_EXECUTED_EXPECTED_VETO</code> dans chaque replay.</td></tr>
+<tr><td>INC-003</td><td>Les cas sémantiques structurés contiennent actuellement les réponses attendues.</td><td>Fuite du jeu d’or.</td><td>Créer une vue d’entrée aveugle séparée.</td></tr>
+<tr><td>INC-004</td><td>Aucun arbitrage humain complet n’est enregistré.</td><td>Blocage métier.</td><td>Maintenir le refus de publication.</td></tr>
+</tbody></table></div>
+<h3 id="DOC-022-DEPENDANCES">Dépendances critiques</h3>
+<p>La chaîne de sortie dépend d’abord du corpus documentaire, puis du jeu d’or aveugle, du runtime local, de la vérification des citations, de l’arbitrage humain et enfin des règles déterministes mises à jour. Aucun maillon aval ne compense l’absence d’un maillon amont.</p>
+<p><code>CTRL-023</code> couvre l’intégrité des références structurées. <code>CTRL-024</code> couvre l’état bloqué attendu. Aucun de ces contrôles ne remplace l’exécution IA encore absente ni la signature du procès-verbal.</p>
+<h3 id="DOC-022-REVUE">Revue de direction candidate</h3>
+<p>Le scénario recommande de présenter au comité trois indicateurs simples : nombre de risques critiques ouverts, nombre de conflits sans arbitrage et statut cumulé du gate. Au snapshot <code>candidate-v1</code>, le passage en RUN public n’est pas proposé. La prochaine revue doit porter sur les résultats vérifiables des actions ACT-001 à ACT-003, sans réécrire a posteriori les constats de ce registre.</p>
+<h3 id="DOC-022-REPLAY-20260827">Addendum technique du replay du 27 août 2026</h3>
+<p>À l'instant d'observation <code>2026-08-27T07:28:48Z</code>, le critère technique de ACT-001 est satisfait : les 28 corps documentaires publics existent avec leurs métadonnées et leurs ancres. Ce constat de replay ne modifie pas rétroactivement l'état <code>EN COURS</code> consigné dans le scénario fictif du 31 juillet.</p>
+<p>ACT-002 à ACT-006 restent ouverts. En particulier, aucun paquet d'entrée aveugle n'est encore constitué, aucune inférence IA n'est attestée, aucun arbitrage humain complet n'est enregistré et la publication demeure <code>BLOCKED</code>. Le plein volume de 7 404 704 501 lignes reste proposé, non exécuté.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

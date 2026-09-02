@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Politique des référentiels maîtres — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-013</nav>
+<p class="eyebrow">Document synthétique · DOC-013</p>
+<h1>Politique des référentiels maîtres</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Sophie Valençay</dd></div>
+  <div><dt>Rôle</dt><dd>Chief Data Officer</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>04efb2dddf86de71fedba87b8c4f124599196ba197c07aac9915a0f2b50afeb4</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Document de démonstration — données, organisation et signatures entièrement fictives.</strong></blockquote>
+<h3 id="DOC-013-FINALITE">Finalité</h3>
+<p>Cette politique fixe les autorités, les cycles de vie et les contrôles applicables aux référentiels qui permettent de comparer CRM, ERP, FINANCE et WMS. Elle vise à empêcher qu'une différence d'identifiant soit interprétée comme une différence métier, ou qu'une valeur locale non gouvernée entre silencieusement dans KPI-CA-NET-001.</p>
+<p>La politique s'applique au scénario NERIVANE-KPI-2026-07 et à ses données entièrement synthétiques. Elle couvre les référentiels organisationnels, les responsabilités, les documents, les sites, les canaux et les correspondances nécessaires au rapprochement. Elle ne confère aucune autorité au modèle d'IA : celui-ci peut signaler un conflit de référentiel, mais ne crée ni ne corrige une valeur maître.</p>
+<h3 id="DOC-013-REFERENTIELS">Référentiels gouvernés</h3>
+<div class="table-wrap"><table><thead><tr><th>Référentiel</th><th>Population du corpus réduit</th><th>Autorité</th><th>Usage principal</th></tr></thead><tbody>
+<tr><td>site</td><td>10</td><td>R003 avec les stewards R017</td><td>Résoudre HQ01, WH01 et AG01 à AG08</td></tr>
+<tr><td>role</td><td>18</td><td>R003</td><td>Définir les responsabilités opposables</td></tr>
+<tr><td>person</td><td>26</td><td>R003</td><td>Identifier les personnes fictives porteuses des rôles</td></tr>
+<tr><td>assignment</td><td>37</td><td>R003 avec R005</td><td>Relier personne, rôle, périmètre et période de validité</td></tr>
+<tr><td>document</td><td>28</td><td>R003 avec chaque owner_role_id</td><td>Gérer version, statut, remplacement et publication</td></tr>
+</tbody></table></div>
+<p>Les 119 lignes de ces cinq tables de référence ont été chargées dans BigQuery. Les 21 valeurs de périmètre observées dans assignment sont contrôlées par leur usage et leur période ; elles ne doivent pas être converties en site lorsque leur sémantique est PROGRAM, FINANCE, DATA_PRODUCT ou KPI-CA-NET-001.</p>
+<p>Le plan historique prévoit par ailleurs 14 842 906 événements mdm_reference_history. Ce nombre reste proposé pour le plein volume. Le pilote on-premise validé contient 45 245 événements de ce domaine ; cette mesure ne prouve pas l'exécution des 14 842 906 événements planifiés.</p>
+<h3 id="DOC-013-AUTORITE">Autorité et délégation</h3>
+<p>R003 porte la politique d'entreprise. R017 entretient les valeurs et instruit les anomalies locales. Les affectations ASN-016 à ASN-023 couvrent les huit agences ; ASN-029 couvre HQ01 ; ASN-034, ASN-035 et ASN-036 apportent une capacité de steward déléguée sur FINANCE, CRM et PRICING.</p>
+<p>Une délégation est recevable uniquement si l'affectation existe, si sa période couvre la date métier et si delegated vaut true lorsqu'elle complète le rôle principal. La délégation ne transfère pas la propriété de la politique. Une correction effectuée par un steward doit pouvoir être revue par l'autorité du domaine et rattachée à un document courant.</p>
+<h3 id="DOC-013-CYCLE">Cycle de vie d'une valeur maître</h3>
+<ol><li>Une valeur candidate est reçue avec son système source et sa date de validité.</li><li>Le steward vérifie format, unicité, autorité de source et correspondance existante.</li><li>Une valeur conforme est activée avec une période explicite ; une valeur ambiguë reste en revue.</li><li>Une évolution crée une nouvelle version ou une nouvelle période. Elle ne réécrit pas l'historique.</li><li>Les consommateurs utilisent la version valable à la date métier, non la dernière valeur disponible par défaut.</li><li>Le retrait d'une valeur conserve son identifiant et sa période pour permettre le replay.</li></ol>
+<p>Pour les documents, la chaîne supersedes doit pointer vers un document existant. DOC-008 remplace DOC-007, qui remplace DOC-006. Les versions remplacées restent accessibles et clairement marquées SUPERSEDED ; elles sont nécessaires pour comprendre les conflits historiques.</p>
+<h3 id="DOC-013-VALIDATION">Règles de validation</h3>
+<p>Les sites doivent appartenir aux dix identifiants gouvernés et ne peuvent être utilisés avant leur date d'ouverture. Les personnes et rôles doivent exister avant toute affectation. Une affectation doit référencer la même personne et le même rôle que ceux annoncés dans le document qui l'utilise. Un canal du corpus KPI réduit doit appartenir à agency, ecommerce ou key_accounts. Une date de juillet 2026 doit se combiner aux huit agences et aux trois canaux pour former les 744 strates attendues.</p>
+<p>Une référence absente, multiple ou hors période ne reçoit jamais une valeur de substitution arbitraire. Elle est isolée avec sa source et la règle de pont applicable. La correction n'est intégrée qu'après résolution de l'autorité et répétition des contrôles affectés.</p>
+<h3 id="DOC-013-C010">Conflit pré-arbitrage</h3>
+<p><strong>Matière à arbitrer C-010.</strong> Le jeu de conflits conserve un cas injecté dans lequel un site ou un motif ne possède aucune correspondance gouvernée. DOC-014 décrit le mécanisme de correspondance mais ne peut pas inventer la valeur manquante. BR-FIN-04 maintient les références orphelines hors de la ligne canonique.</p>
+<p>Le conflit reste pré-arbitrage dans ce snapshot : faut-il compléter le référentiel après preuve de l'autorité, ou exclure la ligne du périmètre certifiable ? La présente politique impose seulement le comportement sûr — quarantaine et absence de publication — sans fabriquer rétroactivement une décision. Le cas doit rester visible jusqu'à la décision humaine et à la compilation de cette décision en contrôle déterministe.</p>
+<h3 id="DOC-013-SECURITE">Qualité, sécurité et publication</h3>
+<p>Toutes les personnes, organisations et signatures sont fictives. Aucun courrier électronique, identifiant client réel ou secret technique n'appartient au référentiel public. Les identifiants stables sont conçus pour la démonstration et ne permettent pas d'identifier une personne réelle.</p>
+<p>Le contrôle de résolution des clés et de la chaîne de remplacement est validé sur le corpus réduit. Cela ne lève pas le veto de publication : les conflits sémantiques exigent toujours un arbitrage. Les preuves publiques peuvent exposer comptes, périodes, statuts et empreintes assainies ; les observations d'identité d'accès et les journaux bruts restent hors du corpus public.</p>
+<h3 id="DOC-013-LIMITES">Limites de preuve</h3>
+<p>La <a href="../evidence/gcp/sample-apply/20260826T070016Z/manifest.json">preuve BigQuery</a> couvre les cinq tables de référence et le corpus réduit de 531 240 lignes physiques. La <a href="../evidence/onprem-lake-pilot-dcff45d/manifest.json">preuve du pilote</a> couvre 25 000 000 lignes par couche, soit 75 000 000 lignes physiques sur RAW, BRONZE et SILVER, ainsi que 2 394 fichiers inventoriés. Aucune chronologie entre ces deux exécutions n'est revendiquée.</p>
+<p>Le plein volume de 7 404 704 501 lignes reste proposé. Cette politique décrit comment ses références seraient gouvernées ; elle n'atteste pas que son historique complet a été généré.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

@@ -1,0 +1,340 @@
+{
+  "attempted_sequence": 5,
+  "authorization": {
+    "order_text_sha256": "dc597b5fef996440d5f5470a337d7c9cf92de7e26ee2db8f4d53be1db644f57d",
+    "scope": "CREATE_EXACT_FIVE_DATASETS",
+    "single_use": true,
+    "status": "EXPLICIT_USER_ORDER_RECEIVED"
+  },
+  "billing_after": {
+    "billing_account_name": null,
+    "billing_enabled": false
+  },
+  "billing_before": {
+    "billing_account_name": null,
+    "billing_enabled": false
+  },
+  "cli": {
+    "bigqueryrc_neutralized": "true",
+    "bq_version": "This is BigQuery CLI 2.1.37",
+    "pinned_binary_paths_verified": "true",
+    "sdk_release": "581.0.0"
+  },
+  "command_contract": {
+    "automatic_rollback": false,
+    "job_id_mode": "DETERMINISTIC_SINGLE_USE_AUTHORIZATION",
+    "maximum_bytes_billed": 10000000,
+    "shell": false,
+    "sql_transport": "STDIN_ONLY",
+    "synchronous_mode": false,
+    "use_legacy_sql": false
+  },
+  "dataset_contracts": [
+    {
+      "acl_entry_count": 4,
+      "approved_user_owner_present": true,
+      "cross_resource_acl_present": false,
+      "dataset_id": "nerivane_raw",
+      "default_table_expiration_ms": "2592000000",
+      "description": "Nérivane — données sources synthétiques, couche raw",
+      "labels": {
+        "billing_mode": "unlinked",
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "environment": "sandbox",
+        "layer": "raw"
+      },
+      "location": "europe-west9",
+      "max_time_travel_hours": "48",
+      "project_id": "datapredict-nerivane-2026",
+      "status": "PASS"
+    },
+    {
+      "acl_entry_count": 4,
+      "approved_user_owner_present": true,
+      "cross_resource_acl_present": false,
+      "dataset_id": "nerivane_reference",
+      "default_table_expiration_ms": "2592000000",
+      "description": "Nérivane — référentiels synthétiques gouvernés",
+      "labels": {
+        "billing_mode": "unlinked",
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "environment": "sandbox",
+        "layer": "reference"
+      },
+      "location": "europe-west9",
+      "max_time_travel_hours": "48",
+      "project_id": "datapredict-nerivane-2026",
+      "status": "PASS"
+    },
+    {
+      "acl_entry_count": 4,
+      "approved_user_owner_present": true,
+      "cross_resource_acl_present": false,
+      "dataset_id": "nerivane_staging",
+      "default_table_expiration_ms": "2592000000",
+      "description": "Nérivane — normalisation et contrôles intermédiaires",
+      "labels": {
+        "billing_mode": "unlinked",
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "environment": "sandbox",
+        "layer": "staging"
+      },
+      "location": "europe-west9",
+      "max_time_travel_hours": "48",
+      "project_id": "datapredict-nerivane-2026",
+      "status": "PASS"
+    },
+    {
+      "acl_entry_count": 4,
+      "approved_user_owner_present": true,
+      "cross_resource_acl_present": false,
+      "dataset_id": "nerivane_mart",
+      "default_table_expiration_ms": "2592000000",
+      "description": "Nérivane — produits de données et KPI gouverné",
+      "labels": {
+        "billing_mode": "unlinked",
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "environment": "sandbox",
+        "layer": "mart"
+      },
+      "location": "europe-west9",
+      "max_time_travel_hours": "48",
+      "project_id": "datapredict-nerivane-2026",
+      "status": "PASS"
+    },
+    {
+      "acl_entry_count": 4,
+      "approved_user_owner_present": true,
+      "cross_resource_acl_present": false,
+      "dataset_id": "nerivane_evidence",
+      "default_table_expiration_ms": "2592000000",
+      "description": "Nérivane — preuves techniques assainies et décisions",
+      "labels": {
+        "billing_mode": "unlinked",
+        "data_class": "synthetic",
+        "demo": "nerivane",
+        "environment": "sandbox",
+        "layer": "evidence"
+      },
+      "location": "europe-west9",
+      "max_time_travel_hours": "48",
+      "project_id": "datapredict-nerivane-2026",
+      "status": "PASS"
+    }
+  ],
+  "datasets_after": [
+    "nerivane_evidence",
+    "nerivane_mart",
+    "nerivane_raw",
+    "nerivane_reference",
+    "nerivane_staging"
+  ],
+  "datasets_before": [],
+  "dry_runs": [
+    {
+      "dataset_id": "nerivane_raw",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "returncode": 0,
+      "sequence": 1,
+      "statement_sha256": "d601e5b56c1aba73e5ebbf4d76dcff4418019513cc82a23d613504e5a3fd41b6",
+      "status": "PASS_BEST_EFFORT_DRY_RUN"
+    },
+    {
+      "dataset_id": "nerivane_reference",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "returncode": 0,
+      "sequence": 2,
+      "statement_sha256": "9491d84743948f30249413b36af479009d156983da5e15f4c3869a6f60c51733",
+      "status": "PASS_BEST_EFFORT_DRY_RUN"
+    },
+    {
+      "dataset_id": "nerivane_staging",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "returncode": 0,
+      "sequence": 3,
+      "statement_sha256": "b90e9c503b9bb3df516b047857bb3dc2d6b6333a7e1595e92077bdf39029732a",
+      "status": "PASS_BEST_EFFORT_DRY_RUN"
+    },
+    {
+      "dataset_id": "nerivane_mart",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "returncode": 0,
+      "sequence": 4,
+      "statement_sha256": "589c4f2a67cda9332f7e3128ea83fbc943c8880deb63e15976be045cfc457f35",
+      "status": "PASS_BEST_EFFORT_DRY_RUN"
+    },
+    {
+      "dataset_id": "nerivane_evidence",
+      "estimated_bytes": 0,
+      "maximum_bytes_billed": 10000000,
+      "returncode": 0,
+      "sequence": 5,
+      "statement_sha256": "b61abb91f316763c376dd30a2e1b9297a53561bdadd5ca9c909ae87813cd2536",
+      "status": "PASS_BEST_EFFORT_DRY_RUN"
+    }
+  ],
+  "failure_code": null,
+  "generated_at": "2026-08-25T16:53:03.344182+00:00",
+  "git": {
+    "commit": "5476d025714e5e84c68fad9d1e2cf59b8589aed5",
+    "tree": "13682ffa9ac93ccf9948a5a07b75a04226adda96",
+    "worktree_clean_before_preflight": true
+  },
+  "jobs": [
+    {
+      "dataset_id": "nerivane_raw",
+      "ddl_operation_performed": "CREATE",
+      "error_result_present": false,
+      "job_id": "nerivane_bootstrap_dc597b5fef99_01",
+      "maximum_bytes_billed": 10000000,
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "statement_sha256": "d601e5b56c1aba73e5ebbf4d76dcff4418019513cc82a23d613504e5a3fd41b6",
+      "statement_type": "CREATE_SCHEMA",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "total_bytes_billed": 0,
+      "total_bytes_processed": 0
+    },
+    {
+      "dataset_id": "nerivane_reference",
+      "ddl_operation_performed": "CREATE",
+      "error_result_present": false,
+      "job_id": "nerivane_bootstrap_dc597b5fef99_02",
+      "maximum_bytes_billed": 10000000,
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "statement_sha256": "9491d84743948f30249413b36af479009d156983da5e15f4c3869a6f60c51733",
+      "statement_type": "CREATE_SCHEMA",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "total_bytes_billed": 0,
+      "total_bytes_processed": 0
+    },
+    {
+      "dataset_id": "nerivane_staging",
+      "ddl_operation_performed": "CREATE",
+      "error_result_present": false,
+      "job_id": "nerivane_bootstrap_dc597b5fef99_03",
+      "maximum_bytes_billed": 10000000,
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "statement_sha256": "b90e9c503b9bb3df516b047857bb3dc2d6b6333a7e1595e92077bdf39029732a",
+      "statement_type": "CREATE_SCHEMA",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "total_bytes_billed": 0,
+      "total_bytes_processed": 0
+    },
+    {
+      "dataset_id": "nerivane_mart",
+      "ddl_operation_performed": "CREATE",
+      "error_result_present": false,
+      "job_id": "nerivane_bootstrap_dc597b5fef99_04",
+      "maximum_bytes_billed": 10000000,
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "statement_sha256": "589c4f2a67cda9332f7e3128ea83fbc943c8880deb63e15976be045cfc457f35",
+      "statement_type": "CREATE_SCHEMA",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "total_bytes_billed": 0,
+      "total_bytes_processed": 0
+    },
+    {
+      "dataset_id": "nerivane_evidence",
+      "ddl_operation_performed": "CREATE",
+      "error_result_present": false,
+      "job_id": "nerivane_bootstrap_dc597b5fef99_05",
+      "maximum_bytes_billed": 10000000,
+      "run_action": "CREATE_CONFIRMED",
+      "state": "DONE",
+      "statement_sha256": "b61abb91f316763c376dd30a2e1b9297a53561bdadd5ca9c909ae87813cd2536",
+      "statement_type": "CREATE_SCHEMA",
+      "status": "PASS",
+      "submission_returncode": 0,
+      "total_bytes_billed": 0,
+      "total_bytes_processed": 0
+    }
+  ],
+  "location": "europe-west9",
+  "mutations_performed": [
+    {
+      "dataset_id": "nerivane_raw",
+      "job_id": "nerivane_bootstrap_dc597b5fef99_01",
+      "operation": "CREATE_SCHEMA"
+    },
+    {
+      "dataset_id": "nerivane_reference",
+      "job_id": "nerivane_bootstrap_dc597b5fef99_02",
+      "operation": "CREATE_SCHEMA"
+    },
+    {
+      "dataset_id": "nerivane_staging",
+      "job_id": "nerivane_bootstrap_dc597b5fef99_03",
+      "operation": "CREATE_SCHEMA"
+    },
+    {
+      "dataset_id": "nerivane_mart",
+      "job_id": "nerivane_bootstrap_dc597b5fef99_04",
+      "operation": "CREATE_SCHEMA"
+    },
+    {
+      "dataset_id": "nerivane_evidence",
+      "job_id": "nerivane_bootstrap_dc597b5fef99_05",
+      "operation": "CREATE_SCHEMA"
+    }
+  ],
+  "policy_sha256": "5e58b9f22f2399fefed1dc92d5457d75aa95563483f7e6fc9761604f78633b59",
+  "private_evidence_commitment": {
+    "file_count": 38,
+    "index_sha256": "2fdaff183edcc68dabdd2ad817060dc96e34f39483b6f750a6efc3bc6d70418e",
+    "raw_observations_public": false
+  },
+  "project_id": "datapredict-nerivane-2026",
+  "proof_scope": "GCP_BOOTSTRAP_FIVE_DATASETS",
+  "schema_version": 1,
+  "source_sha256": {
+    "billing-after-dry-runs.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-after.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-before.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-step-01-after.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-step-01-before.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-step-02-after.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-step-02-before.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-step-03-after.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-step-03-before.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-step-04-after.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-step-04-before.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-step-05-after.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "billing-step-05-before.json": "4441508dbddcb350d3f685d6c458028408e98f8c8d70f6e5c2fca83fd6f3f7d6",
+    "dataset-contracts.json": "7df373b169ed70b164edd41c1f2afa95e8948f1137b66738c338154e82cc8a7d",
+    "datasets-after-dry-runs.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "datasets-after.json": "0d15963a6a2efebc541b94290161f5478169597310580f986c4305eb8ddda40e",
+    "datasets-before.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "datasets-step-01-after.json": "ee6f4592097a4a59e65431b058a2507c237d0d5b475b0f68fbdd888e5f0e508f",
+    "datasets-step-01-before.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "datasets-step-02-after.json": "3cff4605e30e2e50a6f80c33e1c04056c7892efec408cec978c20559f72f1101",
+    "datasets-step-02-before.json": "ee6f4592097a4a59e65431b058a2507c237d0d5b475b0f68fbdd888e5f0e508f",
+    "datasets-step-03-after.json": "a61afcf59e0c7a6b14f409f17cbab413d3d763e64acc57ffae9b96d057ec0238",
+    "datasets-step-03-before.json": "3cff4605e30e2e50a6f80c33e1c04056c7892efec408cec978c20559f72f1101",
+    "datasets-step-04-after.json": "cfbb4685a6152ada717e7daf050354dd73f4bf571eb0a60552d6b60384a65e1f",
+    "datasets-step-04-before.json": "a61afcf59e0c7a6b14f409f17cbab413d3d763e64acc57ffae9b96d057ec0238",
+    "datasets-step-05-after.json": "0d15963a6a2efebc541b94290161f5478169597310580f986c4305eb8ddda40e",
+    "datasets-step-05-before.json": "cfbb4685a6152ada717e7daf050354dd73f4bf571eb0a60552d6b60384a65e1f",
+    "dry-runs.json": "1200067e583aa77962d12970b6b516a9f553e724bdfa7305a0b6d87907e388b7",
+    "jobs.json": "30a573bae9a7e496bc6baf816e69dcf04b0fdf589f72222acf0d3669ce10cf7a",
+    "project-after.json": "1962e0654c1928ca19ca0bd94b5f536540ee00afd524a255cadfe960cd3de0a5",
+    "project-before.json": "1962e0654c1928ca19ca0bd94b5f536540ee00afd524a255cadfe960cd3de0a5"
+  },
+  "sql_sha256": "afef83e646a0c80415d4964fa954b1705f94fb5d25a46296a998cc4940596752",
+  "status": "PASS"
+}
