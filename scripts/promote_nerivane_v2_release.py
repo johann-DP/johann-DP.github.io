@@ -223,7 +223,10 @@ def _replace_catalogue(current: bytes, fragment: bytes) -> bytes:
         or b"maintenance" in stripped.lower()
     ):
         raise _fail("NERIVANE_V2_CATALOGUE_FRAGMENT_INVALID")
-    indented = b"\n".join(indentation + line for line in stripped.splitlines())
+    indented = b"\n".join(
+        indentation + line if line else b""
+        for line in stripped.splitlines()
+    )
     return prefix + b"\n" + indented + b"\n" + indentation + suffix
 
 

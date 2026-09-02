@@ -179,6 +179,13 @@ class NerivaneV2PromotionTests(unittest.TestCase):
         )
         self.assertNotIn("maintenance", page.lower())
         self.assertIn(self.release_id, page)
+        catalogue = (
+            self.site / "demonstrations.html"
+        ).read_text(encoding="utf-8")
+        self.assertFalse(any(
+            line.rstrip() != line
+            for line in catalogue.splitlines()
+        ))
         self.assertEqual(
             promoter._protected_snapshot(self.site),
             self.protected_before,

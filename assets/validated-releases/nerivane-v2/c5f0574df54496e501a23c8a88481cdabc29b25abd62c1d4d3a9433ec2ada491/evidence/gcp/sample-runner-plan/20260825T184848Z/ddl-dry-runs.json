@@ -1,0 +1,138 @@
+[
+  {
+    "ddl_sha256": "66fd8165328afe849562bb70c198a24a84cfaa8f3c94726b0db2858cd914444b",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 1,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_raw.crm_order_line"
+  },
+  {
+    "ddl_sha256": "4432bc6075abc1815205d3cafad5fdd01847019f677db2a4602183e39f846f44",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 2,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_raw.erp_invoice_line"
+  },
+  {
+    "ddl_sha256": "92bb7b0520a74ff1e153fb7e8adcb15f6465354b4d947748346034e4bdfd570c",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 3,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_raw.finance_ledger_line"
+  },
+  {
+    "ddl_sha256": "be320ea465442fe44e5560b2c3a599b479719cddb0f952a9a567fb8e26aaf961",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 4,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_reference.site"
+  },
+  {
+    "ddl_sha256": "78055ee5fdb09f5d409462757348bd5fa77ff9545786b8faa848772a03d6ffa1",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 5,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_reference.role"
+  },
+  {
+    "ddl_sha256": "28455f12a945d455255fd56000edf2030c8c6ff4407eebd3579864cecd54a3c3",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 6,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_reference.person"
+  },
+  {
+    "ddl_sha256": "6d7de5f3e746a9f23007bb3d5ea26322c54f9cd71e246fa16935ad6443c5cb77",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 7,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_reference.assignment"
+  },
+  {
+    "ddl_sha256": "66fe2b93d3776f05e7d4bf9446de79cb297369a99b2e936dcf02a172826ac460",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 8,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_reference.document"
+  },
+  {
+    "ddl_sha256": "973463d122472fecac5cf95bc5b69c177fb17e26435af1556c10723e3efbd294",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 9,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_staging.canonical_financial_line"
+  },
+  {
+    "ddl_sha256": "45316b0799d94d651b6c412406c879679e1f2db9cf99b211ed37be837e0b9f22",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 10,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_staging.bridge_exception"
+  },
+  {
+    "ddl_sha256": "40333c71b42979c3f78c1fcfeb195424ae8381ead1d614d19e0cf936e6e6ec35",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 11,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_mart.kpi_source_value"
+  },
+  {
+    "ddl_sha256": "806ee9bff7c22e061a811e1835deca3e3d95cb9380a5cdeabcbe103ae0ed9778",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 12,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_mart.kpi_bridge_adjustment"
+  },
+  {
+    "ddl_sha256": "b9a748dacc7ec42a1df0095e067a7a5fb1a6467119ab06ec854f93b34cba4e14",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 13,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_mart.kpi_certified"
+  },
+  {
+    "ddl_sha256": "f854a2ce29e1e891662dc5a7f5fb3695ebe9d87659a4770c9a89d240d39390fe",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 14,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_evidence.control_result"
+  },
+  {
+    "ddl_sha256": "518a6b21d963630633737bfe039272ec75956c44f3870f3d72cf7da5602d6497",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 15,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_evidence.lineage_edge"
+  },
+  {
+    "ddl_sha256": "94178ac0a04adde5f211c1d98123396a7ed865d8768afd18b7cc075c6efaefb7",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 16,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_evidence.semantic_case"
+  },
+  {
+    "ddl_sha256": "3bedd39c66bf2ce5245c4ff262e9e0dacb35a23ed806dff08fe9c1bdd27ea91f",
+    "estimated_bytes": 0,
+    "maximum_bytes_billed": 10000000,
+    "sequence": 17,
+    "status": "PASS_BEST_EFFORT_DRY_RUN",
+    "table": "nerivane_evidence.publication_gate"
+  }
+]

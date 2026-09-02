@@ -1,0 +1,74 @@
+[
+  {
+    "bytes_billed": 52428800,
+    "bytes_processed": 52428800,
+    "control_count": 1,
+    "dry_run_estimated_bytes": 52428800,
+    "group_id": "CG-01",
+    "identity_and_billing_guard_after": "PASS",
+    "identity_and_billing_guard_before": "PASS",
+    "job_id": "nerivane_control_group_b38ac2195b_894399d95b_01",
+    "minimum_billed_bytes_floor": 52428800,
+    "projected_billed_bytes": 52428800,
+    "referenced_tables": [
+      "nerivane_evidence.INFORMATION_SCHEMA.PARTITIONS",
+      "nerivane_mart.INFORMATION_SCHEMA.PARTITIONS",
+      "nerivane_raw.INFORMATION_SCHEMA.PARTITIONS",
+      "nerivane_reference.INFORMATION_SCHEMA.PARTITIONS",
+      "nerivane_staging.INFORMATION_SCHEMA.PARTITIONS"
+    ],
+    "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+    "sql_sha256": "894399d95b5408519798f5af206879b39691718a308df9cf51190b188f7d9b2f",
+    "status": "PASS"
+  },
+  {
+    "bytes_billed": 83886080,
+    "bytes_processed": 24404545,
+    "control_count": 33,
+    "dry_run_estimated_bytes": 24404545,
+    "group_id": "CG-02",
+    "identity_and_billing_guard_after": "PASS",
+    "identity_and_billing_guard_before": "PASS",
+    "job_id": "nerivane_control_group_b38ac2195b_3aa588210a_02",
+    "minimum_billed_bytes_floor": 83886080,
+    "projected_billed_bytes": 83886080,
+    "referenced_tables": [
+      "nerivane_mart.kpi_bridge_adjustment",
+      "nerivane_mart.kpi_certified",
+      "nerivane_mart.kpi_source_value",
+      "nerivane_raw.crm_order_line",
+      "nerivane_raw.erp_invoice_line",
+      "nerivane_raw.finance_ledger_line",
+      "nerivane_staging.bridge_exception",
+      "nerivane_staging.canonical_financial_line"
+    ],
+    "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+    "sql_sha256": "3aa588210a31b47b560864ed324280e1763370ad6ba3bd4f74bcab291adf1b30",
+    "status": "PASS"
+  },
+  {
+    "bytes_billed": 83886080,
+    "bytes_processed": 2487,
+    "control_count": 2,
+    "dry_run_estimated_bytes": 2487,
+    "group_id": "CG-03",
+    "identity_and_billing_guard_after": "PASS",
+    "identity_and_billing_guard_before": "PASS",
+    "job_id": "nerivane_control_group_b38ac2195b_232eba35a3_03",
+    "minimum_billed_bytes_floor": 83886080,
+    "projected_billed_bytes": 83886080,
+    "referenced_tables": [
+      "nerivane_evidence.control_result",
+      "nerivane_evidence.publication_gate",
+      "nerivane_evidence.semantic_case",
+      "nerivane_reference.assignment",
+      "nerivane_reference.document",
+      "nerivane_reference.person",
+      "nerivane_reference.role",
+      "nerivane_reference.site"
+    ],
+    "run_action": "SUBMITTED_DETERMINISTIC_JOB",
+    "sql_sha256": "232eba35a3707f775b1f69ca21c4698201c3924cdd40e96d9835e24d48f8ee32",
+    "status": "PASS"
+  }
+]
