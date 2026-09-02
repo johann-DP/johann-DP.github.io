@@ -17,12 +17,14 @@ CATALOGUE = ROOT / "demonstrations.html"
 
 VALIDATED_FIGURE_LINKS = (
     "../assets/figures/demo-2/building-geometry.html",
+    "../assets/figures/demo-2/retaining-wall-sensor-source-values.html",
+    "../assets/figures/demo-2/weather/complements/meteo_explorateur_toutes_mesures.html",
+    "../assets/figures/demo-2/weather/complements/meteo_qualite_acquisition.html",
     "../assets/figures/demo-2/01-historical-crack-analysis-compacted-v2.html",
     "../assets/figures/demo-2/fissure-recente-meme-format.html",
     "../assets/figures/demo-2/joint-dilatation-rendu-site.html",
-    "../assets/figures/demo-2/retaining-wall-sensor-source-values.html",
-    "../assets/figures/demo-2/retaining-wall-extrema-hours.html",
     "../assets/figures/demo-2/retaining-wall-median-day.html",
+    "../assets/figures/demo-2/retaining-wall-extrema-hours.html",
     "../assets/figures/demo-2/weather/legacy/meteo_temperature.html",
     "../assets/figures/demo-2/weather/legacy/meteo_temp_minmax.html",
     "../assets/figures/demo-2/weather/legacy/meteo_humidity.html",
@@ -31,8 +33,6 @@ VALIDATED_FIGURE_LINKS = (
     "../assets/figures/demo-2/weather/legacy/meteo_wind_speed.html",
     "../assets/figures/demo-2/weather/legacy/meteo_wind_dir.html",
     "../assets/figures/demo-2/weather/legacy/meteo_pairplots.html",
-    "../assets/figures/demo-2/weather/complements/meteo_explorateur_toutes_mesures.html",
-    "../assets/figures/demo-2/weather/complements/meteo_qualite_acquisition.html",
 )
 
 UNVALIDATED_SENSOR_CANDIDATES = (
@@ -81,7 +81,7 @@ class Demo2PublicationStateTests(unittest.TestCase):
 
         self.assertIn('<body class="fissures-demo" data-maintenance="true">', page)
         self.assertIn("Démonstration 2 · En maintenance", page)
-        self.assertIn("Les restitutions déjà validées restent consultables", page)
+        self.assertIn("Les restitutions déjà publiées restent consultables", page)
         self.assertNotIn("<div hidden>", page)
         self.assertIn("<span class=\"demonstrations-page__card-status\">En maintenance</span>", demo2_card)
         self.assertIn("Consulter la version en maintenance", demo2_card)
