@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Index public des preuves — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-028</nav>
+<p class="eyebrow">Document synthétique · DOC-028</p>
+<h1>Index public des preuves</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Amine Boulard</dd></div>
+  <div><dt>Rôle</dt><dd>Relecteur sécurité RSSI</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>ea9f0fa2268e71047f7843fa042aa1cf43838826954b0e7e8de0759ea86cf20a</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Démonstration — document entièrement fictif avec index de preuves techniques réelles.</strong> L’organisation, les personnes, le KPI daté de juillet 2026 et les décisions métier sont synthétiques. Les fichiers publics listés comme preuves techniques ont réellement été produits les 25, 26 et 27 août 2026 dans ce dépôt. Aucun chemin privé, absolu ou secret n’est exposé ici.</blockquote>
+<h2>Index public des preuves</h2>
+<h3 id="DOC-028-DATES">Règle de lecture des dates</h3>
+<p>La date métier <code>2026-07-31</code> appartient au scénario fictif Nérivane. Elle sert à dater le KPI, les responsabilités et les documents candidats. Les dates des 25, 26 et 27 août 2026 sont les dates réelles d’exécution et de conservation des preuves techniques publiques. Une preuve technique datée d’août ne démontre pas qu’un événement métier fictif s’est réellement produit en juillet.</p>
+<h3 id="DOC-028-PERIMETRE">Périmètre public</h3>
+<p>Cet index expose uniquement des chemins relatifs au dépôt et des conclusions assainies. Les preuves privées, observations d’identité brutes, journaux internes, secrets et chemins locaux sont volontairement absents. Chaque répertoire de preuve public contient un fichier de sommes de contrôle permettant de vérifier son intégrité.</p>
+<h3 id="DOC-028-GCP-PREFLIGHT">Préflight GCP du 25 août 2026</h3>
+<div class="table-wrap"><table><thead><tr><th>Chemin public relatif</th><th>Statut</th><th>Ce que la preuve démontre</th><th>Ce qu’elle ne démontre pas</th></tr></thead><tbody>
+<tr><td><a href="../evidence/gcp/preflight/20260825T154820Z/manifest.json">evidence/gcp/preflight/20260825T154820Z/manifest.json</a></td><td>PASS</td><td>Lecture du projet Sandbox, absence de facturation liée et inventaire BigQuery initial vide.</td><td>Création de datasets ou chargement de données.</td></tr>
+<tr><td><a href="../evidence/gcp/preflight/20260825T154820Z/SHA256SUMS">evidence/gcp/preflight/20260825T154820Z/SHA256SUMS</a></td><td>Disponible</td><td>Intégrité du paquet public de préflight.</td><td>Authenticité d’une identité non publiée.</td></tr>
+</tbody></table></div>
+<p>L’horodatage de référence du manifeste est le 25 août 2026 à 15:48:23 UTC. Le scope est en lecture seule et le paquet ne revendique aucune mutation.</p>
+<h3 id="DOC-028-GCP-BOOTSTRAP">Bootstrap GCP du 25 août 2026</h3>
+<div class="table-wrap"><table><thead><tr><th>Chemin public relatif</th><th>Statut</th><th>Portée exacte</th></tr></thead><tbody>
+<tr><td><a href="../evidence/gcp/bootstrap-apply/20260825T165303Z/manifest.json">evidence/gcp/bootstrap-apply/20260825T165303Z/manifest.json</a></td><td>PASS</td><td>Création gardée des cinq datasets <code>nerivane_raw</code>, <code>nerivane_reference</code>, <code>nerivane_staging</code>, <code>nerivane_mart</code> et <code>nerivane_evidence</code>.</td></tr>
+<tr><td><a href="../evidence/gcp/bootstrap-apply/20260825T165303Z/dataset-contracts.json">evidence/gcp/bootstrap-apply/20260825T165303Z/dataset-contracts.json</a></td><td>PASS</td><td>Région, expirations, labels, time travel et ACL observés.</td></tr>
+<tr><td><a href="../evidence/gcp/bootstrap-apply/20260825T165303Z/jobs.json">evidence/gcp/bootstrap-apply/20260825T165303Z/jobs.json</a></td><td>PASS</td><td>Cinq jobs de création terminés et facturés à zéro octet.</td></tr>
+<tr><td><a href="../evidence/gcp/bootstrap-apply/20260825T165303Z/SHA256SUMS">evidence/gcp/bootstrap-apply/20260825T165303Z/SHA256SUMS</a></td><td>Disponible</td><td>Intégrité du paquet public de bootstrap.</td></tr>
+</tbody></table></div>
+<p>Ce paquet ne prouve pas encore les tables ni leur contenu. Son horodatage réel est le 25 août 2026 à 16:53:03 UTC.</p>
+<h3 id="DOC-028-GCP-SAMPLE">Plan et chargement GCP des 25 et 26 août 2026</h3>
+<div class="table-wrap"><table><thead><tr><th>Chemin public relatif</th><th>Statut</th><th>Portée exacte</th></tr></thead><tbody>
+<tr><td><a href="../evidence/gcp/sample-runner-plan/20260825T184848Z/manifest.json">evidence/gcp/sample-runner-plan/20260825T184848Z/manifest.json</a></td><td>PASS</td><td>Plan gardé, inventaires en lecture et 17 dry-runs DDL sans mutation.</td></tr>
+<tr><td><a href="../evidence/gcp/sample-runner-plan/20260825T184848Z/SHA256SUMS">evidence/gcp/sample-runner-plan/20260825T184848Z/SHA256SUMS</a></td><td>Disponible</td><td>Intégrité du plan public.</td></tr>
+<tr><td><a href="../evidence/gcp/sample-apply/20260826T070016Z/manifest.json">evidence/gcp/sample-apply/20260826T070016Z/manifest.json</a></td><td>PASS</td><td>Création et chargement de 17 tables, puis exécution des contrôles du corpus V1.</td></tr>
+<tr><td><a href="../evidence/gcp/sample-apply/20260826T070016Z/table-contracts.json">evidence/gcp/sample-apply/20260826T070016Z/table-contracts.json</a></td><td>PASS</td><td>Schémas, partitions, clusters, labels, expirations et nombres de lignes observés.</td></tr>
+<tr><td><a href="../evidence/gcp/sample-apply/20260826T070016Z/controls.json">evidence/gcp/sample-apply/20260826T070016Z/controls.json</a></td><td>PASS</td><td>36 résultats de contrôle validés en trois groupes.</td></tr>
+<tr><td><a href="../evidence/gcp/sample-apply/20260826T070016Z/local-artifacts.json">evidence/gcp/sample-apply/20260826T070016Z/local-artifacts.json</a></td><td>PASS</td><td>Correspondance entre les artefacts locaux autorisés et le run.</td></tr>
+<tr><td><a href="../evidence/gcp/sample-apply/20260826T070016Z/SHA256SUMS">evidence/gcp/sample-apply/20260826T070016Z/SHA256SUMS</a></td><td>Disponible</td><td>Intégrité du paquet public d’apply.</td></tr>
+</tbody></table></div>
+<p>Le corpus chargé compte 17 tables et 531 240 lignes physiques. Cette preuve n’autorise pas à affirmer qu’un plein volume de 7 404 704 501 lignes a été exécuté. Le gate de publication est <code>BLOCKED</code> et l’état IA reste <code>NOT_EXECUTED_EXPECTED_VETO</code>.</p>
+<h3 id="DOC-028-ONPREM">Preuves on-premise trois couches</h3>
+<div class="table-wrap"><table><thead><tr><th>Chemin public relatif</th><th>Statut</th><th>Portée exacte</th></tr></thead><tbody>
+<tr><td><a href="../evidence/onprem-lake-calibration-dcff45d/execution-proof.json">evidence/onprem-lake-calibration-dcff45d/execution-proof.json</a></td><td>PASS</td><td>Calibration mesurée de 1 000 000 lignes par couche, soit 3 000 000 lignes et 2 394 Parquet cumulés.</td></tr>
+<tr><td><a href="../evidence/onprem-lake-calibration-dcff45d/PUBLIC_SHA256SUMS">evidence/onprem-lake-calibration-dcff45d/PUBLIC_SHA256SUMS</a></td><td>Disponible</td><td>Intégrité du paquet public assaini de calibration trois couches.</td></tr>
+<tr><td><a href="../evidence/onprem-lake-pilot-dcff45d/execution-proof.json">evidence/onprem-lake-pilot-dcff45d/execution-proof.json</a></td><td>PASS</td><td>Pilote mesuré de 25 000 000 lignes par couche, soit 75 000 000 lignes et 2 394 Parquet cumulés, avec 421 763 ancres.</td></tr>
+<tr><td><a href="../evidence/onprem-lake-pilot-dcff45d/PUBLIC_SHA256SUMS">evidence/onprem-lake-pilot-dcff45d/PUBLIC_SHA256SUMS</a></td><td>Disponible</td><td>Intégrité du paquet public assaini du pilote trois couches.</td></tr>
+</tbody></table></div>
+<p>Ces preuves remplacent dans le replay courant les premiers paquets on-premise, désormais historiques et supersédés. Elles attestent la calibration et le pilote trois couches seulement. Elles ne prouvent ni la génération du plein volume, ni une chronologie métier réelle, ni l’exécution du gate IA.</p>
+<h3 id="DOC-028-ANCRES-METIER">Ancres métier synthétiques</h3>
+<p><code>EVID-KPI-CA-NET-001-2026-07</code> identifie la valeur candidate déterministe du scénario. <code>EVID-CTRL-023</code> identifie l’intégrité des références structurées. <code>EVID-CTRL-024</code> identifie le gate de publication bloqué. Ces identifiants appartiennent au corpus fictif ; leur présence n’étend pas la portée des manifestes techniques.</p>
+<p>La chaîne <code>DOC-006</code> → <code>DOC-007</code> → <code>DOC-008</code> est une chaîne documentaire fictive à préserver dans le replay. Le conflit C-003 porte précisément sur la version présentée comme courante. Le cas C-012 empêche de confondre le plein volume proposé avec les exécutions effectivement mesurées.</p>
+<h3 id="DOC-028-C003-PRIMARY">Artefact primaire de l'index hérité</h3>
+<p>L'extrait d'index synthétique suivant est la pièce pré-arbitrage de C-003. Il est figé comme entrée fautive et ne représente pas l'index documentaire courant :</p>
+<div class="table-wrap"><table><thead><tr><th>kpi_id</th><th>current_document_id</th><th>current_version</th><th>index_status</th><th>index_snapshot</th></tr></thead><tbody>
+<tr><td>KPI-CA-NET-001</td><td>DOC-006</td><td>0.9</td><td>CURRENT</td><td>LEGACY_PRE_ARBITRATION</td></tr>
+</tbody></table></div>
+<p>Cette ligne démontre l'erreur à diagnostiquer : elle présente DOC-006 comme courant alors que DOC-006 est <code>SUPERSEDED</code> et que DOC-008 porte la définition candidate opposable. L'extrait n'altère ni le catalogue actuel ni la chaîne de remplacement ; il fournit seulement la matière primaire fictive à citer avant arbitrage.</p>
+<h3 id="DOC-028-IA-ABSENTE">Preuve IA absente au snapshot</h3>
+<p>Aucun répertoire public de preuve IA exécutée n’est indexé, car aucun run modèle n’a encore été attesté. <code>DOC-027</code> est un rapport de préparation non exécuté. L’index sera complété uniquement après production d’un manifeste IA, des sorties capturées, de la validation de schéma, de la résolution des citations, des métriques du jeu d’or et de l’arbitrage fictif.</p>
+<h3 id="DOC-028-ASSAINISSEMENT">Contrôle d'assainissement</h3>
+<p>Le lecteur public doit pouvoir vérifier les conclusions à partir des chemins ci-dessus sans accéder à une machine, une API ou un projet cloud. Tout ajout futur à l’index doit rester relatif, public, empreinté et accompagné d’une phrase indiquant ce qu’il prouve et ce qu’il ne prouve pas.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

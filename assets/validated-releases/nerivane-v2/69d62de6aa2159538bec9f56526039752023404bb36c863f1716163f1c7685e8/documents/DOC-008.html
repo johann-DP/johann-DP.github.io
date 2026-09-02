@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Contrat certifié du KPI chiffre d&#x27;affaires net — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-008</nav>
+<p class="eyebrow">Document synthétique · DOC-008</p>
+<h1>Contrat certifié du KPI chiffre d&#x27;affaires net</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.1</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Claire Delmas</dd></div>
+  <div><dt>Rôle</dt><dd>Data Owner du KPI</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>b156ed2dcb7a9effb721f0ced8648b1687fb2066f2c7e2b73c044fa565d5b379</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Données, organisation et signatures entièrement fictives.</strong> Ce contrat fixe la définition métier attendue dans le scénario. Les résultats techniques doivent être prouvés séparément ; le titre « certifié » ne constitue pas, à lui seul, une preuve d'exécution.</blockquote>
+<h3 id="IDENTITE-KPI">Identité du KPI</h3>
+<div class="table-wrap"><table><thead><tr><th>Champ</th><th>Valeur contractuelle</th></tr></thead><tbody>
+<tr><td>Identifiant</td><td>KPI-CA-NET-001</td></tr>
+<tr><td>Libellé</td><td>Chiffre d'affaires net gouverné</td></tr>
+<tr><td>Mois</td><td>2026-07</td></tr>
+<tr><td>Devise</td><td>EUR</td></tr>
+<tr><td>Unité de calcul</td><td>centime entier</td></tr>
+<tr><td>Data Owner</td><td>Claire Delmas <code>PER-002</code></td></tr>
+<tr><td>Affectation</td><td>ASN-027</td></tr>
+<tr><td>Définition remplacée</td><td>DOC-007</td></tr>
+</tbody></table></div>
+<h3 id="DEFINITION-OPPOSABLE">Définition opposable</h3>
+<p>Le chiffre d'affaires net gouverné est la somme des ventes de biens réalisées dans le périmètre autorisé au plus tard le 31 juillet 2026, après déduction des annulations, retours, remises et crédits applicables, et après exclusion des composantes non commerciales définies ci-dessous.</p>
+<p>Une vente est réalisée si elle possède une agence de service et un canal autorisés, si elle est rattachée sans ambiguïté à une ligne canonique, si l'exécution logistique justifie le cut-off et si aucun statut terminal d'annulation ne l'exclut.</p>
+<h3 id="INCLUSIONS-EXCLUSIONS">Inclusions et exclusions</h3>
+<div class="table-wrap"><table><thead><tr><th>Composante</th><th>Traitement courant</th></tr></thead><tbody>
+<tr><td>Prix des biens livrés</td><td>Inclus</td></tr>
+<tr><td>Remise commerciale acquise</td><td>Déduite</td></tr>
+<tr><td>Retour rattachable à la période</td><td>Déduit</td></tr>
+<tr><td>Avoir ou crédit relatif à la vente</td><td>Déduit selon le cut-off gouverné</td></tr>
+<tr><td>Taxe collectée</td><td>Exclue</td></tr>
+<tr><td>Fret refacturé comme prestation logistique distincte</td><td>Exclu</td></tr>
+<tr><td>Commande annulée avant exécution</td><td>Exclue</td></tr>
+<tr><td>Facture provisoire ou annulée</td><td>Exclue</td></tr>
+<tr><td>Écriture intercompagnies ou non opérationnelle</td><td>Exclue</td></tr>
+<tr><td>Provision hors définition</td><td>Exclue</td></tr>
+<tr><td>Doublon technique ou métier</td><td>Exclu</td></tr>
+<tr><td>Référence non résolue</td><td>Mise en quarantaine puis exclue tant qu'elle n'est pas gouvernée</td></tr>
+</tbody></table></div>
+<p>Cette matrice ferme les ambiguïtés de <code>DOC-006</code> et <code>DOC-007</code>. Elle constitue la réponse attendue aux cas <code>C-001</code> et <code>C-002</code>.</p>
+<h3 id="AUTORITE-PAR-COMPOSANTE">Autorité par composante</h3>
+<div class="table-wrap"><table><thead><tr><th>Composante</th><th>Autorité de fait</th><th>Usage dans le rapprochement</th></tr></thead><tbody>
+<tr><td>Capture, annulation, retour commercial</td><td>CRM</td><td>état commercial et événement déclencheur</td></tr>
+<tr><td>Livraison et cut-off opérationnel</td><td>ERP, éclairé par WMS</td><td>preuve de réalisation</td></tr>
+<tr><td>Facture opérationnelle</td><td>ERP</td><td>montant et statut de facturation</td></tr>
+<tr><td>Comptabilisation</td><td>Finance</td><td>période et nature de l'écriture</td></tr>
+<tr><td>Site, canal et motifs</td><td>référentiels gouvernés</td><td>qualification et unicité</td></tr>
+<tr><td>Valeur finale</td><td>rapprochement défini par DOC-008</td><td>aucune source seule n'est autorité finale</td></tr>
+</tbody></table></div>
+<p>Les revendications d'autorité finale présentes dans les contrats candidats <code>DOC-009</code>, <code>DOC-010</code> ou <code>DOC-011</code> sont des conflits à arbitrer, et non des règles concurrentes valides.</p>
+<h3 id="VALEURS-SOURCES">Valeurs sources contractuelles</h3>
+<div class="table-wrap"><table><thead><tr><th>Source</th><th>Lignes physiques du périmètre source</th><th>Valeur source en centimes</th><th>Ajustement total en centimes</th><th>Valeur gouvernée attendue en centimes</th></tr></thead><tbody>
+<tr><td>CRM</td><td>164 487</td><td>1 284 261 000</td><td>-55 616 000</td><td>1 228 645 000</td></tr>
+<tr><td>ERP</td><td>139 182</td><td>1 249 738 000</td><td>-21 093 000</td><td>1 228 645 000</td></tr>
+<tr><td>Finance</td><td>118 094</td><td>1 237 194 000</td><td>-8 549 000</td><td>1 228 645 000</td></tr>
+</tbody></table></div>
+<p>Les 421 763 lignes correspondent à la somme des trois périmètres physiques source. Elles ne représentent pas 421 763 ventes uniques. Le périmètre canonique attendu contient 100 823 lignes.</p>
+<h3 id="PONT-CRM">Pont CRM</h3>
+<div class="table-wrap"><table><thead><tr><th>Règle</th><th>Lignes</th><th>Ajustement en centimes</th><th>Solde après étape en centimes</th></tr></thead><tbody>
+<tr><td>BR-CRM-01</td><td>1 204</td><td>-21 478 340</td><td>1 262 782 660</td></tr>
+<tr><td>BR-CRM-02</td><td>683</td><td>-14 936 825</td><td>1 247 845 835</td></tr>
+<tr><td>BR-CRM-03</td><td>3 412</td><td>-11 284 710</td><td>1 236 561 125</td></tr>
+<tr><td>BR-CRM-04</td><td>587</td><td>-7 916 125</td><td>1 228 645 000</td></tr>
+</tbody></table></div>
+<h3 id="PONT-ERP">Pont ERP</h3>
+<div class="table-wrap"><table><thead><tr><th>Règle</th><th>Lignes</th><th>Ajustement en centimes</th><th>Solde après étape en centimes</th></tr></thead><tbody>
+<tr><td>BR-ERP-01</td><td>442</td><td>-8 763 412</td><td>1 240 974 588</td></tr>
+<tr><td>BR-ERP-02</td><td>588</td><td>-4 208 788</td><td>1 236 765 800</td></tr>
+<tr><td>BR-ERP-03</td><td>326</td><td>-6 941 535</td><td>1 229 824 265</td></tr>
+<tr><td>BR-ERP-04</td><td>217</td><td>-1 179 265</td><td>1 228 645 000</td></tr>
+</tbody></table></div>
+<h3 id="PONT-FINANCE">Pont Finance</h3>
+<div class="table-wrap"><table><thead><tr><th>Règle</th><th>Lignes</th><th>Ajustement en centimes</th><th>Solde après étape en centimes</th></tr></thead><tbody>
+<tr><td>BR-FIN-01</td><td>193</td><td>-3 712 480</td><td>1 233 481 520</td></tr>
+<tr><td>BR-FIN-02</td><td>128</td><td>-2 638 905</td><td>1 230 842 615</td></tr>
+<tr><td>BR-FIN-03</td><td>588</td><td>-1 402 315</td><td>1 229 440 300</td></tr>
+<tr><td>BR-FIN-04</td><td>84</td><td>-795 300</td><td>1 228 645 000</td></tr>
+</tbody></table></div>
+<h3 id="CONTROLES-CERTIFICATION">Contrôles de certification</h3>
+<p><code>CTRL-011</code> et <code>CTRL-012</code> portent l'unicité et la couverture des mappings. <code>CTRL-013</code> à <code>CTRL-016</code> portent les montants. <code>CTRL-017</code> à <code>CTRL-021</code> portent les exceptions et les ponts. <code>CTRL-022</code> exige la convergence des trois valeurs gouvernées. <code>CTRL-023</code> ferme les références et la chaîne documentaire.</p>
+<p>Ces identifiants définissent les preuves attendues. Une valeur écrite dans ce contrat ne peut être présentée comme exécutée que si le manifeste technique correspondant cite un résultat mesuré.</p>
+<h3 id="GATE-PUBLICATION">Gate de publication</h3>
+<p>Le calcul déterministe du KPI est indépendant du gate. Un modèle peut détecter une contradiction sémantique et rendre <code>ADMISSIBLE</code>, <code>REVIEW</code> ou <code>BLOCK</code>, mais il ne calcule ni ne certifie la valeur. Un verdict <code>BLOCK</code> maintient la publication interdite jusqu'à un arbitrage humain tracé et à la création d'un contrôle déterministe.</p>
+<h3 id="APPROBATION-FICTIVE">Approbation fictive</h3>
+<p>Dans le scénario, Claire Delmas porte la responsabilité <code>R008</code> et Malik Renaud l'approbation sponsor. Toute représentation de leur signature est fictive. L'acceptation technique réelle relève d'un dossier de preuve distinct du présent document métier.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>

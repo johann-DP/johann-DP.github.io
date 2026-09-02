@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Manifeste des données synthétiques — Nérivane Distribution</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header"><a href="../index.html">Nérivane Distribution</a><span>Replay prospect candidat · fictif</span></header>
+  <main id="contenu">
+<nav aria-label="Fil d’Ariane"><a href="../index.html">Replay</a> / DOC-017</nav>
+<p class="eyebrow">Document synthétique · DOC-017</p>
+<h1>Manifeste des données synthétiques</h1>
+<div class="notice blocked"><strong>Dossier candidat.</strong> Ce document ne lève ni le veto IA non exécuté ni le blocage de publication.</div>
+<dl class="metadata">
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Statut documentaire</dt><dd>APPROVED</dd></div>
+  <div><dt>Publication</dt><dd>PLANNED</dd></div>
+  <div><dt>Acceptation</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Exécution IA</dt><dd>NOT_APPLICABLE</dd></div>
+  <div><dt>Responsable fictif</dt><dd>Adrien Lemaire</dd></div>
+  <div><dt>Rôle</dt><dd>Data Engineer</dd></div>
+  <div><dt>SHA-256 du corps</dt><dd><code>85a6ad17442ea9ff1cf430ae817e39024f1a87a17cbf47293668fa27b86b5bd2</code></dd></div>
+</dl>
+<h2 id="contenu-documentaire">Contenu documentaire</h2>
+<article><blockquote><strong>Document de démonstration — données, organisation et signatures entièrement fictives.</strong></blockquote>
+<h3 id="DOC-017-OBJET">Objet et garanties</h3>
+<p>Ce manifeste décrit les populations synthétiques de Nérivane, leur déterminisme et les niveaux de preuve disponibles. Toutes les données sont fabriquées pour la démonstration. Elles ne dérivent d'aucun client, salarié, fournisseur ou terminal réel. Les personnes, organisations et signatures du corpus sont également fictives.</p>
+<p>La graine canonique est 202607310823. La période historique va du 1er janvier 2021 au 31 juillet 2026, soit 2 038 jours inclus. La période du KPI réduit est juillet 2026. Les montants sont produits et contrôlés en centimes entiers.</p>
+<h3 id="DOC-017-PLAN-COMPLET">Plan complet proposé</h3>
+<div class="table-wrap"><table><thead><tr><th>Domaine</th><th>Lignes planifiées</th></tr></thead><tbody>
+<tr><td>crm_order_header</td><td>1 843 721</td></tr>
+<tr><td>crm_order_line</td><td>44 946 872</td></tr>
+<tr><td>commercial_lifecycle_event</td><td>617 231 597</td></tr>
+<tr><td>erp_invoice_header</td><td>1 971 378</td></tr>
+<tr><td>erp_invoice_line</td><td>43 773 169</td></tr>
+<tr><td>erp_credit_adjustment</td><td>2 394 817</td></tr>
+<tr><td>wms_handling_scan</td><td>2 458 731 604</td></tr>
+<tr><td>inventory_state_event</td><td>1 762 498 331</td></tr>
+<tr><td>pricing_rule_application</td><td>1 337 846 299</td></tr>
+<tr><td>finance_ledger_event</td><td>104 726 583</td></tr>
+<tr><td>platform_control_event</td><td>1 013 897 224</td></tr>
+<tr><td>mdm_reference_history</td><td>14 842 906</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>7 404 704 501</strong></td></tr>
+</tbody></table></div>
+<p>Ce total est non rond et déterministe, mais son statut reste PROPOSÉ. Les projections pondérées issues du pilote mesuré sont de 13 734 246 965 254 octets en RAW, 4 470 130 068 922 en BRONZE et 3 064 967 027 460 en SILVER, soit 21 269 344 061 636 octets au total. Ces valeurs restent des projections : elles ne constituent pas une mesure du plein volume.</p>
+<h3 id="DOC-017-ONPREM">Exécutions on-premise validées</h3>
+<div class="table-wrap"><table><thead><tr><th>Profil</th><th>Lignes par couche</th><th>Lignes physiques cumulées</th><th>Fichiers Parquet</th><th>Octets encodés cumulés</th><th>Statut</th></tr></thead><tbody>
+<tr><td>calibration-1m</td><td>1 000 000</td><td>3 000 000</td><td>2 394</td><td>2 994 835 321</td><td>PASS</td></tr>
+<tr><td>pilot-25m</td><td>25 000 000</td><td>75 000 000</td><td>2 394</td><td>74 013 405 120</td><td>PASS</td></tr>
+</tbody></table></div>
+<p>La calibration a exercé un shadow de 16 871 lignes sans valeur probante sur l'équivalence GCP. Le pilote contient 421 763 ancres dont l'équivalence de contenu avec les trois sources gouvernées du corpus réduit est vérifiée. Sa vérification exhaustive couvre schémas, fichiers, nombres de lignes, cardinalité exacte des identités, empreintes, équivalence RAW vers BRONZE, dérivation BRONZE vers SILVER et invariants causaux.</p>
+<p>Les Parquet restent hors du dépôt public. Leurs chemins relatifs, tailles et SHA-256 sont conservés dans les manifestes publics. Le profil complet est bloqué parce que la stratégie de stockage et l'index nécessaire au lignage causal ne sont pas encore validés à cette échelle.</p>
+<h3 id="DOC-017-BIGQUERY">Corpus BigQuery réduit validé</h3>
+<p>Le corpus local déterministe destiné à BigQuery comprend 17 fichiers gzip totalisant 27 350 664 octets. Il produit 17 tables, 531 240 lignes physiques et 78 916 173 octets logiques observés dans BigQuery. Les trois sources financières représentent 421 763 lignes ; le staging contient 100 823 lignes canoniques et 8 452 exceptions ; les marts portent trois valeurs sources, douze ajustements et une ligne KPI.</p>
+<p>Le chargement et 36 contrôles ont le statut PASS. Aucun compte de facturation n'était lié au projet. Les 36 contrôles ont traité 76 835 832 octets et déclaré 220 200 960 octets facturables logiques sous le plafond fermé. Ces nombres décrivent les jobs BigQuery ; ils ne sont pas une facture et ne prouvent pas un service permanent.</p>
+<h3 id="DOC-017-DETERMINISME">Déterminisme et reproductibilité</h3>
+<p>La reproductibilité repose sur la graine fixe, les versions de contrat, les schémas explicites, l'allocation en centimes entiers, les dates fermées et les empreintes de contenu. Les fichiers gzip utilisent des en-têtes déterministes. Les Parquet sont découpés selon un plan fermé et finalisés de façon atomique. Un fichier partiel n'est jamais adopté comme résultat valide.</p>
+<p>Chaque niveau de preuve est séparé : le plan décrit une cible ; le générateur produit des fichiers ; le manifeste compte et empreinte ces fichiers ; la vérification relit les contenus ; la preuve publique assainie expose seulement les constats nécessaires. Une absence d'exception ou un fichier créé ne remplace jamais cette chaîne.</p>
+<h3 id="DOC-017-NEUTRALITE">Neutralité et sécurité</h3>
+<p>Les noms de personnes, sites et fonctions sont synthétiques. Les identifiants ne proviennent pas d'un système externe. Aucun courrier électronique, secret, jeton, adresse personnelle ou identifiant client réel n'est généré. Le corpus public expose uniquement des données nécessaires à la compréhension de la gouvernance et des résultats.</p>
+<p>Les fichiers de preuve peuvent contenir des empreintes, versions, compteurs et identifiants de jobs assainis. Les observations d'identité brutes et les journaux privés restent hors du dépôt public.</p>
+<h3 id="DOC-017-C012">Conflit d'assertion volumique</h3>
+<p><strong>Matière à arbitrer C-012.</strong> Un support pré-arbitrage a affirmé que les 7 404 704 501 lignes avaient été exécutées. Aucune preuve de run complet ne soutient cette affirmation. Le présent manifeste conserve l'existence de ce conflit sans réécrire rétroactivement le support concerné.</p>
+<p>L'extrait primaire synthétique du support fautif est figé ainsi :</p>
+<div class="table-wrap"><table><thead><tr><th>support_ref</th><th>statut à la capture</th><th>assertion publiée dans le support</th><th>référence de preuve fournie</th></tr></thead><tbody>
+<tr><td>SUPPORT-VOL-C012-V0</td><td>PRE_ARBITRATION_QUARANTINED</td><td>« 7 404 704 501 lignes générées, contrôlées et disponibles pour la démonstration. »</td><td>AUCUNE</td></tr>
+</tbody></table></div>
+<p>Cet extrait est conservé uniquement comme matière contradictoire du dossier fictif. Il ne constitue ni un manifeste d'exécution, ni une mesure, ni une preuve du plein volume.</p>
+<p>L'état faisant autorité est le suivant : 1 000 000 lignes de calibration par couche validées, 25 000 000 lignes de pilote par couche validées, 531 240 lignes BigQuery validées, plein volume seulement proposé et bloqué. Toute sortie IA doit détecter l'affirmation non soutenue, citer la preuve disponible et produire BLOCK ; elle ne peut pas promouvoir le plan au rang de mesure.</p>
+<h3 id="DOC-017-LIMITES">Chronologie et limites</h3>
+<p>L'équivalence des 421 763 ancres porte sur le contenu. Elle ne revendique pas que le pilote on-premise a précédé le chargement BigQuery. Les deux preuves peuvent être montrées ensemble à condition de conserver cette limite.</p>
+<p>Le manifeste ne certifie pas le KPI. La valeur de 1 228 645 000 centimes est réconciliée par des contrôles déterministes, mais la publication reste BLOCKED jusqu'à l'exécution conforme du gate sémantique et l'arbitrage humain.</p></article>
+</main>
+  <footer><strong>Portée :</strong> démonstration synthétique. Gate <code>BLOCKED</code>, IA <code>NOT_EXECUTED</code>.</footer>
+</body>
+</html>
