@@ -36,7 +36,6 @@ jobs:
           from html.parser import HTMLParser
           from pathlib import Path
           from urllib.parse import unquote, urlsplit
-          import hashlib
           import json
           import os
           import re
@@ -74,6 +73,8 @@ jobs:
               "assets/nerivane-public-v1/references.html",
               "assets/nerivane-public-v1/replay-manifest.json",
               "contracts/nerivane-v2-site-promotion-v1.json",
+              "scripts/promote_demo2_validated_release.py",
+              "scripts/validate_demo2_active_figures.py",
               "scripts/validate_nerivane_site_state.py",
               "assets/figures/demo-2/content-manifest.json",
               "assets/figures/demo-2/weather/content-manifest.json",
@@ -88,82 +89,17 @@ jobs:
               if not (root / relative_path).is_file():
                   errors.append(f"fichier obligatoire absent : {relative_path}")
 
-          figure_root = root / "assets/figures/demo-2"
-          expected_figure_manifests = {
-              "content-manifest.json": "cf04223a690b77a8da017a98929d326a3605409c18144cde165726609b4e0915",
-              "weather/content-manifest.json": "4e81b0db6dead0cf6031aa67e75a7b8f92ac0dd8cdec7eb959893c32bf3cbecd",
-          }
-          immutable_figure_html = set()
-          expected_figure_files = {
-              (figure_root / relative).resolve()
-              for relative in expected_figure_manifests
-          }
-          figure_master_count = 0
-          for relative, expected_sha256 in expected_figure_manifests.items():
-              manifest_path = figure_root / relative
-              if not manifest_path.is_file():
-                  continue
-              manifest_bytes = manifest_path.read_bytes()
-              if hashlib.sha256(manifest_bytes).hexdigest() != expected_sha256:
-                  errors.append(f"manifeste de figures modifié : {manifest_path.relative_to(root)}")
-                  continue
-              try:
-                  manifest = json.loads(manifest_bytes.decode("utf-8"))
-              except (UnicodeError, json.JSONDecodeError) as exc:
-                  errors.append(f"manifeste de figures invalide : {relative} : {exc}")
-                  continue
-              entries = manifest.get("files")
-              if not isinstance(entries, list):
-                  errors.append(f"manifeste de figures sans liste de fichiers : {relative}")
-                  continue
-              for entry in entries:
-                  if not isinstance(entry, dict) or set(entry) != {"path", "role", "sha256", "size_bytes"}:
-                      errors.append(f"entrée de manifeste invalide : {relative}")
-                      continue
-                  candidate = (manifest_path.parent / entry["path"]).resolve()
-                  try:
-                      candidate.relative_to(figure_root.resolve())
-                  except ValueError:
-                      errors.append(f"chemin de figure hors racine : {entry['path']}")
-                      continue
-                  expected_figure_files.add(candidate)
-                  if not candidate.is_file():
-                      errors.append(f"figure absente : {candidate.relative_to(root)}")
-                      continue
-                  payload = candidate.read_bytes()
-                  if len(payload) != entry["size_bytes"]:
-                      errors.append(f"taille de figure divergente : {candidate.relative_to(root)}")
-                  if hashlib.sha256(payload).hexdigest() != entry["sha256"]:
-                      errors.append(f"empreinte de figure divergente : {candidate.relative_to(root)}")
-                  if candidate.suffix.lower() in {".html", ".htm"}:
-                      immutable_figure_html.add(candidate)
-                  if entry["role"] == "responsive_html_master":
-                      figure_master_count += 1
+          sys.path.insert(0, str(root / "scripts"))
+          import validate_demo2_active_figures as demo2_figures
 
-          if figure_master_count != 17:
-              errors.append(f"17 maîtres HTML attendus, trouvé : {figure_master_count}")
-          observed_figure_files = {
-              path.resolve() for path in figure_root.rglob("*") if path.is_file()
+          try:
+              demo2_figures.validate_active_figure_tree(site_root=root)
+          except demo2_figures.Demo2FigureValidationError as exc:
+              errors.extend(exc.errors)
+          immutable_figure_html = {
+              (root / "assets/figures/demo-2" / relative).resolve()
+              for relative in demo2_figures.HTML_MASTER_PATHS
           }
-          if observed_figure_files != expected_figure_files:
-              errors.append("le sous-arbre des figures contient un fichier absent des manifestes")
-
-          sensor_figure = figure_root / "retaining-wall-sensor-source-values.html"
-          if sensor_figure.is_file():
-              sensor_text = sensor_figure.read_text(encoding="utf-8")
-              required_sensor_markers = (
-                  "temps source naïf — fuseau à confirmer",
-                  "valeur source — unité à confirmer",
-                  "Aucune correction, conversion, interpolation, jointure, causalité ni diagnostic",
-                  'src="weather/assets/plotly-2.35.2.min.js"',
-              )
-              for marker in required_sensor_markers:
-                  if marker not in sensor_text:
-                      errors.append(
-                          f"figure brute D2-CAP : mention obligatoire absente : {marker}"
-                      )
-              if re.search(r'(?:src|href)=["\']https?://', sensor_text, re.IGNORECASE):
-                  errors.append("figure brute D2-CAP : dépendance réseau interdite")
 
           counter = root / "assets/js/audience-counter.js"
           if counter.is_file():

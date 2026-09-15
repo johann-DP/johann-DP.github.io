@@ -74,10 +74,12 @@ def build_source_bundle(
     runtime_payload: bytes = b"plotly-runtime",
     approved_at_utc: str = "2026-08-29T12:34:56Z",
     figure_payload: bytes | None = None,
+    selected_figures: tuple[tuple[str, str, bytes], ...] | None = None,
 ) -> Path:
     figure = figure_payload or (
         b"<!doctype html><html lang='fr'><title>candidate</title></html>"
     )
+    figures = selected_figures or ((logical_id, release_path, figure),)
     if release_kind == "weather_complement_review":
         dependencies = {
             importer.WEATHER_PLOTLY: runtime_payload,
@@ -108,11 +110,12 @@ def build_source_bundle(
         },
         "selected_figures": [
             {
-                "logical_figure_id": logical_id,
-                "release_path": release_path,
-                "sha256": digest(figure),
-                "size_bytes": len(figure),
+                "logical_figure_id": selected_logical_id,
+                "release_path": selected_release_path,
+                "sha256": digest(selected_payload),
+                "size_bytes": len(selected_payload),
             }
+            for selected_logical_id, selected_release_path, selected_payload in figures
         ],
         "publication": {
             "preserve_current_validated_masters": True,
@@ -135,11 +138,18 @@ def build_source_bundle(
             "validation_scope": "GRAPHICAL_PUBLICATION_ONLY",
         }
     )
-    published = {release_path: figure, **dependencies}
+    published = {
+        **{
+            selected_release_path: selected_payload
+            for _, selected_release_path, selected_payload in figures
+        },
+        **dependencies,
+    }
+    selected_paths = {selected_release_path for _, selected_release_path, _ in figures}
     identity_files = [
         record(
             path,
-            "approved_figure" if path == release_path else "runtime_dependency",
+            "approved_figure" if path in selected_paths else "runtime_dependency",
             payload,
         )
         for path, payload in sorted(published.items())
@@ -160,7 +170,7 @@ def build_source_bundle(
     }
     roles = {
         **{
-            path: "approved_figure" if path == release_path else "runtime_dependency"
+            path: "approved_figure" if path in selected_paths else "runtime_dependency"
             for path in published
         },
         importer.APPROVAL_PATH: "human_validation_approval",
@@ -351,6 +361,45 @@ class SiteReleaseImportTests(unittest.TestCase):
                 if key in self.protected_before
             },
             self.protected_before,
+        )
+
+    def test_accepts_pattern_release_with_extrema_and_median_figures(self) -> None:
+        extrema = b"<!doctype html><html lang='fr'><title>extrema</title></html>"
+        median = b"<!doctype html><html lang='fr'><title>median</title></html>"
+        source = build_source_bundle(
+            self.sources,
+            release_kind="retaining_wall_sensor_pattern_review",
+            selected_figures=(
+                (
+                    "retaining-wall-extrema-hours",
+                    "retaining-wall-extrema-hours.html",
+                    extrema,
+                ),
+                (
+                    "retaining-wall-median-day",
+                    "retaining-wall-median-day.html",
+                    median,
+                ),
+            ),
+        )
+
+        result = importer.import_validated_release(source, site_root=self.site)
+
+        destination = (
+            self.site / "assets/validated-releases/demo-2" / result["promotion_id"]
+        )
+        self.assertEqual(result["state"], "IMPORTED_INACTIVE")
+        self.assertEqual(
+            (destination / "retaining-wall-extrema-hours.html").read_bytes(),
+            extrema,
+        )
+        self.assertEqual(
+            (destination / "retaining-wall-median-day.html").read_bytes(),
+            median,
+        )
+        self.assertEqual(
+            importer.verify_imported_releases(site_root=self.site),
+            (result["promotion_id"],),
         )
 
     def test_identical_reimport_is_idempotent(self) -> None:

@@ -115,6 +115,13 @@ RELEASE_RULES: dict[str, ReleaseRule] = {
         },
         dependency_paths=(PLOTLY, PLOTLY_LICENSE),
     ),
+    "retaining_wall_sensor_pattern_review": ReleaseRule(
+        logical_paths={
+            "retaining-wall-extrema-hours": "retaining-wall-extrema-hours.html",
+            "retaining-wall-median-day": "retaining-wall-median-day.html",
+        },
+        dependency_paths=(PLOTLY, PLOTLY_LICENSE),
+    ),
     "weather_complement_review": ReleaseRule(
         logical_paths={
             "weather-explorer": "complements/meteo_explorateur_toutes_mesures.html",
