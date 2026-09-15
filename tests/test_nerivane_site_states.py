@@ -3,7 +3,6 @@ from __future__ import annotations
 from copy import deepcopy
 import hashlib
 import json
-import os
 from pathlib import Path
 import stat
 import subprocess
@@ -25,6 +24,127 @@ from tests.test_import_nerivane_v2_release import (  # noqa: E402
 )
 
 
+def _demo2_html(relative: str) -> bytes:
+    strategy = states.DEMO2_ROTATING_STRATEGIES.get(relative)
+    if strategy == "legacy":
+        return (
+            b'<!doctype html><html><body><div id="plot"></div><script>'
+            b'Plotly.newPlot("plot", [{"x":[1]}], {});</script></body></html>'
+        )
+    if strategy == "sensor":
+        return (
+            '<!doctype html><html><body>'
+            '<p>temps source naïf — fuseau à confirmer</p>'
+            '<p>valeur source — unité à confirmer</p>'
+            '<p>Aucune correction, conversion, interpolation, jointure, causalité ni diagnostic</p>'
+            '<script src="weather/assets/plotly-2.35.2.min.js"></script>'
+            '<script>const FIGURE_METADATA = {"rows":1};</script>'
+            '<script id="d2-cap-payload" type="application/json">{"data":[1]}</script>'
+            '</body></html>'
+        ).encode("utf-8")
+    if strategy == "complement":
+        return (
+            b'<!doctype html><html><body><div class="facts">'
+            b'<strong>1</strong><strong>2</strong><strong>3</strong><strong>4</strong>'
+            b'</div><script id="payload" type="application/json">{"values":[1]}</script>'
+            b'</body></html>'
+        )
+    if strategy == "manual" and relative.startswith("fissure-"):
+        return (
+            b'<!doctype html><html><body><p>1 mesures</p><script>'
+            b'const data = [{"mode":"markers","name":"Mesures r\xc3\xa9centes","x":["2024-01-01"],"y":[1]}];'
+            b'const layouts = {desktop:{"xaxis":{"range":[0,1]}},tablet:{"xaxis":{"range":[0,1]}},mobile:{"xaxis":{"range":[0,1]}}};'
+            b'</script></body></html>'
+        )
+    if strategy == "manual":
+        return (
+            b'<!doctype html><html><body><p>1 mesures</p><script>const payload = '
+            b'{"data":[{"mode":"markers","name":"Mesures manuelles","x":["2024-01-01"],"y":[1]}],'
+            b'"layouts":{"desktop":{"xaxis":{"range":[0,1]}},"tablet":{"xaxis":{"range":[0,1]}},"mobile":{"xaxis":{"range":[0,1]}}}};'
+            b'</script></body></html>'
+        )
+    if relative.endswith(".html"):
+        return f"<!doctype html><html><body>{relative}</body></html>".encode()
+    return f"fixture:{relative}".encode()
+
+
+def _manifest(entries: dict[str, str], payloads: dict[str, bytes], *, weather: bool) -> bytes:
+    value: dict[str, object] = {
+        "manifest_version": 1 if weather else 2,
+        "files": [
+            {
+                "path": relative,
+                "role": role,
+                "sha256": hashlib.sha256(payloads[relative]).hexdigest(),
+                "size_bytes": len(payloads[relative]),
+            }
+            for relative, role in entries.items()
+        ],
+    }
+    if weather:
+        value["validation"] = dict(states.demo2_validator.WEATHER_VALIDATION)
+    return canonical(value)
+
+
+def build_valid_demo2_figures(site: Path) -> None:
+    root = site / states.DEMO2_FIGURE_ROOT
+    if root.exists():
+        for candidate in sorted(root.rglob("*"), reverse=True):
+            if candidate.is_file():
+                candidate.unlink()
+            elif candidate.is_dir():
+                candidate.rmdir()
+    root.mkdir(parents=True, exist_ok=True)
+
+    root_payloads = {
+        relative: _demo2_html(relative)
+        for relative in states.demo2_validator.ROOT_ENTRIES
+    }
+    weather_payloads = {
+        relative: _demo2_html(f"weather/{relative}")
+        for relative in states.demo2_validator.WEATHER_ENTRIES
+    }
+    for relative, payload in root_payloads.items():
+        target = root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(payload)
+    for relative, payload in weather_payloads.items():
+        target = root / "weather" / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(payload)
+    (root / states.demo2_validator.ROOT_MANIFEST_RELATIVE).write_bytes(
+        _manifest(
+            dict(states.demo2_validator.ROOT_ENTRIES),
+            root_payloads,
+            weather=False,
+        )
+    )
+    (root / states.demo2_validator.WEATHER_MANIFEST_RELATIVE).write_bytes(
+        _manifest(
+            dict(states.demo2_validator.WEATHER_ENTRIES),
+            weather_payloads,
+            weather=True,
+        )
+    )
+
+
+def update_demo2_manifest(site: Path, relative: str) -> None:
+    weather = relative.startswith("weather/")
+    manifest_relative = (
+        states.demo2_validator.WEATHER_MANIFEST_RELATIVE
+        if weather
+        else states.demo2_validator.ROOT_MANIFEST_RELATIVE
+    )
+    entry_relative = relative.removeprefix("weather/")
+    manifest_path = site / states.DEMO2_FIGURE_ROOT / manifest_relative
+    value = json.loads(manifest_path.read_bytes())
+    payload = (site / states.DEMO2_FIGURE_ROOT / relative).read_bytes()
+    record = next(item for item in value["files"] if item["path"] == entry_relative)
+    record["sha256"] = hashlib.sha256(payload).hexdigest()
+    record["size_bytes"] = len(payload)
+    manifest_path.write_bytes(canonical(value))
+
+
 class NerivaneClosedSiteStatesTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
@@ -32,6 +152,7 @@ class NerivaneClosedSiteStatesTests(unittest.TestCase):
         self.site = self.root / "site"
         self.site.mkdir()
         build_site(self.site)
+        build_valid_demo2_figures(self.site)
         self.baseline = states.capture_baseline(self.site)
         self.sources = self.root / "sources"
         self.sources.mkdir()
@@ -66,6 +187,71 @@ class NerivaneClosedSiteStatesTests(unittest.TestCase):
 
         self.assertEqual(result["state"], states.ACTIVE_STATE)
         self.assertEqual(result["release_id"], self.release_id)
+
+    def test_accepts_a_data_only_demo2_rotation_without_changing_nerivane(self) -> None:
+        protected_before = {
+            relative: (self.site / relative).read_bytes()
+            for relative in states.PROMOTED_TARGETS
+        }
+        relative = "weather/legacy/meteo_temperature.html"
+        target = self.site / states.DEMO2_FIGURE_ROOT / relative
+        target.write_bytes(
+            target.read_bytes().replace(b'[{"x":[1]}]', b'[{"x":[1,2]}]', 1)
+        )
+        update_demo2_manifest(self.site, relative)
+
+        result = self.validate()
+
+        self.assertEqual(result["state"], states.MAINTENANCE_STATE)
+        self.assertEqual(
+            {
+                relative: (self.site / relative).read_bytes()
+                for relative in states.PROMOTED_TARGETS
+            },
+            protected_before,
+        )
+
+    def test_rejects_a_demo2_non_rotating_change_with_a_consistent_manifest(self) -> None:
+        relative = "building-geometry.html"
+        target = self.site / states.DEMO2_FIGURE_ROOT / relative
+        target.write_bytes(target.read_bytes() + b" changed")
+        update_demo2_manifest(self.site, relative)
+
+        with self.assertRaisesRegex(
+            states.NerivaneSiteStateError,
+            "NERIVANE_PROTECTED_TREE_CHANGED",
+        ):
+            self.validate()
+
+    def test_rejects_a_visual_change_hidden_behind_a_rotating_demo2_manifest(self) -> None:
+        relative = "weather/legacy/meteo_temperature.html"
+        target = self.site / states.DEMO2_FIGURE_ROOT / relative
+        target.write_bytes(
+            target.read_bytes().replace(b'<div id="plot">', b'<div id="plot-altered">', 1)
+        )
+        update_demo2_manifest(self.site, relative)
+
+        with self.assertRaisesRegex(
+            states.NerivaneSiteStateError,
+            "NERIVANE_DEMO2_ROTATION_INVALID",
+        ):
+            self.validate()
+
+    def test_demo2_rotation_does_not_relax_nerivane_protection(self) -> None:
+        relative = "weather/legacy/meteo_temperature.html"
+        target = self.site / states.DEMO2_FIGURE_ROOT / relative
+        target.write_bytes(
+            target.read_bytes().replace(b'[{"x":[1]}]', b'[{"x":[1,2]}]', 1)
+        )
+        update_demo2_manifest(self.site, relative)
+        nerivane = self.site / "assets/nerivane-public-v1/index.html"
+        nerivane.write_bytes(nerivane.read_bytes() + b" changed")
+
+        with self.assertRaisesRegex(
+            states.NerivaneSiteStateError,
+            "NERIVANE_PROTECTED_TREE_CHANGED",
+        ):
+            self.validate()
 
     def test_rejects_a_hybrid_maintenance_and_active_page(self) -> None:
         self.promote()
@@ -346,6 +532,7 @@ class NerivaneClosedSiteStatesTests(unittest.TestCase):
             "assets/css/demo-ormevia.css",
             "assets/data/ormevia-scenarios.json",
             "assets/js/demo-ormevia.js",
+            "assets/figures/demo-2/building-geometry.html",
             "assets/nerivane-public-v1/index.html",
         )
         for relative in representatives:

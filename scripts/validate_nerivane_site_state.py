@@ -23,6 +23,8 @@ from typing import Any, Callable, Iterable, Mapping
 
 import import_nerivane_v2_release as importer
 import promote_nerivane_v2_release as promoter
+import refresh_demo2_live_data as demo2_refresh
+import validate_demo2_active_figures as demo2_validator
 
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
@@ -44,10 +46,49 @@ ACTIVE_TARGETS = (
 PROMOTED_TARGETS = (*ACTIVE_TARGETS, CATALOGUE_RELATIVE)
 SITE_FILE_MODE = 0o644
 SITE_DIRECTORY_MODE = 0o755
+DEMO2_FIGURE_ROOT = "assets/figures/demo-2"
+DEMO2_ROTATING_STRATEGIES: Mapping[str, str] = {
+    "fissure-recente-meme-format.html": "manual",
+    "joint-dilatation-rendu-site.html": "manual",
+    "retaining-wall-sensor-source-values.html": "sensor",
+    "weather/complements/meteo_explorateur_toutes_mesures.html": "complement",
+    "weather/complements/meteo_qualite_acquisition.html": "complement",
+    "weather/legacy/meteo_humidity.html": "legacy",
+    "weather/legacy/meteo_light_uv.html": "legacy",
+    "weather/legacy/meteo_pairplots.html": "legacy",
+    "weather/legacy/meteo_precipitation.html": "legacy",
+    "weather/legacy/meteo_temp_minmax.html": "legacy",
+    "weather/legacy/meteo_temperature.html": "legacy",
+    "weather/legacy/meteo_wind_speed.html": "legacy",
+}
+DEMO2_EXPECTED_ENTRIES = {
+    **demo2_validator.ROOT_ENTRIES,
+    **{
+        f"weather/{relative}": role
+        for relative, role in demo2_validator.WEATHER_ENTRIES.items()
+    },
+}
+if (
+    not set(DEMO2_ROTATING_STRATEGIES).issubset(DEMO2_EXPECTED_ENTRIES)
+    or any(
+        DEMO2_EXPECTED_ENTRIES[relative] != "responsive_html_master"
+        for relative in DEMO2_ROTATING_STRATEGIES
+    )
+):
+    raise RuntimeError("NERIVANE_DEMO2_ROTATION_CONTRACT_INVALID")
+DEMO2_FIXED_PATHS = tuple(
+    f"{DEMO2_FIGURE_ROOT}/{relative}"
+    for relative in sorted(set(DEMO2_EXPECTED_ENTRIES) - set(DEMO2_ROTATING_STRATEGIES))
+)
 PROTECTED_PATHS = tuple(
     sorted(
         {
-            *promoter._protected_paths(),
+            *(
+                relative
+                for relative in promoter._protected_paths()
+                if relative != DEMO2_FIGURE_ROOT
+            ),
+            *DEMO2_FIXED_PATHS,
             "assets/css/demo-ormevia.css",
             "assets/data/ormevia-scenarios.json",
             "assets/js/demo-ormevia.js",
@@ -100,7 +141,21 @@ DEFAULT_BASELINE: dict[str, Any] = {
     },
     "maintenance_catalogue_fragment_sha256": "24f984b4ce8bfe678b0dc175331337623fd9c9fae2cde36a900dcd78d69d90f1",
     "catalogue_outside_sha256": "d17e64629f82359d613415c5b7e096dcf252d95ad81ed9cef3464f27403422f5",
-    "protected_snapshot_sha256": "d0ddead04396ecab58ba637d9c64c0684f86e9f6f708946062197a98e2e85526",
+    "protected_snapshot_sha256": "d035e37cba5aa2f91fa02d3115cd400d6b52cce8e4eb6f3896947a9742a9dc73",
+    "demo2_rotating_skeletons": {
+        "fissure-recente-meme-format.html": "2210e366dfb500d872ea37565781bf4d74641e93d65feb6fd31849c11aca36fa",
+        "joint-dilatation-rendu-site.html": "4f839b3024dc6a9c8c719290f5f3ace4c811ae9efe134f0a8465cbcc484d4d18",
+        "retaining-wall-sensor-source-values.html": "def4aa1ef8a7011b85632826032880ac9df3b8eda6f6d7524cffa3543b0c1820",
+        "weather/complements/meteo_explorateur_toutes_mesures.html": "1b06b0c8f9eed1edaf5f6ccd698fa72ed65e7bc84596bcce4b05f9a60974e2e8",
+        "weather/complements/meteo_qualite_acquisition.html": "132c8514f85102d5eaf9da6a35f5453a9875085f79bb375a775aa84581b9e2c5",
+        "weather/legacy/meteo_humidity.html": "40896a88ce5c9c74ebbcea749e85fb803234b9a4142f0af0505cd61d63bbfa8a",
+        "weather/legacy/meteo_light_uv.html": "c34cec89c40d940b141df8fb1306af361a4e30f9e168ea68dd328e386fa95929",
+        "weather/legacy/meteo_pairplots.html": "215335b20174f9e4b2977a84bece49b3fd454f955de83146fb754a5854122887",
+        "weather/legacy/meteo_precipitation.html": "6c20d3b52cd15a6af6e242e5a0d18fc8a5f5513c85e2a42d6a5adb6d7a294075",
+        "weather/legacy/meteo_temp_minmax.html": "d234bddf984bc1a7903903810d18324857135589ce9fb86eb13b5142c84549fb",
+        "weather/legacy/meteo_temperature.html": "d0247f5354ce2bfa3fe6b6abb5cda3959acedc0810e0eecf89bce54623fd1146",
+        "weather/legacy/meteo_wind_speed.html": "9c2f950dc50d51c05902caf5b48dc62e74f1fcf6355f053d8b209ea5be3123b8",
+    },
 }
 
 
@@ -290,6 +345,94 @@ def protected_snapshot_sha256(site_root: Path) -> str:
     return _sha256(_canonical(snapshot))
 
 
+def _demo2_complement_skeleton(payload: bytes) -> bytes:
+    match, _ = demo2_refresh._payload(payload)
+    result = demo2_refresh._replace_span(payload, match, b"__PAYLOAD__")
+    start, end, content = demo2_refresh._facts_content(result)
+    facts = list(demo2_refresh._STRONG.finditer(content))
+    if len(facts) != 4:
+        raise demo2_refresh.RefreshError("REFRESH_COMPLEMENT_FACTS_UNEXPECTED")
+    for fact in reversed(facts):
+        content = (
+            content[: fact.start(2)]
+            + b"__FACT__"
+            + content[fact.end(2) :]
+        )
+    return result[:start] + content + result[end:]
+
+
+def _demo2_rotation_skeleton(payload: bytes, strategy: str) -> bytes:
+    if strategy == "legacy":
+        return demo2_refresh.legacy_data_only_skeleton(payload)
+    if strategy == "manual":
+        return demo2_refresh.manual_data_only_skeleton(payload)
+    if strategy == "sensor":
+        return demo2_refresh.raw_data_only_skeleton(payload)
+    if strategy == "complement":
+        return _demo2_complement_skeleton(payload)
+    raise _fail("NERIVANE_DEMO2_ROTATION_CONTRACT_INVALID")
+
+
+def demo2_rotating_skeletons(site_root: Path) -> dict[str, str]:
+    root = _root(site_root)
+    figure_root = root / DEMO2_FIGURE_ROOT
+    result: dict[str, str] = {}
+    try:
+        for relative, strategy in DEMO2_ROTATING_STRATEGIES.items():
+            payload = _read_regular(figure_root, relative)
+            result[relative] = _sha256(
+                _demo2_rotation_skeleton(payload, strategy)
+            )
+    except (demo2_refresh.RefreshError, UnicodeError, ValueError) as error:
+        raise _fail("NERIVANE_DEMO2_ROTATION_INVALID") from error
+    return result
+
+
+def _validate_demo2_path_contract(root: Path) -> None:
+    figure_root = root / DEMO2_FIGURE_ROOT
+    try:
+        entries = (figure_root, *figure_root.rglob("*"))
+        for entry in entries:
+            metadata = entry.lstat()
+            if stat.S_ISLNK(metadata.st_mode):
+                raise _fail("NERIVANE_DEMO2_PATH_CONTRACT_INVALID")
+            if stat.S_ISDIR(metadata.st_mode):
+                if stat.S_IMODE(metadata.st_mode) != SITE_DIRECTORY_MODE:
+                    raise _fail("NERIVANE_DEMO2_PATH_CONTRACT_INVALID")
+            elif stat.S_ISREG(metadata.st_mode):
+                if (
+                    stat.S_IMODE(metadata.st_mode) != SITE_FILE_MODE
+                    or metadata.st_nlink != 1
+                ):
+                    raise _fail("NERIVANE_DEMO2_PATH_CONTRACT_INVALID")
+            else:
+                raise _fail("NERIVANE_DEMO2_PATH_CONTRACT_INVALID")
+    except NerivaneSiteStateError:
+        raise
+    except OSError:
+        raise _fail("NERIVANE_DEMO2_PATH_CONTRACT_INVALID") from None
+
+
+def _validate_demo2_rotation(root: Path, baseline: Mapping[str, Any]) -> None:
+    try:
+        result = demo2_validator.validate_active_figure_tree(
+            site_root=root,
+            require_maintenance=True,
+        )
+    except (demo2_validator.Demo2FigureValidationError, OSError) as error:
+        raise _fail("NERIVANE_DEMO2_ACTIVE_FIGURES_INVALID") from error
+    if result != {
+        "figure_file_count": 24,
+        "html_master_count": 17,
+        "state": "VALIDÉ",
+        "status": "VERIFIED",
+    }:
+        raise _fail("NERIVANE_DEMO2_ACTIVE_FIGURES_INVALID")
+    _validate_demo2_path_contract(root)
+    if demo2_rotating_skeletons(root) != baseline["demo2_rotating_skeletons"]:
+        raise _fail("NERIVANE_DEMO2_ROTATION_INVALID")
+
+
 def capture_baseline(site_root: Path) -> dict[str, Any]:
     """Capture one explicit maintenance baseline for causal fixture tests."""
 
@@ -306,6 +449,7 @@ def capture_baseline(site_root: Path) -> dict[str, Any]:
         "maintenance_catalogue_fragment_sha256": _sha256(fragment),
         "catalogue_outside_sha256": _catalogue_outside_sha256(catalogue),
         "protected_snapshot_sha256": protected_snapshot_sha256(root),
+        "demo2_rotating_skeletons": demo2_rotating_skeletons(root),
     }
 
 
@@ -317,8 +461,10 @@ def _validate_baseline(value: Mapping[str, Any]) -> None:
         "maintenance_catalogue_fragment_sha256",
         "catalogue_outside_sha256",
         "protected_snapshot_sha256",
+        "demo2_rotating_skeletons",
     }
     targets = value.get("maintenance_targets")
+    rotating_skeletons = value.get("demo2_rotating_skeletons")
     digests = (
         value.get("maintenance_catalogue_fragment_sha256"),
         value.get("catalogue_outside_sha256"),
@@ -329,7 +475,13 @@ def _validate_baseline(value: Mapping[str, Any]) -> None:
         or value.get("contract_id") != "DATAPREDICT-NERIVANE-SITE-STATES-V1"
         or not isinstance(targets, dict)
         or set(targets) != set(ACTIVE_TARGETS)
+        or not isinstance(rotating_skeletons, dict)
+        or set(rotating_skeletons) != set(DEMO2_ROTATING_STRATEGIES)
         or any(RELEASE_ID_PATTERN.fullmatch(str(item)) is None for item in targets.values())
+        or any(
+            RELEASE_ID_PATTERN.fullmatch(str(item)) is None
+            for item in rotating_skeletons.values()
+        )
         or any(RELEASE_ID_PATTERN.fullmatch(str(item)) is None for item in digests)
     ):
         raise _fail("NERIVANE_SITE_BASELINE_INVALID")
@@ -1484,6 +1636,7 @@ def validate_site_state(
     if protected_snapshot_sha256(root) != baseline["protected_snapshot_sha256"]:
         raise _fail("NERIVANE_PROTECTED_TREE_CHANGED")
     _validate_demo2_maintenance(root, catalogue)
+    _validate_demo2_rotation(root, baseline)
 
     maintenance_present = MAINTENANCE_PAGE_MARKER in page.lower()
     page_matches = ACTIVE_PAGE_RELEASE_PATTERN.findall(page)
