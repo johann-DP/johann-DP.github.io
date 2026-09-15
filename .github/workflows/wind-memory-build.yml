@@ -1,0 +1,94 @@
+name: Wind memory - isolated data build
+on:
+  push:
+    branches: ['dataviz/wind-memory-20260915']
+    paths: ['.github/workflows/wind-memory-build.yml']
+permissions:
+  contents: write
+concurrency:
+  group: wind-memory-isolated
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dataviz/wind-memory-20260915
+      - name: Extract published wind measurements without changing their meaning
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, collections, datetime, hashlib, json, math, pathlib, re, zlib
+          source=pathlib.Path('assets/figures/demo-2/weather/complements/meteo_explorateur_toutes_mesures.html')
+          text=source.read_text(encoding='utf-8')
+          match=re.search(r'<script\b[^>]*\bid=["\']payload["\'][^>]*>(.*?)</script>',text,re.S)
+          if not match: raise SystemExit('Missing source payload')
+          p=json.loads(match.group(1)); times=p['times']; ss={s['name']:s for s in p['series']}
+          keys=['Wind direction','Wind speed(km/h)','Wind speed(Hour)(km/h)']
+          for k in keys:
+            if k not in ss or len(ss[k]['values'])!=len(times): raise SystemExit('Invalid source: '+k)
+          def value(k,i):
+            s=ss[k]; v=s['values'][i]
+            if 'applicable' in s and not s['applicable'][i]: return None
+            if isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v): return None
+            return v
+          records=[]; invalid=collections.Counter(); scopes={k:[] for k in keys[1:]}
+          for i,t in enumerate(times):
+            if not ('2023-12-01'<=t[:10]<'2026-09-01'): continue
+            d=value(keys[0],i)
+            if d is None or not 0<=d<=360: invalid['direction']+=1; d=None
+            speeds=[]
+            for k in keys[1:]:
+              v=value(k,i)
+              if v is not None and v<0: invalid[k]+=1;v=None
+              speeds.append(v)
+              if v is not None: scopes[k].append(t)
+            records.append([t,d,*speeds])
+          if not records: raise SystemExit('No wind observations')
+          # All source times are strings with their original offset; no timezone conversion.
+          offset=p.get('offset','unknown')
+          epochs=[datetime.datetime.fromisoformat(r[0]).timestamp() for r in records]
+          gaps=[{'from':records[i-1][0],'to':records[i][0],'hours':round((epochs[i]-epochs[i-1])/3600,6)} for i in range(1,len(records)) if epochs[i]-epochs[i-1]>7200]
+          bins=[5,10,20,30,50]
+          monthly=[]
+          for month in sorted(set(r[0][:7] for r in records)):
+            rr=[r for r in records if r[0][:7]==month]
+            entry={'month':month,'observations':len(rr),'observed_dates':len(set(r[0][:10] for r in rr)),'regimes':{}}
+            for j,k in enumerate(keys[1:],2):
+              sector=[[0]*6 for _ in range(16)]; speed=[]; calm=0
+              for r in rr:
+                d,v=r[1],r[j]
+                if v is None:continue
+                if v==0:calm+=1;continue
+                if d is None:continue
+                s=int(((d%360+11.25)%360)//22.5);b=sum(v>=x for x in bins)
+                sector[s][b]+=1;speed.append(v)
+              entry['regimes'][k]={'counts':sector,'noncalm':len(speed),'calm':calm,'max':max(speed) if speed else None,'mean':round(sum(speed)/len(speed),4) if speed else None}
+            monthly.append(entry)
+          result={'schema':'datapredict-wind-memory/1','source':{'path':str(source),'sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'offset':offset,'timezone_status':'TO_CONFIRM','first':records[0][0],'last':records[-1][0],'count':len(records),'fields':keys,'units':{k:ss[k]['unit'] for k in keys},'speed_scopes':{k:{'first':v[0],'last':v[-1],'n':len(v)} for k,v in scopes.items() if v},'invalid':dict(invalid),'interpolation':False,'speed_series_merged':False},'records':records,'gaps':gaps,'monthly':monthly}
+          root=pathlib.Path('dataviz/wind-memory');root.mkdir(parents=True,exist_ok=True)
+          raw=json.dumps(result,ensure_ascii=False,separators=(',',':')).encode()
+          (root/'wind-data.json').write_bytes(raw)
+          packed=base64.b64encode(zlib.compress(raw,9)).decode()
+          (root/'wind-data.zlib.base64.txt').write_text('\n'.join(packed[i:i+1024] for i in range(0,len(packed),1024))+'\n')
+          summary={'source':result['source'],'gaps':gaps,'monthly':monthly}
+          (root/'wind-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=None))
+          print(json.dumps({'status':'PASS','observations':len(records),'raw_bytes':len(raw),'compressed_base64_bytes':len(packed),'source':result['source']},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wind-memory-source
+          path: dataviz/wind-memory/
+          retention-days: 7
+      - name: Commit extracted data on isolated branch only
+        shell: bash
+        run: |
+          git config user.name 'datapredict dataviz build'
+          git config user.email '64203794+johann-DP@users.noreply.github.com'
+          git add dataviz/wind-memory/
+          if ! git diff --cached --quiet; then
+            git commit -m 'Conserve les mesures vent et leurs deux régimes, sans publication'
+            git push origin HEAD:dataviz/wind-memory-20260915
+          fi
