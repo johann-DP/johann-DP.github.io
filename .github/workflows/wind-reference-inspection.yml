@@ -1,0 +1,42 @@
+name: Wind visual references - inspection only
+on:
+  push:
+    branches: ['dataviz/wind-memory-20260915']
+    paths: ['.github/workflows/wind-reference-inspection.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dataviz/wind-memory-20260915
+      - name: Copy original visualizations and inspect public LinkedIn redirect
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json,pathlib,shutil,urllib.request,urllib.error
+          out=pathlib.Path('wind-reference-inspection');out.mkdir()
+          paths=list(pathlib.Path('assets/figures/demo-2/weather').rglob('*wind*.html'))
+          for p in paths:
+            if p.stat().st_size<10_000_000:shutil.copyfile(p,out/p.name)
+          p=pathlib.Path('assets/figures/demo-2/weather/assets/plotly-2.35.2.min.js')
+          if p.is_file():shutil.copyfile(p,out/p.name)
+          info={'original_files':[str(p) for p in paths]}
+          try:
+            request=urllib.request.Request('https://lnkd.in/p/eZmpkqWW',headers={'User-Agent':'Mozilla/5.0'})
+            with urllib.request.urlopen(request,timeout=25) as r:
+              body=r.read(8_000_000)
+              info.update({'final_url':r.url,'status':r.status,'content_type':r.headers.get('Content-Type'),'bytes':len(body)})
+              (out/'reference-linkedin.html').write_bytes(body)
+          except Exception as e:info['reference_error']=str(e)
+          (out/'inspection.json').write_text(json.dumps(info,ensure_ascii=False,indent=2))
+          print(json.dumps(info,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wind-reference-inspection
+          path: wind-reference-inspection/
+          retention-days: 3
