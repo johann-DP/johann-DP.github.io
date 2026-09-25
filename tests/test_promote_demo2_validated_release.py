@@ -16,8 +16,8 @@ import promote_demo2_validated_release as promoter  # noqa: E402
 from tests.test_import_demo2_validated_release import build_source_bundle  # noqa: E402
 from tests.test_validate_demo2_active_figures import build_active_site  # noqa: E402
 from tests.test_refresh_demo2_processed_signal import (  # noqa: E402
-    bootstrap_candidate,
     patch_bytes,
+    successor_candidate,
 )
 import refresh_demo2_live_data as live_refresh  # noqa: E402
 
@@ -327,7 +327,7 @@ class Demo2PromotionTests(unittest.TestCase):
     def test_promotes_prepared_processed_payload_without_template_change(self) -> None:
         target = "retaining-wall-sensor-processed-v2.html"
         active = (self.figure_root / target).read_bytes()
-        payload, review = bootstrap_candidate()
+        payload, review = successor_candidate()
         prepared = live_refresh.refresh_processed(
             active,
             patch_bytes(payload, review, snapshot="a" * 64, generation="b" * 64),

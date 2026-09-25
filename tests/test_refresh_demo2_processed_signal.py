@@ -309,44 +309,33 @@ def patch_bytes(
     return refresh._canonical_json(value) + b"\n"
 
 
-def bootstrap_candidate() -> tuple[dict[str, object], dict[str, object]]:
-    _, payload, review = document()
-    index = len(payload["hourly"]) - 1
-    hourly = payload["hourly"][index]
-    hourly[4] = -0.006
-    hourly[5] = hourly[4] * 25.4
-    hourly[6] = hourly[5] - hourly[3]
-    hourly[7] = 118
-    hourly[8] = 236
-    hourly[10] += 156
-    global_row = payload["global_hourly"][index]
-    global_row[3] = hourly[5]
-    global_row[5] = global_row[3] + global_row[4]
-    global_row[8] = hourly[7]
-    global_row[11] = hourly[10]
-    thermal = payload["thermal_extended"][index]
-    thermal[5] = hourly[5]
-    thermal[7] = global_row[5]
-    thermal[26] = hourly[7]
-    thermal[28] = hourly[10]
-    recompute_global_sg5(payload, {index - 2})
-    hidden_value = (-0.007 * 25.4) + 9.880599999999978
-    hidden_window = payload["global_hourly"][index - 3 : index + 1] + [
-        [None, None, 36, None, None, hidden_value]
-    ]
-    payload["global_hourly"][index - 1][6] = sum(
-        weight * row[5]
-        for weight, row in zip(refresh._SG5_WEIGHTS, hidden_window, strict=True)
-    )
-    payload["global_hourly"][index - 1][7] = "AVAILABLE"
-    recompute_dynamic(payload, review)
-    return payload, review
-
-
 def append_hour(
-    payload: dict[str, object], review: dict[str, object], *, inch: float = -0.007
+    payload: dict[str, object],
+    review: dict[str, object],
+    *,
+    inch: float | None = None,
 ) -> None:
     old_hourly = payload["hourly"][-1]
+    if inch is None:
+        # The producer closes N only after observing N+2. Recover that one hidden
+        # support value from the already-frozen centered SG5 instead of changing
+        # any published row. This fixture intentionally models only N+1/N+2.
+        global_rows = payload["global_hourly"]
+        center = len(global_rows) - 2
+        if center < 2 or global_rows[center][7] != "AVAILABLE":
+            raise AssertionError("the active tail must carry stable centered SG5 support")
+        known = sum(
+            weight * row[5]
+            for weight, row in zip(
+                refresh._SG5_WEIGHTS[:4],
+                global_rows[center - 2 : center + 2],
+                strict=True,
+            )
+        )
+        next_global_value = (
+            global_rows[center][6] - known
+        ) / refresh._SG5_WEIGHTS[4]
+        inch = (next_global_value - global_rows[-1][4]) / 25.4
     time = old_hourly[0] + refresh._HOUR_MILLISECONDS
     source_hour = (
         datetime.strptime(old_hourly[1], "%Y-%m-%d %H:%M:%S") + timedelta(hours=1)
@@ -417,8 +406,13 @@ def append_hour(
     payload["hourly"].append(hourly)
     payload["global_hourly"].append(global_row)
     payload["thermal_extended"].append(thermal)
-    recompute_global_sg5(payload, {len(payload["global_hourly"]) - 3})
     recompute_dynamic(payload, review)
+
+
+def successor_candidate() -> tuple[dict[str, object], dict[str, object]]:
+    _, payload, review = document()
+    append_hour(payload, review)
+    return payload, review
 
 
 def fill_five_temperatures(
@@ -441,24 +435,77 @@ def fill_five_temperatures(
 
 
 class ProcessedSignalRefreshTests(unittest.TestCase):
-    def test_processed_patch_replaces_only_initial_open_hour_then_freezes_it(self) -> None:
-        master, _, _ = document()
-        payload, review = bootstrap_candidate()
+    def test_processed_initial_anchor_only_allows_provisional_tail_completion(
+        self,
+    ) -> None:
+        _, active, active_review = document()
+        stable_count = refresh._PROCESSED_BASELINE_PROOF["hourly_prefix_count"]
+        initial_count = stable_count + 1
+        active["hourly"] = active["hourly"][:initial_count]
+        active["global_hourly"] = active["global_hourly"][:initial_count]
+        active["thermal_extended"] = active["thermal_extended"][:initial_count]
+        recompute_dynamic(active, active_review)
+
+        candidate = deepcopy(active)
+        candidate_review = deepcopy(active_review)
+        provisional = initial_count - 1
+        candidate["hourly"][provisional][10] += 1
+        candidate["global_hourly"][provisional][11] += 1
+        candidate["thermal_extended"][provisional][28] += 1
+        recompute_dynamic(candidate, candidate_review)
+
+        refresh._validate_processed_transition_values(
+            active,
+            candidate,
+            active_review,
+            candidate_review,
+            initial_anchor=True,
+        )
+
+        altered_identity = deepcopy(candidate)
+        altered_identity["hourly"][provisional][0] += refresh._HOUR_MILLISECONDS
+        with self.assertRaisesRegex(refresh.RefreshError, "HISTORY_DIVERGED"):
+            refresh._validate_processed_transition_values(
+                active,
+                altered_identity,
+                active_review,
+                candidate_review,
+                initial_anchor=True,
+            )
+
+        altered_prefix = deepcopy(candidate)
+        altered_prefix["hourly"][stable_count - 1][10] += 1
+        with self.assertRaisesRegex(refresh.RefreshError, "BASELINE_PROOF_DIVERGED"):
+            refresh._validate_processed_transition_values(
+                active,
+                altered_prefix,
+                active_review,
+                candidate_review,
+                initial_anchor=True,
+            )
+
+    def test_processed_patch_appends_one_hour_and_freezes_existing_history(self) -> None:
+        master, active_payload, _ = document()
+        payload, review = successor_candidate()
         patch = patch_bytes(payload, review, snapshot="a" * 64, generation="b" * 64)
 
         refreshed = refresh.refresh_processed(master, patch)
         _, updated, _, _ = refresh._processed_document(refreshed)
 
-        self.assertEqual(updated["hourly"][-1][4:9], [-0.006, -0.1524, 0.2794, 118, 236])
-        self.assertEqual(updated["hourly"][:12660], payload["hourly"][:12660])
+        self.assertEqual(len(updated["hourly"]), len(active_payload["hourly"]) + 1)
+        self.assertEqual(
+            updated["hourly"][: len(active_payload["hourly"])],
+            active_payload["hourly"],
+        )
+        self.assertEqual(updated["hourly"], payload["hourly"])
         self.assertEqual(
             refresh.processed_data_only_skeleton(refreshed),
             refresh.processed_data_only_skeleton(master),
         )
 
     def test_processed_patch_n_plus_one_applies_to_already_refreshed_master(self) -> None:
-        master, _, _ = document()
-        first_payload, first_review = bootstrap_candidate()
+        master, active_payload, _ = document()
+        first_payload, first_review = successor_candidate()
         first = refresh.refresh_processed(
             master,
             patch_bytes(
@@ -480,13 +527,19 @@ class ProcessedSignalRefreshTests(unittest.TestCase):
         )
         _, updated, _, _ = refresh._processed_document(second)
 
-        self.assertEqual(len(updated["hourly"]), 12662)
-        self.assertEqual(updated["metadata"]["coverage_end"], "2026-09-24 12:00:00")
-        self.assertEqual(updated["hourly"][:12661], first_payload["hourly"])
+        self.assertEqual(len(updated["hourly"]), len(active_payload["hourly"]) + 2)
+        self.assertEqual(
+            updated["metadata"]["coverage_end"],
+            second_payload["metadata"]["coverage_end"],
+        )
+        self.assertEqual(
+            updated["hourly"][: len(first_payload["hourly"])],
+            first_payload["hourly"],
+        )
 
     def test_processed_patch_rejects_old_measurement_mutation(self) -> None:
         master, _, _ = document()
-        payload, review = bootstrap_candidate()
+        payload, review = successor_candidate()
         active = refresh.refresh_processed(
             master,
             patch_bytes(payload, review, snapshot="a" * 64, generation="b" * 64),
@@ -520,7 +573,7 @@ class ProcessedSignalRefreshTests(unittest.TestCase):
 
     def test_processed_patch_allows_old_origin_late_weather_and_bounded_sg5(self) -> None:
         master, _, _ = document()
-        first_payload, first_review = bootstrap_candidate()
+        first_payload, first_review = successor_candidate()
         active = refresh.refresh_processed(
             master,
             patch_bytes(
@@ -663,7 +716,7 @@ class ProcessedSignalRefreshTests(unittest.TestCase):
 
     def test_ready_inventory_accepts_only_content_addressed_processed_patch(self) -> None:
         master, _, _ = document()
-        payload, review = bootstrap_candidate()
+        payload, review = successor_candidate()
         candidate = patch_bytes(
             payload, review, snapshot="a" * 64, generation="b" * 64
         )
