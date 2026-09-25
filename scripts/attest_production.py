@@ -31,6 +31,7 @@ THUMBNAIL_NAMES = (
     "crack-recent.webp",
     "expansion-joint.webp",
     "retaining-wall-source-values.webp",
+    "retaining-wall-processed.webp",
     "retaining-wall-extrema-hours.webp",
     "retaining-wall-median-day.webp",
     "weather-temperature.webp",
@@ -62,7 +63,7 @@ NERIVANE_INTEGRATION_PATHS = (
 )
 NERIVANE_BUNDLE_ROOT = PurePosixPath("assets/nerivane-public-v1")
 NERIVANE_CHECKSUMS = NERIVANE_BUNDLE_ROOT / "SHA256SUMS"
-EXPECTED_FIGURE_COUNT = 17
+EXPECTED_FIGURE_COUNT = 18
 CHUNK_SIZE = 1024 * 1024
 
 

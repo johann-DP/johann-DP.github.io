@@ -53,6 +53,12 @@
       "role": "desktop_validation_reference",
       "sha256": "2fabe8db0f2fcfa8f37074d2fc7d5113fba37e93e449f9866174446e958b2f7a",
       "size_bytes": 216320
+    },
+    {
+      "path": "retaining-wall-sensor-processed-v2.html",
+      "role": "responsive_html_master",
+      "sha256": "28bf2c9dbe87e59f7450e2e629fb5fe293af6c64360f9202693a3ce21bf1ac95",
+      "size_bytes": 15020829
     }
   ],
   "manifest_version": 2

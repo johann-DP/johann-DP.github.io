@@ -252,20 +252,20 @@ jobs:
                       preview.get("data-figure-id", "").strip()
                       for preview in document.figure_previews
                   ]
-                  if len(figure_ids) != 17 or len(set(figure_ids)) != 17:
+                  if len(figure_ids) != 18 or len(set(figure_ids)) != 18:
                       errors.append(
-                          "demonstrations/fissures.html: 17 miniatures de figures uniques attendues"
+                          "demonstrations/fissures.html: 18 miniatures de figures uniques attendues"
                       )
-                  if document.figure_card_count != 17:
+                  if document.figure_card_count != 18:
                       errors.append(
-                          "demonstrations/fissures.html: 17 cartes de figures attendues"
+                          "demonstrations/fissures.html: 18 cartes de figures attendues"
                       )
                   if (
-                      len(document.figure_external_links) != 17
-                      or len(set(document.figure_external_links)) != 17
+                      len(document.figure_external_links) != 18
+                      or len(set(document.figure_external_links)) != 18
                   ):
                       errors.append(
-                          "demonstrations/fissures.html: 17 liens plein écran uniques attendus"
+                          "demonstrations/fissures.html: 18 liens plein écran uniques attendus"
                       )
                   if document.iframe_count:
                       errors.append(
