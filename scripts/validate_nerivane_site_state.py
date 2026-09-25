@@ -127,7 +127,9 @@ ACTIVE_SEO_MARKERS = (
     '<meta name="twitter:card" content="summary_large_image">',
 )
 
-# Exact maintenance/protected baseline at a0cfc1dd.  The values are populated
+# Maintenance baseline at a0cfc1dd; protected Demo 2 extension authorized 2026-09-25.
+# Only the catalogue-outside and protected snapshot hashes below were updated.
+# The values are populated
 # and causally tested below; changing a protected byte requires a deliberate
 # review of this contract rather than broadening one of the two states.
 DEFAULT_BASELINE: dict[str, Any] = {
@@ -140,8 +142,8 @@ DEFAULT_BASELINE: dict[str, Any] = {
         STYLE_RELATIVE: "1a9334a0d4fea1d3062186861c3460cab1af4b07c66072cbe5f7e542c86ce214",
     },
     "maintenance_catalogue_fragment_sha256": "24f984b4ce8bfe678b0dc175331337623fd9c9fae2cde36a900dcd78d69d90f1",
-    "catalogue_outside_sha256": "d17e64629f82359d613415c5b7e096dcf252d95ad81ed9cef3464f27403422f5",
-    "protected_snapshot_sha256": "d035e37cba5aa2f91fa02d3115cd400d6b52cce8e4eb6f3896947a9742a9dc73",
+    "catalogue_outside_sha256": "a5b4ce822ec32b34eea461b7c007ef42575bd5788f6117fb09ef4fac678fcc4c",
+    "protected_snapshot_sha256": "1394c97387b1d0bcc5cff7ddee9706b3d10202df38812baa6ee7fcfb4ce7a5ed",
     "demo2_rotating_skeletons": {
         "fissure-recente-meme-format.html": "2210e366dfb500d872ea37565781bf4d74641e93d65feb6fd31849c11aca36fa",
         "joint-dilatation-rendu-site.html": "4f839b3024dc6a9c8c719290f5f3ace4c811ae9efe134f0a8465cbcc484d4d18",
@@ -422,8 +424,8 @@ def _validate_demo2_rotation(root: Path, baseline: Mapping[str, Any]) -> None:
     except (demo2_validator.Demo2FigureValidationError, OSError) as error:
         raise _fail("NERIVANE_DEMO2_ACTIVE_FIGURES_INVALID") from error
     if result != {
-        "figure_file_count": 24,
-        "html_master_count": 17,
+        "figure_file_count": 25,
+        "html_master_count": 18,
         "state": "VALIDÉ",
         "status": "VERIFIED",
     }:

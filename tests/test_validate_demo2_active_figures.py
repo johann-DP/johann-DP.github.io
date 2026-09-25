@@ -119,7 +119,7 @@ class Demo2ActiveFigureValidationTests(unittest.TestCase):
 
         result = validator.validate_active_figure_tree(site_root=self.root)
 
-        self.assertEqual(result["html_master_count"], 17)
+        self.assertEqual(result["html_master_count"], 18)
         self.assertEqual(result["status"], "VERIFIED")
 
     def test_rejects_extra_file_even_with_valid_manifests(self) -> None:

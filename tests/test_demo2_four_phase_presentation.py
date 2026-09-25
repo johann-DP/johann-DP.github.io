@@ -18,6 +18,7 @@ VALIDATED_FIGURE_IDS = (
     "crack-history",
     "crack-recent",
     "expansion-joint",
+    "retaining-wall-processed",
     "retaining-wall-median-day",
     "retaining-wall-extrema-hours",
     "weather-temperature",
@@ -31,6 +32,7 @@ VALIDATED_FIGURE_IDS = (
 )
 
 VALIDATED_THUMBNAIL_SHA256 = {
+    "retaining-wall-processed": "0dc8fdaeb9aae588502d7d5dc85ee41408a2f417f6f9a665371e81ef0144a4c0",
     "building-geometry": "5c2b4377d24aaad2b0f0195bcc8a802c66860cc08dbdb039903bb4366a49b083",
     "crack-history": "2aadd1709b544db71318526b85a390cee2ce796e6ed7831c233294918e09cf06",
     "crack-recent": "b370703d995c585213fc975d437f8f8ae43647b6fa0c03ef9d101e1561a11a32",
@@ -113,7 +115,7 @@ class Demo2FourPhasePresentationTests(unittest.TestCase):
         self.assertIsNotNone(step_2)
         self.assertIsNotNone(step_3)
         self.assertEqual(step_1.group(0).count('data-figure-id='), 4)
-        self.assertEqual(step_2.group(0).count('data-figure-id='), 13)
+        self.assertEqual(step_2.group(0).count('data-figure-id='), 14)
         self.assertNotIn('<a ', step_3.group(0))
         self.assertIn("En maintenance", step_3.group(0))
         self.assertIn('id="demarche"', page)
@@ -140,7 +142,7 @@ class Demo2FourPhasePresentationTests(unittest.TestCase):
                 page,
             )
         )
-        self.assertEqual(len(public_pages), 17)
+        self.assertEqual(len(public_pages), 18)
         forbidden = (
             "validation requise",
             "candidat de revue",

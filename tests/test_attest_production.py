@@ -25,6 +25,7 @@ FIGURES = (
     "fissure-recente-meme-format.html",
     "joint-dilatation-rendu-site.html",
     "retaining-wall-sensor-source-values.html",
+    "retaining-wall-sensor-processed-v2.html",
     "retaining-wall-extrema-hours.html",
     "retaining-wall-median-day.html",
     "weather/legacy/meteo_temperature.html",
@@ -141,11 +142,11 @@ class ProductionAttestationTests(unittest.TestCase):
         with serve(self.remote) as base_url, redirect_stdout(StringIO()):
             observed = production.attest(self.expected, base_url, timeout_seconds=2)
 
-        self.assertEqual(len(observed), 49)
-        self.assertEqual(sum(item.category == "figure" for item in observed), 17)
+        self.assertEqual(len(observed), 51)
+        self.assertEqual(sum(item.category == "figure" for item in observed), 18)
         self.assertEqual(
             sum(item.category == "demo2_integration" for item in observed),
-            23,
+            24,
         )
         self.assertEqual(
             sum(item.category == "nerivane_integration" for item in observed),
@@ -199,7 +200,7 @@ class ProductionAttestationTests(unittest.TestCase):
         self.assertIn("ATTESTATION_FAILED", stderr.getvalue())
         self.assertRegex(stderr.getvalue(), r"sitemap\.xml non attesté.*HTTP Error 404")
 
-    def test_rejects_a_local_manifest_without_seventeen_unique_masters(self) -> None:
+    def test_rejects_a_local_manifest_without_eighteen_unique_masters(self) -> None:
         manifest = self.expected / "assets/figures/demo-2/content-manifest.json"
         document = json.loads(manifest.read_text(encoding="utf-8"))
         document["files"].pop()
@@ -207,7 +208,7 @@ class ProductionAttestationTests(unittest.TestCase):
 
         with self.assertRaisesRegex(
             production.AttestationError,
-            "exactement 17 maîtres HTML uniques attendus",
+            "exactement 18 maîtres HTML uniques attendus",
         ):
             production.load_expected_files(self.expected)
 

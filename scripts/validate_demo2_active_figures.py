@@ -34,6 +34,7 @@ ROOT_ENTRIES: Mapping[str, str] = {
     "retaining-wall-extrema-hours.html": "responsive_html_master",
     "retaining-wall-median-day.html": "responsive_html_master",
     "retaining-wall-sensor-source-values.html": "responsive_html_master",
+    "retaining-wall-sensor-processed-v2.html": "responsive_html_master",
 }
 
 WEATHER_ENTRIES: Mapping[str, str] = {
@@ -315,8 +316,8 @@ def validate_active_figure_tree(
         errors.append(f"sous-arbre Demo 2 divergent (absents={missing}; supplémentaires={extra})")
 
     master_count = root_masters + weather_masters
-    if master_count != 17:
-        errors.append(f"17 maîtres HTML attendus, trouvé : {master_count}")
+    if master_count != 18:
+        errors.append(f"18 maîtres HTML attendus, trouvé : {master_count}")
 
     for relative in sorted(HTML_MASTER_PATHS):
         payload = _read_regular(figure_root / relative, errors, relative)
