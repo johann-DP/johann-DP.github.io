@@ -15,6 +15,11 @@ import import_demo2_validated_release as importer  # noqa: E402
 import promote_demo2_validated_release as promoter  # noqa: E402
 from tests.test_import_demo2_validated_release import build_source_bundle  # noqa: E402
 from tests.test_validate_demo2_active_figures import build_active_site  # noqa: E402
+from tests.test_refresh_demo2_processed_signal import (  # noqa: E402
+    bootstrap_candidate,
+    patch_bytes,
+)
+import refresh_demo2_live_data as live_refresh  # noqa: E402
 
 
 TARGET = "weather/legacy/meteo_precipitation.html"
@@ -318,6 +323,28 @@ class Demo2PromotionTests(unittest.TestCase):
         self.assertIn(b"NEW", merged)
         self.assertNotIn("Candidat automatisé".encode(), merged)
         self.assertIn("Présentation validée".encode(), merged)
+
+    def test_promotes_prepared_processed_payload_without_template_change(self) -> None:
+        target = "retaining-wall-sensor-processed-v2.html"
+        active = (self.figure_root / target).read_bytes()
+        payload, review = bootstrap_candidate()
+        prepared = live_refresh.refresh_processed(
+            active,
+            patch_bytes(payload, review, snapshot="a" * 64, generation="b" * 64),
+        )
+
+        result = promoter.promote_prepared_outputs(
+            {PurePosixPath("assets/figures/demo-2") / target: prepared},
+            ["processed-signal:sha256"],
+            site_root=self.site,
+        )
+
+        self.assertEqual(result["status"], "PROMOTED")
+        self.assertEqual((self.figure_root / target).read_bytes(), prepared)
+        self.assertEqual(
+            live_refresh.processed_data_only_skeleton(prepared),
+            live_refresh.processed_data_only_skeleton(active),
+        )
 
 
 if __name__ == "__main__":

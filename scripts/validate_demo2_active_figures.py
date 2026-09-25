@@ -18,6 +18,8 @@ import stat
 import sys
 from typing import Iterable, Mapping
 
+import refresh_demo2_live_data as live_refresh
+
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
 FIGURE_ROOT_RELATIVE = PurePosixPath("assets/figures/demo-2")
@@ -353,6 +355,30 @@ def validate_active_figure_tree(
                     errors.append(f"figure brute D2-CAP : mention obligatoire absente : {marker}")
             if re.search(r'(?:src|href)=["\']https?://', sensor_text, re.IGNORECASE):
                 errors.append("figure brute D2-CAP : dépendance réseau interdite")
+
+    processed = _read_regular(
+        figure_root / "retaining-wall-sensor-processed-v2.html",
+        errors,
+        "retaining-wall-sensor-processed-v2.html",
+    )
+    if processed is not None:
+        try:
+            template_sha256 = live_refresh.processed_template_sha256(processed)
+        except live_refresh.RefreshError as error:
+            errors.append(f"figure traitée D2-CAP invalide : {error}")
+        else:
+            if template_sha256 != live_refresh.PROCESSED_BASE_TEMPLATE_SHA256:
+                errors.append("figure traitée D2-CAP : gabarit divergent")
+            required_processed_markers = (
+                b'<time id="processed-coverage-end"',
+                b'coverageEnd.textContent = sourceDateShort(P.metadata.coverage_end);',
+                b'coverageEnd.setAttribute("datetime", String(P.metadata.coverage_end)',
+            )
+            for marker in required_processed_markers:
+                if marker not in processed:
+                    errors.append(
+                        "figure traitée D2-CAP : date de fin dynamique absente"
+                    )
 
     if require_maintenance:
         _maintenance(root, errors)

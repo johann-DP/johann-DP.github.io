@@ -26,6 +26,11 @@ from tests.test_import_nerivane_v2_release import (  # noqa: E402
 
 def _demo2_html(relative: str) -> bytes:
     strategy = states.DEMO2_ROTATING_STRATEGIES.get(relative)
+    if strategy == "processed":
+        return (
+            Path(__file__).resolve().parents[1]
+            / "assets/figures/demo-2/retaining-wall-sensor-processed-v2.html"
+        ).read_bytes()
     if strategy == "legacy":
         return (
             b'<!doctype html><html><body><div id="plot"></div><script>'

@@ -51,6 +51,7 @@ DEMO2_ROTATING_STRATEGIES: Mapping[str, str] = {
     "fissure-recente-meme-format.html": "manual",
     "joint-dilatation-rendu-site.html": "manual",
     "retaining-wall-sensor-source-values.html": "sensor",
+    "retaining-wall-sensor-processed-v2.html": "processed",
     "weather/complements/meteo_explorateur_toutes_mesures.html": "complement",
     "weather/complements/meteo_qualite_acquisition.html": "complement",
     "weather/legacy/meteo_humidity.html": "legacy",
@@ -143,10 +144,11 @@ DEFAULT_BASELINE: dict[str, Any] = {
     },
     "maintenance_catalogue_fragment_sha256": "24f984b4ce8bfe678b0dc175331337623fd9c9fae2cde36a900dcd78d69d90f1",
     "catalogue_outside_sha256": "a5b4ce822ec32b34eea461b7c007ef42575bd5788f6117fb09ef4fac678fcc4c",
-    "protected_snapshot_sha256": "1394c97387b1d0bcc5cff7ddee9706b3d10202df38812baa6ee7fcfb4ce7a5ed",
+    "protected_snapshot_sha256": "312c450cd06880ced5f3ff109c292ce05343323ee74db7bbd271d8e8cdbf931a",
     "demo2_rotating_skeletons": {
         "fissure-recente-meme-format.html": "2210e366dfb500d872ea37565781bf4d74641e93d65feb6fd31849c11aca36fa",
         "joint-dilatation-rendu-site.html": "4f839b3024dc6a9c8c719290f5f3ace4c811ae9efe134f0a8465cbcc484d4d18",
+        "retaining-wall-sensor-processed-v2.html": "9d8d4aef184b36804ba8a59f9f8e06cb0e583d28c67f0449af858b00efba848d",
         "retaining-wall-sensor-source-values.html": "def4aa1ef8a7011b85632826032880ac9df3b8eda6f6d7524cffa3543b0c1820",
         "weather/complements/meteo_explorateur_toutes_mesures.html": "1b06b0c8f9eed1edaf5f6ccd698fa72ed65e7bc84596bcce4b05f9a60974e2e8",
         "weather/complements/meteo_qualite_acquisition.html": "132c8514f85102d5eaf9da6a35f5453a9875085f79bb375a775aa84581b9e2c5",
@@ -372,6 +374,8 @@ def _demo2_rotation_skeleton(payload: bytes, strategy: str) -> bytes:
         return demo2_refresh.raw_data_only_skeleton(payload)
     if strategy == "complement":
         return _demo2_complement_skeleton(payload)
+    if strategy == "processed":
+        return demo2_refresh.processed_data_only_skeleton(payload)
     raise _fail("NERIVANE_DEMO2_ROTATION_CONTRACT_INVALID")
 
 
