@@ -32,6 +32,10 @@ def _html(label: str) -> bytes:
 def build_active_site(root: Path) -> None:
     figure_root = root / "assets/figures/demo-2"
     root_payloads = {path: _html(path) for path in validator.ROOT_ENTRIES}
+    root_payloads["retaining-wall-sensor-processed-v2.html"] = (
+        Path(__file__).resolve().parents[1]
+        / "assets/figures/demo-2/retaining-wall-sensor-processed-v2.html"
+    ).read_bytes()
     root_payloads["01-historical-crack-analysis-compacted-v2.png"] = b"png"
     root_payloads["diagrams/structural-monitoring-layout.svg"] = b"<svg/>"
     root_payloads["retaining-wall-sensor-source-values.html"] = _html(
@@ -145,6 +149,28 @@ class Demo2ActiveFigureValidationTests(unittest.TestCase):
 
         self.assertIn("terme interne visible", str(caught.exception))
         self.assertIn("doit rester En maintenance", str(caught.exception))
+
+    def test_rejects_processed_template_drift_even_with_consistent_manifest(self) -> None:
+        relative = "retaining-wall-sensor-processed-v2.html"
+        target = self.root / "assets/figures/demo-2" / relative
+        payload = target.read_bytes().replace(
+            b'id="processed-coverage-end"', b'id="processed-coverage-altered"', 1
+        )
+        target.write_bytes(payload)
+        manifest_path = self.root / "assets/figures/demo-2/content-manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        record = next(item for item in manifest["files"] if item["path"] == relative)
+        record["sha256"] = hashlib.sha256(payload).hexdigest()
+        record["size_bytes"] = len(payload)
+        manifest_path.write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+        with self.assertRaisesRegex(
+            validator.Demo2FigureValidationError, "gabarit divergent|date de fin"
+        ):
+            validator.validate_active_figure_tree(site_root=self.root)
 
 
 if __name__ == "__main__":

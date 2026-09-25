@@ -147,6 +147,7 @@ PREPARED_OUTPUT_STRATEGIES: Mapping[str, str] = {
     "fissure-recente-meme-format.html": "manual",
     "joint-dilatation-rendu-site.html": "manual",
     "retaining-wall-sensor-source-values.html": "sensor",
+    "retaining-wall-sensor-processed-v2.html": "processed",
     "weather/complements/meteo_explorateur_toutes_mesures.html": "complement",
     "weather/complements/meteo_qualite_acquisition.html": "complement",
     "weather/legacy/meteo_humidity.html": "plotly-data",
@@ -517,6 +518,13 @@ def merge_data_only(current: bytes, candidate: bytes, strategy: str) -> bytes:
             candidate_text,
             strip_candidate_marker=True,
         )
+    elif strategy == "processed":
+        try:
+            merged = live_refresh.validate_processed_transition(
+                current, candidate
+            ).decode("utf-8")
+        except (live_refresh.RefreshError, UnicodeDecodeError) as error:
+            raise _fail("DEMO2_PROMOTION_VISUAL_TEMPLATE_DIVERGED") from error
     else:
         raise _fail("DEMO2_PROMOTION_MAPPING_INVALID")
     payload = merged.encode("utf-8")

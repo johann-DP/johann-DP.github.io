@@ -562,7 +562,7 @@ noscript { display: block; margin-top: 12px; color: var(--red); }
 <main id="processed-signal-app" data-ready="false">
   <p class="eyebrow">DataPredict — traitement descriptif du capteur</p>
   <h1>Signal du comparateur après traitement</h1>
-  <p class="scope">Comparateur du mur côté route · 15 mars 2025 au 24 septembre 2026 · valeurs en millimètres après une conversion unique depuis les pouces · heures source conservées.</p>
+  <p class="scope">Comparateur du mur côté route · 15 mars 2025 au <time id="processed-coverage-end" datetime="2026-09-24T11:00:00">24/09/2026</time> · valeurs en millimètres après une conversion unique depuis les pouces · heures source conservées.</p>
 
   <div class="status-banner" role="status">
     <span class="status-dot" aria-hidden="true"></span>
@@ -730,6 +730,9 @@ noscript { display: block; margin-top: 12px; color: var(--red); }
   const SG5 = [-3 / 35, 12 / 35, 17 / 35, 12 / 35, -3 / 35];
   const P = JSON.parse(document.getElementById("processed-signal-payload").textContent);
   const REVIEW = JSON.parse(document.getElementById("review-diagnostics").textContent);
+  const coverageEnd = document.getElementById("processed-coverage-end");
+  coverageEnd.textContent = sourceDateShort(P.metadata.coverage_end);
+  coverageEnd.setAttribute("datetime", String(P.metadata.coverage_end).replace(" ", "T"));
   const reviewZoom = new Map();
   let fittingY = false;
   const HAS_WEBGL=(function(){try{const canvas=document.createElement("canvas");const gl=canvas.getContext("webgl");if(!gl)return false;const ext=gl.getExtension("WEBGL_lose_context");if(ext)ext.loseContext();return true;}catch(e){return false;}}());
