@@ -21,8 +21,8 @@
     {
       "path": "retaining-wall-sensor-source-values.html",
       "role": "responsive_html_master",
-      "sha256": "4e89f2c9c8283ca1a8e0bfebc2c61651af98891f0fc5c0d7c1918fbfa8275299",
-      "size_bytes": 161796
+      "sha256": "e2328969bbae2eb6c08abed690873157afa7c1be4dff4709a691054aace8bb88",
+      "size_bytes": 159767
     },
     {
       "path": "retaining-wall-extrema-hours.html",
@@ -57,8 +57,8 @@
     {
       "path": "retaining-wall-sensor-processed-v2.html",
       "role": "responsive_html_master",
-      "sha256": "8f9f2fe3eaf2db0bd5cd5a15be0049cf7ecb3181cf2e6b9db0655dd152ab7be6",
-      "size_bytes": 15077836
+      "sha256": "ebe020f3ce9554585bf8ab0b9b5b77bea2e2709eba1ba2a38fd3ea8027e0b895",
+      "size_bytes": 15092142
     }
   ],
   "manifest_version": 2
