@@ -26,6 +26,12 @@ from tests.test_import_nerivane_v2_release import (  # noqa: E402
 
 def _demo2_html(relative: str) -> bytes:
     strategy = states.DEMO2_ROTATING_STRATEGIES.get(relative)
+    if strategy == "pattern":
+        return (
+            Path(__file__).resolve().parents[1]
+            / "assets/figures/demo-2"
+            / relative
+        ).read_bytes()
     if strategy == "processed":
         return (
             Path(__file__).resolve().parents[1]
@@ -150,6 +156,35 @@ def update_demo2_manifest(site: Path, relative: str) -> None:
     manifest_path.write_bytes(canonical(value))
 
 
+def rewrite_pattern(
+    document: bytes,
+    *,
+    payload_change=None,
+    metadata_change=None,
+) -> bytes:
+    match, payload, metadata_span, metadata, cards = (
+        states.demo2_refresh._pattern_document(document)
+    )
+    payload = deepcopy(payload)
+    metadata = deepcopy(metadata)
+    if payload_change is not None:
+        payload_change(payload)
+    if metadata_change is not None:
+        metadata_change(metadata)
+    return states.demo2_refresh._replace_ranges(
+        document,
+        (
+            (
+                match.start(2),
+                match.end(2),
+                states.demo2_refresh._canonical_json(payload),
+            ),
+            (*metadata_span, states.demo2_refresh._canonical_json(metadata)),
+            (cards.start(), cards.end(), cards.group(0)),
+        ),
+    )
+
+
 class NerivaneClosedSiteStatesTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
@@ -204,6 +239,56 @@ class NerivaneClosedSiteStatesTests(unittest.TestCase):
             target.read_bytes().replace(b'[{"x":[1]}]', b'[{"x":[1,2]}]', 1)
         )
         update_demo2_manifest(self.site, relative)
+
+        result = self.validate()
+
+        self.assertEqual(result["state"], states.MAINTENANCE_STATE)
+        self.assertEqual(
+            {
+                relative: (self.site / relative).read_bytes()
+                for relative in states.PROMOTED_TARGETS
+            },
+            protected_before,
+        )
+
+    def test_accepts_a_refreshed_pattern_pair_without_changing_nerivane(self) -> None:
+        protected_before = {
+            relative: (self.site / relative).read_bytes()
+            for relative in states.PROMOTED_TARGETS
+        }
+        figure_root = self.site / states.DEMO2_FIGURE_ROOT
+        active = {
+            name: (figure_root / name).read_bytes()
+            for name in states.demo2_refresh.PATTERN_TARGETS
+        }
+
+        def extend_counts(metadata: dict[str, object]) -> None:
+            metadata["counts"]["source_record_count"] += 1
+            metadata["counts"]["excluded_both_timestamp_and_value_record_count"] += 1
+            metadata["counts"]["profile_day_slot_cell_count"] += 1
+
+        def extend_median(payload: dict[str, object]) -> None:
+            payload["day_count"][18] += 1
+
+        candidate = {
+            name: rewrite_pattern(
+                payload,
+                payload_change=(
+                    extend_median
+                    if name == states.demo2_refresh.PATTERN_MEDIAN
+                    else None
+                ),
+                metadata_change=extend_counts,
+            )
+            for name, payload in active.items()
+        }
+        refreshed = states.demo2_refresh.refresh_pattern_pair(active, candidate)
+        self.assertTrue(
+            all(refreshed[name] != active[name] for name in refreshed)
+        )
+        for name, payload in refreshed.items():
+            (figure_root / name).write_bytes(payload)
+            update_demo2_manifest(self.site, name)
 
         result = self.validate()
 

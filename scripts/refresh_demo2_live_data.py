@@ -1887,12 +1887,19 @@ def _pattern_document(
 
 
 def pattern_data_only_skeleton(payload: bytes) -> bytes:
-    pattern_payload, _, metadata_span, _, cards = _pattern_document(payload)
+    pattern_payload, value, metadata_span, metadata, cards = _pattern_document(payload)
+    kind = _pattern_kind(metadata)
+    _validate_pattern_payload(kind, value, metadata)
+    if cards.group(0) != _render_pattern_cards(kind, value):
+        raise RefreshError("REFRESH_PATTERN_PUBLIC_CARDS_DIVERGED")
+    static_metadata = dict(metadata)
+    static_metadata["bootstrap"] = "__PATTERN_BOOTSTRAP__"
+    static_metadata["counts"] = "__PATTERN_COUNTS__"
     return _replace_ranges(
         payload,
         (
             (pattern_payload.start(2), pattern_payload.end(2), b"__PATTERN_PAYLOAD__"),
-            (*metadata_span, b"__PATTERN_METADATA__"),
+            (*metadata_span, _html_safe_json(static_metadata)),
             (cards.start(), cards.end(), b"__PATTERN_CARDS__"),
         ),
     )
