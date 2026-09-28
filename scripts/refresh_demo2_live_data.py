@@ -2747,6 +2747,15 @@ def refresh_legacy(active: bytes, candidate: bytes) -> bytes:
     a_start, a_end = _plotly_data_span(active)
     c_start, c_end = _plotly_data_span(candidate)
     _validate_live_legacy_layout(candidate)
+    candidate_mobile = _optional_json_assignment_span(candidate, "mobileData")
+    if candidate_mobile is not None:
+        candidate_mobile_value = candidate[candidate_mobile[0] : candidate_mobile[1]]
+        if candidate_mobile_value != b"null":
+            mobile_data = _strict_json(
+                candidate_mobile_value, "REFRESH_LEGACY_MOBILE_DATA_INVALID"
+            )
+            if not isinstance(mobile_data, list):
+                raise RefreshError("REFRESH_LEGACY_MOBILE_DATA_INVALID")
     if legacy_data_only_skeleton(active) != legacy_data_only_skeleton(candidate):
         raise RefreshError("REFRESH_LEGACY_SKELETON_DIVERGED")
     replacements: list[tuple[int, int, bytes]] = [
