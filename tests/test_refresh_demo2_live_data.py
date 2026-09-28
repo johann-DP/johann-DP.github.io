@@ -16,6 +16,39 @@ def legacy(data: bytes = b'[1]') -> bytes:
     return b'<html><body><h1>validated</h1><script>Plotly.newPlot("p", ' + data + b', {"title":"fixed"});</script></body></html>'
 
 
+def responsive_legacy(
+    data: bytes,
+    mobile_data: bytes,
+    range_end: bytes,
+    shapes: bytes,
+    *,
+    title: bytes = b"fixed",
+) -> bytes:
+    return (
+        b'<html><body><h1>validated</h1><script>const desktopLayout = {"shapes":'
+        + shapes
+        + b',"title":"'
+        + title
+        + b'","xaxis":{"range":["2023-12-17",'
+        + range_end
+        + b']},"xaxis2":{"range":["2023-12-17",'
+        + range_end
+        + b']}};const mobileLayout = {"shapes":'
+        + shapes
+        + b',"title":"'
+        + title
+        + b'","xaxis":{"range":["2023-12-17",'
+        + range_end
+        + b']},"xaxis2":{"range":["2023-12-17",'
+        + range_end
+        + b']}};const mobileData = '
+        + mobile_data
+        + b';Plotly.newPlot("p", '
+        + data
+        + b', desktopLayout);</script></body></html>'
+    )
+
+
 def complement(
     payload: bytes,
     banner: bytes = b"validated prose",
@@ -139,20 +172,71 @@ class RefreshTests(unittest.TestCase):
         with self.assertRaisesRegex(refresh.RefreshError, "SKELETON_DIVERGED"):
             refresh.refresh_legacy(legacy(), legacy().replace(b"validated", b"candidate banner"))
 
-    def test_wind_direction_is_never_staged(self) -> None:
+    def test_dynamic_time_layout_and_mobile_data_are_refreshed_atomically(self) -> None:
+        active = responsive_legacy(
+            b'[{"x":["old"]}]',
+            b'[{"r":[1]}]',
+            b'"2026-08-16"',
+            b'[{"x0":"2026-07-01"}]',
+        )
+        candidate = responsive_legacy(
+            b'[{"x":["new"]}]',
+            b'[{"r":[1,2]}]',
+            b'"2026-09-27"',
+            b'[{"x0":"2026-07-01"},{"x0":"2026-09-01"}]',
+        )
+        updated = refresh.refresh_legacy(active, candidate)
+        self.assertIn(b'[{"x":["new"]}]', updated)
+        self.assertIn(b'[{"r":[1,2]}]', updated)
+        self.assertIn(b'"2026-09-27"', updated)
+        self.assertIn(b'"2026-09-01"', updated)
+        self.assertEqual(
+            refresh.legacy_data_only_skeleton(updated),
+            refresh.legacy_data_only_skeleton(active),
+        )
+
+    def test_non_dynamic_legacy_layout_change_is_rejected(self) -> None:
+        active = responsive_legacy(b"[1]", b"null", b'"2026-08-16"', b"[]")
+        candidate = responsive_legacy(
+            b"[2]", b"null", b'"2026-09-27"', b"[]", title=b"changed"
+        )
+        with self.assertRaisesRegex(refresh.RefreshError, "SKELETON_DIVERGED"):
+            refresh.refresh_legacy(active, candidate)
+
+        numeric_active = active.replace(
+            b'["2023-12-17","2026-08-16"]', b"[0,10]"
+        )
+        numeric_candidate = candidate.replace(
+            b'["2023-12-17","2026-09-27"]', b"[0,20]"
+        ).replace(b'"changed"', b'"fixed"')
+        with self.assertRaisesRegex(refresh.RefreshError, "SKELETON_DIVERGED"):
+            refresh.refresh_legacy(numeric_active, numeric_candidate)
+
+    def test_wind_direction_is_staged_with_desktop_and_mobile_data(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             active = root / "active"
             weather = active / "assets/figures/demo-2/weather/legacy"
             weather.mkdir(parents=True)
-            (weather / "meteo_wind_dir.html").write_bytes(legacy(b"[old]"))
+            current = responsive_legacy(
+                b'[{"r":[1]}]', b'[{"r":[10]}]', b'"2026-08-16"', b"[]"
+            )
+            updated = responsive_legacy(
+                b'[{"r":[1,2]}]',
+                b'[{"r":[10,20]}]',
+                b'"2026-09-27"',
+                b"[]",
+            )
+            (weather / "meteo_wind_dir.html").write_bytes(current)
             candidate = ready_candidate(
                 root,
                 "weather/legacy/meteo_wind_dir.html",
-                legacy(b"[new]"),
+                updated,
             )
-            self.assertEqual(refresh.build_staging(active, [candidate]), {})
-            self.assertEqual((weather / "meteo_wind_dir.html").read_bytes(), legacy(b"[old]"))
+            staged = refresh.build_staging(active, [candidate])
+            target = refresh.FIGURES / "weather/legacy/meteo_wind_dir.html"
+            self.assertEqual(staged[target], updated)
+            self.assertEqual((weather / "meteo_wind_dir.html").read_bytes(), current)
 
     def test_pattern_refresh_requires_the_complete_pair(self) -> None:
         patterns = active_patterns()

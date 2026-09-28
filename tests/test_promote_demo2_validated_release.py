@@ -269,20 +269,11 @@ class Demo2PromotionTests(unittest.TestCase):
         self.assertEqual(journal["phase"], promoter.PHASE_COMMITTED)
         self.assertEqual(journal["source_ids"], ["weather-ready:20260915T120000Z"])
 
-    def test_prepared_output_rejects_wind_direction_and_half_pattern_pair(self) -> None:
-        with self.assertRaisesRegex(
-            promoter.Demo2PromotionError,
-            "DEMO2_PROMOTION_TARGET_FROZEN",
-        ):
-            promoter.promote_prepared_outputs(
-                {
-                    "weather/legacy/meteo_wind_dir.html": (
-                        b"<!doctype html><html></html>"
-                    )
-                },
-                ["source:1"],
-                site_root=self.site,
-            )
+    def test_prepared_output_accepts_wind_direction_and_rejects_half_pattern_pair(self) -> None:
+        self.assertEqual(
+            promoter._prepared_target("weather/legacy/meteo_wind_dir.html"),
+            "weather/legacy/meteo_wind_dir.html",
+        )
         patterns = active_patterns()
         for target, payload in patterns.items():
             with self.subTest(target=target):

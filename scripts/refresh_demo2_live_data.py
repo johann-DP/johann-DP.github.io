@@ -30,7 +30,7 @@ HASH = re.compile(r"[0-9a-f]{64}", re.ASCII)
 LEGACY = (
     "meteo_temperature.html", "meteo_temp_minmax.html", "meteo_humidity.html",
     "meteo_light_uv.html", "meteo_precipitation.html", "meteo_wind_speed.html",
-    "meteo_pairplots.html",
+    "meteo_wind_dir.html", "meteo_pairplots.html",
 )
 PATTERN_MEDIAN = "retaining-wall-median-day.html"
 PATTERN_EXTREMA = "retaining-wall-extrema-hours.html"
@@ -39,7 +39,7 @@ PATTERN_ROLES = {
     PATTERN_MEDIAN: "legacy_half_hour_median_profile_candidate",
     PATTERN_EXTREMA: "legacy_daily_extrema_distributions_candidate",
 }
-FROZEN = frozenset(("weather/legacy/meteo_wind_dir.html",))
+FROZEN: frozenset[str] = frozenset()
 _SCRIPT_PAYLOAD = re.compile(br'(<script id="payload" type="application/json">)(.*?)(</script>)', re.S)
 _RAW_PAYLOAD = re.compile(br'(<script id="d2-cap-payload"[^>]*>)(.*?)(</script>)', re.S)
 _FIGURE_METADATA = re.compile(br'const\s+FIGURE_METADATA\s*=\s*\{.*?\};', re.S)
@@ -2492,9 +2492,98 @@ def _plotly_data_span(payload: bytes) -> tuple[int, int]:
     raise RefreshError("REFRESH_LEGACY_DATA_UNTERMINATED")
 
 
+def _optional_json_assignment_span(
+    payload: bytes, name: str
+) -> tuple[int, int] | None:
+    marker = f"const {name} = ".encode()
+    starts = [match.end() for match in re.finditer(re.escape(marker), payload)]
+    if not starts:
+        return None
+    if len(starts) != 1:
+        raise RefreshError("REFRESH_LEGACY_ASSIGNMENT_UNEXPECTED")
+    start = starts[0]
+    while start < len(payload) and payload[start] in b" \t\r\n":
+        start += 1
+    if payload[start : start + 4] == b"null":
+        return start, start + 4
+    opener = payload[start : start + 1]
+    if opener not in (b"[", b"{"):
+        raise RefreshError("REFRESH_LEGACY_ASSIGNMENT_NOT_JSON")
+    closer = b"]" if opener == b"[" else b"}"
+    depth, quote, escaped = 0, 0, False
+    for index in range(start, len(payload)):
+        char = payload[index]
+        if quote:
+            if escaped:
+                escaped = False
+            elif char == 92:
+                escaped = True
+            elif char == quote:
+                quote = 0
+            continue
+        if char in (34, 39):
+            quote = char
+        elif char == opener[0]:
+            depth += 1
+        elif char == closer[0]:
+            depth -= 1
+            if depth == 0:
+                return start, index + 1
+    raise RefreshError("REFRESH_LEGACY_ASSIGNMENT_UNTERMINATED")
+
+
+def _normalized_legacy_layout(payload: bytes, name: str) -> bytes | None:
+    span = _optional_json_assignment_span(payload, name)
+    if span is None:
+        return None
+    try:
+        layout = json.loads(payload[span[0] : span[1]])
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        raise RefreshError("REFRESH_LEGACY_LAYOUT_INVALID") from None
+    if not isinstance(layout, dict):
+        raise RefreshError("REFRESH_LEGACY_LAYOUT_INVALID")
+    def temporal_range(axis_name: str) -> bool:
+        axis = layout.get(axis_name)
+        values = axis.get("range") if isinstance(axis, dict) else None
+        return (
+            isinstance(values, list)
+            and len(values) == 2
+            and all(
+                isinstance(value, str)
+                and re.fullmatch(r"\d{4}-\d{2}-\d{2}(?:T.*)?", value) is not None
+                for value in values
+            )
+        )
+
+    dynamic_range = temporal_range("xaxis") and temporal_range("xaxis2")
+    if not dynamic_range:
+        return payload[span[0] : span[1]]
+    normalized = dict(layout)
+    normalized.pop("shapes", None)
+    for axis_name in ("xaxis", "xaxis2"):
+        if axis_name not in normalized:
+            continue
+        axis = normalized[axis_name]
+        if not isinstance(axis, dict):
+            raise RefreshError("REFRESH_LEGACY_LAYOUT_INVALID")
+        axis = dict(axis)
+        axis.pop("range", None)
+        normalized[axis_name] = axis
+    return _canonical_json(normalized)
+
+
 def legacy_data_only_skeleton(payload: bytes) -> bytes:
     start, end = _plotly_data_span(payload)
-    return payload[:start] + b"__DATA__" + payload[end:]
+    replacements: list[tuple[int, int, bytes]] = [(start, end, b"__DATA__")]
+    mobile = _optional_json_assignment_span(payload, "mobileData")
+    if mobile is not None and payload[mobile[0] : mobile[1]] != b"null":
+        replacements.append((*mobile, b"__MOBILE_DATA__"))
+    for name in ("desktopLayout", "mobileLayout"):
+        span = _optional_json_assignment_span(payload, name)
+        normalized = _normalized_legacy_layout(payload, name)
+        if span is not None and normalized is not None:
+            replacements.append((*span, normalized))
+    return _replace_ranges(payload, replacements)
 
 
 def refresh_legacy(active: bytes, candidate: bytes) -> bytes:
@@ -2502,7 +2591,24 @@ def refresh_legacy(active: bytes, candidate: bytes) -> bytes:
     c_start, c_end = _plotly_data_span(candidate)
     if legacy_data_only_skeleton(active) != legacy_data_only_skeleton(candidate):
         raise RefreshError("REFRESH_LEGACY_SKELETON_DIVERGED")
-    return active[:a_start] + candidate[c_start:c_end] + active[a_end:]
+    replacements: list[tuple[int, int, bytes]] = [
+        (a_start, a_end, candidate[c_start:c_end])
+    ]
+    for name in ("mobileData", "desktopLayout", "mobileLayout"):
+        active_span = _optional_json_assignment_span(active, name)
+        candidate_span = _optional_json_assignment_span(candidate, name)
+        if (active_span is None) != (candidate_span is None):
+            raise RefreshError("REFRESH_LEGACY_SKELETON_DIVERGED")
+        if active_span is None or candidate_span is None:
+            continue
+        active_value = active[active_span[0] : active_span[1]]
+        candidate_value = candidate[candidate_span[0] : candidate_span[1]]
+        if name == "mobileData" and (active_value == b"null") != (
+            candidate_value == b"null"
+        ):
+            raise RefreshError("REFRESH_LEGACY_MOBILE_DATA_DIVERGED")
+        replacements.append((*active_span, candidate_value))
+    return _replace_ranges(active, replacements)
 
 
 def _strip_candidate_paragraph(payload: bytes) -> bytes:

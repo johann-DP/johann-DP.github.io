@@ -62,6 +62,7 @@ DEMO2_ROTATING_STRATEGIES: Mapping[str, str] = {
     "weather/legacy/meteo_precipitation.html": "legacy",
     "weather/legacy/meteo_temp_minmax.html": "legacy",
     "weather/legacy/meteo_temperature.html": "legacy",
+    "weather/legacy/meteo_wind_dir.html": "legacy",
     "weather/legacy/meteo_wind_speed.html": "legacy",
 }
 DEMO2_EXPECTED_ENTRIES = {
@@ -130,7 +131,8 @@ ACTIVE_SEO_MARKERS = (
     '<meta name="twitter:card" content="summary_large_image">',
 )
 
-# Maintenance baseline at a0cfc1dd; protected Demo 2 extension authorized 2026-09-25.
+# Maintenance baseline at a0cfc1dd; protected Demo 2 extensions authorized
+# through 2026-09-28.
 # Only the catalogue-outside, protected snapshot and explicitly rotating
 # Demo 2 skeleton hashes below were updated.
 # The values are populated
@@ -147,7 +149,7 @@ DEFAULT_BASELINE: dict[str, Any] = {
     },
     "maintenance_catalogue_fragment_sha256": "24f984b4ce8bfe678b0dc175331337623fd9c9fae2cde36a900dcd78d69d90f1",
     "catalogue_outside_sha256": "a5b4ce822ec32b34eea461b7c007ef42575bd5788f6117fb09ef4fac678fcc4c",
-    "protected_snapshot_sha256": "88d9c058ccbf5970c961cd7f7a3c3028461e6405de40c785ad3d796e0eb3f0d3",
+    "protected_snapshot_sha256": "18227ca0dc6cd0e806aa9d74a9d3dfe5856865758329a7d110f400da8a238b7d",
     "demo2_rotating_skeletons": {
         "fissure-recente-meme-format.html": "2210e366dfb500d872ea37565781bf4d74641e93d65feb6fd31849c11aca36fa",
         "joint-dilatation-rendu-site.html": "4f839b3024dc6a9c8c719290f5f3ace4c811ae9efe134f0a8465cbcc484d4d18",
@@ -160,10 +162,11 @@ DEFAULT_BASELINE: dict[str, Any] = {
         "weather/legacy/meteo_humidity.html": "40896a88ce5c9c74ebbcea749e85fb803234b9a4142f0af0505cd61d63bbfa8a",
         "weather/legacy/meteo_light_uv.html": "c34cec89c40d940b141df8fb1306af361a4e30f9e168ea68dd328e386fa95929",
         "weather/legacy/meteo_pairplots.html": "215335b20174f9e4b2977a84bece49b3fd454f955de83146fb754a5854122887",
-        "weather/legacy/meteo_precipitation.html": "6c20d3b52cd15a6af6e242e5a0d18fc8a5f5513c85e2a42d6a5adb6d7a294075",
+        "weather/legacy/meteo_precipitation.html": "ffe5deaae6443b661ce11c0ace40e97c7724639432c8b1aa6c02bbd39e2b935e",
         "weather/legacy/meteo_temp_minmax.html": "d234bddf984bc1a7903903810d18324857135589ce9fb86eb13b5142c84549fb",
         "weather/legacy/meteo_temperature.html": "d0247f5354ce2bfa3fe6b6abb5cda3959acedc0810e0eecf89bce54623fd1146",
-        "weather/legacy/meteo_wind_speed.html": "9c2f950dc50d51c05902caf5b48dc62e74f1fcf6355f053d8b209ea5be3123b8",
+        "weather/legacy/meteo_wind_dir.html": "b3b2a5db5ddb9c08b16a3fd86aa6e8ba602b3d721d9cd8a0b1cf5004512dc253",
+        "weather/legacy/meteo_wind_speed.html": "589fcd16d27e8526bb7c965dd27523b78105141b167e767ee2e397f2add1ab80",
     },
 }
 

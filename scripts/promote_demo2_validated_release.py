@@ -131,6 +131,13 @@ PROMOTION_TARGETS: Mapping[str, Mapping[str, tuple[str, str, str]]] = {
             "plotly-data",
         ),
     },
+    "weather_legacy_wind_direction_review": {
+        "weather-wind-direction": (
+            "weather/legacy/meteo_wind_dir.html",
+            "weather/legacy/meteo_wind_dir.html",
+            "plotly-data",
+        ),
+    },
     "weather_legacy_pairplots_review": {
         "weather-pairplots": (
             "weather/legacy/meteo_pairplots.html",
@@ -141,7 +148,7 @@ PROMOTION_TARGETS: Mapping[str, Mapping[str, tuple[str, str, str]]] = {
 }
 
 # Deliberately absent: manual raw pages never replace the validated analytical
-# crack/joint masters, and wind direction is explicitly frozen by its owner.
+# crack/joint masters.
 
 PREPARED_OUTPUT_STRATEGIES: Mapping[str, str] = {
     "fissure-recente-meme-format.html": "manual",
@@ -158,16 +165,12 @@ PREPARED_OUTPUT_STRATEGIES: Mapping[str, str] = {
     "weather/legacy/meteo_precipitation.html": "plotly-data",
     "weather/legacy/meteo_temp_minmax.html": "plotly-data",
     "weather/legacy/meteo_temperature.html": "plotly-data",
+    "weather/legacy/meteo_wind_dir.html": "plotly-data",
     "weather/legacy/meteo_wind_speed.html": "plotly-data",
 }
 
-# Wind direction remains frozen by an explicit owner decision.  Pattern
-# figures are accepted only as a complete pair and are re-proved below.
-PREPARED_OUTPUT_FROZEN = frozenset(
-    {
-        "weather/legacy/meteo_wind_dir.html",
-    }
-)
+# Pattern figures are accepted only as a complete pair and are re-proved below.
+PREPARED_OUTPUT_FROZEN: frozenset[str] = frozenset()
 SOURCE_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}", re.ASCII)
 HTML_PARAGRAPH = re.compile(r"<p\b[^>]*>.*?</p>", re.IGNORECASE | re.DOTALL)
 SENSOR_CANDIDATE_MARKER = re.compile(r"candidat\s+automatis", re.IGNORECASE)
