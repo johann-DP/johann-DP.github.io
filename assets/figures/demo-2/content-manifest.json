@@ -27,14 +27,14 @@
     {
       "path": "retaining-wall-extrema-hours.html",
       "role": "responsive_html_master",
-      "sha256": "00197de5a1e5873e88aa5ec6cf015b2495fa272a64d984bd3f8331a085198732",
-      "size_bytes": 126483
+      "sha256": "3ff8d08f4f28a7548824ae4e10cff14a74b370e3ea8dfba8475bde2f4c0303c0",
+      "size_bytes": 128778
     },
     {
       "path": "retaining-wall-median-day.html",
       "role": "responsive_html_master",
-      "sha256": "152bb5fa22849b1c19356f1ea93b0c1c7e83207d67678d203fcec45fce8a6de0",
-      "size_bytes": 31790
+      "sha256": "236e01e915a0a0104d7be30c96564493b87bf64693b86fae4cd2646405c48ff3",
+      "size_bytes": 32482
     },
     {
       "path": "building-geometry.html",
@@ -57,8 +57,8 @@
     {
       "path": "retaining-wall-sensor-processed-v2.html",
       "role": "responsive_html_master",
-      "sha256": "ebe020f3ce9554585bf8ab0b9b5b77bea2e2709eba1ba2a38fd3ea8027e0b895",
-      "size_bytes": 15092142
+      "sha256": "79ac102a54aedab31c6041b94b03505db673873a8cecbcfe065442cb350d756c",
+      "size_bytes": 15111204
     }
   ],
   "manifest_version": 2
