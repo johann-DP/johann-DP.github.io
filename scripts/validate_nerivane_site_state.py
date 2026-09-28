@@ -162,11 +162,11 @@ DEFAULT_BASELINE: dict[str, Any] = {
         "weather/legacy/meteo_humidity.html": "40896a88ce5c9c74ebbcea749e85fb803234b9a4142f0af0505cd61d63bbfa8a",
         "weather/legacy/meteo_light_uv.html": "c34cec89c40d940b141df8fb1306af361a4e30f9e168ea68dd328e386fa95929",
         "weather/legacy/meteo_pairplots.html": "215335b20174f9e4b2977a84bece49b3fd454f955de83146fb754a5854122887",
-        "weather/legacy/meteo_precipitation.html": "ffe5deaae6443b661ce11c0ace40e97c7724639432c8b1aa6c02bbd39e2b935e",
+        "weather/legacy/meteo_precipitation.html": "62be6d2d732c3d5e5ecebc404edb59376e080f7e5dfaa65811da41163f8a8e64",
         "weather/legacy/meteo_temp_minmax.html": "d234bddf984bc1a7903903810d18324857135589ce9fb86eb13b5142c84549fb",
         "weather/legacy/meteo_temperature.html": "d0247f5354ce2bfa3fe6b6abb5cda3959acedc0810e0eecf89bce54623fd1146",
         "weather/legacy/meteo_wind_dir.html": "b3b2a5db5ddb9c08b16a3fd86aa6e8ba602b3d721d9cd8a0b1cf5004512dc253",
-        "weather/legacy/meteo_wind_speed.html": "589fcd16d27e8526bb7c965dd27523b78105141b167e767ee2e397f2add1ab80",
+        "weather/legacy/meteo_wind_speed.html": "6a2cae5ef39d6514eb0bddbed563a559c8a6158393edda4fd32e345be322eba7",
     },
 }
 
