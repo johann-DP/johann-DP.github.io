@@ -454,7 +454,10 @@ class RefreshTests(unittest.TestCase):
         )
         self.assertEqual(median_document[3]["review_status"], "VALIDÉ")
         self.assertEqual(extrema_document[3]["review_status"], "VALIDÉ")
-        day_counts = median_document[1]["day_count"]
+        candidate_median = refresh._pattern_document(
+            candidate[refresh.PATTERN_MEDIAN]
+        )[1]
+        day_counts = candidate_median["day_count"]
         expected_range = f"{min(day_counts)} à {max(day_counts)} jours".encode()
         self.assertIn(expected_range, median_document[4].group(0))
         self.assertNotIn(b"cluster", median_document[4].group(0).lower())
