@@ -30,7 +30,7 @@ HASH = re.compile(r"[0-9a-f]{64}", re.ASCII)
 LEGACY = (
     "meteo_temperature.html", "meteo_temp_minmax.html", "meteo_humidity.html",
     "meteo_light_uv.html", "meteo_precipitation.html", "meteo_wind_speed.html",
-    "meteo_pairplots.html",
+    "meteo_wind_dir.html", "meteo_pairplots.html",
 )
 PATTERN_MEDIAN = "retaining-wall-median-day.html"
 PATTERN_EXTREMA = "retaining-wall-extrema-hours.html"
@@ -39,7 +39,7 @@ PATTERN_ROLES = {
     PATTERN_MEDIAN: "legacy_half_hour_median_profile_candidate",
     PATTERN_EXTREMA: "legacy_daily_extrema_distributions_candidate",
 }
-FROZEN = frozenset(("weather/legacy/meteo_wind_dir.html",))
+FROZEN: frozenset[str] = frozenset()
 _SCRIPT_PAYLOAD = re.compile(br'(<script id="payload" type="application/json">)(.*?)(</script>)', re.S)
 _RAW_PAYLOAD = re.compile(br'(<script id="d2-cap-payload"[^>]*>)(.*?)(</script>)', re.S)
 _FIGURE_METADATA = re.compile(br'const\s+FIGURE_METADATA\s*=\s*\{.*?\};', re.S)
@@ -2492,17 +2492,281 @@ def _plotly_data_span(payload: bytes) -> tuple[int, int]:
     raise RefreshError("REFRESH_LEGACY_DATA_UNTERMINATED")
 
 
+def _optional_json_assignment_span(
+    payload: bytes, name: str
+) -> tuple[int, int] | None:
+    marker = f"const {name} = ".encode()
+    starts = [match.end() for match in re.finditer(re.escape(marker), payload)]
+    if not starts:
+        return None
+    if len(starts) != 1:
+        raise RefreshError("REFRESH_LEGACY_ASSIGNMENT_UNEXPECTED")
+    start = starts[0]
+    while start < len(payload) and payload[start] in b" \t\r\n":
+        start += 1
+    if payload[start : start + 4] == b"null":
+        return start, start + 4
+    opener = payload[start : start + 1]
+    if opener not in (b"[", b"{"):
+        raise RefreshError("REFRESH_LEGACY_ASSIGNMENT_NOT_JSON")
+    closer = b"]" if opener == b"[" else b"}"
+    depth, quote, escaped = 0, 0, False
+    for index in range(start, len(payload)):
+        char = payload[index]
+        if quote:
+            if escaped:
+                escaped = False
+            elif char == 92:
+                escaped = True
+            elif char == quote:
+                quote = 0
+            continue
+        if char in (34, 39):
+            quote = char
+        elif char == opener[0]:
+            depth += 1
+        elif char == closer[0]:
+            depth -= 1
+            if depth == 0:
+                return start, index + 1
+    raise RefreshError("REFRESH_LEGACY_ASSIGNMENT_UNTERMINATED")
+
+
+def _legacy_layout_assignment(
+    payload: bytes, name: str
+) -> dict[str, object] | None:
+    span = _optional_json_assignment_span(payload, name)
+    if span is None:
+        return None
+    try:
+        value = json.loads(payload[span[0] : span[1]])
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        raise RefreshError("REFRESH_LEGACY_LAYOUT_INVALID") from None
+    if not isinstance(value, dict):
+        raise RefreshError("REFRESH_LEGACY_LAYOUT_INVALID")
+    return value
+
+
+def _temporal_range(
+    layout: Mapping[str, object], axis_name: str
+) -> tuple[datetime, datetime] | None:
+    axis = layout.get(axis_name)
+    values = axis.get("range") if isinstance(axis, dict) else None
+    if not isinstance(values, list) or len(values) != 2:
+        return None
+    if not all(isinstance(value, str) for value in values):
+        return None
+    date_prefix = re.compile(r"\d{4}-\d{2}-\d{2}")
+    if not any(date_prefix.match(value) for value in values):
+        return None
+    iso_value = re.compile(
+        r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?"
+        r"(?:Z|[+-]\d{2}:?\d{2})?)?"
+    )
+    if not all(iso_value.fullmatch(value) for value in values):
+        raise RefreshError("REFRESH_LEGACY_TIME_RANGE_INVALID")
+    try:
+        parsed = tuple(datetime.fromisoformat(value) for value in values)
+        if parsed[0] >= parsed[1]:
+            raise ValueError
+    except (TypeError, ValueError):
+        raise RefreshError("REFRESH_LEGACY_TIME_RANGE_INVALID") from None
+    return parsed
+
+
+def _shift_month(value: datetime, months: int) -> datetime:
+    month_index = value.year * 12 + value.month - 1 + months
+    return value.replace(
+        year=month_index // 12,
+        month=month_index % 12 + 1,
+        day=1,
+    )
+
+
+def _calendar_shape_signature(
+    layout: Mapping[str, object],
+) -> tuple[dict[str, object], datetime, int]:
+    shapes = layout.get("shapes")
+    if not isinstance(shapes, list) or len(shapes) < 2 or len(shapes) % 2:
+        raise RefreshError("REFRESH_LEGACY_CALENDAR_SHAPES_INVALID")
+    prototypes: list[dict[str, object]] = []
+    first_start: datetime | None = None
+    for pair_index in range(0, len(shapes), 2):
+        pair = shapes[pair_index : pair_index + 2]
+        if not all(isinstance(shape, dict) for shape in pair):
+            raise RefreshError("REFRESH_LEGACY_CALENDAR_SHAPES_INVALID")
+        starts = [shape.get("x0") for shape in pair]
+        ends = [shape.get("x1") for shape in pair]
+        if (
+            not all(isinstance(value, str) for value in (*starts, *ends))
+            or len(set(starts)) != 1
+            or len(set(ends)) != 1
+        ):
+            raise RefreshError("REFRESH_LEGACY_CALENDAR_SHAPES_INVALID")
+        try:
+            start = datetime.fromisoformat(starts[0])
+            end = datetime.fromisoformat(ends[0])
+        except ValueError:
+            raise RefreshError("REFRESH_LEGACY_CALENDAR_SHAPES_INVALID") from None
+        if first_start is None:
+            first_start = start
+            if start.day != 1 or start.month % 2 != 1:
+                raise RefreshError("REFRESH_LEGACY_CALENDAR_SHAPES_INVALID")
+        expected_start = _shift_month(first_start, pair_index)
+        if start != expected_start or end != _shift_month(expected_start, 1):
+            raise RefreshError("REFRESH_LEGACY_CALENDAR_SHAPES_INVALID")
+        styles = [
+            {key: value for key, value in shape.items() if key not in {"x0", "x1"}}
+            for shape in pair
+        ]
+        if not prototypes:
+            prototypes = styles
+        elif styles != prototypes:
+            raise RefreshError("REFRESH_LEGACY_CALENDAR_SHAPES_INVALID")
+    assert first_start is not None
+    return (
+        {"anchor": first_start.isoformat(), "prototypes": prototypes},
+        first_start,
+        len(shapes) // 2,
+    )
+
+
+def _normalized_legacy_layout(payload: bytes, name: str) -> bytes | None:
+    span = _optional_json_assignment_span(payload, name)
+    if span is None:
+        return None
+    layout = _legacy_layout_assignment(payload, name)
+    assert layout is not None
+    x_range = _temporal_range(layout, "xaxis")
+    x2_range = _temporal_range(layout, "xaxis2")
+    dynamic_range = x_range is not None and x2_range is not None
+    if (x_range is None) != (x2_range is None):
+        raise RefreshError("REFRESH_LEGACY_TIME_RANGE_INVALID")
+    if not dynamic_range:
+        return payload[span[0] : span[1]]
+    normalized = dict(layout)
+    normalized["shapes"] = _calendar_shape_signature(layout)[0]
+    for axis_name in ("xaxis", "xaxis2"):
+        if axis_name not in normalized:
+            continue
+        axis = normalized[axis_name]
+        if not isinstance(axis, dict):
+            raise RefreshError("REFRESH_LEGACY_LAYOUT_INVALID")
+        axis = dict(axis)
+        axis.pop("range", None)
+        normalized[axis_name] = axis
+    return _canonical_json(normalized)
+
+
+def _legacy_trace_coverage(payload: bytes) -> tuple[datetime, datetime]:
+    start, end = _plotly_data_span(payload)
+    try:
+        traces = json.loads(payload[start:end])
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        raise RefreshError("REFRESH_LEGACY_DATA_NOT_JSON") from None
+    candidates: list[tuple[int, datetime, datetime]] = []
+    if not isinstance(traces, list):
+        raise RefreshError("REFRESH_LEGACY_DATA_NOT_JSON")
+    for trace in traces:
+        values = trace.get("x") if isinstance(trace, dict) else None
+        if (
+            not isinstance(values, list)
+            or not values
+            or not all(isinstance(value, str) for value in values)
+        ):
+            continue
+        try:
+            parsed = tuple(datetime.fromisoformat(value) for value in values)
+        except ValueError:
+            raise RefreshError("REFRESH_LEGACY_TRACE_TIME_INVALID") from None
+        try:
+            if any(
+                left > right
+                for left, right in zip(parsed, parsed[1:], strict=False)
+            ):
+                raise RefreshError("REFRESH_LEGACY_TRACE_TIME_INVALID")
+        except TypeError:
+            raise RefreshError("REFRESH_LEGACY_TRACE_TIME_INVALID") from None
+        candidates.append((len(values), parsed[0], parsed[-1]))
+    if not candidates:
+        raise RefreshError("REFRESH_LEGACY_TRACE_TIME_INVALID")
+    longest = max(item[0] for item in candidates)
+    bounds = {(item[1], item[2]) for item in candidates if item[0] == longest}
+    if len(bounds) != 1:
+        raise RefreshError("REFRESH_LEGACY_TRACE_COVERAGE_DIVERGED")
+    return next(iter(bounds))
+
+
+def _validate_live_legacy_layout(payload: bytes) -> None:
+    derived: list[tuple[tuple[datetime, datetime], object]] = []
+    for name in ("desktopLayout", "mobileLayout"):
+        layout = _legacy_layout_assignment(payload, name)
+        if layout is None:
+            continue
+        x_range = _temporal_range(layout, "xaxis")
+        x2_range = _temporal_range(layout, "xaxis2")
+        if x_range is None and x2_range is None:
+            continue
+        if x_range is None or x2_range is None or x_range != x2_range:
+            raise RefreshError("REFRESH_LEGACY_TIME_RANGE_INVALID")
+        signature, first_band, pair_count = _calendar_shape_signature(layout)
+        derived.append((x_range, (signature, first_band, pair_count)))
+    if not derived:
+        return
+    if len(derived) != 2 or derived[0] != derived[1]:
+        raise RefreshError("REFRESH_LEGACY_RESPONSIVE_LAYOUT_DIVERGED")
+    coverage = _legacy_trace_coverage(payload)
+    ranges, shape_state = derived[0]
+    if ranges != coverage:
+        raise RefreshError("REFRESH_LEGACY_TIME_RANGE_DIVERGED")
+    _, first_band, pair_count = shape_state
+    expected_pairs = 0
+    band = first_band
+    while band.date() <= coverage[1].date():
+        expected_pairs += 1
+        band = _shift_month(band, 2)
+    if pair_count != expected_pairs:
+        raise RefreshError("REFRESH_LEGACY_CALENDAR_SHAPES_DIVERGED")
+
+
 def legacy_data_only_skeleton(payload: bytes) -> bytes:
     start, end = _plotly_data_span(payload)
-    return payload[:start] + b"__DATA__" + payload[end:]
+    replacements: list[tuple[int, int, bytes]] = [(start, end, b"__DATA__")]
+    mobile = _optional_json_assignment_span(payload, "mobileData")
+    if mobile is not None and payload[mobile[0] : mobile[1]] != b"null":
+        replacements.append((*mobile, b"__MOBILE_DATA__"))
+    for name in ("desktopLayout", "mobileLayout"):
+        span = _optional_json_assignment_span(payload, name)
+        normalized = _normalized_legacy_layout(payload, name)
+        if span is not None and normalized is not None:
+            replacements.append((*span, normalized))
+    return _replace_ranges(payload, replacements)
 
 
 def refresh_legacy(active: bytes, candidate: bytes) -> bytes:
     a_start, a_end = _plotly_data_span(active)
     c_start, c_end = _plotly_data_span(candidate)
+    _validate_live_legacy_layout(candidate)
     if legacy_data_only_skeleton(active) != legacy_data_only_skeleton(candidate):
         raise RefreshError("REFRESH_LEGACY_SKELETON_DIVERGED")
-    return active[:a_start] + candidate[c_start:c_end] + active[a_end:]
+    replacements: list[tuple[int, int, bytes]] = [
+        (a_start, a_end, candidate[c_start:c_end])
+    ]
+    for name in ("mobileData", "desktopLayout", "mobileLayout"):
+        active_span = _optional_json_assignment_span(active, name)
+        candidate_span = _optional_json_assignment_span(candidate, name)
+        if (active_span is None) != (candidate_span is None):
+            raise RefreshError("REFRESH_LEGACY_SKELETON_DIVERGED")
+        if active_span is None or candidate_span is None:
+            continue
+        active_value = active[active_span[0] : active_span[1]]
+        candidate_value = candidate[candidate_span[0] : candidate_span[1]]
+        if name == "mobileData" and (active_value == b"null") != (
+            candidate_value == b"null"
+        ):
+            raise RefreshError("REFRESH_LEGACY_MOBILE_DATA_DIVERGED")
+        replacements.append((*active_span, candidate_value))
+    return _replace_ranges(active, replacements)
 
 
 def _strip_candidate_paragraph(payload: bytes) -> bytes:

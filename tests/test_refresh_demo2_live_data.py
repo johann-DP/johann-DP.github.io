@@ -16,6 +16,52 @@ def legacy(data: bytes = b'[1]') -> bytes:
     return b'<html><body><h1>validated</h1><script>Plotly.newPlot("p", ' + data + b', {"title":"fixed"});</script></body></html>'
 
 
+def responsive_legacy(
+    data: bytes,
+    mobile_data: bytes,
+    range_end: bytes,
+    shapes: bytes,
+    *,
+    title: bytes = b"fixed",
+) -> bytes:
+    return (
+        b'<html><body><h1>validated</h1><script>const desktopLayout = {"shapes":'
+        + shapes
+        + b',"title":"'
+        + title
+        + b'","xaxis":{"range":["2023-12-17",'
+        + range_end
+        + b']},"xaxis2":{"range":["2023-12-17",'
+        + range_end
+        + b']}};const mobileLayout = {"shapes":'
+        + shapes
+        + b',"title":"'
+        + title
+        + b'","xaxis":{"range":["2023-12-17",'
+        + range_end
+        + b']},"xaxis2":{"range":["2023-12-17",'
+        + range_end
+        + b']}};const mobileData = '
+        + mobile_data
+        + b';Plotly.newPlot("p", '
+        + data
+        + b', desktopLayout);</script></body></html>'
+    )
+
+
+def radial_legacy(data: bytes, mobile_data: bytes) -> bytes:
+    return (
+        b'<html><body><h1>validated</h1><script>const desktopLayout = '
+        b'{"polar":{"radialaxis":{"visible":true}},"title":"fixed"};'
+        b'const mobileLayout = {"polar":{"radialaxis":{"visible":true}},'
+        b'"title":"fixed"};const mobileData = '
+        + mobile_data
+        + b';Plotly.newPlot("p", '
+        + data
+        + b', desktopLayout);</script></body></html>'
+    )
+
+
 def complement(
     payload: bytes,
     banner: bytes = b"validated prose",
@@ -139,20 +185,120 @@ class RefreshTests(unittest.TestCase):
         with self.assertRaisesRegex(refresh.RefreshError, "SKELETON_DIVERGED"):
             refresh.refresh_legacy(legacy(), legacy().replace(b"validated", b"candidate banner"))
 
-    def test_wind_direction_is_never_staged(self) -> None:
+    def test_dynamic_time_layout_and_mobile_data_are_refreshed_atomically(self) -> None:
+        old_shapes = (
+            b'[{"slot":"top","x0":"2026-07-01","x1":"2026-08-01"},'
+            b'{"slot":"bottom","x0":"2026-07-01","x1":"2026-08-01"}]'
+        )
+        new_shapes = (
+            b'[{"slot":"top","x0":"2026-07-01","x1":"2026-08-01"},'
+            b'{"slot":"bottom","x0":"2026-07-01","x1":"2026-08-01"},'
+            b'{"slot":"top","x0":"2026-09-01","x1":"2026-10-01"},'
+            b'{"slot":"bottom","x0":"2026-09-01","x1":"2026-10-01"}]'
+        )
+        active = responsive_legacy(
+            b'[{"x":["2023-12-17","2026-09-27"]}]',
+            b"null",
+            b'"2026-08-16"',
+            old_shapes,
+        )
+        candidate = responsive_legacy(
+            b'[{"x":["2023-12-17","2026-09-27"]}]',
+            b"null",
+            b'"2026-09-27"',
+            new_shapes,
+        )
+        updated = refresh.refresh_legacy(active, candidate)
+        self.assertIn(b'"2026-09-27"', updated)
+        self.assertIn(b'"2026-09-01"', updated)
+        self.assertEqual(
+            refresh.legacy_data_only_skeleton(updated),
+            refresh.legacy_data_only_skeleton(active),
+        )
+
+    def test_non_dynamic_legacy_layout_change_is_rejected(self) -> None:
+        shapes = (
+            b'[{"slot":"top","x0":"2026-07-01","x1":"2026-08-01"},'
+            b'{"slot":"bottom","x0":"2026-07-01","x1":"2026-08-01"}]'
+        )
+        active = responsive_legacy(
+            b'[{"x":["2023-12-17","2026-08-16"]}]',
+            b"null",
+            b'"2026-08-16"',
+            shapes,
+        )
+        candidate = responsive_legacy(
+            b'[{"x":["2023-12-17","2026-09-27"]}]',
+            b"null",
+            b'"2026-09-27"',
+            shapes.replace(
+                b"]",
+                b',{"slot":"top","x0":"2026-09-01","x1":"2026-10-01"},'
+                b'{"slot":"bottom","x0":"2026-09-01","x1":"2026-10-01"}]',
+            ),
+            title=b"changed",
+        )
+        with self.assertRaisesRegex(refresh.RefreshError, "SKELETON_DIVERGED"):
+            refresh.refresh_legacy(active, candidate)
+
+        numeric_active = active.replace(
+            b'["2023-12-17","2026-08-16"]', b"[0,10]"
+        )
+        numeric_candidate = candidate.replace(
+            b'["2023-12-17","2026-09-27"]', b"[0,20]"
+        ).replace(b'"changed"', b'"fixed"')
+        with self.assertRaisesRegex(refresh.RefreshError, "SKELETON_DIVERGED"):
+            refresh.refresh_legacy(numeric_active, numeric_candidate)
+
+    def test_calendar_shape_style_change_is_rejected(self) -> None:
+        shapes = (
+            b'[{"fillcolor":"gray","slot":"top","x0":"2026-09-01",'
+            b'"x1":"2026-10-01"},{"fillcolor":"gray","slot":"bottom",'
+            b'"x0":"2026-09-01","x1":"2026-10-01"}]'
+        )
+        active = responsive_legacy(
+            b'[{"x":["2023-12-17","2026-09-27"]}]',
+            b"null",
+            b'"2026-09-27"',
+            shapes,
+        )
+        candidate = active.replace(b'"fillcolor":"gray"', b'"fillcolor":"red"')
+        with self.assertRaisesRegex(refresh.RefreshError, "SKELETON_DIVERGED"):
+            refresh.refresh_legacy(active, candidate)
+
+    def test_invalid_calendar_bound_is_rejected(self) -> None:
+        shapes = (
+            b'[{"slot":"top","x0":"2026-09-01","x1":"2026-10-01"},'
+            b'{"slot":"bottom","x0":"2026-09-01","x1":"2026-10-01"}]'
+        )
+        active = responsive_legacy(
+            b'[{"x":["2026-09-01","2026-09-27"]}]',
+            b"null",
+            b'"2026-09-27"',
+            shapes,
+        )
+        candidate = active.replace(b"2026-09-27", b"2026-99-99")
+        with self.assertRaisesRegex(refresh.RefreshError, "TIME_RANGE_INVALID"):
+            refresh.refresh_legacy(active, candidate)
+
+    def test_wind_direction_is_staged_with_desktop_and_mobile_data(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             active = root / "active"
             weather = active / "assets/figures/demo-2/weather/legacy"
             weather.mkdir(parents=True)
-            (weather / "meteo_wind_dir.html").write_bytes(legacy(b"[old]"))
+            current = radial_legacy(b'[{"r":[1]}]', b'[{"r":[10]}]')
+            updated = radial_legacy(b'[{"r":[1,2]}]', b'[{"r":[10,20]}]')
+            (weather / "meteo_wind_dir.html").write_bytes(current)
             candidate = ready_candidate(
                 root,
                 "weather/legacy/meteo_wind_dir.html",
-                legacy(b"[new]"),
+                updated,
             )
-            self.assertEqual(refresh.build_staging(active, [candidate]), {})
-            self.assertEqual((weather / "meteo_wind_dir.html").read_bytes(), legacy(b"[old]"))
+            staged = refresh.build_staging(active, [candidate])
+            target = refresh.FIGURES / "weather/legacy/meteo_wind_dir.html"
+            self.assertEqual(staged[target], updated)
+            self.assertEqual((weather / "meteo_wind_dir.html").read_bytes(), current)
 
     def test_pattern_refresh_requires_the_complete_pair(self) -> None:
         patterns = active_patterns()
