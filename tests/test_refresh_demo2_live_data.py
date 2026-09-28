@@ -300,6 +300,19 @@ class RefreshTests(unittest.TestCase):
             self.assertEqual(staged[target], updated)
             self.assertEqual((weather / "meteo_wind_dir.html").read_bytes(), current)
 
+    def test_non_json_mobile_data_is_rejected_before_refresh(self) -> None:
+        active = radial_legacy(b'[{"r":[1]}]', b'[{"r":[10]}]')
+        for mobile_data in (
+            b'[(()=>{"r":[10,20]})()]',
+            b'[{"r":[NaN]}]',
+        ):
+            with self.subTest(mobile_data=mobile_data):
+                candidate = radial_legacy(b'[{"r":[1,2]}]', mobile_data)
+                with self.assertRaisesRegex(
+                    refresh.RefreshError, "REFRESH_LEGACY_MOBILE_DATA_INVALID"
+                ):
+                    refresh.refresh_legacy(active, candidate)
+
     def test_pattern_refresh_requires_the_complete_pair(self) -> None:
         patterns = active_patterns()
         with tempfile.TemporaryDirectory() as temporary:

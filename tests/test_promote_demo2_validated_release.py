@@ -21,6 +21,7 @@ from tests.test_refresh_demo2_processed_signal import (  # noqa: E402
 )
 from tests.test_refresh_demo2_live_data import (  # noqa: E402
     active_patterns,
+    radial_legacy,
     responsive_legacy,
     rewrite_pattern,
 )
@@ -186,6 +187,21 @@ class Demo2PromotionTests(unittest.TestCase):
             promoter.merge_data_only(current, candidate, "plotly-data"),
             candidate,
         )
+
+    def test_plotly_promotion_rejects_non_json_mobile_data(self) -> None:
+        current = b"<!doctype html>" + radial_legacy(
+            b'[{"r":[1]}]', b'[{"r":[10]}]'
+        )
+        candidate = b"<!doctype html>" + radial_legacy(
+            b'[{"r":[1,2]}]',
+            b'[(()=>{"r":[10,20]})()]',
+        )
+
+        with self.assertRaisesRegex(
+            promoter.Demo2PromotionError,
+            "DEMO2_PROMOTION_VISUAL_TEMPLATE_DIVERGED",
+        ):
+            promoter.merge_data_only(current, candidate, "plotly-data")
 
     def test_failure_after_visibility_rolls_back_the_exact_previous_tree(self) -> None:
         release_id = self.import_weather(figure('[{"x":[3]}]'))
