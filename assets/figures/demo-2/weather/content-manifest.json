@@ -39,8 +39,8 @@
     {
       "path": "legacy/meteo_precipitation.html",
       "role": "responsive_html_master",
-      "sha256": "0fb990dda0f4a58e2bfef56b4502f5b8e12f61f0879be048ff34bbe8e74e5143",
-      "size_bytes": 1650699
+      "sha256": "9d0ea4472f0bacafbb31736445f6f11f2aa5b67bf3554d2e00f6f47d54ad8021",
+      "size_bytes": 1651497
     },
     {
       "path": "legacy/meteo_temp_minmax.html",
@@ -57,14 +57,14 @@
     {
       "path": "legacy/meteo_wind_dir.html",
       "role": "responsive_html_master",
-      "sha256": "57df668f8a3601869d4c442ece86f81a7ea53479274902f7bb43101cbf8493d7",
-      "size_bytes": 1548827
+      "sha256": "1f870f6fdc350a8a532ed077b3dbb345340335bf9343acac2cb6e0a0f17aa03f",
+      "size_bytes": 1589947
     },
     {
       "path": "legacy/meteo_wind_speed.html",
       "role": "responsive_html_master",
-      "sha256": "ec8ad7f0e469ff55cbac7c26662c95efcf36da73d5f60a996a771b218d89e89c",
-      "size_bytes": 1994266
+      "sha256": "0475a2ee97c00516416ddb2fd0f3755a08e79fd67fa034d2a76b668f668e1645",
+      "size_bytes": 1995064
     },
     {
       "path": "complements/meteo_explorateur_toutes_mesures.html",
