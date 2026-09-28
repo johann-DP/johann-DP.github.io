@@ -364,17 +364,15 @@ def _reject_internal_text(*fragments: str) -> None:
 
 
 def _merge_plotly_data(current: str, candidate: str) -> str:
-    current_arguments = _javascript_arguments(current)
-    candidate_arguments = _javascript_arguments(candidate)
-    current_data = current_arguments[1]
-    candidate_data = candidate_arguments[1]
-    candidate_fragment = candidate[candidate_data[0] : candidate_data[1]]
-    _reject_internal_text(candidate_fragment)
-    current_skeleton = _replace_spans(current, [(*current_data, "__DEMO2_DATA__")])
-    candidate_skeleton = _replace_spans(candidate, [(*candidate_data, "__DEMO2_DATA__")])
-    if current_skeleton != candidate_skeleton:
-        raise _fail("DEMO2_PROMOTION_VISUAL_TEMPLATE_DIVERGED")
-    return _replace_spans(current, [(*current_data, candidate_fragment)])
+    try:
+        merged = live_refresh.refresh_legacy(
+            current.encode("utf-8"), candidate.encode("utf-8")
+        )
+        result = merged.decode("utf-8")
+    except (live_refresh.RefreshError, UnicodeDecodeError) as error:
+        raise _fail("DEMO2_PROMOTION_VISUAL_TEMPLATE_DIVERGED") from error
+    _reject_internal_text(result)
+    return result
 
 
 def _merge_pattern(current: str, candidate: str) -> str:

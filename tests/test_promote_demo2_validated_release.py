@@ -21,6 +21,7 @@ from tests.test_refresh_demo2_processed_signal import (  # noqa: E402
 )
 from tests.test_refresh_demo2_live_data import (  # noqa: E402
     active_patterns,
+    responsive_legacy,
     rewrite_pattern,
 )
 import refresh_demo2_live_data as live_refresh  # noqa: E402
@@ -158,6 +159,33 @@ class Demo2PromotionTests(unittest.TestCase):
         self.assertEqual(journal["phase"], promoter.PHASE_COMMITTED)
         self.assertEqual(hashes(transaction / promoter.COUNTERPART_NAME), self.before)
         self.assertEqual(promoter.recover_transaction(str(result["transaction_id"]), site_root=self.site)["status"], "COMMITTED")
+
+    def test_plotly_promotion_reproves_dynamic_time_layout(self) -> None:
+        old_shapes = (
+            b'[{"slot":"top","x0":"2026-07-01","x1":"2026-08-01"},'
+            b'{"slot":"bottom","x0":"2026-07-01","x1":"2026-08-01"}]'
+        )
+        new_shapes = old_shapes[:-1] + (
+            b',{"slot":"top","x0":"2026-09-01","x1":"2026-10-01"},'
+            b'{"slot":"bottom","x0":"2026-09-01","x1":"2026-10-01"}]'
+        )
+        current = b"<!doctype html>" + responsive_legacy(
+            b'[{"x":["2023-12-17","2026-09-27"]}]',
+            b"null",
+            b'"2026-08-16"',
+            old_shapes,
+        )
+        candidate = b"<!doctype html>" + responsive_legacy(
+            b'[{"x":["2023-12-17","2026-09-27"]}]',
+            b"null",
+            b'"2026-09-27"',
+            new_shapes,
+        )
+
+        self.assertEqual(
+            promoter.merge_data_only(current, candidate, "plotly-data"),
+            candidate,
+        )
 
     def test_failure_after_visibility_rolls_back_the_exact_previous_tree(self) -> None:
         release_id = self.import_weather(figure('[{"x":[3]}]'))
