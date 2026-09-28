@@ -50,6 +50,8 @@ DEMO2_FIGURE_ROOT = "assets/figures/demo-2"
 DEMO2_ROTATING_STRATEGIES: Mapping[str, str] = {
     "fissure-recente-meme-format.html": "manual",
     "joint-dilatation-rendu-site.html": "manual",
+    "retaining-wall-extrema-hours.html": "pattern",
+    "retaining-wall-median-day.html": "pattern",
     "retaining-wall-sensor-source-values.html": "sensor",
     "retaining-wall-sensor-processed-v2.html": "processed",
     "weather/complements/meteo_explorateur_toutes_mesures.html": "complement",
@@ -129,7 +131,8 @@ ACTIVE_SEO_MARKERS = (
 )
 
 # Maintenance baseline at a0cfc1dd; protected Demo 2 extension authorized 2026-09-25.
-# Only the catalogue-outside and protected snapshot hashes below were updated.
+# Only the catalogue-outside, protected snapshot and explicitly rotating
+# Demo 2 skeleton hashes below were updated.
 # The values are populated
 # and causally tested below; changing a protected byte requires a deliberate
 # review of this contract rather than broadening one of the two states.
@@ -144,10 +147,12 @@ DEFAULT_BASELINE: dict[str, Any] = {
     },
     "maintenance_catalogue_fragment_sha256": "24f984b4ce8bfe678b0dc175331337623fd9c9fae2cde36a900dcd78d69d90f1",
     "catalogue_outside_sha256": "a5b4ce822ec32b34eea461b7c007ef42575bd5788f6117fb09ef4fac678fcc4c",
-    "protected_snapshot_sha256": "312c450cd06880ced5f3ff109c292ce05343323ee74db7bbd271d8e8cdbf931a",
+    "protected_snapshot_sha256": "88d9c058ccbf5970c961cd7f7a3c3028461e6405de40c785ad3d796e0eb3f0d3",
     "demo2_rotating_skeletons": {
         "fissure-recente-meme-format.html": "2210e366dfb500d872ea37565781bf4d74641e93d65feb6fd31849c11aca36fa",
         "joint-dilatation-rendu-site.html": "4f839b3024dc6a9c8c719290f5f3ace4c811ae9efe134f0a8465cbcc484d4d18",
+        "retaining-wall-extrema-hours.html": "6cf5fe9536da4147a5ef2b3c233ae8519cf5058d26b1a11d975111156df3b6d0",
+        "retaining-wall-median-day.html": "c59bac6616d7d9ad97f6aac24d9f7645bb665c6203df0203aabb362b4649044b",
         "retaining-wall-sensor-processed-v2.html": "9d8d4aef184b36804ba8a59f9f8e06cb0e583d28c67f0449af858b00efba848d",
         "retaining-wall-sensor-source-values.html": "def4aa1ef8a7011b85632826032880ac9df3b8eda6f6d7524cffa3543b0c1820",
         "weather/complements/meteo_explorateur_toutes_mesures.html": "1b06b0c8f9eed1edaf5f6ccd698fa72ed65e7bc84596bcce4b05f9a60974e2e8",
@@ -376,6 +381,8 @@ def _demo2_rotation_skeleton(payload: bytes, strategy: str) -> bytes:
         return _demo2_complement_skeleton(payload)
     if strategy == "processed":
         return demo2_refresh.processed_data_only_skeleton(payload)
+    if strategy == "pattern":
+        return demo2_refresh.pattern_data_only_skeleton(payload)
     raise _fail("NERIVANE_DEMO2_ROTATION_CONTRACT_INVALID")
 
 

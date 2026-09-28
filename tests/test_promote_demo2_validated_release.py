@@ -19,6 +19,10 @@ from tests.test_refresh_demo2_processed_signal import (  # noqa: E402
     patch_bytes,
     successor_candidate,
 )
+from tests.test_refresh_demo2_live_data import (  # noqa: E402
+    active_patterns,
+    rewrite_pattern,
+)
 import refresh_demo2_live_data as live_refresh  # noqa: E402
 
 
@@ -265,23 +269,150 @@ class Demo2PromotionTests(unittest.TestCase):
         self.assertEqual(journal["phase"], promoter.PHASE_COMMITTED)
         self.assertEqual(journal["source_ids"], ["weather-ready:20260915T120000Z"])
 
-    def test_prepared_output_rejects_wind_direction_and_pattern_masters(self) -> None:
-        for target in (
-            "weather/legacy/meteo_wind_dir.html",
-            "retaining-wall-extrema-hours.html",
-            "retaining-wall-median-day.html",
+    def test_prepared_output_rejects_wind_direction_and_half_pattern_pair(self) -> None:
+        with self.assertRaisesRegex(
+            promoter.Demo2PromotionError,
+            "DEMO2_PROMOTION_TARGET_FROZEN",
         ):
+            promoter.promote_prepared_outputs(
+                {
+                    "weather/legacy/meteo_wind_dir.html": (
+                        b"<!doctype html><html></html>"
+                    )
+                },
+                ["source:1"],
+                site_root=self.site,
+            )
+        patterns = active_patterns()
+        for target, payload in patterns.items():
             with self.subTest(target=target):
                 with self.assertRaisesRegex(
                     promoter.Demo2PromotionError,
-                    "DEMO2_PROMOTION_TARGET_FROZEN",
+                    "DEMO2_PROMOTION_PATTERN_PAIR_INCOMPLETE",
                 ):
                     promoter.promote_prepared_outputs(
-                        {target: b"<!doctype html><html></html>"},
+                        {target: payload},
                         ["source:1"],
                         site_root=self.site,
                     )
         self.assertEqual(hashes(self.figure_root), self.before)
+
+    def test_promotes_complete_prepared_pattern_pair_atomically(self) -> None:
+        active = active_patterns()
+        for target, payload in active.items():
+            set_active_payload(self.site, target, payload)
+
+        def extend_counts(metadata: dict[str, object]) -> None:
+            metadata["counts"]["source_record_count"] += 1
+            metadata["counts"]["excluded_both_timestamp_and_value_record_count"] += 1
+            metadata["counts"]["profile_day_slot_cell_count"] += 1
+
+        def extend_median(payload: dict[str, object]) -> None:
+            payload["day_count"][18] += 1
+
+        candidate = {
+            target: rewrite_pattern(
+                payload,
+                payload_change=(extend_median if target == live_refresh.PATTERN_MEDIAN else None),
+                metadata_change=extend_counts,
+            )
+            for target, payload in active.items()
+        }
+        prepared = live_refresh.refresh_pattern_pair(active, candidate)
+
+        result = promoter.promote_prepared_outputs(
+            prepared,
+            ["pattern-ready:sha256"],
+            site_root=self.site,
+        )
+
+        self.assertEqual(result["status"], "PROMOTED")
+        self.assertEqual(result["updated_master_count"], 2)
+        self.assertEqual(
+            {
+                target: (self.figure_root / target).read_bytes()
+                for target in live_refresh.PATTERN_TARGETS
+            },
+            prepared,
+        )
+
+    def test_prepared_pattern_pair_rejects_non_bytes_payload_stably(self) -> None:
+        patterns = active_patterns()
+        malformed = {
+            live_refresh.PATTERN_MEDIAN: "not-bytes",
+            live_refresh.PATTERN_EXTREMA: patterns[live_refresh.PATTERN_EXTREMA],
+        }
+        with self.assertRaisesRegex(
+            promoter.Demo2PromotionError,
+            "DEMO2_PROMOTION_PREPARED_PAYLOAD_INVALID",
+        ):
+            promoter.promote_prepared_outputs(
+                malformed,
+                ["pattern-ready:invalid"],
+                site_root=self.site,
+            )
+
+    def test_promotes_complete_imported_pattern_release(self) -> None:
+        patterns = active_patterns()
+        for target, payload in patterns.items():
+            set_active_payload(self.site, target, payload)
+        source = build_source_bundle(
+            self.sources,
+            release_kind="retaining_wall_sensor_pattern_review",
+            selected_figures=(
+                (
+                    "retaining-wall-extrema-hours",
+                    live_refresh.PATTERN_EXTREMA,
+                    patterns[live_refresh.PATTERN_EXTREMA],
+                ),
+                (
+                    "retaining-wall-median-day",
+                    live_refresh.PATTERN_MEDIAN,
+                    patterns[live_refresh.PATTERN_MEDIAN],
+                ),
+            ),
+        )
+        release_id = str(
+            importer.import_validated_release(source, site_root=self.site)[
+                "promotion_id"
+            ]
+        )
+
+        result = promoter.promote_validated_releases(
+            [release_id], site_root=self.site
+        )
+
+        self.assertEqual(result["status"], "ALREADY_ACTIVE")
+        self.assertEqual(result["updated_master_count"], 0)
+
+    def test_rejects_half_imported_pattern_release(self) -> None:
+        patterns = active_patterns()
+        for target, payload in patterns.items():
+            set_active_payload(self.site, target, payload)
+        source = build_source_bundle(
+            self.sources,
+            release_kind="retaining_wall_sensor_pattern_review",
+            selected_figures=(
+                (
+                    "retaining-wall-median-day",
+                    live_refresh.PATTERN_MEDIAN,
+                    patterns[live_refresh.PATTERN_MEDIAN],
+                ),
+            ),
+        )
+        release_id = str(
+            importer.import_validated_release(source, site_root=self.site)[
+                "promotion_id"
+            ]
+        )
+
+        with self.assertRaisesRegex(
+            promoter.Demo2PromotionError,
+            "DEMO2_PROMOTION_PATTERN_PAIR_INCOMPLETE",
+        ):
+            promoter.promote_validated_releases(
+                [release_id], site_root=self.site
+            )
 
     def test_prepared_output_rejects_internal_data_wording(self) -> None:
         with self.assertRaisesRegex(
