@@ -32,13 +32,45 @@ LEGACY = (
     "meteo_light_uv.html", "meteo_precipitation.html", "meteo_wind_speed.html",
     "meteo_pairplots.html",
 )
-FROZEN = frozenset(("retaining-wall-extrema-hours.html", "retaining-wall-median-day.html"))
+PATTERN_MEDIAN = "retaining-wall-median-day.html"
+PATTERN_EXTREMA = "retaining-wall-extrema-hours.html"
+PATTERN_TARGETS = frozenset((PATTERN_MEDIAN, PATTERN_EXTREMA))
+PATTERN_ROLES = {
+    PATTERN_MEDIAN: "legacy_half_hour_median_profile_candidate",
+    PATTERN_EXTREMA: "legacy_daily_extrema_distributions_candidate",
+}
+FROZEN = frozenset(("weather/legacy/meteo_wind_dir.html",))
 _SCRIPT_PAYLOAD = re.compile(br'(<script id="payload" type="application/json">)(.*?)(</script>)', re.S)
 _RAW_PAYLOAD = re.compile(br'(<script id="d2-cap-payload"[^>]*>)(.*?)(</script>)', re.S)
 _FIGURE_METADATA = re.compile(br'const\s+FIGURE_METADATA\s*=\s*\{.*?\};', re.S)
+_PATTERN_PAYLOAD = re.compile(
+    br'(<script id="pattern-payload" type="application/json">)(.*?)(</script>)',
+    re.S,
+)
+_PATTERN_METADATA_PREFIX = re.compile(br"const\s+PATTERN_METADATA\s*=\s*")
+_PATTERN_CARDS = re.compile(
+    br'<section class="cards" aria-label="Rep\xc3\xa8res statistiques">.*?</section>',
+    re.S,
+)
 _PARAGRAPH = re.compile(br"<p\b[^>]*>.*?</p>", re.I | re.S)
 _STRONG = re.compile(br'(<strong(?:\s+[^>]*)?>)(.*?)(</strong>)', re.S)
 _MEASURE_COUNT = re.compile(br"\b[0-9]+(?=\s+mesures\b)")
+_PATTERN_METADATA_KEYS = frozenset(
+    {
+        "analysis_id",
+        "axes",
+        "bootstrap",
+        "counts",
+        "figure_id",
+        "limits",
+        "method",
+        "review_status",
+        "semantics",
+    }
+)
+_PATTERN_STATIC_METADATA_KEYS = frozenset(
+    {"analysis_id", "axes", "figure_id", "limits", "method", "semantics"}
+)
 PROCESSED_PATCH = "processed-signal-payload-patch.json"
 PROCESSED_PATCH_ROLE = "processed_signal_payload_patch"
 PROCESSED_TARGET = "retaining-wall-sensor-processed-v2.html"
@@ -288,6 +320,18 @@ def _canonical_json(value: object) -> bytes:
         separators=(",", ":"),
         sort_keys=True,
     ).encode("utf-8")
+
+
+def _html_safe_json(value: object) -> bytes:
+    """Serialize JSON embedded in HTML without emitting HTML parser sentinels."""
+    return (
+        _canonical_json(value)
+        .replace(b"&", b"\\u0026")
+        .replace(b"<", b"\\u003c")
+        .replace(b">", b"\\u003e")
+        .replace("\u2028".encode(), b"\\u2028")
+        .replace("\u2029".encode(), b"\\u2029")
+    )
 
 
 def _value_sha256(value: object) -> str:
@@ -1773,6 +1817,615 @@ def refresh_processed(active: bytes, patch_payload: bytes) -> bytes:
     return result
 
 
+def _replace_ranges(
+    payload: bytes, replacements: Iterable[tuple[int, int, bytes]]
+) -> bytes:
+    result = payload
+    ordered = sorted(replacements, key=lambda item: item[0])
+    if any(start < 0 or end < start for start, end, _ in ordered):
+        raise RefreshError("REFRESH_PATTERN_TEMPLATE_INVALID")
+    if any(left[1] > right[0] for left, right in zip(ordered, ordered[1:])):
+        raise RefreshError("REFRESH_PATTERN_TEMPLATE_INVALID")
+    for start, end, replacement in reversed(ordered):
+        result = result[:start] + replacement + result[end:]
+    return result
+
+
+def _pattern_metadata_assignment(
+    payload: bytes,
+) -> tuple[dict[str, object], int, int]:
+    prefix = _one(
+        _PATTERN_METADATA_PREFIX,
+        payload,
+        "REFRESH_PATTERN_METADATA_UNEXPECTED",
+    )
+    start = prefix.end()
+    try:
+        text = payload[start:].decode("utf-8")
+        value, consumed = json.JSONDecoder(
+            parse_constant=_reject_json_constant
+        ).raw_decode(text)
+    except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:
+        raise RefreshError("REFRESH_PATTERN_METADATA_INVALID") from error
+    end = start + len(text[:consumed].encode("utf-8"))
+    semicolon = end
+    while payload[semicolon : semicolon + 1] in {b" ", b"\t", b"\r", b"\n"}:
+        semicolon += 1
+    if payload[semicolon : semicolon + 1] != b";" or not isinstance(value, dict):
+        raise RefreshError("REFRESH_PATTERN_METADATA_INVALID")
+    return value, start, end
+
+
+def _pattern_document(
+    payload: bytes,
+) -> tuple[
+    re.Match[bytes],
+    dict[str, object],
+    tuple[int, int],
+    dict[str, object],
+    re.Match[bytes],
+]:
+    pattern_payload = _one(
+        _PATTERN_PAYLOAD, payload, "REFRESH_PATTERN_PAYLOAD_UNEXPECTED"
+    )
+    value = _strict_json(
+        pattern_payload.group(2), "REFRESH_PATTERN_PAYLOAD_INVALID"
+    )
+    metadata, metadata_start, metadata_end = _pattern_metadata_assignment(payload)
+    cards = _one(_PATTERN_CARDS, payload, "REFRESH_PATTERN_CARDS_UNEXPECTED")
+    if not isinstance(value, dict):
+        raise RefreshError("REFRESH_PATTERN_PAYLOAD_INVALID")
+    _validate_json_tree(value, "REFRESH_PATTERN_JSON_TREE_INVALID")
+    _validate_json_tree(metadata, "REFRESH_PATTERN_JSON_TREE_INVALID")
+    return (
+        pattern_payload,
+        value,
+        (metadata_start, metadata_end),
+        metadata,
+        cards,
+    )
+
+
+def pattern_data_only_skeleton(payload: bytes) -> bytes:
+    pattern_payload, _, metadata_span, _, cards = _pattern_document(payload)
+    return _replace_ranges(
+        payload,
+        (
+            (pattern_payload.start(2), pattern_payload.end(2), b"__PATTERN_PAYLOAD__"),
+            (*metadata_span, b"__PATTERN_METADATA__"),
+            (cards.start(), cards.end(), b"__PATTERN_CARDS__"),
+        ),
+    )
+
+
+def _pattern_kind(metadata: Mapping[str, object]) -> str:
+    figure_id = metadata.get("figure_id")
+    if figure_id == "D2-CAP-LEGACY-MEDIAN-DAY":
+        return "median"
+    if figure_id == "D2-CAP-LEGACY-EXTREMA-DISTRIBUTIONS":
+        return "extrema"
+    raise RefreshError("REFRESH_PATTERN_FIGURE_ID_INVALID")
+
+
+def _validate_pattern_counts(counts: Mapping[str, object]) -> None:
+    flags = {
+        "daily_extrema_day_partition_is_exhaustive",
+        "legacy_thinning_partition_is_exhaustive",
+        "source_partition_is_exhaustive",
+    }
+    if any(counts.get(name) is not True for name in flags):
+        raise RefreshError("REFRESH_PATTERN_COUNTS_INVALID")
+    numeric = set(counts) - flags
+    if any(type(counts[name]) is not int or counts[name] < 0 for name in numeric):
+        raise RefreshError("REFRESH_PATTERN_COUNTS_INVALID")
+    if (
+        counts["source_record_count"]
+        != counts["eligible_timestamp_and_finite_value_record_count"]
+        + counts["excluded_both_timestamp_and_value_record_count"]
+        + counts["excluded_non_finite_value_only_record_count"]
+        + counts["excluded_unanalyzable_timestamp_only_record_count"]
+        or counts["finite_source_value_record_count"]
+        != counts["eligible_timestamp_and_finite_value_record_count"]
+        + counts["excluded_unanalyzable_timestamp_only_record_count"]
+        or counts["timestamp_analyzable_record_count"]
+        != counts["eligible_timestamp_and_finite_value_record_count"]
+        + counts["excluded_non_finite_value_only_record_count"]
+        or counts["timestamp_records_before_legacy_thinning"]
+        != counts["timestamp_analyzable_record_count"]
+        or counts["timestamp_records_after_legacy_thinning"]
+        + counts["timestamp_records_excluded_by_legacy_thinning"]
+        != counts["timestamp_records_before_legacy_thinning"]
+        or counts["source_naive_day_count_with_finite_retained_records"]
+        != counts["daily_extrema_accepted_day_count"]
+        + counts["daily_extrema_excluded_day_count"]
+        or counts["minimum_primary_cluster_day_count"]
+        + counts["minimum_outside_primary_cluster_day_count"]
+        != counts["daily_extrema_accepted_day_count"]
+        or counts["maximum_primary_cluster_day_count"]
+        + counts["maximum_outside_primary_cluster_day_count"]
+        != counts["daily_extrema_accepted_day_count"]
+        or counts["finite_records_after_legacy_thinning"]
+        > counts["timestamp_records_after_legacy_thinning"]
+    ):
+        raise RefreshError("REFRESH_PATTERN_COUNTS_COHERENCE_INVALID")
+
+
+def _pattern_metadata_transition(
+    active: Mapping[str, object], candidate: Mapping[str, object]
+) -> dict[str, object]:
+    if set(active) != _PATTERN_METADATA_KEYS or set(candidate) != _PATTERN_METADATA_KEYS:
+        raise RefreshError("REFRESH_PATTERN_METADATA_SCHEMA_DIVERGED")
+    if active.get("review_status") != "VALIDÉ":
+        raise RefreshError("REFRESH_PATTERN_PUBLIC_STATUS_DIVERGED")
+    if candidate.get("review_status") not in {
+        "EXÉCUTÉ_NON_VALIDÉ — validation visuelle requise",
+        "VALIDÉ",
+    }:
+        raise RefreshError("REFRESH_PATTERN_CANDIDATE_STATUS_INVALID")
+    if any(active[name] != candidate[name] for name in _PATTERN_STATIC_METADATA_KEYS):
+        raise RefreshError("REFRESH_PATTERN_STATIC_METADATA_DIVERGED")
+    active_counts = active.get("counts")
+    candidate_counts = candidate.get("counts")
+    if not isinstance(active_counts, dict) or not isinstance(candidate_counts, dict):
+        raise RefreshError("REFRESH_PATTERN_COUNTS_INVALID")
+    if set(active_counts) != set(candidate_counts):
+        raise RefreshError("REFRESH_PATTERN_COUNTS_SCHEMA_DIVERGED")
+    _validate_pattern_counts(active_counts)
+    _validate_pattern_counts(candidate_counts)
+    for name in (
+        "source_record_count",
+        "source_naive_day_count_with_finite_retained_records",
+        "daily_extrema_accepted_day_count",
+        "profile_day_slot_cell_count",
+    ):
+        old = active_counts.get(name)
+        new = candidate_counts.get(name)
+        if type(old) is not int or type(new) is not int or old < 0 or new < old:
+            raise RefreshError("REFRESH_PATTERN_COUNT_REGRESSION")
+    if not isinstance(candidate.get("bootstrap"), dict):
+        raise RefreshError("REFRESH_PATTERN_BOOTSTRAP_INVALID")
+    merged = dict(active)
+    merged["bootstrap"] = candidate["bootstrap"]
+    merged["counts"] = candidate_counts
+    merged["review_status"] = "VALIDÉ"
+    return merged
+
+
+def _finite_list(value: object, *, allow_empty: bool = False) -> list[object]:
+    if (
+        not isinstance(value, list)
+        or (not value and not allow_empty)
+        or any(not _number(item) for item in value)
+    ):
+        raise RefreshError("REFRESH_PATTERN_PAYLOAD_COHERENCE_INVALID")
+    return value
+
+
+def _hour_observations(value: object, *, allow_empty: bool = False) -> list[object]:
+    values = _finite_list(value, allow_empty=allow_empty)
+    if any(not 0.0 <= float(item) < 24.0 for item in values):
+        raise RefreshError("REFRESH_PATTERN_HOUR_DOMAIN_INVALID")
+    return values
+
+
+def _highest_interior_peak(density: list[object]) -> int | None:
+    """Mirror the producer's non-flat interior peak selection."""
+    peaks: list[int] = []
+    index = 1
+    while index < len(density) - 1:
+        if density[index] <= density[index - 1]:
+            index += 1
+            continue
+        plateau_end = index
+        while (
+            plateau_end + 1 < len(density)
+            and density[plateau_end + 1] == density[index]
+        ):
+            plateau_end += 1
+        if (
+            plateau_end < len(density) - 1
+            and density[plateau_end] > density[plateau_end + 1]
+        ):
+            peaks.append((index + plateau_end) // 2)
+        index = plateau_end + 1
+    return max(peaks, key=lambda item: density[item]) if peaks else None
+
+
+def _validate_median_pattern_payload(
+    payload: Mapping[str, object], metadata: Mapping[str, object]
+) -> None:
+    keys = {
+        "day_count",
+        "estimate",
+        "slot_index",
+        "slot_start_hours",
+        "source_naive_time",
+        "step_estimate",
+        "step_hours",
+        "step_source_naive_time",
+    }
+    if set(payload) != keys:
+        raise RefreshError("REFRESH_PATTERN_PAYLOAD_SCHEMA_DIVERGED")
+    counts = payload["day_count"]
+    estimates = payload["estimate"]
+    slot_indices = payload["slot_index"]
+    slot_hours = payload["slot_start_hours"]
+    source_times = payload["source_naive_time"]
+    step_estimates = payload["step_estimate"]
+    step_hours = payload["step_hours"]
+    step_times = payload["step_source_naive_time"]
+    expected_times = [
+        f"{index // 2:02d}:{(index % 2) * 30:02d}" for index in range(48)
+    ]
+    if (
+        not isinstance(counts, list)
+        or len(counts) != 48
+        or any(type(item) is not int or item < 1 for item in counts)
+        or not isinstance(estimates, list)
+        or len(estimates) != 48
+        or any(not _number(item) for item in estimates)
+        or slot_indices != list(range(48))
+        or slot_hours != [index / 2 for index in range(48)]
+        or not isinstance(source_times, list)
+        or source_times != expected_times
+        or step_estimates != estimates + [estimates[-1]]
+        or step_hours != [index / 2 for index in range(49)]
+        or step_times != expected_times + ["24:00"]
+    ):
+        raise RefreshError("REFRESH_PATTERN_PAYLOAD_COHERENCE_INVALID")
+    metadata_counts = metadata.get("counts")
+    if (
+        not isinstance(metadata_counts, dict)
+        or metadata_counts.get("profile_day_slot_cell_count") != sum(counts)
+    ):
+        raise RefreshError("REFRESH_PATTERN_COUNTS_PAYLOAD_DIVERGED")
+
+
+def _validate_extrema_item(
+    name: str, value: object, metadata: Mapping[str, object]
+) -> None:
+    if not isinstance(value, dict) or set(value) != {
+        "hour_kde",
+        "hours",
+        "outside_hours",
+        "primary_hour_cluster",
+        "retained_hours",
+        "timing",
+    }:
+        raise RefreshError("REFRESH_PATTERN_PAYLOAD_SCHEMA_DIVERGED")
+    hours = _hour_observations(value["hours"])
+    retained = _hour_observations(value["retained_hours"])
+    outside = _hour_observations(value["outside_hours"], allow_empty=True)
+    timing = value["timing"]
+    cluster = value["primary_hour_cluster"]
+    kde = value["hour_kde"]
+    metadata_counts = metadata.get("counts")
+    metadata_method = metadata.get("method")
+    metadata_bootstrap = metadata.get("bootstrap")
+    primary_method = (
+        metadata_method.get("primary_hour_cluster")
+        if isinstance(metadata_method, dict)
+        else None
+    )
+    interval = timing.get("ci95") if isinstance(timing, dict) else None
+    interval_start = interval.get("arc_start_hours") if isinstance(interval, dict) else None
+    interval_end = interval.get("arc_end_hours") if isinstance(interval, dict) else None
+    wraps_midnight = interval.get("wraps_midnight") if isinstance(interval, dict) else None
+    central = timing.get("central_time_hours") if isinstance(timing, dict) else None
+    mode = cluster.get("kde_mode_hours") if isinstance(cluster, dict) else None
+    half_width = cluster.get("half_width_hours") if isinstance(cluster, dict) else None
+    window_width = cluster.get("window_width_hours") if isinstance(cluster, dict) else None
+    if (
+        not isinstance(timing, dict)
+        or not isinstance(cluster, dict)
+        or not isinstance(kde, dict)
+        or not isinstance(metadata_counts, dict)
+        or not isinstance(primary_method, dict)
+        or not isinstance(metadata_bootstrap, dict)
+        or set(timing)
+        != {
+            "central_estimator",
+            "central_time_hours",
+            "ci95",
+            "day_count",
+            "outside_primary_cluster_day_count",
+            "primary_cluster_day_count",
+        }
+        or not isinstance(interval, dict)
+        or set(interval)
+        != {
+            "arc_end_hours",
+            "arc_start_hours",
+            "method",
+            "successful_replicates",
+            "wraps_midnight",
+        }
+        or set(cluster)
+        != {
+            "half_width_hours",
+            "kde_mode_hours",
+            "outside_cluster_day_count",
+            "retained_day_count",
+            "window_width_hours",
+        }
+        or set(kde) != {"density", "grid_hours", "method"}
+        or timing.get("central_estimator") != "PRIMARY_GAUSSIAN_KDE_MODE"
+        or interval.get("method")
+        != "CONSERVATIVE_ENVELOPE_OF_CIRCULAR_MOVING_BLOCK_SENSITIVITIES"
+        or kde.get("method") != "GAUSSIAN_KDE"
+        or not _number(interval_start)
+        or not _number(interval_end)
+        or not 0.0 <= float(interval_start) <= 24.0
+        or not 0.0 <= float(interval_end) <= 24.0
+        or type(wraps_midnight) is not bool
+        or wraps_midnight != (float(interval_start) > float(interval_end))
+        or not _number(central)
+        or not 0.0 <= float(central) < 24.0
+        or not _number(mode)
+        or not 0.0 <= float(mode) < 24.0
+        or not _number(half_width)
+        or not 0.0 < float(half_width) <= 24.0
+        or not _number(window_width)
+        or not 0.0 < float(window_width) <= 24.0
+        or not _same_number(window_width, float(half_width) * 2.0)
+        or not _same_number(
+            window_width, primary_method.get("window_width_hours")
+        )
+        or primary_method.get("method")
+        != "HIGHEST_GAUSSIAN_KDE_DENSITY_PEAK_ON_0_TO_24_HOUR_GRID"
+        or type(primary_method.get("grid_steps")) is not int
+        or primary_method["grid_steps"] < 2
+        or type(interval.get("successful_replicates")) is not int
+        or interval["successful_replicates"] < 1
+        or interval["successful_replicates"]
+        != metadata_bootstrap.get(f"{name}_successful_replicates")
+        or type(timing.get("day_count")) is not int
+        or type(timing.get("primary_cluster_day_count")) is not int
+        or type(timing.get("outside_primary_cluster_day_count")) is not int
+        or timing["day_count"] != len(hours)
+        or timing["primary_cluster_day_count"] != len(retained)
+        or timing["outside_primary_cluster_day_count"] != len(outside)
+        or len(retained) + len(outside) != len(hours)
+        or sorted(retained + outside) != sorted(hours)
+        or cluster.get("retained_day_count") != len(retained)
+        or cluster.get("outside_cluster_day_count") != len(outside)
+        or not _same_number(
+            mode, central
+        )
+        or metadata_counts.get(f"{name}_primary_cluster_day_count") != len(retained)
+        or metadata_counts.get(f"{name}_outside_primary_cluster_day_count")
+        != len(outside)
+    ):
+        raise RefreshError("REFRESH_PATTERN_PAYLOAD_COHERENCE_INVALID")
+    grid = _finite_list(kde.get("grid_hours"))
+    density = _finite_list(kde.get("density"))
+    if (
+        len(grid) != len(density)
+        or len(grid) != primary_method["grid_steps"]
+        or any(not 0.0 <= float(item) <= 24.0 for item in grid)
+        or any(left >= right for left, right in zip(grid, grid[1:]))
+        or any(float(item) < 0.0 for item in density)
+    ):
+        raise RefreshError("REFRESH_PATTERN_PAYLOAD_COHERENCE_INVALID")
+    peak_index = _highest_interior_peak(density)
+    expected_mode = (
+        grid[peak_index]
+        if peak_index is not None
+        else sum(float(hour) for hour in hours) / len(hours)
+    )
+    if (
+        not _same_number(grid[0], 0.0)
+        or not _same_number(grid[-1], 24.0)
+        or not _same_number(mode, expected_mode)
+    ):
+        raise RefreshError("REFRESH_PATTERN_KDE_MODE_DIVERGED")
+
+    def circular_distance(hour: object) -> float:
+        return abs(((float(hour) - float(mode) + 12.0) % 24.0) - 12.0)
+
+    if any(
+        circular_distance(hour) > float(half_width)
+        for hour in retained
+    ) or any(
+        circular_distance(hour) <= float(half_width)
+        for hour in outside
+    ):
+        raise RefreshError("REFRESH_PATTERN_CLUSTER_PARTITION_DIVERGED")
+
+
+def _validate_extrema_pattern_payload(
+    payload: Mapping[str, object], metadata: Mapping[str, object]
+) -> None:
+    if set(payload) != {"maximum", "minimum"}:
+        raise RefreshError("REFRESH_PATTERN_PAYLOAD_SCHEMA_DIVERGED")
+    counts = metadata.get("counts")
+    if not isinstance(counts, dict):
+        raise RefreshError("REFRESH_PATTERN_COUNTS_INVALID")
+    for name in ("minimum", "maximum"):
+        _validate_extrema_item(name, payload[name], metadata)
+    minimum_days = payload["minimum"]["timing"]["day_count"]
+    maximum_days = payload["maximum"]["timing"]["day_count"]
+    if (
+        minimum_days != maximum_days
+        or counts.get("daily_extrema_accepted_day_count") != minimum_days
+        or type(counts.get("daily_extrema_excluded_day_count")) is not int
+        or counts.get("source_naive_day_count_with_finite_retained_records")
+        != minimum_days + counts["daily_extrema_excluded_day_count"]
+    ):
+        raise RefreshError("REFRESH_PATTERN_COUNTS_PAYLOAD_DIVERGED")
+
+
+def _format_pattern_hour(
+    value: object,
+    *,
+    bound: str = "nearest",
+    preserve_upper_24: bool = False,
+) -> str:
+    if not _number(value):
+        raise RefreshError("REFRESH_PATTERN_PAYLOAD_COHERENCE_INVALID")
+    number = float(value)
+    if (
+        bound == "upper"
+        and preserve_upper_24
+        and math.isclose(number, 24.0, rel_tol=0.0, abs_tol=1e-12)
+    ):
+        return "24 h 00"
+    scaled = (number % 24.0) * 4.0
+    if bound == "lower":
+        quarter = math.floor(scaled + 1e-12)
+    elif bound == "upper":
+        quarter = math.ceil(scaled - 1e-12)
+    elif bound == "nearest":
+        quarter = int(round(scaled))
+    else:
+        raise RefreshError("REFRESH_PATTERN_PAYLOAD_COHERENCE_INVALID")
+    if bound == "upper" and preserve_upper_24 and quarter == 96:
+        return "24 h 00"
+    quarter %= 96
+    return f"{quarter // 4:02d} h {(quarter % 4) * 15:02d}"
+
+
+def _render_pattern_cards(kind: str, payload: Mapping[str, object]) -> bytes:
+    if kind == "median":
+        counts = payload["day_count"]
+        return (
+            '<section class="cards" aria-label="Repères statistiques">'
+            '<div class="card"><strong>Médiane par demi-heure</strong>'
+            f"<span>{len(counts)} créneaux ; {min(counts)} à {max(counts)} jours "
+            "observés selon le créneau.</span></div></section>"
+        ).encode("utf-8")
+    cards: list[str] = []
+    for name, label in (("minimum", "Minimum"), ("maximum", "Maximum")):
+        timing = payload[name]["timing"]
+        interval = timing["ci95"]
+        midnight_suffix = " (par minuit)" if interval["wraps_midnight"] else ""
+        cards.append(
+            '<div class="card"><strong>'
+            f'{label} : {_format_pattern_hour(timing["central_time_hours"])}'
+            "</strong><span>Horaire principal · intervalle d’incertitude à 95 % : "
+            f'{_format_pattern_hour(interval["arc_start_hours"], bound="lower")} à '
+            f'{_format_pattern_hour(interval["arc_end_hours"], bound="upper", preserve_upper_24=not interval["wraps_midnight"])}'
+            f"{midnight_suffix} · "
+            f'{timing["primary_cluster_day_count"]} jours dans le groupe horaire '
+            f'principal sur {timing["day_count"]} ; '
+            f'{timing["outside_primary_cluster_day_count"]} autres horaires '
+            "observés.</span></div>"
+        )
+    return (
+        '<section class="cards" aria-label="Repères statistiques">'
+        + "".join(cards)
+        + "</section>"
+    ).encode("utf-8")
+
+
+def _validate_pattern_payload(
+    kind: str, payload: Mapping[str, object], metadata: Mapping[str, object]
+) -> None:
+    if kind == "median":
+        _validate_median_pattern_payload(payload, metadata)
+    else:
+        _validate_extrema_pattern_payload(payload, metadata)
+
+
+def refresh_pattern(active: bytes, candidate: bytes) -> bytes:
+    active_document = _pattern_document(active)
+    candidate_document = _pattern_document(candidate)
+    active_match, active_payload, active_metadata_span, active_metadata, active_cards = (
+        active_document
+    )
+    _, candidate_payload, _, candidate_metadata, _ = candidate_document
+    active_kind = _pattern_kind(active_metadata)
+    if _pattern_kind(candidate_metadata) != active_kind:
+        raise RefreshError("REFRESH_PATTERN_FIGURE_ID_INVALID")
+    merged_metadata = _pattern_metadata_transition(active_metadata, candidate_metadata)
+    _validate_pattern_payload(active_kind, active_payload, active_metadata)
+    _validate_pattern_payload(active_kind, candidate_payload, merged_metadata)
+    if active_cards.group(0) != _render_pattern_cards(active_kind, active_payload):
+        raise RefreshError("REFRESH_PATTERN_PUBLIC_CARDS_DIVERGED")
+    if active_kind == "median":
+        if any(
+            new < old
+            for old, new in zip(
+                active_payload["day_count"],
+                candidate_payload["day_count"],
+                strict=True,
+            )
+        ):
+            raise RefreshError("REFRESH_PATTERN_DAY_COUNT_REGRESSION")
+    else:
+        for name in ("minimum", "maximum"):
+            if (
+                candidate_payload[name]["timing"]["day_count"]
+                < active_payload[name]["timing"]["day_count"]
+            ):
+                raise RefreshError("REFRESH_PATTERN_DAY_COUNT_REGRESSION")
+    result = _replace_ranges(
+        active,
+        (
+            (
+                active_match.start(2),
+                active_match.end(2),
+                _html_safe_json(candidate_payload) + b"\n",
+            ),
+            (*active_metadata_span, _html_safe_json(merged_metadata)),
+            (
+                active_cards.start(),
+                active_cards.end(),
+                _render_pattern_cards(active_kind, candidate_payload),
+            ),
+        ),
+    )
+    result_document = _pattern_document(result)
+    if result_document[3].get("review_status") != "VALIDÉ":
+        raise RefreshError("REFRESH_PATTERN_PUBLIC_STATUS_DIVERGED")
+    return result
+
+
+def _validate_pattern_pair_documents(
+    documents: Mapping[
+        str,
+        tuple[
+            re.Match[bytes],
+            dict[str, object],
+            tuple[int, int],
+            dict[str, object],
+            re.Match[bytes],
+        ],
+    ]
+) -> None:
+    median_payload = documents[PATTERN_MEDIAN][1]
+    median_metadata = documents[PATTERN_MEDIAN][3]
+    extrema_payload = documents[PATTERN_EXTREMA][1]
+    extrema_metadata = documents[PATTERN_EXTREMA][3]
+    if (
+        _pattern_kind(median_metadata) != "median"
+        or _pattern_kind(extrema_metadata) != "extrema"
+        or median_metadata.get("analysis_id") != extrema_metadata.get("analysis_id")
+        or median_metadata.get("counts") != extrema_metadata.get("counts")
+        or median_metadata.get("bootstrap") != extrema_metadata.get("bootstrap")
+    ):
+        raise RefreshError("REFRESH_PATTERN_PAIR_DIVERGED")
+    _validate_median_pattern_payload(median_payload, median_metadata)
+    _validate_extrema_pattern_payload(extrema_payload, extrema_metadata)
+
+
+def refresh_pattern_pair(
+    active: Mapping[str, bytes], candidate: Mapping[str, bytes]
+) -> dict[str, bytes]:
+    if set(active) != PATTERN_TARGETS or set(candidate) != PATTERN_TARGETS:
+        raise RefreshError("REFRESH_PATTERN_PAIR_INCOMPLETE")
+    active_documents = {name: _pattern_document(active[name]) for name in PATTERN_TARGETS}
+    candidate_documents = {
+        name: _pattern_document(candidate[name]) for name in PATTERN_TARGETS
+    }
+    _validate_pattern_pair_documents(active_documents)
+    _validate_pattern_pair_documents(candidate_documents)
+    return {
+        name: refresh_pattern(active[name], candidate[name])
+        for name in PATTERN_TARGETS
+    }
+
+
 def _plotly_data_span(payload: bytes) -> tuple[int, int]:
     """Return the JSON data argument of exactly one Plotly.newPlot call."""
     marker = b"Plotly.newPlot("
@@ -2108,6 +2761,15 @@ def _ready_updates(
     processed_patch: bytes | None = None
     for root in roots:
         inventory = _verified_ready_files(Path(root))
+        inventory_patterns = PATTERN_TARGETS.intersection(inventory.files)
+        if inventory_patterns:
+            if inventory_patterns != PATTERN_TARGETS:
+                raise RefreshError("REFRESH_PATTERN_PAIR_INCOMPLETE")
+            if any(
+                inventory.files[name].role != PATTERN_ROLES[name]
+                for name in PATTERN_TARGETS
+            ):
+                raise RefreshError("REFRESH_PATTERN_ROLE_INVALID")
         for relative, entry in inventory.files.items():
             if PurePosixPath(relative).suffix.lower() in {".html", ".htm"}:
                 if relative in found:
@@ -2130,6 +2792,20 @@ def build_staging(active_root: Path, ready_roots: Iterable[Path], *, manual: Map
     active_root = Path(active_root)
     candidates, processed_patch = _ready_updates(ready_roots)
     staged: dict[PurePosixPath, bytes] = {}
+    pattern_candidates = PATTERN_TARGETS.intersection(candidates)
+    if pattern_candidates and pattern_candidates != PATTERN_TARGETS:
+        raise RefreshError("REFRESH_PATTERN_PAIR_INCOMPLETE")
+    if pattern_candidates:
+        active_patterns = {
+            name: (active_root / FIGURES / name).read_bytes()
+            for name in PATTERN_TARGETS
+        }
+        refreshed_patterns = refresh_pattern_pair(
+            active_patterns,
+            {name: candidates[name] for name in PATTERN_TARGETS},
+        )
+        for name, payload in refreshed_patterns.items():
+            staged[FIGURES / name] = payload
     for name in LEGACY:
         source = f"weather/legacy/{name}"
         if source in candidates:

@@ -146,6 +146,8 @@ PROMOTION_TARGETS: Mapping[str, Mapping[str, tuple[str, str, str]]] = {
 PREPARED_OUTPUT_STRATEGIES: Mapping[str, str] = {
     "fissure-recente-meme-format.html": "manual",
     "joint-dilatation-rendu-site.html": "manual",
+    "retaining-wall-extrema-hours.html": "pattern",
+    "retaining-wall-median-day.html": "pattern",
     "retaining-wall-sensor-source-values.html": "sensor",
     "retaining-wall-sensor-processed-v2.html": "processed",
     "weather/complements/meteo_explorateur_toutes_mesures.html": "complement",
@@ -159,13 +161,10 @@ PREPARED_OUTPUT_STRATEGIES: Mapping[str, str] = {
     "weather/legacy/meteo_wind_speed.html": "plotly-data",
 }
 
-# The two pattern figures are refreshed only from a coherent, explicitly
-# validated pattern release.  Wind direction is frozen by an explicit owner
-# decision.  Neither class is accepted by the live prepared-output interface.
+# Wind direction remains frozen by an explicit owner decision.  Pattern
+# figures are accepted only as a complete pair and are re-proved below.
 PREPARED_OUTPUT_FROZEN = frozenset(
     {
-        "retaining-wall-extrema-hours.html",
-        "retaining-wall-median-day.html",
         "weather/legacy/meteo_wind_dir.html",
     }
 )
@@ -376,35 +375,12 @@ def _merge_plotly_data(current: str, candidate: str) -> str:
 
 
 def _merge_pattern(current: str, candidate: str) -> str:
-    current_payload = _script_body_span(current, "pattern-payload")
-    candidate_payload = _script_body_span(candidate, "pattern-payload")
-    current_cards = _section_span(current, "cards")
-    candidate_cards = _section_span(candidate, "cards")
     try:
-        json.loads(candidate[candidate_payload[0] : candidate_payload[1]])
-    except json.JSONDecodeError:
-        raise _fail("DEMO2_PROMOTION_DATA_INVALID") from None
-    _reject_internal_text(
-        candidate[candidate_payload[0] : candidate_payload[1]],
-        candidate[candidate_cards[0] : candidate_cards[1]],
-    )
-    current_skeleton = _replace_spans(
-        current,
-        [(*current_payload, "__DEMO2_DATA__"), (*current_cards, "__DEMO2_CARDS__")],
-    )
-    candidate_skeleton = _replace_spans(
-        candidate,
-        [(*candidate_payload, "__DEMO2_DATA__"), (*candidate_cards, "__DEMO2_CARDS__")],
-    )
-    if current_skeleton != candidate_skeleton:
-        raise _fail("DEMO2_PROMOTION_VISUAL_TEMPLATE_DIVERGED")
-    return _replace_spans(
-        current,
-        [
-            (*current_payload, candidate[candidate_payload[0] : candidate_payload[1]]),
-            (*current_cards, candidate[candidate_cards[0] : candidate_cards[1]]),
-        ],
-    )
+        return live_refresh.refresh_pattern(
+            current.encode("utf-8"), candidate.encode("utf-8")
+        ).decode("utf-8")
+    except (live_refresh.RefreshError, UnicodeDecodeError) as error:
+        raise _fail("DEMO2_PROMOTION_PATTERN_INVALID") from error
 
 
 def _merge_complement(current: str, candidate: str) -> str:
@@ -630,11 +606,36 @@ def _collect_prepared_outputs(
 ) -> dict[str, bytes]:
     if not isinstance(outputs, Mapping) or not outputs:
         raise _fail("DEMO2_PROMOTION_PREPARED_SET_INVALID")
-    prepared: dict[str, bytes] = {}
+    normalized: dict[str, bytes] = {}
     for raw_target, payload in outputs.items():
         target = _prepared_target(raw_target)
-        if target in prepared:
+        if type(payload) is not bytes or not payload:
+            raise _fail("DEMO2_PROMOTION_PREPARED_PAYLOAD_INVALID")
+        if target in normalized:
             raise _fail("DEMO2_PROMOTION_PREPARED_TARGET_AMBIGUOUS")
+        normalized[target] = payload
+    pattern_targets = set(live_refresh.PATTERN_TARGETS)
+    present_patterns = pattern_targets.intersection(normalized)
+    if present_patterns and present_patterns != pattern_targets:
+        raise _fail("DEMO2_PROMOTION_PATTERN_PAIR_INCOMPLETE")
+    prepared: dict[str, bytes] = {}
+    if present_patterns:
+        active_patterns = {
+            target: _read_regular(active_root / target) for target in pattern_targets
+        }
+        candidate_patterns = {target: normalized[target] for target in pattern_targets}
+        try:
+            expected_patterns = live_refresh.refresh_pattern_pair(
+                active_patterns, candidate_patterns
+            )
+        except live_refresh.RefreshError as error:
+            raise _fail("DEMO2_PROMOTION_PATTERN_INVALID") from error
+        if expected_patterns != candidate_patterns:
+            raise _fail("DEMO2_PROMOTION_VISUAL_TEMPLATE_DIVERGED")
+        prepared.update(candidate_patterns)
+    for target, payload in normalized.items():
+        if target in pattern_targets:
+            continue
         prepared[target] = _merge_prepared_output(
             _read_regular(active_root / target),
             payload,
@@ -801,7 +802,36 @@ def _collect_outputs(
         if mappings is None:
             raise _fail("DEMO2_PROMOTION_RELEASE_KIND_FORBIDDEN")
         _verify_runtime(active_root, release_kind, payloads)
-        for selected in approval["selected_figures"]:
+        selected_figures = approval["selected_figures"]
+        if release_kind == "retaining_wall_sensor_pattern_review":
+            selected_by_id = {
+                selected["logical_figure_id"]: selected
+                for selected in selected_figures
+            }
+            if set(selected_by_id) != set(mappings):
+                raise _fail("DEMO2_PROMOTION_PATTERN_PAIR_INCOMPLETE")
+            active_patterns: dict[str, bytes] = {}
+            candidate_patterns: dict[str, bytes] = {}
+            for logical_id, (source, target, strategy) in mappings.items():
+                selected = selected_by_id[logical_id]
+                if (
+                    strategy != "pattern"
+                    or source != selected["release_path"]
+                    or target in outputs
+                ):
+                    raise _fail("DEMO2_PROMOTION_MAPPING_INVALID")
+                active_patterns[target] = _read_regular(active_root / target)
+                candidate_patterns[target] = payloads[source]
+            try:
+                outputs.update(
+                    live_refresh.refresh_pattern_pair(
+                        active_patterns, candidate_patterns
+                    )
+                )
+            except live_refresh.RefreshError as error:
+                raise _fail("DEMO2_PROMOTION_PATTERN_INVALID") from error
+            continue
+        for selected in selected_figures:
             logical_id = selected["logical_figure_id"]
             mapping = mappings.get(logical_id)
             if mapping is None:
