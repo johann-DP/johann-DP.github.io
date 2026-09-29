@@ -27,14 +27,14 @@
     {
       "path": "retaining-wall-extrema-hours.html",
       "role": "responsive_html_master",
-      "sha256": "91ff9a3f474a138b9925c6d4871fd14e0dcdd78c3503065501c6e7e1c3838225",
-      "size_bytes": 128778
+      "sha256": "f4623abf8c3594c0ed92ab9800eb702a96acc8e53e2474920513d38f75bc1fdf",
+      "size_bytes": 128976
     },
     {
       "path": "retaining-wall-median-day.html",
       "role": "responsive_html_master",
-      "sha256": "9d3e0a166391567163aa1bed783c20092ccdf4e94b0abaf1ce859ce4ae65d8cc",
-      "size_bytes": 32478
+      "sha256": "084843bffffa6310c70eefa7f1267f553ed07d047e22ec0a28331121a523b739",
+      "size_bytes": 32584
     },
     {
       "path": "building-geometry.html",
