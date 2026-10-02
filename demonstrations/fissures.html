@@ -73,7 +73,7 @@
           <h1 id="fissures-title">Relier un phénomène physique à une donnée exploitable</h1>
           <p class="lead">À partir du suivi de fissures, d’un joint de dilatation, d’un mur de soutènement et de leur environnement météorologique, cette démonstration rend visible toute la chaîne qui va du terrain à une interprétation responsable.</p>
           <div class="fissures-demo__hero-actions">
-            <a class="btn primary" href="#figures">Explorer les dix-huit restitutions</a>
+            <a class="btn primary" href="#figures">Explorer les vingt et une restitutions</a>
             <a class="fissures-demo__text-link" href="#chaine">Comprendre la chaîne de mesure <span aria-hidden="true">↓</span></a>
           </div>
           <p class="fissures-demo__source-note"><strong>Cadre de consultation.</strong> Les relevés sont réels et privés ; ils n’appartiennent à aucun client. Les résultats sont précalculés : la visite ne sollicite ni le Raspberry Pi, ni la station météo, ni une machine de calcul.</p>
@@ -271,18 +271,18 @@
         <header class="fissures-demo__figures-heading">
           <div>
             <p class="eyebrow">Mesures et analyses</p>
-            <h2 id="figures-title">Dix-huit restitutions à examiner à votre rythme</h2>
+            <h2 id="figures-title">Vingt et une restitutions à examiner à votre rythme</h2>
           </div>
           <div class="fissures-demo__validation-note" role="note">
             <strong>Portée des restitutions</strong>
-            <p>Ces dix-huit pages présentent des résultats déjà contrôlés pour leur affichage. Chacune éclaire un aspect du suivi ; aucune ne constitue, isolément, un diagnostic structurel.</p>
+            <p>Ces vingt et une pages présentent des résultats déjà contrôlés pour leur affichage. Chacune éclaire un aspect du suivi ; aucune ne constitue, isolément, un diagnostic structurel.</p>
           </div>
         </header>
 
         <nav class="fissures-demo__family-nav" aria-label="Étapes de la démonstration">
           <a href="#etape-1">Étape 1 · Présentation, acquisition et qualité <span>4</span></a>
           <a href="#etape-2">Étape 2 · Traitement et dataviz <span>14</span></a>
-          <span class="fissures-demo__family-nav-disabled" aria-disabled="true">Étape 3 · Analyses et prévisions <strong>En maintenance</strong></span>
+          <a href="#etape-3">Étape 3 · Analyses et prévisions <span>3</span></a>
         </nav>
 
         <div class="fissures-demo__catalogue">
@@ -580,11 +580,55 @@
             <header>
               <p>Étape 3</p>
               <h3 id="etape-3-title">Analyses et prévisions</h3>
-              <span>En maintenance</span>
+              <span>3 restitutions</span>
             </header>
-            <div class="fissures-demo__maintenance-step">
-              <p>Les analyses explicatives et les comparaisons de modèles sont en cours. Cette étape ne proposera de résultats consultables qu’après des contrôles temporels permettant d’en présenter clairement la portée et les limites.</p>
-            </div>
+            <ul class="fissures-demo__figure-list">
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Association · Prédiction</span>
+                    <h4>Facteurs testés et résultats</h4>
+                    <p>Évaluation de l’apport de la météo, du joint et du mur routier, avec incertitude et limites d’interprétation.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="tested-factors" src="../assets/img/demo-2-thumbnails/tested-factors.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu : facteurs testés et résultats">
+                    </div>
+                    <a href="../assets/analyses/demo-2/m12/pages/factors.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : facteurs testés et résultats</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Prévision · Incertitude</span>
+                    <h4>Prévisions de la fissure récente</h4>
+                    <p>Simulation datée à 7, 14 et 28 jours, complétée par une comparaison historique distincte des méthodes.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="recent-crack-forecasts" src="../assets/img/demo-2-thumbnails/recent-crack-forecasts.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu : prévisions de la fissure récente">
+                    </div>
+                    <a href="../assets/analyses/demo-2/m12/pages/forecast.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : prévisions de la fissure récente</span></a>
+                  </div>
+                </article>
+              </li>
+              <li>
+                <article class="fissures-demo__figure-card">
+                  <div class="fissures-demo__figure-copy">
+                    <span>Intervention · Suivi</span>
+                    <h4>Suivi avant/après élagage</h4>
+                    <p>Protocole de comparaison de la fissure autour de l’intervention, complété par deux lectures du signal traité du mur.</p>
+                  </div>
+                  <div class="fissures-demo__figure-actions">
+                    <div class="fissures-demo__figure-thumbnail">
+                      <img data-figure-id="pruning-follow-up" src="../assets/img/demo-2-thumbnails/pruning-follow-up.webp" width="800" height="500" loading="lazy" decoding="async" alt="Aperçu : suivi avant/après élagage">
+                    </div>
+                    <a href="../assets/analyses/demo-2/m12/pages/pruning.html" target="_blank" rel="noopener noreferrer">Ouvrir dans une nouvelle fenêtre<span class="sr-only"> : suivi avant/après élagage</span></a>
+                  </div>
+                </article>
+              </li>
+            </ul>
           </section>
         </div>
 

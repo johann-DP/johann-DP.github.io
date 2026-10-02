@@ -25,6 +25,11 @@ FIGURE_MANIFESTS = (
     FIGURE_ROOT / "weather/content-manifest.json",
 )
 THUMBNAIL_ROOT = PurePosixPath("assets/img/demo-2-thumbnails")
+M12_THUMBNAIL_NAMES = (
+    "tested-factors.webp",
+    "recent-crack-forecasts.webp",
+    "pruning-follow-up.webp",
+)
 THUMBNAIL_NAMES = (
     "building-geometry.webp",
     "crack-history.webp",
@@ -44,6 +49,24 @@ THUMBNAIL_NAMES = (
     "weather-pairplots.webp",
     "weather-explorer.webp",
     "weather-quality.webp",
+    *M12_THUMBNAIL_NAMES,
+)
+M12_ROOT = PurePosixPath("assets/analyses/demo-2/m12")
+M12_INTEGRATION_PATHS = (
+    M12_ROOT / "assets/demo-fissures.css",
+    M12_ROOT / "assets/logo-datapredict.png",
+    M12_ROOT / "assets/m12-live.js",
+    M12_ROOT / "assets/m12.css",
+    M12_ROOT / "assets/m12.js",
+    M12_ROOT / "assets/plotly.min.js",
+    M12_ROOT / "assets/plotly.min.js.LICENSE.txt",
+    M12_ROOT / "assets/site.css",
+    M12_ROOT / "data/factors.json",
+    M12_ROOT / "data/forecast.json",
+    M12_ROOT / "data/pruning.json",
+    M12_ROOT / "pages/factors.html",
+    M12_ROOT / "pages/forecast.html",
+    M12_ROOT / "pages/pruning.html",
 )
 INTEGRATION_PATHS = (
     PurePosixPath("demonstrations/fissures.html"),
@@ -52,6 +75,7 @@ INTEGRATION_PATHS = (
     FIGURE_ROOT / "content-manifest.json",
     FIGURE_ROOT / "weather/content-manifest.json",
     PurePosixPath("sitemap.xml"),
+    *M12_INTEGRATION_PATHS,
     *(THUMBNAIL_ROOT / name for name in THUMBNAIL_NAMES),
 )
 NERIVANE_INTEGRATION_PATHS = (

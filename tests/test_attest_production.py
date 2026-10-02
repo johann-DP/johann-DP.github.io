@@ -142,11 +142,11 @@ class ProductionAttestationTests(unittest.TestCase):
         with serve(self.remote) as base_url, redirect_stdout(StringIO()):
             observed = production.attest(self.expected, base_url, timeout_seconds=2)
 
-        self.assertEqual(len(observed), 51)
+        self.assertEqual(len(observed), 68)
         self.assertEqual(sum(item.category == "figure" for item in observed), 18)
         self.assertEqual(
             sum(item.category == "demo2_integration" for item in observed),
-            24,
+            41,
         )
         self.assertEqual(
             sum(item.category == "nerivane_integration" for item in observed),
@@ -173,6 +173,78 @@ class ProductionAttestationTests(unittest.TestCase):
                     retry_delay_seconds=0,
                     timeout_seconds=2,
                 )
+
+    def test_rejects_remote_m12_data_divergence_explicitly(self) -> None:
+        relative = Path("assets/analyses/demo-2/m12/data/forecast.json")
+        (self.remote / relative).write_bytes(b"divergent")
+
+        with serve(self.remote) as base_url, redirect_stdout(StringIO()):
+            with self.assertRaisesRegex(
+                production.AttestationError,
+                r"assets/analyses/demo-2/m12/data/forecast\.json non attesté"
+                r".*contenu divergent",
+            ):
+                production.attest(
+                    self.expected,
+                    base_url,
+                    attempts=2,
+                    retry_delay_seconds=0,
+                    timeout_seconds=2,
+                )
+
+    def test_m12_inventory_is_closed_and_explicit(self) -> None:
+        expected_subtree = (
+            "assets/demo-fissures.css",
+            "assets/logo-datapredict.png",
+            "assets/m12-live.js",
+            "assets/m12.css",
+            "assets/m12.js",
+            "assets/plotly.min.js",
+            "assets/plotly.min.js.LICENSE.txt",
+            "assets/site.css",
+            "data/factors.json",
+            "data/forecast.json",
+            "data/pruning.json",
+            "pages/factors.html",
+            "pages/forecast.html",
+            "pages/pruning.html",
+        )
+        self.assertEqual(
+            tuple(
+                path.relative_to(production.M12_ROOT).as_posix()
+                for path in production.M12_INTEGRATION_PATHS
+            ),
+            expected_subtree,
+        )
+        repository_root = Path(__file__).resolve().parents[1]
+        m12_root = repository_root / Path(*production.M12_ROOT.parts)
+        actual_subtree = tuple(
+            sorted(
+                path.relative_to(m12_root).as_posix()
+                for path in m12_root.rglob("*")
+                if path.is_file()
+            )
+        )
+        self.assertEqual(actual_subtree, expected_subtree)
+        self.assertEqual(
+            production.M12_THUMBNAIL_NAMES,
+            (
+                "tested-factors.webp",
+                "recent-crack-forecasts.webp",
+                "pruning-follow-up.webp",
+            ),
+        )
+        self.assertTrue(
+            set(production.M12_INTEGRATION_PATHS).issubset(
+                production.INTEGRATION_PATHS
+            )
+        )
+        self.assertTrue(
+            {
+                production.THUMBNAIL_ROOT / name
+                for name in production.M12_THUMBNAIL_NAMES
+            }.issubset(production.INTEGRATION_PATHS)
+        )
 
     def test_cli_returns_nonzero_for_a_missing_remote_file(self) -> None:
         relative = Path("sitemap.xml")

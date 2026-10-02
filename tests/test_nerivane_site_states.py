@@ -4,6 +4,7 @@ from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import stat
 import subprocess
 import sys
@@ -192,6 +193,10 @@ class NerivaneClosedSiteStatesTests(unittest.TestCase):
         self.site = self.root / "site"
         self.site.mkdir()
         build_site(self.site)
+        shutil.copytree(
+            Path(__file__).resolve().parents[1] / "assets/analyses/demo-2/m12",
+            self.site / "assets/analyses/demo-2/m12",
+        )
         build_valid_demo2_figures(self.site)
         self.baseline = states.capture_baseline(self.site)
         self.sources = self.root / "sources"

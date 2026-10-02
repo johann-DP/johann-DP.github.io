@@ -110,16 +110,16 @@ class Demo2PublicationStateTests(unittest.TestCase):
                 catalogue,
             )
 
-    def test_eighteen_static_lazy_previews_replace_the_interactive_viewer(self) -> None:
+    def test_twenty_one_static_lazy_previews_replace_the_interactive_viewer(self) -> None:
         parser = FigureInventory()
         page = PAGE.read_text(encoding="utf-8")
         parser.feed(page)
         parser.close()
 
         identifiers = [preview["data-figure-id"] for preview in parser.previews]
-        self.assertEqual(len(identifiers), 18)
-        self.assertEqual(len(set(identifiers)), 18)
-        self.assertEqual(parser.figure_card_count, 18)
+        self.assertEqual(len(identifiers), 21)
+        self.assertEqual(len(set(identifiers)), 21)
+        self.assertEqual(parser.figure_card_count, 21)
         self.assertEqual(tuple(parser.external_figure_links), VALIDATED_FIGURE_LINKS)
         self.assertEqual(parser.iframe_count, 0)
         self.assertNotIn("Lecteur de restitution", page)
