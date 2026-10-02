@@ -127,7 +127,7 @@
               observed_mm: exact === undefined ? null : exact,
               residual_mm: exact === undefined ? null : exact-target.predicted_mm,
               observation_status: exact !== undefined ? 'OBSERVÉE_EXACTE' : target.date < today ? 'OBSERVATION_EXACTE_ABSENTE' : 'NON_ÉCHUE',
-              observation_label: exact !== undefined ? 'Mesure exacte disponible — simulation rétrospective, pas validation prospective' : target.date < today ? 'Échéance passée, mesure exacte non disponible' : 'Échéance à venir ; mesure non disponible',
+              observation_label: exact !== undefined ? (data.simulation.issued_at ? 'Mesure exacte disponible — comparaison avec la prévision datée, sans conclusion de validation' : 'Mesure exacte disponible — simulation rétrospective, pas validation prospective') : target.date < today ? 'Échéance passée, mesure exacte non disponible' : 'Échéance à venir ; mesure non disponible',
             };
           });
           setText('.metrics .metric:first-child strong', frDate(last.date));

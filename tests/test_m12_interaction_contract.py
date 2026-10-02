@@ -26,7 +26,7 @@ class M12InteractionContractTests(unittest.TestCase):
             timeout=30,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("# pass 8", result.stdout)
+        self.assertIn("# pass 10", result.stdout)
         self.assertIn("# fail 0", result.stdout)
 
     def test_historical_series_use_color_and_shape(self) -> None:

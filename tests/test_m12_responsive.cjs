@@ -25,6 +25,9 @@ const instrumented = source.replace(
     installResponsiveObserver,
     pruningTraceVisibility,
     pruningModeLabel,
+    normaliseForecastTarget,
+    drawProjectionPlot,
+    formatLeadDays,
   };\n${insertionPoint}`,
 );
 const context = {
@@ -113,4 +116,32 @@ test('tous les paragraphes utilisent la largeur disponible, avant et après les 
   assert.match(css, /body\[data-page\]\s+p\s*\{\s*max-width:\s*none/);
   assert.doesNotMatch(css, /max-width:\s*\d+ch/);
   assert.match(css, /\.chart-section\s*>\s*#main-chart\s*~\s*p\s*,[\s\S]*?#secondary-chart\s*~\s*p\s*\{[\s\S]*?max-width:\s*none/);
+});
+
+test('une prévision à une seule échéance garde une incertitude visible et son statut daté', async () => {
+  let rendered;
+  context.window.Plotly = { react: async (_chart, traces, layout) => { rendered = { traces, layout }; } };
+  const chart = { style: {}, getBoundingClientRect: () => ({ width: 450 }), setAttribute() {} };
+  const target = responsive.normaliseForecastTarget({
+    date: '2026-10-22', predicted_mm: 30.8, lower95_mm: 30.7, upper95_mm: 30.9,
+    model_label: 'ElasticNet', horizon_label: '28 jours', issued: true,
+    actual_lead_days: [19.2, 20.2], calibration_n: 40, selection_n: 12,
+  });
+  assert.match(target.status, /Prévision exploratoire datée/);
+  const result = await responsive.drawProjectionPlot(chart, [], [target], '2026-09-24', 'mm', true);
+  const trace = rendered.traces.at(-1);
+  assert.equal(trace.error_y.visible, true);
+  assert.ok(Math.abs(trace.error_y.array[0] - .1) < 1e-12);
+  assert.match(trace.name, /Prévision exploratoire/);
+  assert.match(trace.hovertemplate, /customdata\[12\]/);
+  assert.doesNotMatch(JSON.stringify(rendered), /undefined/);
+  assert.equal(result.items.length, 1);
+});
+
+test('les délais en jours sont lisibles à une décimale sans modifier leur valeur', () => {
+  const sourceDays = 5.3272;
+  assert.equal(responsive.formatLeadDays(sourceDays), '5,3');
+  assert.equal(responsive.formatLeadDays(6), '6,0');
+  assert.equal(responsive.formatLeadDays(null), '—');
+  assert.equal(sourceDays, 5.3272);
 });
