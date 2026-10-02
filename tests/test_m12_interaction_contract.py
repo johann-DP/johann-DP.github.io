@@ -15,6 +15,8 @@ class M12InteractionContractTests(unittest.TestCase):
         result = subprocess.run(
             [
                 "node",
+                "--test",
+                "--test-reporter=tap",
                 str(ROOT / "tests/test_m12_responsive.cjs"),
                 str(ASSETS / "m12.js"),
                 str(ASSETS / "m12.css"),
