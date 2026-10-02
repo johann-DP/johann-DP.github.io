@@ -1089,7 +1089,7 @@
     });
     traces.push({
       type: "scatter", mode: "markers", name: "Persistance — référence", x: panel.rows.map((row) => row.x), y: panel.rows.map((row) => row.persistence),
-      marker: { color: COLORS.orange, size: mobile ? 11 : 10, symbol: "x", line: { color: COLORS.orange, width: 2 } },
+      marker: { color: COLORS.orange, size: mobile ? 7 : 6, symbol: "x", line: { color: COLORS.orange, width: 1.2 } },
       hovertemplate: "<b>%{x|%d/%m/%Y}</b><br>Persistance %{y:.4f} mm<extra></extra>",
     });
     const layout = baseLayout({ height: mobile ? 470 : 520, margin: mobile ? { l: 55, r: 14, t: 42, b: 72 } : { l: 82, r: 30, t: 42, b: 74 } });
