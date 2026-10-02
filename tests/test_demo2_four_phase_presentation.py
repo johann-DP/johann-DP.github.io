@@ -29,6 +29,9 @@ VALIDATED_FIGURE_IDS = (
     "weather-wind-speed",
     "weather-wind-direction",
     "weather-pairplots",
+    "tested-factors",
+    "recent-crack-forecasts",
+    "pruning-follow-up",
 )
 
 VALIDATED_THUMBNAIL_SHA256 = {
@@ -103,7 +106,7 @@ class Demo2FourPhasePresentationTests(unittest.TestCase):
         self.assertIn("Étape 1 · Présentation, acquisition et qualité", page)
         self.assertIn("Étape 2 · Traitement et dataviz", page)
         self.assertIn("Étape 3 · Analyses et prévisions", page)
-        self.assertIn('class="fissures-demo__family-nav-disabled" aria-disabled="true"', page)
+        self.assertIn('<a href="#etape-3">Étape 3 · Analyses et prévisions <span>3</span></a>', page)
         self.assertNotIn("Famille 01", page)
         self.assertNotIn("Famille 02", page)
         self.assertNotIn("Famille 03", page)
@@ -116,8 +119,9 @@ class Demo2FourPhasePresentationTests(unittest.TestCase):
         self.assertIsNotNone(step_3)
         self.assertEqual(step_1.group(0).count('data-figure-id='), 4)
         self.assertEqual(step_2.group(0).count('data-figure-id='), 14)
-        self.assertNotIn('<a ', step_3.group(0))
-        self.assertIn("En maintenance", step_3.group(0))
+        self.assertEqual(step_3.group(0).count('data-figure-id='), 3)
+        self.assertEqual(step_3.group(0).count('<a '), 3)
+        self.assertNotIn("En maintenance", step_3.group(0))
         self.assertIn('id="demarche"', page)
         self.assertIn("Mise à jour · Acquisition · Qualité", page)
         self.assertIn("Mesures · Analyses", page)

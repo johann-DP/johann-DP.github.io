@@ -252,13 +252,13 @@ jobs:
                       preview.get("data-figure-id", "").strip()
                       for preview in document.figure_previews
                   ]
-                  if len(figure_ids) != 18 or len(set(figure_ids)) != 18:
+                  if len(figure_ids) != 21 or len(set(figure_ids)) != 21:
                       errors.append(
-                          "demonstrations/fissures.html: 18 miniatures de figures uniques attendues"
+                          "demonstrations/fissures.html: 21 miniatures de figures uniques attendues"
                       )
-                  if document.figure_card_count != 18:
+                  if document.figure_card_count != 21:
                       errors.append(
-                          "demonstrations/fissures.html: 18 cartes de figures attendues"
+                          "demonstrations/fissures.html: 21 cartes de figures attendues"
                       )
                   if (
                       len(document.figure_external_links) != 18

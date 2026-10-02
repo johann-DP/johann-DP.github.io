@@ -93,6 +93,7 @@ PROTECTED_PATHS = tuple(
                 if relative != DEMO2_FIGURE_ROOT
             ),
             *DEMO2_FIXED_PATHS,
+            "assets/analyses/demo-2/m12",
             "assets/css/demo-ormevia.css",
             "assets/data/ormevia-scenarios.json",
             "assets/js/demo-ormevia.js",
@@ -132,7 +133,7 @@ ACTIVE_SEO_MARKERS = (
 )
 
 # Maintenance baseline at a0cfc1dd; protected Demo 2 extensions authorized
-# through 2026-09-28.
+# through 2026-10-01, including the prepared M12 analysis subtree.
 # Only the catalogue-outside, protected snapshot and explicitly rotating
 # Demo 2 skeleton hashes below were updated.
 # The values are populated
@@ -149,7 +150,7 @@ DEFAULT_BASELINE: dict[str, Any] = {
     },
     "maintenance_catalogue_fragment_sha256": "24f984b4ce8bfe678b0dc175331337623fd9c9fae2cde36a900dcd78d69d90f1",
     "catalogue_outside_sha256": "a5b4ce822ec32b34eea461b7c007ef42575bd5788f6117fb09ef4fac678fcc4c",
-    "protected_snapshot_sha256": "18227ca0dc6cd0e806aa9d74a9d3dfe5856865758329a7d110f400da8a238b7d",
+    "protected_snapshot_sha256": "055e2324e899da6408286a434968f8110bb2361523bf3d24bdd3ed0d3936b401",
     "demo2_rotating_skeletons": {
         "fissure-recente-meme-format.html": "2210e366dfb500d872ea37565781bf4d74641e93d65feb6fd31849c11aca36fa",
         "joint-dilatation-rendu-site.html": "4f839b3024dc6a9c8c719290f5f3ace4c811ae9efe134f0a8465cbcc484d4d18",
