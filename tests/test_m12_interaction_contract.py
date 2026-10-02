@@ -34,7 +34,7 @@ class M12InteractionContractTests(unittest.TestCase):
         for style in (
             'color: COLORS.deep, size: mobile ? 9 : 8, symbol: "circle"',
             'color: COLORS.aqua, size: mobile ? 10 : 9, symbol: "diamond"',
-            'color: COLORS.orange, size: mobile ? 11 : 10, symbol: "x", '
+            'color: COLORS.orange, size: mobile ? 12.44 : 11.32, symbol: "x-thin", '
             'line: { color: COLORS.orange, width: 1.2 }',
         ):
             self.assertIn(style, source)
