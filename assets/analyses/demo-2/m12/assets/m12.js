@@ -834,18 +834,19 @@
     const observations = asArray(first(data.measurements, data.observed_measurements, data.observed))
       .map(normaliseObservation).filter(Boolean).sort((a, b) => a.time - b.time);
     const simulation = object(data.simulation) || {};
+    const issued = simulation.method_id === "stage3-m11-causal-v1" && Boolean(simulation.issued_at);
     const targets = asArray(simulation.targets)
-      .map(normaliseForecastTarget).filter(Boolean).sort((a, b) => a.time - b.time);
+      .map((row) => normaliseForecastTarget({ ...row, issued })).filter(Boolean).sort((a, b) => a.time - b.time);
     if (!observations.length && !targets.length) throw new Error("Aucune mesure ni cible de prévision publique n’est disponible.");
     const cutoff = text(first(simulation.data_cutoff, data.cutoff_date), "").slice(0, 10);
     const displayedObservations = observations.slice(-40);
-    const result = await drawProjectionPlot(chart, displayedObservations, targets, cutoff, unit);
+    const result = await drawProjectionPlot(chart, displayedObservations, targets, cutoff, unit, issued);
     renderProjectionSummary(simulation, targets);
     appendForecastTechnical(data, observations, targets, unit);
     const secondary = document.getElementById("secondary-chart");
     if (secondary) await renderHistoricalComparison(data, secondary, unit);
     createPointBrowser(chart, result.items, "Explorer les mesures et cibles au clavier");
-    return `${displayedObservations.length} des ${observations.length} mesures exactes et ${targets.length} cibles d’une simulation exploratoire non annoncée à l’avance sont affichées; aucun résultat n’est recalculé.`;
+    return `${displayedObservations.length} des ${observations.length} mesures exactes et ${targets.length} cibles ${issued ? "d’une prévision exploratoire datée" : "d’une simulation exploratoire non annoncée à l’avance"} sont affichées; aucun calcul scientifique n’est effectué dans le navigateur.`;
   }
 
   function normaliseObservation(row) {
@@ -881,7 +882,8 @@
       referenceModel: text(row.selection_reference_model, "Persistance"),
       referenceMae: number(row.selection_reference_mae_mm),
       referenceWis: number(row.selection_reference_wis_mm),
-      status: "Simulation exploratoire · non annoncée à l’avance",
+      actualLeadDays: Array.isArray(row.actual_lead_days) ? row.actual_lead_days : null,
+      status: row.issued ? "Prévision exploratoire datée · non validée" : "Simulation exploratoire · non annoncée à l’avance",
       observationLabel: text(row.observation_label, "Observation non disponible à cette date"),
       residual: number(row.residual_mm),
     };
@@ -896,7 +898,7 @@
     return [firstTime - padding, lastTime + padding];
   }
 
-  async function drawProjectionPlot(chart, observations, targets, cutoff, unit) {
+  async function drawProjectionPlot(chart, observations, targets, cutoff, unit, issued = false) {
     const mobile = isCompactChart(chart, "forecast");
     const complete = targets.filter((row) => row.lower !== null && row.upper !== null);
     const traces = [];
@@ -921,18 +923,24 @@
     });
     const targetCurve = traces.length;
     traces.push({
-      type: "scatter", mode: "lines+markers", name: "Simulation exploratoire — liaison entre horizons = guide visuel",
+      type: "scatter", mode: "lines+markers", name: `${issued ? "Prévision" : "Simulation"} exploratoire — liaison entre horizons = guide visuel`,
       x: targets.map((row) => row.x), y: targets.map((row) => row.value),
       customdata: targets.map((row) => [
         safe(row.date), row.lower === null ? "non publiée" : format(row.lower),
         row.upper === null ? "non publiée" : format(row.upper), safe(row.horizon), safe(row.modelLabel),
         count(row.calibrationN), count(row.selectionN), format(row.selectionMae), format(row.selectionWis),
         safe(row.observationLabel), row.observed === null ? "non disponible" : `${format(row.observed)} mm`,
-        row.residual === null ? "non calculable" : `${format(row.residual)} mm`,
+        row.residual === null ? "non calculable" : `${format(row.residual)} mm`, safe(row.status),
       ]),
       line: { color: COLORS.orange, width: 2.5, dash: "dash" },
       marker: { color: COLORS.orange, size: mobile ? 8 : 7, symbol: "diamond" },
-      hovertemplate: "<b>%{customdata[0]} · %{customdata[3]}</b><br>Simulation %{y:.4f} mm<br>Modèle sélectionné : %{customdata[4]}<br>Plage empirique 95 % : %{customdata[1]} à %{customdata[2]} mm<br>Calibration n = %{customdata[5]} · sélection n = %{customdata[6]}<br>MAE de sélection %{customdata[7]} mm · WIS %{customdata[8]} mm<br>%{customdata[9]}<br>Mesure exacte : %{customdata[10]} · écart : %{customdata[11]}<br><b>Simulation exploratoire · non annoncée à l’avance</b><extra></extra>",
+      error_y: targets.length === 1 && complete.length === 1 ? {
+        type: "data", symmetric: false,
+        array: [complete[0].upper - complete[0].value],
+        arrayminus: [complete[0].value - complete[0].lower],
+        color: COLORS.orange, thickness: 1.5, width: 5, visible: true,
+      } : { visible: false },
+      hovertemplate: `<b>%{customdata[0]} · %{customdata[3]}</b><br>${issued ? "Prévision" : "Simulation"} %{y:.4f} mm<br>Modèle sélectionné : %{customdata[4]}<br>Plage empirique 95 % : %{customdata[1]} à %{customdata[2]} mm<br>Calibration n = %{customdata[5]} · sélection n = %{customdata[6]}<br>MAE de sélection %{customdata[7]} mm · WIS %{customdata[8]} mm<br>%{customdata[9]}<br>Mesure exacte : %{customdata[10]} · écart : %{customdata[11]}<br><b>%{customdata[12]}</b><extra></extra>`,
       connectgaps: false,
     });
     const layout = baseLayout({
@@ -955,18 +963,18 @@
       ];
       layout.annotations = [
         { x: cutoff, y: 1, xref: "x", yref: "paper", xanchor: "right", text: mobile ? `Dernière mesure · ${shortDate(cutoff)}` : `Dernière mesure utilisée · ${shortDate(cutoff)}`, showarrow: true, arrowhead: 0, ax: 0, ay: -25, font: { color: COLORS.red, size: 13 } },
-        { x: 1, y: 0.04, xref: "paper", yref: "paper", xanchor: "right", text: observedAfterCutoff ? (mobile ? "Nouvelles mesures<br>Simulation inchangée" : "Mesures reçues après la dernière donnée utilisée · simulation inchangée") : (mobile ? "Zone non observée" : "Non observé dans ce jeu de données"), showarrow: false, font: { color: COLORS.muted, size: 13 } },
+        { x: 1, y: 0.04, xref: "paper", yref: "paper", xanchor: "right", text: observedAfterCutoff ? (mobile ? `Nouvelles mesures<br>${issued ? "Prévision" : "Simulation"} inchangée` : `Mesures reçues après la dernière donnée utilisée · ${issued ? "prévision" : "simulation"} inchangée`) : (mobile ? "Zone non observée" : "Non observé dans ce jeu de données"), showarrow: false, font: { color: COLORS.muted, size: 13 } },
       ];
     }
     applyChartHeight(chart, layout.height);
     await window.Plotly.react(chart, traces, layout, PLOT_CONFIG);
     chart.setAttribute("role", "img");
-    chart.setAttribute("aria-label", "Quarante dernières mesures exactes, puis trois cibles d’une simulation exploratoire non annoncée à l’avance. Chaque horizon peut utiliser un modèle distinct; la ligne entre les points est seulement un guide visuel.");
+    chart.setAttribute("aria-label", `Dernières mesures exactes, puis ${targets.length} cibles ${issued ? "d’une prévision exploratoire datée non validée" : "d’une simulation exploratoire non annoncée à l’avance"}. Chaque horizon peut utiliser un modèle distinct; la ligne entre les points est seulement un guide visuel.`);
     const items = observations.map((row, pointNumber) => ({
       label: row.date, detail: `Mesure exacte ${format(row.value)} ${unit}.`, curveNumber: observedCurve, pointNumber,
     })).concat(targets.map((row, pointNumber) => ({
       label: row.date,
-      detail: `${row.horizon}; ${row.modelLabel}; simulation ${format(row.value)} ${unit}; plage 95 % ${row.lower === null ? "non publiée" : format(row.lower)} à ${row.upper === null ? "non publiée" : format(row.upper)} ${unit}; ${row.observationLabel}; calibration n ${count(row.calibrationN)}.`,
+      detail: `${row.horizon}; ${row.modelLabel}; ${issued ? "prévision" : "simulation"} ${format(row.value)} ${unit}; plage 95 % ${row.lower === null ? "non publiée" : format(row.lower)} à ${row.upper === null ? "non publiée" : format(row.upper)} ${unit}; ${row.observationLabel}; calibration n ${count(row.calibrationN)}.`,
       curveNumber: targetCurve, pointNumber,
     })));
     return { items };
@@ -975,6 +983,34 @@
   function renderProjectionSummary(simulation, targets) {
     const target = document.getElementById("projection-summary");
     if (!target) return;
+    const issued = simulation.method_id === "stage3-m11-causal-v1" && Boolean(simulation.issued_at);
+    // The original calculation method remains available for its own frozen
+    // simulation, not underneath a newer forecast made with a different method.
+    const initialMethodHeadings = new Set([
+      "Pourquoi ces trois points de projection ?",
+      "La comparaison historique ci-dessus est un contrôle distinct",
+    ]);
+    document.querySelectorAll(".technical .details-body > h3").forEach((heading) => {
+      if (!initialMethodHeadings.has(heading.textContent)) return;
+      heading.hidden = issued;
+      let sibling = heading.nextElementSibling;
+      while (sibling && sibling.tagName !== "H3") {
+        sibling.hidden = issued;
+        sibling = sibling.nextElementSibling;
+      }
+    });
+    if (issued) {
+      target.replaceChildren(
+        element("h3", "", "Prévision exploratoire datée · non validée"),
+        element("p", "", "À chaque horizon encore à venir, la méthode est choisie au plus faible WIS sur les 12 derniers essais comparables connus avant le calcul ; la MAE départage les égalités. Seuls le passé de la fissure et le calendrier sont utilisés. La persistance reste la référence de comparaison. Les horizons de 7, 14 et 28 jours sont comptés depuis le dernier relevé, pas depuis le calcul : seules les dates encore futures sont publiées. Les prévisions déjà datées sont conservées sans être réécrites."),
+        definitionGrid("projection-grid", [
+          ["Calcul et enregistrement", readableDateTime(simulation.issued_at)],
+          ["Dernière mesure utilisée", longDate(simulation.data_cutoff)],
+          ["Dates futures · délai réel depuis le calcul", targets.map((row) => `${longDate(row.date)}${row.actualLeadDays ? ` (${formatLeadDays(row.actualLeadDays[0])} à ${formatLeadDays(row.actualLeadDays[1])} jours)` : ""}`).join(" · ")],
+        ]),
+      );
+      return;
+    }
     const ruleObject = object(simulation.selection_rule);
     const rule = typeof simulation.selection_rule === "string"
       ? simulation.selection_rule
@@ -1129,15 +1165,16 @@
     const target = technicalTarget();
     if (!target) return;
     const generated = generatedTechnical(target);
-    generated.appendChild(element("h3", "", "Cibles de la simulation exploratoire"));
+    const issued = data.simulation?.method_id === "stage3-m11-causal-v1" && Boolean(data.simulation.issued_at);
+    generated.appendChild(element("h3", "", issued ? "Cibles de la prévision exploratoire datée" : "Cibles de la simulation exploratoire"));
     generated.appendChild(makeTable(
-      "Simulation, modèles par horizon et plages publiées",
-      [["Horizon", false], ["Date cible", false], ["Modèle", false], ["Simulation", true], ["Borne basse 95 %", true], ["Borne haute 95 %", true], ["Calibration n", true], ["Sélection n", true], ["MAE sélection", true], ["WIS sélection", true]],
+      `${issued ? "Prévision" : "Simulation"}, modèles par horizon et plages publiées`,
+      [["Horizon", false], ["Date cible", false], ["Modèle", false], [issued ? "Prévision" : "Simulation", true], ["Borne basse 95 %", true], ["Borne haute 95 %", true], ["Calibration n", true], ["Sélection n", true], ["MAE sélection", true], ["WIS sélection", true]],
       targets.map((row) => [row.horizon, row.date, row.modelLabel, `${format(row.value)} ${unit}`, row.lower === null ? "Non publiée" : format(row.lower), row.upper === null ? "Non publiée" : format(row.upper), count(row.calibrationN), count(row.selectionN), format(row.selectionMae), format(row.selectionWis)]),
     ));
     const note = element("p", "takeaway");
     const simulation = object(data.simulation) || {};
-    note.textContent = `Calcul : ${readableDateTime(simulation.generated_at)}; dernière mesure utilisée : ${longDate(first(simulation.data_cutoff, data.cutoff_date))}; simulation exploratoire non annoncée à l’avance. La série complète contient ${observations.length} mesures exactes.`;
+    note.textContent = `Calcul : ${readableDateTime(simulation.generated_at)}; dernière mesure utilisée : ${longDate(first(simulation.data_cutoff, data.cutoff_date))}; ${issued ? "prévision exploratoire datée, non validée" : "simulation exploratoire non annoncée à l’avance"}. La série complète contient ${observations.length} mesures exactes.`;
     generated.appendChild(note);
     appendMetricsTable(generated, data.metrics);
   }
@@ -1428,6 +1465,12 @@
 
   function publicVariableLabel(value) {
     return text(value, "—").replace(/invariantes? à l[’']offset/gi, "indépendantes du décalage de niveau");
+  }
+
+  function formatLeadDays(value) {
+    return typeof value === "number" && Number.isFinite(value)
+      ? value.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+      : "—";
   }
 
   function format(value) {

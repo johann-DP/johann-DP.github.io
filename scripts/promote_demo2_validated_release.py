@@ -26,6 +26,7 @@ from typing import Any, Iterable, Mapping, Sequence
 import import_demo2_validated_release as importer
 import refresh_demo2_live_data as live_refresh
 import validate_demo2_active_figures as active_validator
+import refresh_demo2_stage3_data as stage3
 
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
@@ -1006,14 +1007,26 @@ def promote_prepared_outputs(
     transaction_root = root.joinpath(*TRANSACTION_ROOT_RELATIVE.parts)
     with _lock(transaction_root):
         _validate_tree(root, active_root)
-        prepared = _collect_prepared_outputs(active_root, outputs)
-        return _promote_outputs_locked(
-            root,
-            active_root,
-            transaction_root,
-            prepared,
-            identifiers,
-        )
+        analyses = {PurePosixPath(path): payload for path, payload in outputs.items()
+                    if PurePosixPath(path) in stage3.STAGE3_PATHS}
+        figures = {path: payload for path, payload in outputs.items()
+                   if PurePosixPath(path) not in stage3.STAGE3_PATHS}
+        # Prove both complete candidates before either local subtree is touched.
+        if analyses:
+            stage3.validate_stage3_outputs(root, analyses)
+        prepared = _collect_prepared_outputs(active_root, figures) if figures else {}
+        if not prepared and not analyses:
+            raise _fail("DEMO2_PROMOTION_PREPARED_SET_INVALID")
+        result = _promote_outputs_locked(
+            root, active_root, transaction_root, prepared, identifiers,
+        ) if prepared else {"status": "ALREADY_ACTIVE", "updated_master_count": 0}
+        if analyses:
+            analysis_result = stage3.promote_stage3_outputs(root, analyses, identifiers)
+            result["updated_master_count"] += analysis_result["updated_master_count"]
+            result["stage3"] = analysis_result
+            if analysis_result["status"] == "PROMOTED":
+                result["status"] = "PROMOTED"
+        return result
 
 
 def _journal(transaction: Path) -> dict[str, Any]:
