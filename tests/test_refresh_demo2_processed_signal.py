@@ -316,6 +316,7 @@ def append_hour(
     inch: float | None = None,
 ) -> None:
     old_hourly = payload["hourly"][-1]
+    temperature = future_thermal_support(payload)
     if inch is None:
         # The producer closes N only after observing N+2. Recover that one hidden
         # support value from the already-frozen centered SG5 instead of changing
@@ -403,10 +404,57 @@ def append_hour(
         line_min,
         line_max,
     ]
+    if temperature is not None:
+        component = -0.09994542923746184 * (temperature - 15.1)
+        thermal[8:15] = [
+            temperature, component, global_row[5] - component,
+            True, True, "EXTENDED_FROZEN_MODEL_EXPLORATORY", "",
+        ]
     payload["hourly"].append(hourly)
     payload["global_hourly"].append(global_row)
     payload["thermal_extended"].append(thermal)
     recompute_dynamic(payload, review)
+
+
+def future_thermal_support(payload: dict[str, object]) -> float | None:
+    """Recover synthetic N+1 support without invalidating frozen thermal SG5.
+
+    The producer can already publish the centered thermal smoother using two
+    source hours beyond the displayed cutoff. A fixture cannot replace that
+    known support by missing weather when it later appends one displayed hour.
+    This is only a test-data construction, never a weather-data reconstruction
+    in the publisher or a relaxation of its independent validator.
+    """
+    rows = payload["thermal_extended"]
+    weights = refresh._SG5_WEIGHTS
+    center = len(rows) - 2
+    if rows[center][25] == "AVAILABLE":
+        known = sum(
+            weight * row[9]
+            for weight, row in zip(weights[:4], rows[center - 2 : center + 2], strict=True)
+        )
+        component = (rows[center][23] - known) / weights[4]
+    elif rows[-1][25] == "AVAILABLE":
+        # Only the last cached window is available: two future temperatures are
+        # unknown. Choose one bounded synthetic solution; the next append then
+        # recovers the other from this same unchanged cached window.
+        known = sum(
+            weight * row[9]
+            for weight, row in zip(weights[:3], rows[-3:], strict=True)
+        )
+        remaining = rows[-1][23] - known
+        low, high = sorted(
+            -0.09994542923746184 * (temperature - 15.1)
+            for temperature in rows[-1][16:18]
+        )
+        lower = max(low, (remaining - weights[4] * low) / weights[3])
+        upper = min(high, (remaining - weights[4] * high) / weights[3])
+        if lower > upper:
+            raise AssertionError("cached thermal support has no bounded fixture solution")
+        component = (lower + upper) / 2
+    else:
+        return None
+    return 15.1 + component / -0.09994542923746184
 
 
 def successor_candidate() -> tuple[dict[str, object], dict[str, object]]:
@@ -435,6 +483,57 @@ def fill_five_temperatures(
 
 
 class ProcessedSignalRefreshTests(unittest.TestCase):
+    def test_append_fixture_preserves_frozen_thermal_sg5_when_weather_reaches_the_tail(self) -> None:
+        for missing_penultimate_support in (False, True):
+            with self.subTest(missing_penultimate_support=missing_penultimate_support):
+                _, payload, review = document()
+                count = len(payload["hourly"])
+                append_hour(payload, review)
+                append_hour(payload, review)
+                rows = payload["thermal_extended"]
+                for index in range(count - 5, count + 2):
+                    temperature = 20.0 + (index - count + 5) / 10
+                    component = -0.09994542923746184 * (temperature - 15.1)
+                    rows[index][8:15] = [
+                        temperature, component, rows[index][7] - component,
+                        True, True, "EXTENDED_FROZEN_MODEL_EXPLORATORY", "",
+                    ]
+                if missing_penultimate_support:
+                    rows[count - 4][8:15] = [
+                        None, None, None, False, False, "NOT_APPLIED",
+                        "NO_EXACT_OUTDOOR_TEMPERATURE",
+                    ]
+                recompute_thermal_sg5(payload, set(range(count - 7, count + 2)))
+                for key in ("hourly", "global_hourly", "thermal_extended"):
+                    payload[key] = payload[key][:count]
+                recompute_dynamic(payload, review)
+                refresh._validate_processed_payload(payload)
+                frozen = deepcopy(payload["thermal_extended"])
+                self.assertEqual(frozen[-1][25], "AVAILABLE")
+                self.assertEqual(
+                    frozen[-2][25] == "AVAILABLE", not missing_penultimate_support
+                )
+
+                # Demonstrate the old failure: discarding this one hour of
+                # support is inconsistent once its frozen five-point window
+                # becomes fully displayed.
+                if not missing_penultimate_support:
+                    broken, broken_review = deepcopy(payload), deepcopy(review)
+                    append_hour(broken, broken_review)
+                    broken["thermal_extended"][-1][8:15] = [
+                        None, None, None, False, False, "NOT_APPLIED",
+                        "NO_EXACT_OUTDOOR_TEMPERATURE",
+                    ]
+                    recompute_dynamic(broken, broken_review)
+                    with self.assertRaisesRegex(refresh.RefreshError, "SG5_DIVERGED"):
+                        refresh._validate_processed_payload(broken)
+
+                for _ in range(2):
+                    append_hour(payload, review)
+                    refresh._validate_processed_payload(payload)
+                    self.assertEqual(payload["thermal_extended"][:count], frozen)
+                    self.assertTrue(payload["thermal_extended"][-1][12])
+
     def test_processed_initial_anchor_only_allows_provisional_tail_completion(
         self,
     ) -> None:
@@ -557,7 +656,10 @@ class ProcessedSignalRefreshTests(unittest.TestCase):
         thermal = candidate["thermal_extended"][index]
         thermal[5] = row[5]
         thermal[7] = global_row[5]
+        if thermal[12] is True:
+            thermal[10] = thermal[7] - thermal[9]
         recompute_global_sg5(candidate, {index - 2})
+        recompute_thermal_sg5(candidate, {index - 2})
         recompute_dynamic(candidate, candidate_review)
 
         with self.assertRaisesRegex(refresh.RefreshError, "HISTORY_DIVERGED"):
