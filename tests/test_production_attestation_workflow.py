@@ -43,6 +43,15 @@ class ProductionAttestationWorkflowTests(unittest.TestCase):
         self.assertIn('--pages-run-id "$PAGES_RUN_ID"', self.workflow)
         self.assertIn('--attestation-run-id "$GITHUB_RUN_ID"', self.workflow)
 
+    def test_replayed_old_deployment_uses_current_runner_not_its_historical_script(self) -> None:
+        self.assertIn("          ref: ${{ github.sha }}\n", self.workflow)
+        self.assertIn("          path: attestation-runner\n", self.workflow)
+        self.assertIn("          path: deployed-site\n", self.workflow)
+        self.assertIn("working-directory: attestation-runner", self.workflow)
+        self.assertIn("python3 attestation-runner/scripts/attest_production.py", self.workflow)
+        self.assertIn('--root "$GITHUB_WORKSPACE/deployed-site"', self.workflow)
+        self.assertNotIn("python3 deployed-site/scripts/", self.workflow)
+
     def test_daily_safety_audit_and_manual_recovery_are_kept(self) -> None:
         self.assertIn('  schedule:\n    - cron: "17 05 * * *"\n', self.trigger)
         self.assertIn("  workflow_dispatch:\n", self.trigger)

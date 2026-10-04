@@ -457,6 +457,39 @@ class ProductionReceiptTests(unittest.TestCase):
         self.assertIsNone(first["pages_run_id"])
         self.assertEqual(first["base_url"], "https://www.datapredict.org")
 
+    def test_current_cli_attests_an_old_checkout_whose_runner_has_no_receipt_options(self) -> None:
+        historical = self.root / "historical"
+        build_tree(historical)
+        legacy_script = historical / "scripts/attest_production.py"
+        legacy_script.parent.mkdir()
+        legacy_script.write_text(
+            "raise SystemExit('historical runner must not be executed')\n", encoding="utf-8"
+        )
+        subprocess.run(["git", "init", "--quiet", str(historical)], check=True)
+        subprocess.run(["git", "add", "."], cwd=historical, check=True)
+        subprocess.run(
+            ["git", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+             "-c", "commit.gpgsign=false", "commit", "--quiet", "-m", "historical fixture"],
+            cwd=historical, check=True,
+        )
+        historical_sha = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=historical, text=True
+        ).strip()
+        with serve(historical) as base_url:
+            completed = subprocess.run(
+                [sys.executable, str(Path(production.__file__).resolve()),
+                 "--root", str(historical), "--base-url", base_url,
+                 "--source-commit", historical_sha, "--pages-run-id", "1234",
+                 "--attestation-run-id", "5678", "--receipt", str(self.receipt),
+                 "--summary-path", str(self.summary)],
+                capture_output=True, text=True, check=False,
+            )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        receipt = json.loads(self.receipt.read_text(encoding="utf-8"))
+        self.assertEqual(receipt["source_commit"], historical_sha)
+        self.assertEqual(receipt["file_count"], 68)
+        self.assertEqual(receipt["pages_run_id"], 1234)
+
 
 if __name__ == "__main__":
     unittest.main()

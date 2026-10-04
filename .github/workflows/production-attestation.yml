@@ -32,18 +32,28 @@ jobs:
       PAGES_RUN_ID: ${{ github.event.workflow_run.id || '' }}
 
     steps:
-      - name: Récupérer le dépôt
+      - name: Récupérer le code de contrôle actuel
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          path: attestation-runner
+          persist-credentials: false
+
+      - name: Récupérer les fichiers du déploiement à contrôler
         uses: actions/checkout@v7
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          path: deployed-site
           persist-credentials: false
 
       - name: Tester l’attestation hors réseau
+        working-directory: attestation-runner
         run: python3 -m unittest discover -s tests -p 'test*attest*.py'
 
       - name: Attester les fichiers publiés
         run: >-
-          python3 scripts/attest_production.py
+          python3 attestation-runner/scripts/attest_production.py
+          --root "$GITHUB_WORKSPACE/deployed-site"
           --base-url https://www.datapredict.org
           --attempts 2
           --retry-delay-seconds 5
