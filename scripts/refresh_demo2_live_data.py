@@ -2946,11 +2946,12 @@ def _json_assignment(payload: bytes, variable: bytes) -> tuple[object, int, int]
 
 
 def _normalise_manual_trace(data: object, name: str) -> object:
-    if not isinstance(data, list):
+    if not isinstance(data, list) or any(not isinstance(item, dict) for item in data):
         raise RefreshError("REFRESH_MANUAL_DATA_INVALID")
     matches = [item for item in data if isinstance(item, dict) and item.get("name") == name]
     if len(matches) != 1 or matches[0].get("mode") != "markers":
         raise RefreshError("REFRESH_MANUAL_SOURCE_TRACE_INVALID")
+    _manual_xy(matches[0])
     normalised = json.loads(json.dumps(data))
     match = next(item for item in normalised if item.get("name") == name)
     match["x"] = ["__SOURCE_DATES__"]
@@ -2958,13 +2959,187 @@ def _normalise_manual_trace(data: object, name: str) -> object:
     return normalised
 
 
-def _normalise_manual_layout(layout: object) -> object:
+def _manual_number(value: object) -> float:
+    if type(value) not in (float, int) or not math.isfinite(value):
+        raise RefreshError("REFRESH_MANUAL_MODEL_NUMBER_INVALID")
+    return float(value)
+
+
+def _manual_date(value: object) -> datetime:
+    # These are source civil labels, never an inferred timezone conversion.
+    if not isinstance(value, str) or not re.fullmatch(
+        r"[0-9]{4}-[0-9]{2}-[0-9]{2}(?:T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)?",
+        value,
+    ):
+        raise RefreshError("REFRESH_MANUAL_MODEL_DATE_INVALID")
+    try:
+        return datetime.fromisoformat(value)
+    except ValueError as error:
+        raise RefreshError("REFRESH_MANUAL_MODEL_DATE_INVALID") from error
+
+
+def _manual_xy(trace: dict, *, daily: bool = False) -> list[datetime]:
+    x, y = trace.get("x"), trace.get("y")
+    if not isinstance(x, list) or not isinstance(y, list) or not x or len(x) != len(y):
+        raise RefreshError("REFRESH_MANUAL_MODEL_POINTS_INVALID")
+    dates = [_manual_date(value) for value in x]
+    for value in y:
+        _manual_number(value)
+    if any(left >= right for left, right in zip(dates, dates[1:])):
+        raise RefreshError("REFRESH_MANUAL_MODEL_DATES_UNORDERED")
+    if daily and (
+        any(date != date.replace(hour=0, minute=0, second=0, microsecond=0) for date in dates)
+        or any(right - left != timedelta(days=1) for left, right in zip(dates, dates[1:]))
+    ):
+        raise RefreshError("REFRESH_MANUAL_MODEL_GRID_INVALID")
+    return dates
+
+
+def _normalise_manual_models(data: object, name: str, *, current: bool = False) -> object:
+    normalised = _normalise_manual_trace(data, name)
+    source = next(item for item in data if item.get("name") == name)
+    observed = _manual_xy(source)
+    model_name = "Modèle exponentiel" if name == "Mesures récentes" else "Ajustement périodique"
+    models = [index for index, item in enumerate(data) if item.get("name") == model_name]
+    if not models:
+        return normalised  # Other historical/manual templates retain their frozen contract.
+    if len(models) != 1:
+        raise RefreshError("REFRESH_MANUAL_MODEL_TRACE_INVALID")
+    index = models[0]
+    model = data[index]
+    if model.get("mode") != "lines" or model.get("type") != "scatter":
+        raise RefreshError("REFRESH_MANUAL_MODEL_TRACE_INVALID")
+    dates = _manual_xy(model, daily=True)
+    expected_start = datetime(2025, 12, 28) if name == "Mesures récentes" else observed[0]
+    if dates[0] != expected_start or dates[-1] > observed[-1]:
+        raise RefreshError("REFRESH_MANUAL_MODEL_DOMAIN_INVALID")
+    if current and dates[-1] != observed[-1]:
+        raise RefreshError("REFRESH_MANUAL_MODEL_STALE")
+    normalised[index]["x"] = ["__REFITTED_MODEL_DATES__"]
+    normalised[index]["y"] = ["__REFITTED_MODEL_VALUES__"]
+    if name == "Mesures récentes":
+        if len(data) != 14 or index != 3:
+            raise RefreshError("REFRESH_MANUAL_MODEL_TRACE_INVALID")
+        zoom = data[13]
+        if (zoom.get("mode"), zoom.get("xaxis"), zoom.get("yaxis")) != ("lines", "x2", "y2"):
+            raise RefreshError("REFRESH_MANUAL_MODEL_ZOOM_INVALID")
+        lookup = dict(zip(dates, model["y"], strict=True))
+        zoom_dates = _manual_xy(zoom, daily=True)
+        if any(
+            date not in lookup or not math.isclose(value, lookup[date], rel_tol=0, abs_tol=1e-10)
+            for date, value in zip(zoom_dates, zoom["y"], strict=True)
+        ):
+            raise RefreshError("REFRESH_MANUAL_MODEL_ZOOM_DIVERGED")
+        normalised[13]["y"] = ["__REFITTED_MODEL_VALUES__"]
+    elif len(data) != 2 or index != 1:
+        raise RefreshError("REFRESH_MANUAL_MODEL_TRACE_INVALID")
+    return normalised
+
+
+_JOINT_PERIOD = r"[0-9]+,[0-9]"
+_JOINT_AMPLITUDE = r"[0-9]+,[0-9]{3}"
+_JOINT_SUMMARY = re.compile(
+    rf"Période : <b>({_JOINT_PERIOD}) jours</b> \[({_JOINT_PERIOD})–({_JOINT_PERIOD})\]"
+    rf"(?: · |<br>)Semi-amplitude : <b>({_JOINT_AMPLITUDE}) mm</b>"
+    rf" \[({_JOINT_AMPLITUDE})–({_JOINT_AMPLITUDE})\]"
+)
+_JOINT_ARIA = re.compile(
+    br"(sa p\xc3\xa9riode de )([0-9]+,[0-9])( jours, sa semi-amplitude de )"
+    br"([0-9]+,[0-9]{3})( millim\xc3\xa8tre)"
+)
+
+
+def _mask_manual_groups(text: str, match: re.Match) -> str:
+    for index in range(len(match.groups()), 0, -1):
+        text = text[:match.start(index)] + "__FIT_NUMBER__" + text[match.end(index):]
+    return text
+
+
+def _normalise_joint_layout(layout: object) -> tuple[object, tuple]:
+    normalised = _normalise_manual_layout(layout, refitted=True)
+    annotations, shapes = normalised.get("annotations"), normalised.get("shapes")
+    if not isinstance(annotations, list) or len(annotations) != 5 or not isinstance(shapes, list) or len(shapes) != 6:
+        raise RefreshError("REFRESH_MANUAL_MODEL_LAYOUT_INVALID")
+    if any(not isinstance(item, dict) for item in annotations + shapes):
+        raise RefreshError("REFRESH_MANUAL_MODEL_LAYOUT_INVALID")
+    if any(not isinstance(item.get("text"), str) for item in annotations[:4]):
+        raise RefreshError("REFRESH_MANUAL_MODEL_LABEL_INVALID")
+    summary = _JOINT_SUMMARY.fullmatch(annotations[2].get("text", ""))
+    period = re.fullmatch(rf"P = ({_JOINT_PERIOD}) jours", annotations[0].get("text", ""))
+    amplitude = re.fullmatch(rf"A = ({_JOINT_AMPLITUDE}) mm", annotations[1].get("text", ""))
+    bootstrap = list(re.finditer(r"\b([0-9]+)/500 réplications\b", annotations[3].get("text", "")))
+    if not summary or not period or not amplitude or len(bootstrap) != 1:
+        raise RefreshError("REFRESH_MANUAL_MODEL_LABEL_INVALID")
+    values = tuple(float(value.replace(",", ".")) for value in summary.groups())
+    if (period[1], amplitude[1]) != (summary[1], summary[4]) or not all(math.isfinite(v) and v > 0 for v in values):
+        raise RefreshError("REFRESH_MANUAL_MODEL_LABEL_DIVERGED")
+    if values[1] > values[2] or values[4] > values[5] or not 1 <= int(bootstrap[0][1]) <= 500:
+        raise RefreshError("REFRESH_MANUAL_MODEL_INTERVAL_INVALID")
+    geometry = []
+    for index, shape in enumerate(shapes):
+        x0, x1 = _manual_date(shape.get("x0")), _manual_date(shape.get("x1"))
+        y0, y1 = _manual_number(shape.get("y0")), _manual_number(shape.get("y1"))
+        geometry.append((x0, x1, y0, y1))
+        shape["x0"] = "__FIT_DATE__"
+        # Horizontal bar widths are presentation, not fitted parameters.
+        shape["x1"] = str(x1 - x0) if index >= 4 else "__FIT_DATE__"
+        if index >= 3:
+            shape["y0"] = shape["y1"] = "__FIT_VALUE__"
+    p0, p1 = geometry[0][:2]
+    base, peak = geometry[3][2:]
+    period_days = (p1 - p0).total_seconds() / 86400
+    if (
+        not math.isclose(period_days, values[0], rel_tol=0, abs_tol=0.050001)
+        or not math.isclose(peak - base, values[3], rel_tol=0, abs_tol=0.000501)
+        or geometry[1][:2] != (p0, p0) or geometry[2][:2] != (p1, p1)
+        or geometry[3][:2] != (p1, p1)
+        or geometry[4][2:] != (base, base) or geometry[5][2:] != (peak, peak)
+        or abs((_manual_date(annotations[0].get("x")) - (p0 + (p1 - p0) / 2)).total_seconds()) > 0.00001
+        or _manual_date(annotations[1].get("x")) != p1
+        or not math.isclose(_manual_number(annotations[1].get("y")), (base + peak) / 2, rel_tol=0, abs_tol=1e-10)
+    ):
+        raise RefreshError("REFRESH_MANUAL_MODEL_GEOMETRY_DIVERGED")
+    for index, match in ((0, period), (1, amplitude), (2, summary), (3, bootstrap[0])):
+        annotations[index]["text"] = _mask_manual_groups(annotations[index]["text"], match)
+    annotations[0]["x"] = annotations[1]["x"] = "__FIT_DATE__"
+    annotations[1]["y"] = "__FIT_VALUE__"
+    return normalised, (summary.groups(), int(bootstrap[0][1]), tuple(geometry))
+
+
+def _manual_refit_marker(payload: bytes, data: object, source_name: str) -> bytes:
+    token = b"manual-curve-refit:"
+    if token not in payload:
+        return payload
+    method = "recent-v1" if source_name == "Mesures récentes" else "joint-v1"
+    pattern = re.compile(rb"<!-- manual-curve-refit:" + method.encode() + rb":([0-9a-f]{64}) -->(?=</head>)")
+    matches = list(pattern.finditer(payload))
+    if payload.count(token) != 1 or len(matches) != 1:
+        raise RefreshError("REFRESH_MANUAL_MODEL_MARKER_INVALID")
+    source = next(item for item in data if item.get("name") == source_name)
+    dates = _manual_xy(source)
+    fingerprint = hashlib.sha256(json.dumps({
+        "method": method,
+        "dates": [date.isoformat(timespec="seconds") for date in dates],
+        "values": [float(value) for value in source["y"]],
+    }, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
+    if matches[0][1].decode() != fingerprint:
+        raise RefreshError("REFRESH_MANUAL_MODEL_MARKER_DIVERGED")
+    return payload[:matches[0].start()] + payload[matches[0].end():]
+
+
+def _normalise_manual_layout(layout: object, *, refitted: bool = False) -> object:
     if not isinstance(layout, dict) or not isinstance(layout.get("xaxis"), dict):
         raise RefreshError("REFRESH_MANUAL_LAYOUT_INVALID")
     normalised = json.loads(json.dumps(layout))
     if "range" not in normalised["xaxis"]:
         raise RefreshError("REFRESH_MANUAL_LAYOUT_INVALID")
     normalised["xaxis"]["range"] = ["__PRIMARY_RANGE__"]
+    if refitted:
+        for axis in ("yaxis", "yaxis2"):
+            if axis in normalised:
+                if not isinstance(normalised[axis], dict) or "range" not in normalised[axis]:
+                    raise RefreshError("REFRESH_MANUAL_MODEL_AXIS_INVALID")
+                normalised[axis]["range"] = ["__REFITTED_VERTICAL_RANGE__"]
     return normalised
 
 
@@ -2986,7 +3161,7 @@ def _recent_layout_assignments(payload: bytes) -> tuple[list[object], list[tuple
         except (UnicodeDecodeError, json.JSONDecodeError) as error:
             raise RefreshError("REFRESH_MANUAL_LAYOUT_INVALID") from error
         end = start + len(text[:consumed].encode("utf-8"))
-        values.append(_normalise_manual_layout(value))
+        values.append(value)
         spans.append((start, end))
         cursor = end
         expected = b"," if index < 2 else b"};"
@@ -2996,14 +3171,81 @@ def _recent_layout_assignments(payload: bytes) -> tuple[list[object], list[tuple
     return values, spans
 
 
-def manual_data_only_skeleton(payload: bytes) -> bytes:
-    """Mask only source points, their count, and the primary temporal extent."""
+def _manual_vertical_state(data: list, layouts: list, *, padded: bool = False) -> dict:
+    """Ranges and data envelopes only; the scientific points are never altered."""
+    if not any(item.get("name") in {"Modèle exponentiel", "Ajustement périodique"} for item in data):
+        return {}
+    values: dict[str, list[float]] = {}
+    for trace in data:
+        axis = trace.get("yaxis", "y")
+        if axis not in {"y", "y2"} or not isinstance(trace.get("y"), list):
+            raise RefreshError("REFRESH_MANUAL_MODEL_AXIS_INVALID")
+        values.setdefault("yaxis" if axis == "y" else "yaxis2", []).extend(
+            _manual_number(value) for value in trace["y"] if value is not None
+        )
+    result = {}
+    for axis, numbers in values.items():
+        if not numbers:
+            raise RefreshError("REFRESH_MANUAL_MODEL_AXIS_INVALID")
+        minimum, maximum = min(numbers), max(numbers)
+        margin = max(0.002, 0.03 * (maximum - minimum))
+        bounds = (minimum - margin, maximum + margin)
+        current_range = None
+        for layout in layouts:
+            axis_value = layout.get(axis) if isinstance(layout, dict) else None
+            axis_range = axis_value.get("range") if isinstance(axis_value, dict) else None
+            if not isinstance(axis_range, list) or len(axis_range) != 2:
+                raise RefreshError("REFRESH_MANUAL_MODEL_AXIS_INVALID")
+            low, high = (_manual_number(value) for value in axis_range)
+            if low >= high:
+                raise RefreshError("REFRESH_MANUAL_MODEL_AXIS_INVALID")
+            if current_range is not None and current_range != (low, high):
+                raise RefreshError("REFRESH_MANUAL_MODEL_AXIS_RESPONSIVE_DIVERGED")
+            current_range = (low, high)
+            if padded and (low > bounds[0] + 1e-10 or high < bounds[1] - 1e-10):
+                raise RefreshError("REFRESH_MANUAL_MODEL_AXIS_CLIPPED")
+        result[axis] = (current_range, bounds)
+    return result
+
+
+def _manual_vertical_refresh(active: bytes, refreshed: bytes) -> None:
+    states = []
+    for payload in (active, refreshed):
+        if b"const data = " in payload:
+            data, _, _ = _json_assignment(payload, b"data")
+            layouts, _ = _recent_layout_assignments(payload)
+        else:
+            value, _, _ = _json_assignment(payload, b"payload")
+            data, layouts = value["data"], list(value["layouts"].values())
+        states.append(_manual_vertical_state(data, layouts, padded=len(states) == 1))
+    before, after = states
+    if before.keys() != after.keys():
+        raise RefreshError("REFRESH_MANUAL_MODEL_AXIS_INVALID")
+    for axis, (observed, bounds) in after.items():
+        old = before[axis][0]
+        expected = (min(old[0], bounds[0]), max(old[1], bounds[1]))
+        if any(not math.isclose(value, target, rel_tol=0, abs_tol=1e-10) for value, target in zip(observed, expected, strict=True)):
+            raise RefreshError("REFRESH_MANUAL_MODEL_AXIS_NOT_MINIMAL_EXPANSION")
+
+
+def manual_data_only_skeleton(payload: bytes, *, current_models: bool = False) -> bytes:
+    """Mask source data and the exact numeric fields of the two governed refits.
+
+    Styles, executable code, scientific wording, the crack zoom's dates, all
+    other traces and annotation/shape fields remain byte/structure protected.
+    The optional input-bound refit marker authorizes no other HTML change.
+    """
+    joint_signature = None
     if b"const data = " in payload and b"const layouts = {" in payload:
         data, start, end = _json_assignment(payload, b"data")
-        replacements = [(start, end, _canonical_json(_normalise_manual_trace(data, "Mesures récentes")))]
+        source_name = "Mesures récentes"
+        replacements = [(start, end, _canonical_json(_normalise_manual_models(
+            data, source_name, current=current_models
+        ))) ]
         layouts, spans = _recent_layout_assignments(payload)
+        vertical = _manual_vertical_state(data, layouts, padded=current_models)
         replacements.extend(
-            (span[0], span[1], _canonical_json(layout))
+            (span[0], span[1], _canonical_json(_normalise_manual_layout(layout, refitted=bool(vertical))))
             for layout, span in zip(layouts, spans, strict=True)
         )
     elif b"const payload = " in payload:
@@ -3013,24 +3255,41 @@ def manual_data_only_skeleton(payload: bytes) -> bytes:
         }:
             raise RefreshError("REFRESH_MANUAL_PAYLOAD_INVALID")
         normalised = json.loads(json.dumps(value))
-        normalised["data"] = _normalise_manual_trace(
-            normalised.get("data"), "Mesures manuelles"
+        data, source_name = value.get("data"), "Mesures manuelles"
+        normalised["data"] = _normalise_manual_models(
+            data, source_name, current=current_models
         )
-        normalised["layouts"] = {
-            mode: _normalise_manual_layout(layout)
-            for mode, layout in normalised["layouts"].items()
-        }
+        _manual_vertical_state(data, list(value["layouts"].values()), padded=current_models)
+        has_model = any(item.get("name") == "Ajustement périodique" for item in data)
+        for mode, layout in normalised["layouts"].items():
+            if has_model:
+                layout, signature = _normalise_joint_layout(layout)
+                if joint_signature is not None and joint_signature != signature:
+                    raise RefreshError("REFRESH_MANUAL_MODEL_RESPONSIVE_DIVERGED")
+                joint_signature = signature
+            else:
+                layout = _normalise_manual_layout(layout)
+            normalised["layouts"][mode] = layout
         replacements = [(start, end, _canonical_json(normalised))]
     else:
         raise RefreshError("REFRESH_MANUAL_TEMPLATE_UNEXPECTED")
     for start, end, replacement in sorted(replacements, reverse=True):
         payload = payload[:start] + replacement + payload[end:]
+    if joint_signature is not None:
+        matches = list(_JOINT_ARIA.finditer(payload))
+        if len(matches) != 1 or (matches[0][2].decode(), matches[0][4].decode()) != (
+            joint_signature[0][0], joint_signature[0][3]
+        ):
+            raise RefreshError("REFRESH_MANUAL_MODEL_ARIA_DIVERGED")
+        payload = _JOINT_ARIA.sub(rb"\1__FIT_NUMBER__\3__FIT_NUMBER__\5", payload)
+    payload = _manual_refit_marker(payload, data, source_name)
     return _MEASURE_COUNT.sub(b"__COUNT__", payload)
 
 
 def refresh_manual(active: bytes, refreshed: bytes) -> bytes:
-    if manual_data_only_skeleton(active) != manual_data_only_skeleton(refreshed):
+    if manual_data_only_skeleton(active) != manual_data_only_skeleton(refreshed, current_models=True):
         raise RefreshError("REFRESH_MANUAL_SKELETON_DIVERGED")
+    _manual_vertical_refresh(active, refreshed)
     return refreshed
 
 
