@@ -5,10 +5,12 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
+from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import stat
+import subprocess
 import sys
 import time
 from typing import Iterable
@@ -408,12 +410,79 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--attempts", type=int, default=1)
     parser.add_argument("--retry-delay-seconds", type=float, default=0)
     parser.add_argument("--timeout-seconds", type=float, default=45)
+    parser.add_argument("--source-commit", help="SHA Git exact du contenu déployé")
+    parser.add_argument("--pages-run-id", default="")
+    parser.add_argument("--attestation-run-id", default="")
+    parser.add_argument("--receipt", type=Path, help="reçu JSON, créé seulement après succès")
+    parser.add_argument("--summary-path", type=Path, help="résumé final du contrôle GitHub")
     return parser
+
+
+def _verified_source_commit(root: Path, source_commit: str) -> str:
+    if len(source_commit) != 40 or any(c not in "0123456789abcdef" for c in source_commit):
+        raise AttestationError("SHA source invalide")
+    try:
+        actual = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=root, text=True, stderr=subprocess.PIPE
+        ).strip()
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise AttestationError("commit du checkout impossible à vérifier") from exc
+    if actual != source_commit:
+        raise AttestationError("le checkout ne correspond pas au commit déployé attendu")
+    return actual
+
+
+def _run_identifier(raw: str, name: str) -> int | None:
+    if raw == "":
+        return None
+    if not raw.isascii() or not raw.isdecimal() or int(raw) <= 0:
+        raise AttestationError(f"identifiant {name} invalide")
+    return int(raw)
+
+
+def build_receipt(
+    expected: tuple[ExpectedFile, ...],
+    *,
+    source_commit: str,
+    base_url: str,
+    pages_run_id: int | None,
+    attestation_run_id: int,
+) -> dict[str, object]:
+    inventory = [
+        {"path": item.path.as_posix(), "sha256": item.sha256,
+         "size_bytes": item.size_bytes, "category": item.category}
+        for item in sorted(expected, key=lambda item: item.path.as_posix())
+    ]
+    inventory_bytes = json.dumps(
+        inventory, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    ).encode("ascii")
+    return {
+        "schema_version": "production-attestation/1",
+        "status": "ATTESTED",
+        "source_commit": source_commit,
+        "pages_run_id": pages_run_id,
+        "attestation_run_id": attestation_run_id,
+        "completed_at": datetime.now(timezone.utc).isoformat(),
+        "base_url": base_url.rstrip("/"),
+        "file_count": len(expected),
+        "byte_count": sum(item.size_bytes for item in expected),
+        "inventory_sha256": hashlib.sha256(inventory_bytes).hexdigest(),
+    }
 
 
 def main(argv: Iterable[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        if args.receipt is not None and not args.source_commit:
+            raise AttestationError("un reçu nécessite le commit source vérifié")
+        if args.receipt is not None and args.receipt.exists():
+            raise AttestationError("le chemin du reçu existe déjà")
+        if args.source_commit:
+            _verified_source_commit(args.root, args.source_commit)
+        pages_run_id = _run_identifier(args.pages_run_id, "Pages")
+        attestation_run_id = _run_identifier(args.attestation_run_id, "attestation")
+        if args.receipt is not None and attestation_run_id is None:
+            raise AttestationError("un reçu nécessite l’identifiant du contrôle GitHub")
         expected = attest(
             args.root,
             args.base_url,
@@ -421,7 +490,28 @@ def main(argv: Iterable[str] | None = None) -> int:
             retry_delay_seconds=args.retry_delay_seconds,
             timeout_seconds=args.timeout_seconds,
         )
-    except AttestationError as exc:
+        if args.receipt is not None:
+            receipt = build_receipt(
+                expected,
+                source_commit=args.source_commit,
+                base_url=args.base_url,
+                pages_run_id=pages_run_id,
+                attestation_run_id=attestation_run_id,
+            )
+            with args.receipt.open("x", encoding="utf-8") as handle:
+                json.dump(receipt, handle, sort_keys=True, ensure_ascii=True)
+                handle.write("\n")
+        if args.summary_path is not None:
+            with args.summary_path.open("a", encoding="utf-8") as handle:
+                handle.write(
+                    "## Publication vérifiée\n\n"
+                    f"Les **{len(expected)} fichiers** contrôlés en production "
+                    "correspondent exactement au contenu versionné.\n\n"
+                    f"Commit vérifié : `{args.source_commit or 'non fourni'}`.\n\n"
+                    "Ce contrôle vérifie la publication des fichiers, "
+                    "pas la validité scientifique des conclusions.\n"
+                )
+    except (AttestationError, OSError) as exc:
         print(f"ATTESTATION_FAILED: {exc}", file=sys.stderr)
         return 1
 
