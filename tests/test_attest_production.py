@@ -7,10 +7,12 @@ from io import StringIO
 import json
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tempfile
 from threading import Thread
 import unittest
+from unittest.mock import patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -321,6 +323,139 @@ class ProductionAttestationTests(unittest.TestCase):
         self.assertTrue(
             all(result["release_id"] in item.path.parts for item in staged)
         )
+
+
+class ProductionReceiptTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name)
+        self.receipt = self.root / "receipt.json"
+        self.summary = self.root / "summary.md"
+        self.sha = "a" * 40
+        self.expected = (
+            production.ExpectedFile(
+                production.PurePosixPath("figure.html"), "b" * 64, 123, "figure"
+            ),
+        )
+        self.arguments = [
+            "--root", str(self.root), "--source-commit", self.sha,
+            "--pages-run-id", "1234", "--attestation-run-id", "5678",
+            "--receipt", str(self.receipt), "--summary-path", str(self.summary),
+        ]
+
+    def test_receipt_and_single_summary_bind_success_to_the_checked_out_commit(self) -> None:
+        with (
+            patch.object(production.subprocess, "check_output", return_value=self.sha + "\n") as git,
+            patch.object(production, "attest", return_value=self.expected),
+            redirect_stdout(StringIO()),
+        ):
+            self.assertEqual(production.main(self.arguments), 0)
+
+        git.assert_called_once_with(
+            ["git", "rev-parse", "HEAD"], cwd=self.root, text=True, stderr=subprocess.PIPE
+        )
+        receipt = json.loads(self.receipt.read_text(encoding="utf-8"))
+        self.assertEqual(receipt["schema_version"], "production-attestation/1")
+        self.assertEqual(receipt["status"], "ATTESTED")
+        self.assertEqual(receipt["source_commit"], self.sha)
+        self.assertEqual(receipt["pages_run_id"], 1234)
+        self.assertEqual(receipt["attestation_run_id"], 5678)
+        self.assertEqual(receipt["file_count"], 1)
+        self.assertEqual(receipt["byte_count"], 123)
+        self.assertRegex(receipt["inventory_sha256"], r"^[a-f0-9]{64}$")
+        self.assertTrue(receipt["completed_at"].endswith("+00:00"))
+        summary = self.summary.read_text(encoding="utf-8")
+        self.assertEqual(summary.count("## Publication vérifiée"), 1)
+        self.assertIn(self.sha, summary)
+        self.assertIn("pas la validité scientifique", summary)
+
+    def test_checkout_at_a_newer_tip_is_rejected_before_any_network_call(self) -> None:
+        with (
+            patch.object(production.subprocess, "check_output", return_value="c" * 40 + "\n"),
+            patch.object(production, "attest") as attest,
+            redirect_stderr(StringIO()) as error,
+        ):
+            self.assertEqual(production.main(self.arguments), 1)
+        self.assertIn("ne correspond pas", error.getvalue())
+        attest.assert_not_called()
+        self.assertFalse(self.receipt.exists())
+        self.assertFalse(self.summary.exists())
+
+    def test_failed_remote_attestation_never_emits_a_success_receipt_or_summary(self) -> None:
+        with (
+            patch.object(production.subprocess, "check_output", return_value=self.sha),
+            patch.object(production, "attest", side_effect=production.AttestationError("divergence")),
+            redirect_stderr(StringIO()),
+        ):
+            self.assertEqual(production.main(self.arguments), 1)
+        self.assertFalse(self.receipt.exists())
+        self.assertFalse(self.summary.exists())
+
+    def test_existing_receipt_cannot_be_reused_as_fresh_evidence(self) -> None:
+        self.receipt.write_text("previous evidence", encoding="utf-8")
+        with patch.object(production, "attest") as attest, redirect_stderr(StringIO()):
+            self.assertEqual(production.main(self.arguments), 1)
+        attest.assert_not_called()
+        self.assertEqual(self.receipt.read_text(encoding="utf-8"), "previous evidence")
+
+    def test_invalid_or_missing_source_commit_is_rejected_before_network(self) -> None:
+        for source_commit in (None, "main", "A" * 40, "a" * 39, "a" * 40 + "\n"):
+            with self.subTest(source_commit=source_commit):
+                arguments = ["--receipt", str(self.receipt)]
+                if source_commit is not None:
+                    arguments.extend(["--source-commit", source_commit])
+                with patch.object(production, "attest") as attest, redirect_stderr(StringIO()):
+                    self.assertEqual(production.main(arguments), 1)
+                attest.assert_not_called()
+
+    def test_checkout_identity_failure_is_not_reported_as_a_valid_publication(self) -> None:
+        with (
+            patch.object(
+                production.subprocess, "check_output",
+                side_effect=subprocess.CalledProcessError(128, "git"),
+            ),
+            patch.object(production, "attest") as attest,
+            redirect_stderr(StringIO()),
+        ):
+            self.assertEqual(production.main(self.arguments), 1)
+        attest.assert_not_called()
+        self.assertFalse(self.receipt.exists())
+
+    def test_run_identifiers_are_numeric_or_absent_for_the_daily_audit(self) -> None:
+        self.assertIsNone(production._run_identifier("", "Pages"))
+        self.assertEqual(production._run_identifier("123", "Pages"), 123)
+        for invalid in ("0", "-1", "1\n", "1.5", "１２", "false"):
+            with self.subTest(invalid=invalid), self.assertRaises(production.AttestationError):
+                production._run_identifier(invalid, "Pages")
+
+    def test_receipt_requires_its_own_github_run_identity(self) -> None:
+        arguments = self.arguments.copy()
+        arguments[arguments.index("--attestation-run-id") + 1] = ""
+        with (
+            patch.object(production.subprocess, "check_output", return_value=self.sha),
+            patch.object(production, "attest") as attest,
+            redirect_stderr(StringIO()),
+        ):
+            self.assertEqual(production.main(arguments), 1)
+        attest.assert_not_called()
+        self.assertFalse(self.receipt.exists())
+
+    def test_inventory_digest_is_order_independent_and_changes_with_public_bytes(self) -> None:
+        other = production.ExpectedFile(
+            production.PurePosixPath("other.html"), "c" * 64, 42, "figure"
+        )
+        arguments = dict(
+            source_commit=self.sha, base_url="https://www.datapredict.org/",
+            pages_run_id=None, attestation_run_id=5678,
+        )
+        first = production.build_receipt((*self.expected, other), **arguments)
+        reverse = production.build_receipt((other, *self.expected), **arguments)
+        changed = production.build_receipt(self.expected, **arguments)
+        self.assertEqual(first["inventory_sha256"], reverse["inventory_sha256"])
+        self.assertNotEqual(first["inventory_sha256"], changed["inventory_sha256"])
+        self.assertIsNone(first["pages_run_id"])
+        self.assertEqual(first["base_url"], "https://www.datapredict.org")
 
 
 if __name__ == "__main__":
