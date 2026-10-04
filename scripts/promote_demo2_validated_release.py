@@ -524,11 +524,7 @@ def _merge_prepared_output(current: bytes, prepared: bytes, strategy: str) -> by
     if strategy == "manual":
         _reject_internal_text(_decode(prepared))
         try:
-            if (
-                live_refresh.manual_data_only_skeleton(current)
-                != live_refresh.manual_data_only_skeleton(prepared)
-            ):
-                raise _fail("DEMO2_PROMOTION_VISUAL_TEMPLATE_DIVERGED")
+            live_refresh.refresh_manual(current, prepared)
         except live_refresh.RefreshError as error:
             raise _fail("DEMO2_PROMOTION_VISUAL_TEMPLATE_DIVERGED") from error
         try:
