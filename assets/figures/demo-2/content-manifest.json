@@ -9,14 +9,14 @@
     {
       "path": "fissure-recente-meme-format.html",
       "role": "responsive_html_master",
-      "sha256": "7ab70ec45da3cf5c1122db59fd5513d9926d7b31d8b84a6f7587bb7c627d4123",
-      "size_bytes": 64265
+      "sha256": "faf9ca371a398e3f2f574cd2e412f68588f36a3655510874e408ee1cd7d8064b",
+      "size_bytes": 64321
     },
     {
       "path": "joint-dilatation-rendu-site.html",
       "role": "responsive_html_master",
-      "sha256": "8912eb72f4452bb3262ee6caadde00a12d03d9bda624d629afcf37115e55acb5",
-      "size_bytes": 40828
+      "sha256": "d9a5b20457cf1d2a19b07ef637fb852379e6483f987eabd8dd822ad266b751d5",
+      "size_bytes": 40884
     },
     {
       "path": "retaining-wall-sensor-source-values.html",
@@ -57,8 +57,8 @@
     {
       "path": "retaining-wall-sensor-processed-v2.html",
       "role": "responsive_html_master",
-      "sha256": "2ad029f27155f0a15d0634ebc017a66b76c6fb9d8321616313ea57150c368bb3",
-      "size_bytes": 15196018
+      "sha256": "18511f086cd938303fd92a8e3c2ba57d0a09e3cbbd2d2422a85b5a8b55d7bebe",
+      "size_bytes": 15201872
     }
   ],
   "manifest_version": 2
