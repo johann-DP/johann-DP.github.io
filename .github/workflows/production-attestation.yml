@@ -1,7 +1,11 @@
 name: Attestation de la production
+run-name: Attestation production · ${{ github.event.workflow_run.head_sha || github.sha }}
 
 on:
-  deployment_status:
+  workflow_run:
+    workflows: [pages-build-deployment]
+    types: [completed]
+    branches: [main]
   schedule:
     - cron: "17 05 * * *"
   workflow_dispatch:
@@ -17,25 +21,54 @@ jobs:
   attest:
     name: Comparer la production à l’arbre validé
     if: >-
-      github.event_name != 'deployment_status' ||
-      (github.event.deployment.environment == 'github-pages' &&
-      github.event.deployment_status.state == 'success')
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      ATTESTED_COMMIT: ${{ github.event.workflow_run.head_sha || github.sha }}
+      PAGES_RUN_ID: ${{ github.event.workflow_run.id || '' }}
 
     steps:
-      - name: Récupérer le dépôt
+      - name: Récupérer le code de contrôle actuel
         uses: actions/checkout@v7
         with:
+          ref: ${{ github.sha }}
+          path: attestation-runner
+          persist-credentials: false
+
+      - name: Récupérer les fichiers du déploiement à contrôler
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          path: deployed-site
           persist-credentials: false
 
       - name: Tester l’attestation hors réseau
-        run: python3 -m unittest discover -s tests -p 'test_attest_production.py'
+        working-directory: attestation-runner
+        run: python3 -m unittest discover -s tests -p 'test*attest*.py'
 
       - name: Attester les fichiers publiés
         run: >-
-          python3 scripts/attest_production.py
+          python3 attestation-runner/scripts/attest_production.py
+          --root "$GITHUB_WORKSPACE/deployed-site"
           --base-url https://www.datapredict.org
           --attempts 2
           --retry-delay-seconds 5
           --timeout-seconds 10
+          --source-commit "$ATTESTED_COMMIT"
+          --pages-run-id "$PAGES_RUN_ID"
+          --attestation-run-id "$GITHUB_RUN_ID"
+          --receipt "$RUNNER_TEMP/production-attestation.json"
+          --summary-path "$GITHUB_STEP_SUMMARY"
+
+      - name: Conserver la preuve de publication
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-attestation-${{ env.ATTESTED_COMMIT }}
+          path: ${{ runner.temp }}/production-attestation.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
