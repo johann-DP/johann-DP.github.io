@@ -2995,7 +2995,72 @@ def _manual_xy(trace: dict, *, daily: bool = False) -> list[datetime]:
     return dates
 
 
-def _normalise_manual_models(data: object, name: str, *, current: bool = False) -> object:
+def _validate_recent_model(values: list[float]) -> None:
+    """Reconstruct the declared family from curve values, never fit source data.
+
+    The producer evaluates level + slope * expm1(k*t)/k on daily labels,
+    with slope and k in [0,.05], linear k=0 and exponent clipping at 50.
+    Use separated increments in the guaranteed-unclipped prefix to avoid
+    cancellation from tiny adjacent differences, then check every ordinate.
+    """
+    if len(values) < 3:
+        raise RefreshError("REFRESH_MANUAL_EXPONENTIAL_SUPPORT_INVALID")
+    level = values[0]
+    if max(abs(value - level) for value in values) <= max(1e-8, 64 * math.ulp(level)):
+        return  # The producer explicitly permits a zero initial slope.
+    end = min(len(values) - 1, 1000)  # k <= .05: no clipping before day 1000.
+    spacing = max(1, min(end // 2, 100))
+    start = end - 2 * spacing
+    first = values[start + spacing] - values[start]
+    second = values[end] - values[start + spacing]
+    if first <= 0 or second <= 0:
+        raise RefreshError("REFRESH_MANUAL_EXPONENTIAL_DIVERGED")
+    curvature = math.log(second / first) / spacing
+    if not -1e-10 <= curvature <= 0.05 + 1e-10:
+        raise RefreshError("REFRESH_MANUAL_EXPONENTIAL_PARAMETER_INVALID")
+    curvature = min(0.05, max(0.0, curvature))
+    extent = values[end] - level
+    if curvature < 1e-10:
+        slope = extent / end
+        predictions = (level + slope * day for day in range(len(values)))
+    else:
+        slope = extent * curvature / math.expm1(curvature * end)
+        predictions = (
+            level + slope * math.expm1(min(curvature * day, 50.0)) / curvature
+            for day in range(len(values))
+        )
+    if not 0 <= slope <= 0.05 + 1e-10 or any(
+        not math.isclose(value, predicted, rel_tol=0,
+                         abs_tol=max(1e-8, 64 * max(math.ulp(value), math.ulp(predicted))))
+        for value, predicted in zip(values, predictions, strict=True)
+    ):
+        raise RefreshError("REFRESH_MANUAL_EXPONENTIAL_DIVERGED")
+
+
+def _validate_joint_model(model: dict, dates: list[datetime], geometry: tuple) -> None:
+    """Bind each rounded ordinate to the exact harmonic geometry already shown."""
+    p0, p1 = geometry[0][:2]
+    period = (p1 - p0).total_seconds() / 86400
+    base, peak = geometry[3][2:]
+    amplitude = peak - base
+    if not 28 <= period <= 493.5 or not dates[0] <= p0 < p1 <= dates[-1]:
+        raise RefreshError("REFRESH_MANUAL_PERIODIC_DOMAIN_INVALID")
+    days = [(date - p1).total_seconds() / 86400 for date in dates]
+    anchor = max(range(len(days)), key=lambda index: abs(days[index]))
+    if days[anchor] == 0:
+        raise RefreshError("REFRESH_MANUAL_PERIODIC_DOMAIN_INVALID")
+    harmonic = [base + amplitude * math.cos(2 * math.pi * day / period) for day in days]
+    slope = (model["y"][anchor] - harmonic[anchor]) / days[anchor]
+    # Producer rounding contributes <=5e-8 per value and at most the same
+    # uncertainty through the distant anchor. Civil datetime precision is 1 us.
+    tolerance = 1.1e-7
+    if any(not math.isclose(value, level + slope * day, rel_tol=0, abs_tol=tolerance)
+           for value, level, day in zip(model["y"], harmonic, days, strict=True)):
+        raise RefreshError("REFRESH_MANUAL_PERIODIC_DIVERGED")
+
+
+def _normalise_manual_models(data: object, name: str, *, current: bool = False,
+                             joint_geometry: tuple | None = None) -> object:
     normalised = _normalise_manual_trace(data, name)
     source = next(item for item in data if item.get("name") == name)
     observed = _manual_xy(source)
@@ -3015,11 +3080,10 @@ def _normalise_manual_models(data: object, name: str, *, current: bool = False) 
         raise RefreshError("REFRESH_MANUAL_MODEL_DOMAIN_INVALID")
     if current and dates[-1] != observed[-1]:
         raise RefreshError("REFRESH_MANUAL_MODEL_STALE")
-    normalised[index]["x"] = ["__REFITTED_MODEL_DATES__"]
-    normalised[index]["y"] = ["__REFITTED_MODEL_VALUES__"]
     if name == "Mesures récentes":
         if len(data) != 14 or index != 3:
             raise RefreshError("REFRESH_MANUAL_MODEL_TRACE_INVALID")
+        _validate_recent_model(model["y"])
         zoom = data[13]
         if (zoom.get("mode"), zoom.get("xaxis"), zoom.get("yaxis")) != ("lines", "x2", "y2"):
             raise RefreshError("REFRESH_MANUAL_MODEL_ZOOM_INVALID")
@@ -3031,8 +3095,12 @@ def _normalise_manual_models(data: object, name: str, *, current: bool = False) 
         ):
             raise RefreshError("REFRESH_MANUAL_MODEL_ZOOM_DIVERGED")
         normalised[13]["y"] = ["__REFITTED_MODEL_VALUES__"]
-    elif len(data) != 2 or index != 1:
-        raise RefreshError("REFRESH_MANUAL_MODEL_TRACE_INVALID")
+    else:
+        if len(data) != 2 or index != 1 or joint_geometry is None:
+            raise RefreshError("REFRESH_MANUAL_MODEL_TRACE_INVALID")
+        _validate_joint_model(model, dates, joint_geometry)
+    normalised[index]["x"] = ["__REFITTED_MODEL_DATES__"]
+    normalised[index]["y"] = ["__REFITTED_MODEL_VALUES__"]
     return normalised
 
 
@@ -3256,9 +3324,7 @@ def manual_data_only_skeleton(payload: bytes, *, current_models: bool = False) -
             raise RefreshError("REFRESH_MANUAL_PAYLOAD_INVALID")
         normalised = json.loads(json.dumps(value))
         data, source_name = value.get("data"), "Mesures manuelles"
-        normalised["data"] = _normalise_manual_models(
-            data, source_name, current=current_models
-        )
+        _normalise_manual_trace(data, source_name)
         _manual_vertical_state(data, list(value["layouts"].values()), padded=current_models)
         has_model = any(item.get("name") == "Ajustement périodique" for item in data)
         for mode, layout in normalised["layouts"].items():
@@ -3270,6 +3336,10 @@ def manual_data_only_skeleton(payload: bytes, *, current_models: bool = False) -
             else:
                 layout = _normalise_manual_layout(layout)
             normalised["layouts"][mode] = layout
+        normalised["data"] = _normalise_manual_models(
+            data, source_name, current=current_models,
+            joint_geometry=joint_signature[2] if joint_signature is not None else None,
+        )
         replacements = [(start, end, _canonical_json(normalised))]
     else:
         raise RefreshError("REFRESH_MANUAL_TEMPLATE_UNEXPECTED")

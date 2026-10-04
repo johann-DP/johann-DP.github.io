@@ -58,25 +58,36 @@ def expand_ranges(payload: bytes) -> bytes:
     return change_layouts(payload, expand)
 
 
+def recent_ordinate(day: int, *, slope: float = 0.0001, curvature: float = 0.004) -> float:
+    return 31 + (slope * day if curvature < 1e-10 else slope * math.expm1(min(curvature * day, 50)) / curvature)
+
+
+def joint_ordinate(date: str, *, period: float = 368.2, amplitude: float = 0.725,
+                   phase_days: float = 0, slope: float = 0.0001) -> float:
+    days = (datetime.fromisoformat(date) - datetime(2026, 1, 9)).total_seconds() / 86400
+    return round(90.3 + slope * days + amplitude * math.cos(2 * math.pi * (days - phase_days) / period), 7)
+
+
 def recent_candidate() -> bytes:
     def refit(data):
         data[0]["x"].append("2026-10-04T00:00:00")
         data[0]["y"].append(31.23)
         data[3]["x"] = daily("2025-12-28", "2026-10-04")
-        data[3]["y"] = [31 + index / 10000 for index in range(len(data[3]["x"]))]
+        data[3]["y"] = [recent_ordinate(index) for index in range(len(data[3]["x"]))]
         lookup = dict(zip(data[3]["x"], data[3]["y"]))
         data[13]["y"] = [lookup[date] for date in data[13]["x"]]
     return expand_ranges(assignment(RECENT, b"data", refit).replace(b"137 mesures", b"138 mesures"))
 
 
-def joint_candidate() -> bytes:
+def joint_candidate(template: bytes | None = None, *, append: bool = True) -> bytes:
     def refit(value):
         data = value["data"]
-        data[0]["x"].append("2026-10-04T00:00:00")
-        data[0]["y"].append(90.3)
-        data[1]["x"] = daily("2023-12-03", "2026-10-04")
-        data[1]["y"] = [90.3 + 0.725 * math.cos(index * 2 * math.pi / 368.2) for index in range(len(data[1]["x"]))]
-        last = datetime(2026, 10, 4)
+        if append:
+            data[0]["x"].append("2026-10-04T00:00:00")
+            data[0]["y"].append(90.3)
+        data[1]["x"] = daily(data[0]["x"][0], data[0]["x"][-1])
+        data[1]["y"] = [joint_ordinate(date) for date in data[1]["x"]]
+        last = datetime(2026, 1, 9)
         first = last - timedelta(days=368.2)
         base, peak = 90.3, 91.025
         for layout in value["layouts"].values():
@@ -96,7 +107,9 @@ def joint_candidate() -> bytes:
                 text = text[:match.start(index)] + numbers[index - 1] + text[match.end(index):]
             annotations[2]["text"] = text
             annotations[3]["text"] = re.sub(r"\b[0-9]+/500 réplications", "487/500 réplications", annotations[3]["text"])
-    candidate = assignment(JOINT, b"payload", refit).replace(b"137 mesures", b"138 mesures")
+    candidate = assignment(JOINT if template is None else template, b"payload", refit)
+    if append:
+        candidate = candidate.replace(b"137 mesures", b"138 mesures")
     candidate = refresh._JOINT_ARIA.sub(rb"\g<1>368,2\g<3>0,725\g<5>", candidate)
     return expand_ranges(candidate)
 
@@ -136,6 +149,10 @@ def fixture_master(payload: bytes, *, joint: bool = False) -> bytes:
         model["x"], model["y"] = map(list, zip(*model_points))
     payload = assignment(payload, variable, trim)
     payload = payload.replace(f"{old_count} mesures".encode(), f"{kept_count} mesures".encode())
+    if joint:
+        # Numeric parameters are test inputs, not an accidental dependency on
+        # whichever periodic fit happens to be published when CI runs.
+        payload = joint_candidate(payload, append=False)
     def freeze_ranges(layout):
         layout["yaxis"]["range"] = [89.0, 92.05] if joint else [29.54, 30.84]
         if not joint:
@@ -148,6 +165,99 @@ JOINT = fixture_master(JOINT, joint=True)
 
 
 class ManualModelRefitTests(unittest.TestCase):
+    def test_rejects_shuffled_model_values_even_with_valid_source_marker(self):
+        for original, candidate, variable, index, joint in (
+            (RECENT, recent_candidate(), b"data", 3, False),
+            (JOINT, joint_candidate(), b"payload", 1, True),
+        ):
+            def shuffle(value):
+                trace = (value["data"] if joint else value)[index]
+                trace["y"][110], trace["y"][150] = trace["y"][150], trace["y"][110]
+            for with_marker in (False, True):
+                with self.subTest(joint=joint, marker=with_marker):
+                    payload = marker(candidate, joint=joint) if with_marker else candidate
+                    corrupted = assignment(payload, variable, shuffle)
+                    with self.assertRaisesRegex(refresh.RefreshError, "EXPONENTIAL|PERIODIC"):
+                        refresh.refresh_manual(original, corrupted)
+
+    def test_periodic_ordinates_must_match_declared_parameters_and_linear_trend(self):
+        for parameters in ({"period": 350}, {"amplitude": 0.7}, {"phase_days": 10}):
+            def change(value):
+                trace = value["data"][1]
+                trace["y"] = [joint_ordinate(date, **parameters) for date in trace["x"]]
+            with self.subTest(parameters=parameters):
+                with self.assertRaisesRegex(refresh.RefreshError, "PERIODIC_DIVERGED"):
+                    refresh.refresh_manual(JOINT, assignment(joint_candidate(), b"payload", change))
+        def nonlinear(value):
+            trace = value["data"][1]
+            trace["y"] = [number + 1e-7 * index * index for index, number in enumerate(trace["y"])]
+        with self.assertRaisesRegex(refresh.RefreshError, "PERIODIC_DIVERGED"):
+            refresh.refresh_manual(JOINT, assignment(joint_candidate(), b"payload", nonlinear))
+
+    def test_periodic_rounding_and_positive_negative_or_zero_trend_are_supported(self):
+        for slope in (-0.002, 0, 0.003):
+            def change(value):
+                trace = value["data"][1]
+                trace["y"] = [joint_ordinate(date, slope=slope) for date in trace["x"]]
+            candidate = expand_ranges(assignment(joint_candidate(), b"payload", change))
+            with self.subTest(slope=slope):
+                self.assertEqual(refresh.refresh_manual(JOINT, candidate), candidate)
+
+    def test_periodic_shape_peaks_must_remain_inside_the_plotted_domain(self):
+        def outside(value):
+            for layout in value["layouts"].values():
+                shapes, annotations = layout["shapes"], layout["annotations"]
+                delta = timedelta(days=3 * 368.2)
+                vertical_delta = 0.0001 * 3 * 368.2
+                for index, shape in enumerate(shapes):
+                    for field in ("x0", "x1"):
+                        shape[field] = (datetime.fromisoformat(shape[field]) + delta).isoformat()
+                    if index >= 3:
+                        shape["y0"] += vertical_delta
+                        shape["y1"] += vertical_delta
+                for index in (0, 1):
+                    annotations[index]["x"] = (datetime.fromisoformat(annotations[index]["x"]) + delta).isoformat()
+                annotations[1]["y"] += vertical_delta
+        with self.assertRaisesRegex(refresh.RefreshError, "PERIODIC_DOMAIN_INVALID"):
+            refresh.refresh_manual(JOINT, assignment(joint_candidate(), b"payload", outside))
+
+    def test_exponential_constant_linear_near_linear_and_curved_limits(self):
+        for slope, curvature in ((0, 0.05), (0.0001, 0), (0.0001, 1e-12),
+                                 (0.0001, 1e-9), (0.0001, 0.004), (1e-8, 0.05), (0.05, 0)):
+            with self.subTest(slope=slope, curvature=curvature):
+                refresh._validate_recent_model([recent_ordinate(day, slope=slope, curvature=curvature) for day in range(281)])
+        for slope, curvature in ((-0.0001, 0.004), (0.051, 0), (0.0001, -0.001), (0.0001, 0.051)):
+            with self.subTest(slope=slope, curvature=curvature):
+                values = [31 + (slope * day if curvature == 0 else slope * math.expm1(min(curvature * day, 50)) / curvature) for day in range(281)]
+                with self.assertRaisesRegex(refresh.RefreshError, "EXPONENTIAL"):
+                    refresh._validate_recent_model(values)
+
+    def test_exponential_local_precision_does_not_hide_early_corruption_with_clipping(self):
+        values = [recent_ordinate(day, slope=0.05, curvature=0.05) for day in range(1201)]
+        refresh._validate_recent_model(values)
+        self.assertGreater(values[-1], 1e21)
+        self.assertEqual(values[1000], values[-1])
+        for mode in ("swap", "perturb"):
+            corrupted = list(values)
+            if mode == "swap":
+                corrupted[1], corrupted[2] = corrupted[2], corrupted[1]
+            else:
+                corrupted[1] += 1e-5
+            with self.subTest(mode=mode):
+                with self.assertRaisesRegex(refresh.RefreshError, "EXPONENTIAL_DIVERGED"):
+                    refresh._validate_recent_model(corrupted)
+
+    def test_exponential_every_point_is_checked_even_for_smooth_increasing_corruption(self):
+        def change(data):
+            trace = data[3]
+            final = len(trace["y"]) - 1
+            trace["y"] = [value + 0.001 * (index / final) * (1 - index / final) for index, value in enumerate(trace["y"])]
+            lookup = dict(zip(trace["x"], trace["y"]))
+            data[13]["y"] = [lookup[date] for date in data[13]["x"]]
+            self.assertTrue(all(right > left for left, right in zip(trace["y"], trace["y"][1:])))
+        with self.assertRaisesRegex(refresh.RefreshError, "EXPONENTIAL_DIVERGED"):
+            refresh.refresh_manual(RECENT, assignment(recent_candidate(), b"data", change))
+
     def test_fixture_ignores_later_published_points_markers_parameters_and_ranges(self):
         for joint in (False, True):
             for later_days in (0, 7, 14):
@@ -159,7 +269,8 @@ class ManualModelRefitTests(unittest.TestCase):
                     model = data[1 if joint else 3]
                     last_date = datetime.fromisoformat(model["x"][-1])
                     model["x"].extend((last_date + timedelta(days=index + 1)).isoformat() for index in range(later_days))
-                    model["y"].extend([model["y"][-1]] * later_days)
+                    model["y"] = ([joint_ordinate(date) for date in model["x"]] if joint else
+                                  [recent_ordinate(index) for index in range(len(model["x"]))])
                 live = marker(assignment(live, b"payload" if joint else b"data", later), joint=joint)
                 with self.subTest(joint=joint, later_days=later_days):
                     baseline = fixture_master(live, joint=joint)
