@@ -178,7 +178,17 @@ limité au compte concerné, avec les droits d’écriture `Workers Scripts` et
 
 Les pushes sur `main` et `codex/**`, ainsi que les PR vers `main`, testent le
 Worker sans le déployer. Le workflow `Déploiement du compteur` ne s’exécute que
-manuellement sur `main`. Le collecteur public est
+manuellement sur `main`. Par défaut, il conserve le mot de passe Cloudflare
+existant : le secret GitHub n’est ni chargé pour la vérification privée, ni
+réappliqué. La case `configure_admin_password`, désactivée par défaut, permet
+uniquement sur demande explicite de réappliquer le secret GitHub
+`COUNTER_ADMIN_PASSWORD` à Cloudflare ; cette action modifie le mot de passe
+utilisable pour `/stats` et vérifie alors l’accès authentifié. La valeur du
+secret ne peut pas être relue depuis GitHub. Pour récupérer l’accès, le
+propriétaire saisit lui-même un nouveau mot de passe dans l’interface sécurisée
+GitHub de l’environnement `production`, puis autorise cette réapplication.
+Les contrôles de santé et de refus d’accès sans authentification restent
+obligatoires dans les deux modes. Le collecteur public est
 `https://datapredict-audience-counter.johann-grisel.workers.dev/hit` et le
 tableau privé est exposé sous `/stats`.
 

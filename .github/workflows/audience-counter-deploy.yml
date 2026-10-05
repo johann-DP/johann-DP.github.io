@@ -2,6 +2,12 @@ name: Déploiement du compteur
 
 on:
   workflow_dispatch:
+    inputs:
+      configure_admin_password:
+        description: "Réappliquer le mot de passe GitHub (réinitialise l’accès privé)"
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -38,12 +44,14 @@ jobs:
           cache: npm
           cache-dependency-path: analytics-counter/package-lock.json
 
-      - name: Vérifier les secrets de déploiement
+      - name: Vérifier le jeton de déploiement
+        run: test -n "$CLOUDFLARE_API_TOKEN"
+
+      - name: Vérifier le mot de passe avant publication
+        if: ${{ inputs.configure_admin_password == true }}
         env:
           COUNTER_ADMIN_PASSWORD: ${{ secrets.COUNTER_ADMIN_PASSWORD }}
-        run: |
-          test -n "$CLOUDFLARE_API_TOKEN"
-          test "${#COUNTER_ADMIN_PASSWORD}" -ge 32
+        run: test "${#COUNTER_ADMIN_PASSWORD}" -ge 32
 
       - name: Installer et tester
         run: |
@@ -62,6 +70,7 @@ jobs:
         run: npx wrangler deploy --config wrangler.toml
 
       - name: Configurer le mot de passe privé
+        if: ${{ inputs.configure_admin_password == true }}
         env:
           COUNTER_ADMIN_PASSWORD: ${{ secrets.COUNTER_ADMIN_PASSWORD }}
         run: |
@@ -99,7 +108,8 @@ jobs:
       - name: Vérifier le service déployé
         working-directory: .
         env:
-          COUNTER_ADMIN_PASSWORD: ${{ secrets.COUNTER_ADMIN_PASSWORD }}
+          COUNTER_ADMIN_PASSWORD: ${{ inputs.configure_admin_password && secrets.COUNTER_ADMIN_PASSWORD || '' }}
+          CONFIGURE_ADMIN_PASSWORD: ${{ inputs.configure_admin_password }}
           COUNTER_WORKER_URL: ${{ steps.worker.outputs.url }}
         run: |
           [[ "$COUNTER_WORKER_URL" =~ ^https://[a-z0-9.-]+\.workers\.dev/?$ ]]
@@ -117,6 +127,10 @@ jobs:
             const refused = await fetch(`${baseUrl}/stats`);
             if (refused.status !== 401) {
               throw new Error(`stats non protégées : HTTP ${refused.status}`);
+            }
+
+            if (process.env.CONFIGURE_ADMIN_PASSWORD !== "true") {
+              return;
             }
 
             const credentials = Buffer.from(
