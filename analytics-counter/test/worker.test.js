@@ -280,6 +280,8 @@ test("refuse les campagnes incomplètes, libres ou malformées avant toute écri
     campaign({ name: "dp-<script>" }),
     campaign({ name: "dp-user@example.org" }),
     campaign({ name: "dp-a?utm_content=user" }),
+    campaign({ name: "dp-a" }),
+    campaign({ name: `dp-${"a".repeat(61)}` }),
     campaign({ name: `dp-${"a".repeat(62)}` }),
     { ...campaign(), utm_content: "user-id" },
     { ...campaign(), url: "https://datapredict.org/?email=user@example.org" },
@@ -295,14 +297,34 @@ test("refuse les campagnes incomplètes, libres ou malformées avant toute écri
   }
 });
 
-test("accepte les bornes de longueur des slugs et les catégories autorisées", async () => {
+test("refuse les identifiants et les campagnes non approuvées même avec un slug valide", async () => {
+  for (const name of ["dp-user-12345", "dp-johann-grisel", "dp-new-unapproved-campaign"]) {
+    assert.match(name, /^dp-[a-z0-9]+(?:-[a-z0-9]+)*$/);
+    const env = environment();
+    const response = await worker.fetch(hitRequest(payload({ campaign: campaign({ name }) })), env);
+    assert.equal(response.status, 400, `campagne non approuvée acceptée : ${name}`);
+    assert.equal(env.COUNTER_DB.batches.length, 0);
+  }
+});
+
+test("accepte uniquement les dix campagnes publiques approuvées et les catégories autorisées", async () => {
   const acceptedCampaigns = [
-    campaign({ name: "dp-a" }),
-    campaign({ name: `dp-${"a".repeat(61)}` }),
-    campaign({ source: "google", medium: "organic", name: "dp-seo" }),
-    campaign({ source: "bing", medium: "cpc", name: "dp-seo" }),
-    campaign({ source: "newsletter", medium: "email", name: "dp-pmo-data" }),
-    campaign({ source: "partner", medium: "referral", name: "dp-event-2026" }),
+    ...[
+      "dp-datapredict",
+      "dp-offres",
+      "dp-gouvernance-run",
+      "dp-cas-clients",
+      "dp-demo-fissures",
+      "dp-demo-weather",
+      "dp-nerivane",
+      "dp-contact",
+      "dp-articles",
+      "dp-newsletter",
+    ].map((name) => campaign({ name })),
+    campaign({ source: "google", medium: "organic", name: "dp-articles" }),
+    campaign({ source: "bing", medium: "cpc", name: "dp-offres" }),
+    campaign({ source: "newsletter", medium: "email", name: "dp-newsletter" }),
+    campaign({ source: "partner", medium: "referral", name: "dp-datapredict" }),
   ];
   for (const acceptedCampaign of acceptedCampaigns) {
     const env = environment();
