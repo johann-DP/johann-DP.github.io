@@ -23,6 +23,12 @@ class FakeStatement {
   }
 
   async first() {
+    if (this.sql.includes("SELECT 1 FROM daily_campaigns")) {
+      if (this.database.campaignTableError) {
+        throw new Error("table des campagnes absente");
+      }
+      return null;
+    }
     if (this.sql.includes("SELECT 1 FROM daily_totals")) {
       if (this.database.healthError) {
         throw new Error("base indisponible");
@@ -81,6 +87,10 @@ class FakeStatement {
         ],
       };
     }
+    if (this.sql.includes("FROM daily_campaigns")) {
+      this.database.campaignQueryParameters = this.parameters;
+      return { results: this.database.campaigns };
+    }
     return { results: [] };
   }
 }
@@ -89,6 +99,8 @@ class FakeDatabase {
   constructor() {
     this.batches = [];
     this.healthError = false;
+    this.campaignTableError = false;
+    this.campaigns = [];
   }
 
   prepare(sql) {
@@ -124,6 +136,13 @@ const payload = (overrides = {}) => ({
   visit: true,
   source: "direct",
   device: "desktop",
+  ...overrides,
+});
+
+const campaign = (overrides = {}) => ({
+  source: "linkedin",
+  medium: "social",
+  name: "dp-gouvernance-run",
   ...overrides,
 });
 
@@ -199,6 +218,128 @@ test("enregistre une page vue et une visite dans des agrégats séparés", async
   assert.deepEqual(statements[2].parameters.slice(1), ["source", "linkedin"]);
   assert.deepEqual(statements[3].parameters.slice(1), ["device", "mobile"]);
   assert.deepEqual(statements[4].parameters.slice(1), ["country", "FR"]);
+});
+
+test("ajoute une campagne valide à la première page et préserve les agrégats existants", async () => {
+  const env = environment();
+  const response = await worker.fetch(
+    hitRequest(payload({ source: "linkedin", campaign: campaign() })),
+    env,
+  );
+
+  assert.equal(response.status, 204);
+  const statements = env.COUNTER_DB.batches[0];
+  assert.equal(statements.length, 6);
+  assert.deepEqual(statements[0].parameters.slice(1), [1, 1, 0, 0]);
+  assert.deepEqual(statements[1].parameters.slice(1), ["/", 1, 1, 0, 0]);
+  assert.match(statements[5].sql, /INSERT INTO daily_campaigns/);
+  assert.deepEqual(statements[5].parameters.slice(1), [
+    "linkedin", "social", "dp-gouvernance-run",
+  ]);
+});
+
+test("n’ajoute pas de campagne sur les pages suivantes ou les signaux de lecture", async () => {
+  for (const overrides of [
+    { event: "pageview", visit: false },
+    { event: "engaged_30s", visit: false },
+    { event: "scroll_75", visit: false },
+    { event: "engaged_30s", visit: true },
+    { event: "scroll_75", visit: true },
+  ]) {
+    const env = environment();
+    const response = await worker.fetch(
+      hitRequest(payload({ ...overrides, campaign: campaign() })),
+      env,
+    );
+    assert.equal(response.status, 204);
+    assert.equal(env.COUNTER_DB.batches[0].length, 2);
+    assert.ok(env.COUNTER_DB.batches[0].every((statement) => (
+      !statement.sql.includes("daily_campaigns")
+    )));
+  }
+});
+
+test("refuse les campagnes incomplètes, libres ou malformées avant toute écriture", async () => {
+  const incomplete = campaign();
+  delete incomplete.medium;
+  const invalidCampaigns = [
+    null,
+    [],
+    "dp-gouvernance-run",
+    {},
+    incomplete,
+    campaign({ source: "unknown" }),
+    campaign({ source: "LinkedIn" }),
+    campaign({ medium: "unknown" }),
+    campaign({ name: null }),
+    campaign({ name: "dp-" }),
+    campaign({ name: "gouvernance-run" }),
+    campaign({ name: "dp-Gouvernance" }),
+    campaign({ name: "dp-trailing-" }),
+    campaign({ name: "dp-double--hyphen" }),
+    campaign({ name: "dp-<script>" }),
+    campaign({ name: "dp-user@example.org" }),
+    campaign({ name: "dp-a?utm_content=user" }),
+    campaign({ name: `dp-${"a".repeat(62)}` }),
+    { ...campaign(), utm_content: "user-id" },
+    { ...campaign(), url: "https://datapredict.org/?email=user@example.org" },
+  ];
+  for (const invalidCampaign of invalidCampaigns) {
+    const env = environment();
+    const response = await worker.fetch(
+      hitRequest(payload({ campaign: invalidCampaign })),
+      env,
+    );
+    assert.equal(response.status, 400, JSON.stringify(invalidCampaign));
+    assert.equal(env.COUNTER_DB.batches.length, 0);
+  }
+});
+
+test("accepte les bornes de longueur des slugs et les catégories autorisées", async () => {
+  const acceptedCampaigns = [
+    campaign({ name: "dp-a" }),
+    campaign({ name: `dp-${"a".repeat(61)}` }),
+    campaign({ source: "google", medium: "organic", name: "dp-seo" }),
+    campaign({ source: "bing", medium: "cpc", name: "dp-seo" }),
+    campaign({ source: "newsletter", medium: "email", name: "dp-pmo-data" }),
+    campaign({ source: "partner", medium: "referral", name: "dp-event-2026" }),
+  ];
+  for (const acceptedCampaign of acceptedCampaigns) {
+    const env = environment();
+    const response = await worker.fetch(
+      hitRequest(payload({
+        page: "/demonstrations/nerivane-distribution.html",
+        campaign: acceptedCampaign,
+      })),
+      env,
+    );
+    assert.equal(response.status, 204, JSON.stringify(acceptedCampaign));
+    assert.deepEqual(env.COUNTER_DB.batches[0][5].parameters.slice(1), [
+      acceptedCampaign.source, acceptedCampaign.medium, acceptedCampaign.name,
+    ]);
+  }
+});
+
+test("maintient une taille de corps bornée et un payload fermé", async () => {
+  const oversizedEnv = environment();
+  const oversized = await worker.fetch(hitRequest({ padding: "a".repeat(384) }), oversizedEnv);
+  assert.equal(oversized.status, 413);
+  assert.equal(oversizedEnv.COUNTER_DB.batches.length, 0);
+
+  const extraEnv = environment();
+  const extra = await worker.fetch(
+    hitRequest(payload({ campaign: campaign(), utm_term: "person" })),
+    extraEnv,
+  );
+  assert.equal(extra.status, 400);
+  assert.equal(extraEnv.COUNTER_DB.batches.length, 0);
+
+  const missing = payload({ campaign: campaign() });
+  delete missing.visit;
+  const missingEnv = environment();
+  const refused = await worker.fetch(hitRequest(missing), missingEnv);
+  assert.equal(refused.status, 400);
+  assert.equal(missingEnv.COUNTER_DB.batches.length, 0);
 });
 
 test("enregistre la démonstration Ormévia comme page publique", async () => {
@@ -390,6 +531,66 @@ test("refuse un tableau dont la date de début de collecte est absente", async (
   assert.equal(response.status, 503);
 });
 
+test("rend les campagnes sur trente jours, arrondit, masque les petits effectifs et échappe les libellés", async () => {
+  const env = environment();
+  env.COUNTER_DB.campaigns = [{
+    source: "linkedin",
+    medium: "social",
+    campaign: "dp-gouvernance-run",
+    count: 23,
+  }, {
+    source: "linkedin",
+    medium: "social",
+    campaign: "dp-small-campaign",
+    count: 4,
+  }, {
+    source: "<script>source</script>",
+    medium: '"support"',
+    campaign: "<img src=x onerror=alert(1)>",
+    count: 12,
+  }];
+  const response = await worker.fetch(
+    new Request("https://counter.example/stats", {
+      headers: { Authorization: basicAuth("datapredict", "test-password") },
+    }),
+    env,
+  );
+  const html = await response.text();
+  assert.equal(response.status, 200);
+  assert.match(html, /<section id="campaigns">/);
+  const section = html.match(/<h2>Campagnes — visites estimées sur 30 jours<\/h2>[\s\S]*?<\/section>/);
+  assert.ok(section);
+  assert.match(section[0], /dp-gouvernance-run/);
+  assert.match(section[0], /<td>LinkedIn<\/td>/);
+  assert.match(section[0], /<td>Réseau social<\/td>/);
+  assert.match(section[0], /<td>20<\/td>/);
+  assert.doesNotMatch(section[0], /<td>23<\/td>|dp-small-campaign/);
+  assert.match(section[0], /Effectif inférieur à 5 — valeur masquée/);
+  assert.match(section[0], /&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.match(section[0], /&lt;script&gt;source&lt;\/script&gt;/);
+  assert.match(section[0], /&quot;support&quot;/);
+  assert.doesNotMatch(section[0], /<img|<script/);
+  assert.match(html, /sans reconstitution des visites antérieures/);
+  assert.match(html, /valeurs sont approximatives, arrondies à la dizaine/);
+  const [from, to] = env.COUNTER_DB.campaignQueryParameters;
+  assert.equal(shiftDays(from, 29), to);
+});
+
+test("rend une campagne vide sans inventer de visites historiques", async () => {
+  const env = environment();
+  const response = await worker.fetch(
+    new Request("https://counter.example/stats", {
+      headers: { Authorization: basicAuth("datapredict", "test-password") },
+    }),
+    env,
+  );
+  const html = await response.text();
+  assert.equal(response.status, 200);
+  const section = html.match(/<h2>Campagnes — visites estimées sur 30 jours<\/h2>[\s\S]*?<\/section>/);
+  assert.ok(section);
+  assert.match(section[0], /colspan="4">Aucune donnée/);
+});
+
 test("contrôle réellement la disponibilité de la base", async () => {
   const env = environment();
   const available = await worker.fetch(
@@ -404,13 +605,29 @@ test("contrôle réellement la disponibilité de la base", async () => {
     env,
   );
   assert.equal(unavailable.status, 503);
+
+  env.COUNTER_DB.healthError = false;
+  env.COUNTER_DB.campaignTableError = true;
+  const migrationMissing = await worker.fetch(
+    new Request("https://counter.example/health"),
+    env,
+  );
+  assert.equal(migrationMissing.status, 503);
 });
 
-test("purge les trois agrégats antérieurs à vingt-quatre mois", async () => {
+test("purge les quatre agrégats antérieurs à vingt-quatre mois", async () => {
   const env = environment();
   await worker.scheduled({}, env);
   assert.equal(env.COUNTER_DB.batches.length, 1);
-  assert.equal(env.COUNTER_DB.batches[0].length, 3);
+  assert.equal(env.COUNTER_DB.batches[0].length, 4);
+  assert.deepEqual(env.COUNTER_DB.batches[0].map((statement) => statement.sql), [
+    "DELETE FROM daily_totals WHERE day < ?1",
+    "DELETE FROM daily_pages WHERE day < ?1",
+    "DELETE FROM daily_dimensions WHERE day < ?1",
+    "DELETE FROM daily_campaigns WHERE day < ?1",
+  ]);
+  const cutoffs = new Set(env.COUNTER_DB.batches[0].map((statement) => statement.parameters[0]));
+  assert.equal(cutoffs.size, 1);
   for (const statement of env.COUNTER_DB.batches[0]) {
     assert.match(statement.parameters[0], /^\d{4}-\d{2}-\d{2}$/);
   }
