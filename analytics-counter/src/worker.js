@@ -48,6 +48,18 @@ const PAYLOAD_KEYS = ["device", "event", "page", "source", "visit"];
 const CAMPAIGN_KEYS = ["medium", "name", "source"];
 const CAMPAIGN_SOURCES = new Set(Object.keys(CAMPAIGN_SOURCE_LABELS));
 const CAMPAIGN_MEDIA = new Set(Object.keys(CAMPAIGN_MEDIUM_LABELS));
+const CAMPAIGN_NAMES = new Set([
+  "dp-datapredict",
+  "dp-offres",
+  "dp-gouvernance-run",
+  "dp-cas-clients",
+  "dp-demo-fissures",
+  "dp-demo-weather",
+  "dp-nerivane",
+  "dp-contact",
+  "dp-articles",
+  "dp-newsletter",
+]);
 
 const UPSERT_DAILY_TOTAL = `
   INSERT INTO daily_totals (day, page_views, visits, engaged_30s, scroll_75)
@@ -628,6 +640,7 @@ function isValidCampaign(campaign) {
     && CAMPAIGN_SOURCES.has(campaign.source)
     && CAMPAIGN_MEDIA.has(campaign.medium)
     && typeof campaign.name === "string"
+    && CAMPAIGN_NAMES.has(campaign.name)
     && campaign.name.length >= 4
     && campaign.name.length <= 64
     && /^dp-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(campaign.name);

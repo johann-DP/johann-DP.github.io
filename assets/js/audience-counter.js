@@ -114,6 +114,11 @@
     partner: "other-site",
   });
   const campaignMedia = new Set(["social", "organic", "cpc", "email", "referral"]);
+  const campaignNames = new Set([
+    "dp-datapredict", "dp-offres", "dp-gouvernance-run", "dp-cas-clients",
+    "dp-demo-fissures", "dp-demo-weather", "dp-nerivane", "dp-contact",
+    "dp-articles", "dp-newsletter",
+  ]);
   const readCampaign = () => {
     const parameters = new URL(location.href).searchParams;
     const keys = ["utm_source", "utm_medium", "utm_campaign"];
@@ -124,9 +129,7 @@
     if (
       !Object.hasOwn(campaignSources, source)
       || !campaignMedia.has(medium)
-      || name.length < 4
-      || name.length > 64
-      || !/^dp-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name)
+      || !campaignNames.has(name)
     ) {
       return null;
     }

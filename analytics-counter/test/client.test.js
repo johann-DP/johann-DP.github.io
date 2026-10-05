@@ -99,13 +99,14 @@ test("une campagne LinkedIn valide attribue une visite sans URL ni identifiant",
 test("les paramètres inconnus, personnels ou incomplets n’empêchent pas une page vue", () => {
   for (const query of [
     "utm_source=linkedin&utm_medium=social",
-    "utm_source=unknown&utm_medium=social&utm_campaign=dp-test",
-    "utm_source=linkedin&utm_medium=unknown&utm_campaign=dp-test",
+    "utm_source=unknown&utm_medium=social&utm_campaign=dp-datapredict",
+    "utm_source=linkedin&utm_medium=unknown&utm_campaign=dp-datapredict",
     "utm_source=linkedin&utm_medium=social&utm_campaign=johann@example.com",
+    "utm_source=linkedin&utm_medium=social&utm_campaign=dp-user-12345",
     "utm_source=linkedin&utm_medium=social&utm_campaign=dp--test",
     `utm_source=linkedin&utm_medium=social&utm_campaign=dp-${"a".repeat(62)}`,
     "utm_source=linkedin&utm_medium=social&utm_campaign=dp-%3Cscript%3E",
-    "utm_source=linkedin&utm_source=google&utm_medium=social&utm_campaign=dp-test",
+    "utm_source=linkedin&utm_source=google&utm_medium=social&utm_campaign=dp-datapredict",
   ]) {
     const { requests } = visit(`/?${query}`);
     assert.equal(requests.length, 1);
@@ -122,13 +123,13 @@ test("les liens ordinaires gardent le contrat existant et leur provenance", () =
 });
 
 test("une campagne n’est transmise que pour la première page vue de la visite", () => {
-  const tracked = visit("/?utm_source=linkedin&utm_medium=social&utm_campaign=dp-pmo-data");
+  const tracked = visit("/?utm_source=linkedin&utm_medium=social&utm_campaign=dp-gouvernance-run");
   tracked.engage();
   tracked.scroll();
   assert.deepEqual(tracked.requests.map(({ payload }) => payload.event), ["pageview", "engaged_30s", "scroll_75"]);
   assert.equal(Object.hasOwn(tracked.requests[0].payload, "campaign"), true);
   for (const { payload } of tracked.requests.slice(1)) assert.equal(Object.hasOwn(payload, "campaign"), false);
-  const next = visit("/offres.html?utm_source=linkedin&utm_medium=social&utm_campaign=dp-pmo-data", { storage: tracked.storage });
+  const next = visit("/offres.html?utm_source=linkedin&utm_medium=social&utm_campaign=dp-gouvernance-run", { storage: tracked.storage });
   assert.equal(next.requests[0].payload.visit, false);
   assert.equal(Object.hasOwn(next.requests[0].payload, "campaign"), false);
 });
@@ -140,18 +141,18 @@ test("l’opposition, GPC et Do Not Track bloquent aussi les campagnes", () => {
     { navigator: { doNotTrack: "1" } },
     { windowDnt: "1" },
   ]) {
-    const tracked = visit("/?utm_source=linkedin&utm_medium=social&utm_campaign=dp-test", options);
+    const tracked = visit("/?utm_source=linkedin&utm_medium=social&utm_campaign=dp-datapredict", options);
     assert.equal(tracked.requests.length, 0);
     assert.equal(tracked.storage.size, 0);
   }
-  const tracked = visit("/?utm_source=linkedin&utm_medium=social&utm_campaign=dp-test");
+  const tracked = visit("/?utm_source=linkedin&utm_medium=social&utm_campaign=dp-datapredict");
   tracked.document.cookie = "datapredict_audience_optout=1";
   tracked.engage();
   assert.equal(tracked.requests.length, 1);
 });
 
 test("sans stockage de session, les pages vues restent mesurées sans visite ni campagne", () => {
-  const { requests } = visit("/?utm_source=linkedin&utm_medium=social&utm_campaign=dp-test", { storageUnavailable: true });
+  const { requests } = visit("/?utm_source=linkedin&utm_medium=social&utm_campaign=dp-datapredict", { storageUnavailable: true });
   assert.equal(requests.length, 1);
   assert.equal(requests[0].payload.visit, false);
   assert.equal(Object.hasOwn(requests[0].payload, "campaign"), false);
@@ -165,17 +166,24 @@ test("le Worker accepte les campagnes produites par le navigateur", async () => 
     ["newsletter", "email", "other-site"],
     ["partner", "referral", "other-site"],
   ]) {
-    const { requests } = visit(`/demonstrations/nerivane-distribution.html?utm_source=${source}&utm_medium=${medium}&utm_campaign=dp-${"a".repeat(61)}`);
-    assert.equal(requests[0].payload.source, category);
-    const database = {
-      prepare(sql) { return { bind(...parameters) { return { sql, parameters }; } }; },
-      async batch(statements) { return statements.map(() => ({ success: true })); },
-    };
-    const response = await worker.fetch(new Request(requests[0].url, {
-      method: "POST",
-      headers: { Origin: "https://www.datapredict.org", "Content-Type": "text/plain;charset=UTF-8" },
-      body: requests[0].init.body,
-    }), { COUNTER_DB: database, ALLOWED_ORIGINS: "https://www.datapredict.org" });
-    assert.equal(response.status, 204, `${source} : ${await response.text()}`);
+    for (const name of [
+      "dp-datapredict", "dp-offres", "dp-gouvernance-run", "dp-cas-clients",
+      "dp-demo-fissures", "dp-demo-weather", "dp-nerivane", "dp-contact",
+      "dp-articles", "dp-newsletter",
+    ]) {
+      const { requests } = visit(`/demonstrations/nerivane-distribution.html?utm_source=${source}&utm_medium=${medium}&utm_campaign=${name}`);
+      assert.equal(requests[0].payload.source, category);
+      assert.equal(requests[0].payload.campaign.name, name);
+      const database = {
+        prepare(sql) { return { bind(...parameters) { return { sql, parameters }; } }; },
+        async batch(statements) { return statements.map(() => ({ success: true })); },
+      };
+      const response = await worker.fetch(new Request(requests[0].url, {
+        method: "POST",
+        headers: { Origin: "https://www.datapredict.org", "Content-Type": "text/plain;charset=UTF-8" },
+        body: requests[0].init.body,
+      }), { COUNTER_DB: database, ALLOWED_ORIGINS: "https://www.datapredict.org" });
+      assert.equal(response.status, 204, `${source} : ${await response.text()}`);
+    }
   }
 });
