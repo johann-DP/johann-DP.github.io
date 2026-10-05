@@ -622,6 +622,7 @@ class NerivaneClosedSiteStatesTests(unittest.TestCase):
     def test_rejects_fissures_ormevia_or_v1_protected_tree_changes(self) -> None:
         self.promote()
         representatives = (
+            "assets/js/audience-counter.js",
             "demonstrations/fissures.html",
             "demonstrations/ormevia-batiment.html",
             "assets/css/demo-ormevia.css",

@@ -13,6 +13,7 @@
     "/methode.html",
     "/cas-clients.html",
     "/demonstrations.html",
+    "/demonstrations/nerivane-distribution.html",
     "/demonstrations/ormevia-batiment.html",
     "/demonstrations/fissures.html",
     "/contact.html",
@@ -105,7 +106,38 @@
   const matchesDomain = (hostname, domain) => hostname === domain
     || hostname.endsWith(`.${domain}`);
 
+  const campaignSources = Object.freeze({
+    linkedin: "linkedin",
+    google: "search",
+    bing: "search",
+    newsletter: "other-site",
+    partner: "other-site",
+  });
+  const campaignMedia = new Set(["social", "organic", "cpc", "email", "referral"]);
+  const readCampaign = () => {
+    const parameters = new URL(location.href).searchParams;
+    const keys = ["utm_source", "utm_medium", "utm_campaign"];
+    if (keys.some((key) => parameters.getAll(key).length !== 1)) {
+      return null;
+    }
+    const [source, medium, name] = keys.map((key) => parameters.get(key).trim().toLowerCase());
+    if (
+      !Object.hasOwn(campaignSources, source)
+      || !campaignMedia.has(medium)
+      || name.length < 4
+      || name.length > 64
+      || !/^dp-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name)
+    ) {
+      return null;
+    }
+    return { source, medium, name };
+  };
+  const campaign = readCampaign();
+
   const classifySource = () => {
+    if (campaign) {
+      return campaignSources[campaign.source];
+    }
     if (!document.referrer) {
       return "direct";
     }
@@ -196,6 +228,7 @@
       visit,
       source,
       device,
+      ...(event === "pageview" && visit && campaign ? { campaign } : {}),
     });
     fetch(ENDPOINT, {
       method: "POST",

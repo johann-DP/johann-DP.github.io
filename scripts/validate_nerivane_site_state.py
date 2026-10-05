@@ -144,6 +144,9 @@ ACTIVE_SEO_MARKERS = (
 # The values are populated
 # and causally tested below; changing a protected byte requires a deliberate
 # review of this contract rather than broadening one of the two states.
+# On 2026-10-05 the owner authorized the audience-counter repair and aggregate
+# campaign tracking. Only the counter script changes in this protected snapshot;
+# all protected paths, demonstration bytes and other baseline values stay frozen.
 DEFAULT_BASELINE: dict[str, Any] = {
     "contract_id": "DATAPREDICT-NERIVANE-SITE-STATES-V1",
     "source_commit": "a0cfc1dda472e1d7b592a5f23a5bfc06b3515f7c",
@@ -155,7 +158,7 @@ DEFAULT_BASELINE: dict[str, Any] = {
     },
     "maintenance_catalogue_fragment_sha256": "24f984b4ce8bfe678b0dc175331337623fd9c9fae2cde36a900dcd78d69d90f1",
     "catalogue_outside_sha256": "a5b4ce822ec32b34eea461b7c007ef42575bd5788f6117fb09ef4fac678fcc4c",
-    "protected_snapshot_sha256": "66ff438d91579fcbba3ebf758bae6d498b1fac75ca7ee3d570907c103aa9047b",
+    "protected_snapshot_sha256": "892a9e3adc4424b4c371dc75be36b339305bc43b444692ed5985da091776fd8c",
     "demo2_rotating_skeletons": {
         "fissure-recente-meme-format.html": "bf48a902b4cc5b9ba18bf790d1e11d8737aa7b38994ebf892e29043afb208350",
         "joint-dilatation-rendu-site.html": "8388bce3bad500c641b27768201f6749337c5d79b29811d4bb578642987a2ea2",
