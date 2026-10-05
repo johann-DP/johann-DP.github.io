@@ -47,6 +47,12 @@ jobs:
       - name: Vérifier le jeton de déploiement
         run: test -n "$CLOUDFLARE_API_TOKEN"
 
+      - name: Vérifier le mot de passe avant publication
+        if: ${{ inputs.configure_admin_password == true }}
+        env:
+          COUNTER_ADMIN_PASSWORD: ${{ secrets.COUNTER_ADMIN_PASSWORD }}
+        run: test "${#COUNTER_ADMIN_PASSWORD}" -ge 32
+
       - name: Installer et tester
         run: |
           npm ci
