@@ -25,10 +25,29 @@ const DEVICE_LABELS = Object.freeze({
   mobile: "Mobile",
 });
 
+const CAMPAIGN_SOURCE_LABELS = Object.freeze({
+  linkedin: "LinkedIn",
+  google: "Google",
+  bing: "Bing",
+  newsletter: "Newsletter",
+  partner: "Partenaire",
+});
+
+const CAMPAIGN_MEDIUM_LABELS = Object.freeze({
+  social: "Réseau social",
+  organic: "Recherche naturelle",
+  cpc: "Publicité au clic",
+  email: "Courriel",
+  referral: "Lien référent",
+});
+
 const ALLOWED_EVENTS = new Set(["pageview", "engaged_30s", "scroll_75"]);
 const ALLOWED_SOURCES = new Set(Object.keys(SOURCE_LABELS));
 const ALLOWED_DEVICES = new Set(Object.keys(DEVICE_LABELS));
 const PAYLOAD_KEYS = ["device", "event", "page", "source", "visit"];
+const CAMPAIGN_KEYS = ["medium", "name", "source"];
+const CAMPAIGN_SOURCES = new Set(Object.keys(CAMPAIGN_SOURCE_LABELS));
+const CAMPAIGN_MEDIA = new Set(Object.keys(CAMPAIGN_MEDIUM_LABELS));
 
 const UPSERT_DAILY_TOTAL = `
   INSERT INTO daily_totals (day, page_views, visits, engaged_30s, scroll_75)
@@ -56,6 +75,13 @@ const UPSERT_DIMENSION = `
   INSERT INTO daily_dimensions (day, dimension, value, count)
   VALUES (?1, ?2, ?3, 1)
   ON CONFLICT (day, dimension, value)
+  DO UPDATE SET count = count + 1
+`;
+
+const UPSERT_DAILY_CAMPAIGN = `
+  INSERT INTO daily_campaigns (day, source, medium, campaign, count)
+  VALUES (?1, ?2, ?3, ?4, 1)
+  ON CONFLICT (day, source, medium, campaign)
   DO UPDATE SET count = count + 1
 `;
 
@@ -111,6 +137,14 @@ const DIMENSION_QUERY = `
   WHERE day >= ?1
   GROUP BY dimension, value
   ORDER BY dimension ASC, count DESC, value ASC
+`;
+
+const CAMPAIGN_QUERY = `
+  SELECT source, medium, campaign, SUM(count) AS count
+  FROM daily_campaigns
+  WHERE day BETWEEN ?1 AND ?2
+  GROUP BY source, medium, campaign
+  ORDER BY count DESC, source ASC, medium ASC, campaign ASC
 `;
 
 const SECURITY_HEADERS = Object.freeze({
@@ -363,6 +397,7 @@ function dashboard(
   pages,
   monthlyPages,
   dimensions,
+  campaigns,
   today,
   collectionStartedOn,
 ) {
@@ -393,6 +428,18 @@ function dashboard(
     ],
   );
   const monthlyRows = monthlyTableRows(monthlyPages, today, collectionStartedOn);
+  const visibleCampaigns = campaigns.filter((row) => roundedCount(row.count) > 0);
+  const campaignRows = tableRows(
+    visibleCampaigns,
+    (row) => row.campaign,
+    [
+      (row) => CAMPAIGN_SOURCE_LABELS[row.source] || row.source,
+      (row) => CAMPAIGN_MEDIUM_LABELS[row.medium] || row.medium,
+      (row) => roundedNumber(row.count),
+    ],
+  ) + (visibleCampaigns.length < campaigns.length
+    ? '<tr><td colspan="4">Effectif inférieur à 5 — valeur masquée</td></tr>'
+    : "");
 
   const groupedDimensions = dimensions.reduce((groups, row) => {
     const group = groups[row.dimension] || [];
@@ -462,6 +509,8 @@ function dashboard(
     td { text-align: right; font-variant-numeric: tabular-nums; }
     .table-scroll { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .monthly-table { min-width: 48rem; }
+    .campaign-table { min-width: 35rem; }
+    .campaign-table td:not(:last-child) { text-align: left; }
     .monthly-table th:not(:first-child), .monthly-table td { text-align: right; font-variant-numeric: tabular-nums; }
     .monthly-table th:first-child { position: sticky; left: 0; z-index: 1; background: #fff; }
     .monthly-table thead th:first-child { z-index: 2; background: #e6edf2; }
@@ -537,6 +586,18 @@ function dashboard(
       <h2>Pays approximatif — 30 jours</h2>
       <table><tbody>${countryRows}</tbody></table>
     </section>
+
+    <section id="campaigns">
+      <h2>Campagnes — visites estimées sur 30 jours</h2>
+      <div class="table-scroll">
+        <table class="campaign-table">
+          <thead><tr><th scope="col">Campagne</th><th scope="col">Source</th><th scope="col">Support</th><th scope="col">Visites</th></tr></thead>
+          <tbody>${campaignRows || emptyRow(4)}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="note">Les campagnes sont comptées à partir de la mise en ligne du suivi UTM, sans reconstitution des visites antérieures. Les valeurs sont approximatives, arrondies à la dizaine ; les groupes de moins de cinq visites sont masqués. Seule la première page d’une session d’onglet peut attribuer une visite à une campagne ; les pages suivantes et les signaux de lecture n’en ajoutent pas. Les totaux par campagne ne comprennent que les liens comportant les trois paramètres autorisés.</p>
     <p class="note">Les visites sont des estimations par session d’onglet. « — » indique un mois antérieur au début de la collecte. Les sources, pays et écrans sont arrondis à la dizaine et comptés séparément ; ils ne peuvent pas être croisés pour reconstituer un parcours.</p>
   </main>
 </body>
@@ -547,13 +608,29 @@ function isValidPayload(payload) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     return false;
   }
-  const keys = Object.keys(payload).sort();
+  const keys = Object.keys(payload).filter((key) => key !== "campaign").sort();
   return keys.length === PAYLOAD_KEYS.length
     && keys.every((key, index) => key === PAYLOAD_KEYS[index])
+    && (!Object.hasOwn(payload, "campaign") || isValidCampaign(payload.campaign))
     && ALLOWED_EVENTS.has(payload.event)
     && typeof payload.visit === "boolean"
     && ALLOWED_SOURCES.has(payload.source)
     && ALLOWED_DEVICES.has(payload.device);
+}
+
+function isValidCampaign(campaign) {
+  if (!campaign || typeof campaign !== "object" || Array.isArray(campaign)) {
+    return false;
+  }
+  const keys = Object.keys(campaign).sort();
+  return keys.length === CAMPAIGN_KEYS.length
+    && keys.every((key, index) => key === CAMPAIGN_KEYS[index])
+    && CAMPAIGN_SOURCES.has(campaign.source)
+    && CAMPAIGN_MEDIA.has(campaign.medium)
+    && typeof campaign.name === "string"
+    && campaign.name.length >= 4
+    && campaign.name.length <= 64
+    && /^dp-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(campaign.name);
 }
 
 function eventMetrics(event, visit) {
@@ -572,7 +649,7 @@ async function recordHit(request, env) {
   }
 
   const rawBody = await request.text();
-  if (rawBody.length > 240) {
+  if (rawBody.length > 384) {
     return new Response(null, { status: 413, headers: { ...SECURITY_HEADERS, ...cors } });
   }
 
@@ -604,6 +681,12 @@ async function recordHit(request, env) {
       env.COUNTER_DB.prepare(UPSERT_DIMENSION)
         .bind(day, "country", normalizeCountry(request.cf?.country)),
     );
+    if (payload.campaign) {
+      statements.push(
+        env.COUNTER_DB.prepare(UPSERT_DAILY_CAMPAIGN)
+          .bind(day, payload.campaign.source, payload.campaign.medium, payload.campaign.name),
+      );
+    }
   }
 
   await env.COUNTER_DB.batch(statements);
@@ -633,6 +716,7 @@ async function showStats(request, env) {
     pageResult,
     monthlyPageResult,
     dimensionResult,
+    campaignResult,
   ] = await Promise.all([
     env.COUNTER_DB.prepare(SUMMARY_QUERY)
       .bind(today, last30Days, previous30Days, last90Days)
@@ -641,6 +725,7 @@ async function showStats(request, env) {
     env.COUNTER_DB.prepare(PAGE_QUERY).bind(last30Days).all(),
     env.COUNTER_DB.prepare(MONTHLY_PAGE_QUERY).bind(monthly.from, monthly.to).all(),
     env.COUNTER_DB.prepare(DIMENSION_QUERY).bind(last30Days).all(),
+    env.COUNTER_DB.prepare(CAMPAIGN_QUERY).bind(last30Days, today).all(),
   ]);
 
   return new Response(
@@ -650,6 +735,7 @@ async function showStats(request, env) {
       pageResult.results || [],
       monthlyPageResult.results || [],
       dimensionResult.results || [],
+      campaignResult.results || [],
       today,
       env.COLLECTION_STARTED_ON,
     ),
@@ -668,6 +754,7 @@ async function fetchHandler(request, env) {
   if (url.pathname === "/health" && request.method === "GET") {
     try {
       await env.COUNTER_DB.prepare("SELECT 1 FROM daily_totals LIMIT 1").first();
+      await env.COUNTER_DB.prepare("SELECT 1 FROM daily_campaigns LIMIT 1").first();
       return Response.json({ status: "ok" }, { headers: SECURITY_HEADERS });
     } catch {
       return Response.json(
@@ -716,6 +803,7 @@ async function scheduledHandler(_event, env) {
     env.COUNTER_DB.prepare("DELETE FROM daily_totals WHERE day < ?1").bind(cutoff),
     env.COUNTER_DB.prepare("DELETE FROM daily_pages WHERE day < ?1").bind(cutoff),
     env.COUNTER_DB.prepare("DELETE FROM daily_dimensions WHERE day < ?1").bind(cutoff),
+    env.COUNTER_DB.prepare("DELETE FROM daily_campaigns WHERE day < ?1").bind(cutoff),
   ]);
 }
 

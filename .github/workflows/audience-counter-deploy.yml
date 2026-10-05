@@ -130,6 +130,9 @@ jobs:
             if (!html.includes("Audience datapredict")) {
               throw new Error("tableau de statistiques invalide");
             }
+            if (!html.includes('id="campaigns"')) {
+              throw new Error("tableau des campagnes absent");
+            }
           };
 
           (async () => {
