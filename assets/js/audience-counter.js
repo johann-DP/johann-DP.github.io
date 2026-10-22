@@ -16,6 +16,7 @@
     "/demonstrations/nerivane-distribution.html",
     "/demonstrations/ormevia-batiment.html",
     "/demonstrations/fissures.html",
+    "/demonstrations/llm-local.html",
     "/contact.html",
   ]);
   const SEARCH_DOMAINS = [

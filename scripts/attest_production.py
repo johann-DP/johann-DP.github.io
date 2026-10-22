@@ -87,6 +87,12 @@ NERIVANE_INTEGRATION_PATHS = (
     PurePosixPath("assets/css/demo-nerivane.css"),
     PurePosixPath("demonstrations.html"),
 )
+LLM_INTEGRATION_PATHS = (
+    PurePosixPath("demonstrations/llm-local.html"),
+    PurePosixPath("assets/js/audience-counter.js"),
+)
+LLM_BUNDLE_ROOT = PurePosixPath("assets/llm-local")
+LLM_CHECKSUMS = LLM_BUNDLE_ROOT / "SHA256SUMS"
 NERIVANE_BUNDLE_ROOT = PurePosixPath("assets/nerivane-public-v1")
 NERIVANE_CHECKSUMS = NERIVANE_BUNDLE_ROOT / "SHA256SUMS"
 EXPECTED_FIGURE_COUNT = 18
@@ -315,6 +321,11 @@ def load_expected_files(root: Path) -> tuple[ExpectedFile, ...]:
         "nerivane_bundle",
     )
     nerivane_v2_staged = _load_staged_nerivane_v2(root)
+    llm_integrations = [
+        _expected_local_file(root, relative, "llm_integration")
+        for relative in LLM_INTEGRATION_PATHS
+    ]
+    llm_bundle = _load_checksum_subtree(root, LLM_BUNDLE_ROOT, LLM_CHECKSUMS, "llm_bundle")
 
     all_expected = (
         *figures,
@@ -322,6 +333,8 @@ def load_expected_files(root: Path) -> tuple[ExpectedFile, ...]:
         *nerivane_integrations,
         *nerivane_bundle,
         *nerivane_v2_staged,
+        *llm_integrations,
+        *llm_bundle,
     )
     all_paths = [expected.path for expected in all_expected]
     if len(set(all_paths)) != len(all_paths):
@@ -523,6 +536,8 @@ def main(argv: Iterable[str] | None = None) -> int:
             "nerivane_integration",
             "nerivane_bundle",
             "nerivane_v2_staged",
+            "llm_integration",
+            "llm_bundle",
         )
     }
     total_size = sum(item.size_bytes for item in expected)
@@ -533,6 +548,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         f"nerivane_integration={category_counts['nerivane_integration']} "
         f"nerivane_bundle={category_counts['nerivane_bundle']} "
         f"nerivane_v2_staged={category_counts['nerivane_v2_staged']} "
+        f"llm_integration={category_counts['llm_integration']} "
+        f"llm_bundle={category_counts['llm_bundle']} "
         f"fichiers={len(expected)} octets={total_size} base={args.base_url.rstrip('/')}"
     )
     return 0

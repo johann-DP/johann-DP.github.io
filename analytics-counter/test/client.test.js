@@ -71,7 +71,8 @@ function visit(path, options = {}) {
 
 test("chaque page du sitemap émet une page vue acceptée par le Worker", () => {
   const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
-  assert.equal(paths.length, 9);
+  assert.equal(paths.length, 10);
+  assert.ok(paths.includes("/demonstrations/llm-local.html"));
   for (const path of paths) {
     const { requests } = visit(path);
     assert.equal(requests.length, 1, `page non comptée : ${path}`);

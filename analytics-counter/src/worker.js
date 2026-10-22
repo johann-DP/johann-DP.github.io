@@ -7,6 +7,7 @@ const PAGE_LABELS = Object.freeze({
   "/demonstrations/nerivane-distribution.html": "Démo Nérivane",
   "/demonstrations/ormevia-batiment.html": "Démo Ormévia",
   "/demonstrations/fissures.html": "Démo Fissures",
+  "/demonstrations/llm-local.html": "Démo LLM local",
   "/contact.html": "Contact",
 });
 

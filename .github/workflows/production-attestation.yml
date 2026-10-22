@@ -50,6 +50,9 @@ jobs:
         working-directory: attestation-runner
         run: python3 -m unittest discover -s tests -p 'test*attest*.py'
 
+      - name: Vérifier le contrat du replay LLM déployé
+        run: python3 attestation-runner/scripts/validate_llm_local.py --root "$GITHUB_WORKSPACE/deployed-site"
+
       - name: Attester les fichiers publiés
         run: >-
           python3 attestation-runner/scripts/attest_production.py

@@ -1,0 +1,189 @@
+{
+  "schema": "datapredict-page-proposal/1",
+  "editorial_reference_commit": "2888b5788e099eb7fff2874e2f43049be50b8e1d",
+  "evidence_commit": "99070d77cb426dafb5efc2435eefd6e2dabe2224",
+  "public_data_sha256": "4f6f3e395c3862d21167d0d12adf28630c75e9f320c90d3e76f3985366dddf9b",
+  "public_zip_sha256": "bb7a234417875e54efddd27d87667683b4e0da35f7eb4637a9f2c42b2b0208cc",
+  "purpose": "Démonstration publique, réponses synthétiques enregistrées ; aucune inférence déclenchée par cette page.",
+  "configuration": {
+    "model": "Qwen3-14B",
+    "adapter": "checkpoint-0150",
+    "dtype": "bfloat16",
+    "vllm": "0.11.2",
+    "context": 18432,
+    "kv_gib": 11,
+    "max_sequences": 1,
+    "sampling_temperature": 0,
+    "seed": 20261020
+  },
+  "training": {
+    "records": 600,
+    "steps": 150,
+    "optimization_seconds": 1146.272223610009,
+    "controller_seconds": 1184.1309539119975,
+    "energy_gpu_observed_wh": 96.7497413818409,
+    "training_method": "QLoRA NF4, LoRA rank16; final inference BF16",
+    "source_export_sha256": "e0de34a377ca0778f1f3fecf54ab9835de50100c4bfb8fc24ae16d7ce0866e39"
+  },
+  "historical_learning_comparison": {
+    "scope": "Distinct earlier NF4 comparison; not comparable to present BF16 application recipe",
+    "main_planned": 240,
+    "base_conform": 5,
+    "base_two_examples_conform": 37,
+    "adapted_conform": 111,
+    "challenge_planned": 60
+  },
+  "data_provenance": {
+    "source_commit": "99070d77cb426dafb5efc2435eefd6e2dabe2224",
+    "source_sha256": {
+      "evidence/solution-v6/acceptance-score-r1.json": "580d8f51ae03d1be299bdc3753a2fadd762f7d061c7ee91173d9044272cf406d",
+      "evidence/solution-v6/acceptance-contribution-r1.json": "692280fcd3ab82a7773d971dbe8eb3711209e39bbb38e892030bcdbba2a89ab0",
+      "evidence/solution-v6/acceptance-score.json": "72a4a994dba37626fc6384ebeef0aae76aad546f6286ea335fca2c36fc68b2ff",
+      "evidence/solution-v6/acceptance-contribution-01.json": "c8689adf631b7666a563aeb5be310dba25da85674decb3a185063fca28253b3e",
+      "evidence/solution-v6/final-selection.json": "bde0a2ec801bc42b3929b77998e9e3bcd22acb87d56f6a22c4ccf350384d7bfd",
+      "evidence/solution-v6/admission-selection.json": "06ca4271da99af1aa7916cff6b1cbf7e92cabf5117d807e3968314333ccef9cc",
+      "evidence/solution-v6/admission-correction.json": "bb6ce1719e6a14b5a7cd552a5b0d5a49e7c904306a138c6ba8b37fcecc3ad976",
+      "evidence/solution-v6/stop-during-request.json": "b96bd61d39bf987153d7b4948dfb1d0000eb48c28872b8fed05c24b8e17ff894",
+      "evidence/solution-v6/operator-command-proof.json": "00332beb3cca6853f116e84aa0eadd7581fb071877f4e0de48ce341d5321e3e8",
+      "data/solution-v5/acceptance/inputs.jsonl": "c691adcd16d00587913860b7cf371d0de89c4dab63487a38a06ec7c7fa0db1a0",
+      "runs/incident-v6-acceptance-02/outputs.jsonl": "895b0a032b270a492ba67d2f88c1bbbb05b1ecff7ab042207ed4556d32e1e722",
+      "evidence/solution-v6/captures/manifest.json": "468ff0dc3d2ed20b6c4020164d290bba6ce506f2072946e2d63d90ffaac4ed50",
+      "evidence/solution-v6/operator-examples/confirm-before.json": "4a3b07e10e34dc5b714a45674b766af2c2d0dd80397d15790d9eed93c14f6fa6",
+      "evidence/solution-v6/operator-examples/confirm-after.json": "46d3b3a97ac483739545a553b21201a780caf1c6130f6a7e82297cbd1fa9dae2",
+      "evidence/solution-v6/operator-examples/confirm-decision.json": "2e26ca974cf8daa4666fe6b372405f494bba112b5b3eaf8aceb1a88e542b51fb",
+      "evidence/solution-v6/operator-examples/correct-before.json": "f6ab51f9f71573946be136933eec4b308ccad543e12a97b841511c587006eac4",
+      "evidence/solution-v6/operator-examples/correct-after.json": "6ffb9dd3bb18de43d9c7f92bfaadc6268df3fc738f1795a5a460ff2c265dffc5",
+      "evidence/solution-v6/operator-examples/correct-decision.json": "7ccd0dc857c5c6fabcedc0b5c516a9fe3285a9302e76d68e0da4b4449f035116",
+      "evidence/solution-v6/operator-examples/reject-before.json": "6ebc2fbb5db15c272219f463779dba21e909d176eebee4387e7c25ff659585ad",
+      "evidence/solution-v6/operator-examples/reject-after.json": "e8e7490cc6050816ed3256ee95c71bd742cb2957b60d7aa4df1dd1b19411a8da",
+      "evidence/solution-v6/operator-examples/reject-decision.json": "ac0c07b8f43e6b2d66b461b37e4ac0a9ed7fa04605a8e1d71036cab35468934d"
+    },
+    "public_projection": "Liste explicite de champs ; aucune capture privée brute ni prompt exporté."
+  },
+  "limits": [
+    "Les 30 dossiers sont synthétiques et réutilisés ; ils ne mesurent pas une généralisation indépendante.",
+    "Les attentes affichées sont les annotations du test, jamais des réponses obtenues.",
+    "Aucune revue humaine réelle n’est comptabilisée. Les trois décisions opérateur sont simulées.",
+    "La conformité dépend d’une grille finie. Quatre réponses portent un signalement critique ; l’une a des valeurs correctes mais une citation supplémentaire rejetée.",
+    "Les gains éventuels du post-traitement ne prouvent aucun nouvel apprentissage. Les mesures de temps sont celles de la réponse complète.",
+    "L’énergie mesurée concerne la carte graphique ; les lacunes ne sont pas comblées. La consommation totale de la station et le temps métier gagné ne sont pas mesurés.",
+    "Cette page rejoue des réponses enregistrées. Elle ne lance pas de modèle, ne valide pas automatiquement une proposition et n’exécute aucune action SI."
+  ],
+  "budget": {
+    "schema": "datapredict-budget-assumptions/1",
+    "checked_on": "2026-10-22",
+    "currency": "EUR",
+    "tax_basis": "Hors TVA. Le prix variable de l’électricité inclut l’accise, mais pas l’abonnement ni la CTA fixe.",
+    "scenario": "Petite équipe en France, station locale, utilisation effective 4 heures par jour sur 220 jours. Maintenance courante, sans engagement de disponibilité permanente.",
+    "defaults": {
+      "cost-capex": {
+        "value": 11000,
+        "unit": "EUR hors TVA",
+        "status": "hypothèse budgétaire arrondie à partir d’un catalogue",
+        "source_ids": [
+          "senetic"
+        ],
+        "reason": "Station complète comparable affichée à 10034.19 EUR hors TVA, mais indisponible. Le budget de 11000 EUR ne garantit pas une offre disponible ni une configuration équivalente chez tous les fournisseurs."
+      },
+      "cost-years": {
+        "value": 4,
+        "unit": "années",
+        "status": "hypothèse d’usage",
+        "reason": "Répartition économique sur quatre ans, sans valeur résiduelle. Ce n’est pas une durée fiscale prescrite."
+      },
+      "cost-hours": {
+        "value": 880,
+        "unit": "heures actives/an",
+        "status": "hypothèse d’usage",
+        "reason": "4 heures de traitement effectif par jour multipliées par 220 jours. Ne pas confondre avec les heures sous tension."
+      },
+      "cost-electricity": {
+        "value": 0.16242,
+        "unit": "EUR/kWh hors TVA",
+        "status": "calcul à partir du barème fournisseur",
+        "source_ids": [
+          "edf"
+        ],
+        "calculation": "0.1318 + 30.62/1000",
+        "reason": "Tarif Bleu non résidentiel, option Base, grille au 1er août 2026 : 13.18 cEUR/kWh hors taxes, plus 30.62 EUR/MWh d’accise. Repère pour les clients éligibles ; remplacer par le contrat du site."
+      },
+      "cost-overhead": {
+        "value": 100,
+        "unit": "W hors GPU",
+        "status": "hypothèse technique non mesurée",
+        "reason": "Provision pour CPU, RAM, disques, ventilateurs et pertes d’alimentation pendant les lots. À remplacer par une mesure à la prise avec comptage GPU séparé."
+      },
+      "cost-fixed": {
+        "value": 120,
+        "unit": "EUR/an hors TVA",
+        "status": "provision de scénario non tarifée",
+        "reason": "10 EUR/mois réservés à la sauvegarde locale et aux consommables, hors interventions. Ne couvre pas l’achat d’un NAS, un contrat de support ou une infrastructure à créer."
+      },
+      "cost-human-hours": {
+        "value": 24,
+        "unit": "heures/an",
+        "status": "hypothèse d’exploitation",
+        "reason": "Deux heures par mois de suivi et maintenance courante de la station. Développement, intégration, adaptation du modèle et incidents majeurs exclus."
+      },
+      "cost-human-rate": {
+        "value": 90,
+        "unit": "EUR/h hors TVA",
+        "status": "repère de prestation publié",
+        "source_ids": [
+          "votinfo"
+        ],
+        "reason": "Tarif 2026 d’intervention sur poste de travail. Ce n’est ni un coût salarial chargé, ni un devis d’expertise IA ou de support serveur critique."
+      }
+    },
+    "sources": [
+      {
+        "id": "senetic",
+        "publisher": "Senetic Allemagne",
+        "url": "https://www.senetic.de/product/30HT009AGE",
+        "observed_price_eur_ex_vat": 10034.19,
+        "availability": "hors stock",
+        "configuration": "Lenovo ThinkStation P3 Tower Gen 2 30HT009AGE, Core Ultra 9 285K, 128 Go RAM, SSD 1 To, RTX PRO 5000 Blackwell 48 Go, Windows 11 Pro allemand, Premier Support NBD et service sur site trois ans",
+        "limit": "Repère de catalogue européen ; livraison, disponibilité et configuration française à confirmer par devis."
+      },
+      {
+        "id": "mifcom_comparison",
+        "publisher": "MIFCOM Europe",
+        "url": "https://www.mifcom.eu/workstation-ryzen-9-9900x-rtx-pro-5000-blackwell-id22415",
+        "observed_price_eur_incl_vat": 16649,
+        "availability": "précommande, délai annoncé 6–8 jours ouvrés",
+        "configuration": "Ryzen 9 9900X, 64 Go RAM, SSD 2 To, RTX PRO 5000 Blackwell 48 Go, garantie trois ans",
+        "limit": "Prix TTC affiché, port en supplément. Pas de conversion HT utilisée ; configuration et prix différents du repère retenu."
+      },
+      {
+        "id": "edf",
+        "publisher": "EDF Entreprises",
+        "url": "https://www.edf.fr/sites/entreprise/files/2026-08/Entreprises_Fiche_CRE_prive_tarif_bleu_juillet_2026.pdf",
+        "page": 1,
+        "effective_on": "2026-08-01",
+        "base_eur_per_kwh_before_taxes": 0.1318,
+        "excise_eur_per_mwh_ex_vat": 30.62,
+        "limit": "France métropolitaine continentale, option Base non résidentielle, sous réserve d’éligibilité. Coûts fixes du raccordement et de l’abonnement non répartis."
+      },
+      {
+        "id": "votinfo",
+        "publisher": "VOT’INFO",
+        "url": "https://www.votinfo.fr/tarifs-maintenance-infogerance/",
+        "published_year": 2026,
+        "workstation_hour_eur": 90,
+        "server_hour_eur": 200,
+        "limit": "Prestataire non assujetti à la TVA ; tarifs indicatifs, sur devis. Périmètre poste distinct du serveur Windows/Linux et de l’expertise LLM."
+      }
+    ],
+    "exclusions": [
+      "TVA",
+      "Mise en service et intégration métier",
+      "Développement et entraînement",
+      "Relecture humaine des dossiers",
+      "Support critique ou permanent",
+      "Abonnement électrique et CTA fixe",
+      "Électricité hors des lots et climatisation",
+      "Intervalles GPU sans mesure",
+      "Infrastructure de sauvegarde à créer"
+    ]
+  }
+}
