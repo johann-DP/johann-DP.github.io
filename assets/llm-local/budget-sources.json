@@ -1,0 +1,24 @@
+{
+  "schema": "datapredict-budget-assumptions/1",
+  "checked_on": "2026-10-22",
+  "currency": "EUR",
+  "tax_basis": "Hors TVA. Le prix variable de l’électricité inclut l’accise, mais pas l’abonnement ni la CTA fixe.",
+  "scenario": "Petite équipe en France, station locale, utilisation effective 4 heures par jour sur 220 jours. Maintenance courante, sans engagement de disponibilité permanente.",
+  "defaults": {
+    "cost-capex": {"value": 11000, "unit": "EUR hors TVA", "status": "hypothèse budgétaire arrondie à partir d’un catalogue", "source_ids": ["senetic"], "reason": "Station complète comparable affichée à 10034.19 EUR hors TVA, mais indisponible. Le budget de 11000 EUR ne garantit pas une offre disponible ni une configuration équivalente chez tous les fournisseurs."},
+    "cost-years": {"value": 4, "unit": "années", "status": "hypothèse d’usage", "reason": "Répartition économique sur quatre ans, sans valeur résiduelle. Ce n’est pas une durée fiscale prescrite."},
+    "cost-hours": {"value": 880, "unit": "heures actives/an", "status": "hypothèse d’usage", "reason": "4 heures de traitement effectif par jour multipliées par 220 jours. Ne pas confondre avec les heures sous tension."},
+    "cost-electricity": {"value": 0.16242, "unit": "EUR/kWh hors TVA", "status": "calcul à partir du barème fournisseur", "source_ids": ["edf"], "calculation": "0.1318 + 30.62/1000", "reason": "Tarif Bleu non résidentiel, option Base, grille au 1er août 2026 : 13.18 cEUR/kWh hors taxes, plus 30.62 EUR/MWh d’accise. Repère pour les clients éligibles ; remplacer par le contrat du site."},
+    "cost-overhead": {"value": 100, "unit": "W hors GPU", "status": "hypothèse technique non mesurée", "reason": "Provision pour CPU, RAM, disques, ventilateurs et pertes d’alimentation pendant les lots. À remplacer par une mesure à la prise avec comptage GPU séparé."},
+    "cost-fixed": {"value": 120, "unit": "EUR/an hors TVA", "status": "provision de scénario non tarifée", "reason": "10 EUR/mois réservés à la sauvegarde locale et aux consommables, hors interventions. Ne couvre pas l’achat d’un NAS, un contrat de support ou une infrastructure à créer."},
+    "cost-human-hours": {"value": 24, "unit": "heures/an", "status": "hypothèse d’exploitation", "reason": "Deux heures par mois de suivi et maintenance courante de la station. Développement, intégration, adaptation du modèle et incidents majeurs exclus."},
+    "cost-human-rate": {"value": 90, "unit": "EUR/h hors TVA", "status": "repère de prestation publié", "source_ids": ["votinfo"], "reason": "Tarif 2026 d’intervention sur poste de travail. Ce n’est ni un coût salarial chargé, ni un devis d’expertise IA ou de support serveur critique."}
+  },
+  "sources": [
+    {"id": "senetic", "publisher": "Senetic Allemagne", "url": "https://www.senetic.de/product/30HT009AGE", "observed_price_eur_ex_vat": 10034.19, "availability": "hors stock", "configuration": "Lenovo ThinkStation P3 Tower Gen 2 30HT009AGE, Core Ultra 9 285K, 128 Go RAM, SSD 1 To, RTX PRO 5000 Blackwell 48 Go, Windows 11 Pro allemand, Premier Support NBD et service sur site trois ans", "limit": "Repère de catalogue européen ; livraison, disponibilité et configuration française à confirmer par devis."},
+    {"id": "mifcom_comparison", "publisher": "MIFCOM Europe", "url": "https://www.mifcom.eu/workstation-ryzen-9-9900x-rtx-pro-5000-blackwell-id22415", "observed_price_eur_incl_vat": 16649, "availability": "précommande, délai annoncé 6–8 jours ouvrés", "configuration": "Ryzen 9 9900X, 64 Go RAM, SSD 2 To, RTX PRO 5000 Blackwell 48 Go, garantie trois ans", "limit": "Prix TTC affiché, port en supplément. Pas de conversion HT utilisée ; configuration et prix différents du repère retenu."},
+    {"id": "edf", "publisher": "EDF Entreprises", "url": "https://www.edf.fr/sites/entreprise/files/2026-08/Entreprises_Fiche_CRE_prive_tarif_bleu_juillet_2026.pdf", "page": 1, "effective_on": "2026-08-01", "base_eur_per_kwh_before_taxes": 0.1318, "excise_eur_per_mwh_ex_vat": 30.62, "limit": "France métropolitaine continentale, option Base non résidentielle, sous réserve d’éligibilité. Coûts fixes du raccordement et de l’abonnement non répartis."},
+    {"id": "votinfo", "publisher": "VOT’INFO", "url": "https://www.votinfo.fr/tarifs-maintenance-infogerance/", "published_year": 2026, "workstation_hour_eur": 90, "server_hour_eur": 200, "limit": "Prestataire non assujetti à la TVA ; tarifs indicatifs, sur devis. Périmètre poste distinct du serveur Windows/Linux et de l’expertise LLM."}
+  ],
+  "exclusions": ["TVA", "Mise en service et intégration métier", "Développement et entraînement", "Relecture humaine des dossiers", "Support critique ou permanent", "Abonnement électrique et CTA fixe", "Électricité hors des lots et climatisation", "Intervalles GPU sans mesure", "Infrastructure de sauvegarde à créer"]
+}

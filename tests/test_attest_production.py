@@ -128,6 +128,19 @@ def build_tree(root: Path) -> None:
     )
 
 
+    for relative in production.LLM_INTEGRATION_PATHS:
+        path = root / Path(*relative.parts)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(f"llm-integration:{relative}".encode())
+    llm_bundle = root / Path(*production.LLM_BUNDLE_ROOT.parts)
+    llm_bundle.mkdir(parents=True, exist_ok=True)
+    llm_payload = b'{"fixture":true}\n'
+    (llm_bundle / "replay.json").write_bytes(llm_payload)
+    (llm_bundle / "SHA256SUMS").write_text(
+        f"{hashlib.sha256(llm_payload).hexdigest()}  replay.json\n", encoding="ascii"
+    )
+
+
 class ProductionAttestationTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
@@ -144,7 +157,7 @@ class ProductionAttestationTests(unittest.TestCase):
         with serve(self.remote) as base_url, redirect_stdout(StringIO()):
             observed = production.attest(self.expected, base_url, timeout_seconds=2)
 
-        self.assertEqual(len(observed), 68)
+        self.assertEqual(len(observed), 72)
         self.assertEqual(sum(item.category == "figure" for item in observed), 18)
         self.assertEqual(
             sum(item.category == "demo2_integration" for item in observed),
@@ -158,6 +171,21 @@ class ProductionAttestationTests(unittest.TestCase):
             sum(item.category == "nerivane_bundle" for item in observed),
             4,
         )
+
+    def test_llm_inventory_and_remote_divergence(self) -> None:
+        inventory = production.load_expected_files(self.expected)
+        self.assertEqual(sum(item.category == "llm_integration" for item in inventory), 2)
+        self.assertEqual(sum(item.category == "llm_bundle" for item in inventory), 2)
+        relative = Path("assets/llm-local/replay.json")
+        (self.remote / relative).write_bytes(b"divergent")
+        with serve(self.remote) as base_url, redirect_stdout(StringIO()):
+            with self.assertRaisesRegex(production.AttestationError, "llm-local/replay.json non attesté"):
+                production.attest(self.expected, base_url, timeout_seconds=2)
+
+    def test_llm_bundle_cannot_silently_add_unattested_assets(self) -> None:
+        (self.expected / "assets/llm-local/hidden.json").write_bytes(b"{}")
+        with self.assertRaisesRegex(production.AttestationError, "inventaire local divergent"):
+            production.load_expected_files(self.expected)
 
     def test_rejects_remote_content_divergence_explicitly(self) -> None:
         relative = Path("assets/figures/demo-2/fissure-recente-meme-format.html")
@@ -487,7 +515,7 @@ class ProductionReceiptTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 0, completed.stderr)
         receipt = json.loads(self.receipt.read_text(encoding="utf-8"))
         self.assertEqual(receipt["source_commit"], historical_sha)
-        self.assertEqual(receipt["file_count"], 68)
+        self.assertEqual(receipt["file_count"], 72)
         self.assertEqual(receipt["pages_run_id"], 1234)
 
 

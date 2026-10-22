@@ -22,6 +22,7 @@ Les réalisations présentées sur le site sont anonymisées et reformulées afi
 - [Nérivane Distribution](demonstrations/nerivane-distribution.html) : replay public en sept étapes d’une gouvernance Data à l’échelle Big Data, avec corpus fictif détaillé et preuves techniques assainies ;
 - [Ormévia Bâtiment](demonstrations/ormevia-batiment.html) : replay public d’un traitement IA local sur données entièrement fictives ;
 - [Comprendre l’évolution de fissures](demonstrations/fissures.html) : investigation de mesures physiques réelles, de leur acquisition à leur restitution prudente ;
+- [Spécialiser un LLM local](demonstrations/llm-local.html) : qualification d’incidents synthétiques, preuves, décision opérateur et budget sourcé ;
 - [Contact](contact.html) : qualification d’un besoin et prise de contact.
 
 Le nom de fichier historique `cas-clients.html` est conservé ; son libellé public est « Réalisations ».
@@ -98,7 +99,7 @@ Le nom de fichier historique `cas-clients.html` est conservé ; son libellé pub
     └── test/
 ```
 
-`CNAME` configure le domaine public, `.nojekyll` assure la publication directe des fichiers statiques et `robots.txt` déclare le sitemap des neuf pages canoniques.
+`CNAME` configure le domaine public, `.nojekyll` assure la publication directe des fichiers statiques et `robots.txt` déclare le sitemap des dix pages canoniques.
 
 ## Démonstrations interactives
 

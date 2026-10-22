@@ -167,7 +167,7 @@ function tableRow(html, month) {
   return row[1];
 }
 
-test("normalise uniquement les neuf pages publiques et les codes pays", () => {
+test("normalise uniquement les dix pages publiques et les codes pays", () => {
   assert.equal(normalizePage("/index.html"), "/");
   assert.equal(normalizePage("/cas-clients.html"), "/cas-clients.html");
   assert.equal(normalizePage("/demonstrations.html"), "/demonstrations.html");
@@ -653,4 +653,9 @@ test("purge les quatre agrégats antérieurs à vingt-quatre mois", async () => 
   for (const statement of env.COUNTER_DB.batches[0]) {
     assert.match(statement.parameters[0], /^\d{4}-\d{2}-\d{2}$/);
   }
+});
+
+test("la page LLM local est admise sans ouvrir de chemin arbitraire", () => {
+  assert.equal(normalizePage("/demonstrations/llm-local.html"), "/demonstrations/llm-local.html");
+  assert.equal(normalizePage("/demonstrations/llm-local-private.html"), null);
 });

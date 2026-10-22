@@ -53,6 +53,8 @@ jobs:
               "cas-clients.html",
               "demonstrations.html",
               "demonstrations/fissures.html",
+              "demonstrations/llm-local.html",
+              "assets/llm-local/SHA256SUMS",
               "demonstrations/nerivane-distribution.html",
               "demonstrations/ormevia-batiment.html",
               "contact.html",
@@ -240,6 +242,7 @@ jobs:
                   "demonstrations/fissures.html": "../assets/js/audience-counter.js",
                   "demonstrations/nerivane-distribution.html": "../assets/js/audience-counter.js",
                   "demonstrations/ormevia-batiment.html": "../assets/js/audience-counter.js",
+                  "demonstrations/llm-local.html": "../assets/js/audience-counter.js",
                   "contact.html": "assets/js/audience-counter.js",
               }.get(relative.as_posix())
               if expected_counter and document.script_sources.count(expected_counter) != 1:
@@ -492,6 +495,9 @@ jobs:
               f"{sum(len(document.references) for document in documents.values())} référence(s)."
           )
           PY
+
+      - name: Vérifier la démonstration LLM approuvée
+        run: python3 scripts/validate_llm_local.py
 
       - name: Vérifier le replay Nérivane
         shell: bash
