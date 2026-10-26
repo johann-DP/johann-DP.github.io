@@ -349,7 +349,7 @@ class RefreshTests(unittest.TestCase):
         patterns = active_patterns()
 
         def mutate_method(metadata: dict[str, object]) -> None:
-            metadata["method"] = {"unexpected": "mutation"}
+            metadata["method"] = {**metadata["method"], "unexpected": "mutation"}
 
         patterns[refresh.PATTERN_MEDIAN] = rewrite_pattern(
             patterns[refresh.PATTERN_MEDIAN], metadata_change=mutate_method
