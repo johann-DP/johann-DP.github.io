@@ -254,6 +254,8 @@ def metadata_update(payload: dict[str, object]) -> dict[str, object]:
         name: deepcopy(metadata["thermal_extension"][name])
         for name in refresh._PROCESSED_DYNAMIC_THERMAL_EXTENSION_KEYS
     }
+    if "source_clock_revision" in metadata:
+        update["source_clock_revision"] = deepcopy(metadata["source_clock_revision"])
     return update
 
 
@@ -306,6 +308,9 @@ def patch_bytes(
             for name in refresh._PROCESSED_REVIEW_UPDATE_KEYS
         },
     }
+    if "source_clock_revision" in payload["metadata"]:
+        value["protocol_version"] = 2
+        value["delivery_revision"] = refresh.CLOCK_DELIVERY_REVISION
     return refresh._canonical_json(value) + b"\n"
 
 
@@ -363,8 +368,8 @@ def append_hour(
         source_hour,
         36,
         measured,
-        9.880599999999978,
-        measured + 9.880599999999978,
+        payload["global_hourly"][-1][4],
+        measured + payload["global_hourly"][-1][4],
         None,
         "UNAVAILABLE_INCOMPLETE_5_POINT_SUPPORT",
         118,

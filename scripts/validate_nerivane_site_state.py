@@ -166,7 +166,7 @@ DEFAULT_BASELINE: dict[str, Any] = {
         "joint-dilatation-rendu-site.html": "8388bce3bad500c641b27768201f6749337c5d79b29811d4bb578642987a2ea2",
         "retaining-wall-extrema-hours.html": "6cf5fe9536da4147a5ef2b3c233ae8519cf5058d26b1a11d975111156df3b6d0",
         "retaining-wall-median-day.html": "c59bac6616d7d9ad97f6aac24d9f7645bb665c6203df0203aabb362b4649044b",
-        "retaining-wall-sensor-processed-v2.html": "9d8d4aef184b36804ba8a59f9f8e06cb0e583d28c67f0449af858b00efba848d",
+        "retaining-wall-sensor-processed-v2.html": "4757bb395ad44010053340028f2bc39b130775425685f01fe828e303b9851064",
         "retaining-wall-sensor-source-values.html": "def4aa1ef8a7011b85632826032880ac9df3b8eda6f6d7524cffa3543b0c1820",
         "weather/complements/meteo_explorateur_toutes_mesures.html": "1b06b0c8f9eed1edaf5f6ccd698fa72ed65e7bc84596bcce4b05f9a60974e2e8",
         "weather/complements/meteo_qualite_acquisition.html": "132c8514f85102d5eaf9da6a35f5453a9875085f79bb375a775aa84581b9e2c5",

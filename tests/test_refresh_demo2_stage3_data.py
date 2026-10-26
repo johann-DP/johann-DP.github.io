@@ -22,7 +22,8 @@ def fixture_simulation(issued_at="2026-09-25T12:00:00+00:00", days=(7, 14, 28)):
     targets = []
     for horizon in days:
         target = datetime(2026, 9, 24, tzinfo=ZoneInfo("Europe/Paris")) + timedelta(days=horizon)
-        lead = (target - issued).total_seconds() / 86400
+        leads = [(boundary.astimezone(timezone.utc) - issued.astimezone(timezone.utc)).total_seconds() / 86400
+                 for boundary in (target, target + timedelta(days=1))]
         targets.append({
             "horizon": f"{horizon}d", "horizon_label": f"{horizon} jours",
             "date": target.date().isoformat(), "predicted_mm": 30.82,
@@ -33,7 +34,7 @@ def fixture_simulation(issued_at="2026-09-25T12:00:00+00:00", days=(7, 14, 28)):
             "selection_reference_wis_mm": .03, "lower80_mm": 30.75, "upper80_mm": 30.85,
             "lower95_mm": 30.7, "upper95_mm": 30.9, "feature_scope": "RECENT_AND_CALENDAR_ONLY",
             "additional_data_groups_in_scope": [], "scientific_acceptance": False,
-            "status": "PREVISION_EXPLORATOIRE_NON_VALIDEE", "actual_lead_days": [lead, lead + 1],
+            "status": "PREVISION_EXPLORATOIRE_NON_VALIDEE", "actual_lead_days": leads,
         })
     return {
         "method_id": stage3.METHOD, "status": "PREVISION_EXPLORATOIRE_NON_VALIDEE",
@@ -102,6 +103,55 @@ def fixture_payloads(public):
         counts={"raw": 2, "corrected": 1, "missing_temperature": 1, "out_of_domain": 0, "other_missing": 0},
         period={"start": start.strftime("%Y-%m-%dT%H:%M:%S"), "end": end.strftime("%Y-%m-%dT%H:%M:%S")})
     return values
+
+
+class ForecastClockPublicationTests(unittest.TestCase):
+    def forecast(self, issued_at, target_date):
+        value = json.loads((ROOT / stage3.ROOT / "forecast.json").read_bytes())
+        value["simulation"] = fixture_simulation()
+        simulation = value["simulation"]
+        for key in ("issued_at", "generated_at", "origin_utc"):
+            simulation[key] = issued_at
+        simulation["targets"] = simulation["targets"][:1]
+        target = simulation["targets"][0]
+        target["date"] = target_date
+        start = datetime.fromisoformat(target_date).replace(tzinfo=ZoneInfo("Europe/Paris"))
+        issued = datetime.fromisoformat(issued_at).astimezone(timezone.utc)
+        target["actual_lead_days"] = [
+            (boundary.astimezone(timezone.utc) - issued).total_seconds() / 86400
+            for boundary in (start, start + timedelta(days=1))
+        ]
+        return value
+
+    def test_target_already_started_in_paris_is_not_future_because_utc_date_is_yesterday(self):
+        value = self.forecast("2026-10-25T23:30:00+00:00", "2026-10-26")
+        value["simulation"]["targets"][0]["actual_lead_days"] = [.1, 1.1]
+        with self.assertRaisesRegex(stage3.Stage3DataError, "RETRODATED_FORECAST"):
+            stage3._validate_forecast(value)
+
+    def test_paris_midnight_is_a_strict_boundary(self):
+        stage3._validate_forecast(self.forecast("2026-10-25T22:59:59+00:00", "2026-10-26"))
+        for issued in ("2026-10-25T23:00:00+00:00", "2026-10-26T00:30:00+01:00"):
+            with self.subTest(issued=issued), self.assertRaisesRegex(stage3.Stage3DataError, "RETRODATED_FORECAST"):
+                stage3._validate_forecast(self.forecast(issued, "2026-10-26"))
+
+    def test_spring_and_autumn_leads_cover_23_and_25_physical_hours(self):
+        for issued, target_date, hours in (("2026-03-28T22:00:00+00:00", "2026-03-29", 23),
+                                          ("2026-10-24T20:00:00+00:00", "2026-10-25", 25)):
+            with self.subTest(date=target_date):
+                value = self.forecast(issued, target_date)
+                stage3._validate_forecast(value)
+                leads = value["simulation"]["targets"][0]["actual_lead_days"]
+                self.assertAlmostEqual((leads[1] - leads[0]) * 24, hours)
+                leads[1] = leads[0] + 1
+                with self.assertRaisesRegex(stage3.Stage3DataError, "TARGET_LEAD_INVALID"):
+                    stage3._validate_forecast(value)
+
+    def test_positive_but_invented_leads_are_rejected(self):
+        value = self.forecast("2026-10-25T12:00:00+00:00", "2026-11-01")
+        value["simulation"]["targets"][0]["actual_lead_days"] = [.1, 1.1]
+        with self.assertRaisesRegex(stage3.Stage3DataError, "TARGET_LEAD_INVALID"):
+            stage3._validate_forecast(value)
 
 
 class Stage3DataPublicationTests(unittest.TestCase):

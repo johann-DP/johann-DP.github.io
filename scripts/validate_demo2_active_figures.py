@@ -367,7 +367,7 @@ def validate_active_figure_tree(
         except live_refresh.RefreshError as error:
             errors.append(f"figure traitée D2-CAP invalide : {error}")
         else:
-            if template_sha256 != live_refresh.PROCESSED_BASE_TEMPLATE_SHA256:
+            if template_sha256 != live_refresh.PROCESSED_CURRENT_TEMPLATE_SHA256:
                 errors.append("figure traitée D2-CAP : gabarit divergent")
             required_processed_markers = (
                 b'<time id="processed-coverage-end"',
