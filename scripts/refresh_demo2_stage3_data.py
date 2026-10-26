@@ -327,18 +327,50 @@ def _validate_forecast(value: dict) -> None:
 def _validate_pruning(value: dict) -> None:
     require(value.get("schema") == "m12-pruning-public/2", "STAGE3_SCHEMA_INVALID")
     rows = value.get("comparator_series")
-    _ordered(rows, "date")
+    require(isinstance(rows, list) and 0 < len(rows) <= 100000, "STAGE3_ROWS_INVALID")
+    legacy_keys = {"date", "timestamp_ms", "raw_mm", "corrected_mm", "temperature_c", "missing_reason"}
+    source_keys = {"source_line_min", "source_line_max", "source_hour_occurrence"}
+    require(isinstance(rows[0], dict), "STAGE3_ROW_INVALID")
+    traced = bool(source_keys & set(rows[0]))
+    expected_keys = legacy_keys | (source_keys if traced else set())
+    previous = None
     for row in rows:
-        require(set(row) == {"date", "timestamp_ms", "raw_mm", "corrected_mm",
-                            "temperature_c", "missing_reason"}, "STAGE3_THERMAL_SCHEMA_INVALID")
+        require(isinstance(row, dict) and set(row) == expected_keys, "STAGE3_THERMAL_SCHEMA_INVALID")
         _number(row.get("raw_mm"))
         _number(row.get("corrected_mm"), True)
         _number(row.get("temperature_c"), True)
         _number(row.get("timestamp_ms"))
-        require(datetime.fromtimestamp(row["timestamp_ms"] / 1000, timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+        require(row["timestamp_ms"] % 1000 == 0 and
+                datetime.fromtimestamp(row["timestamp_ms"] / 1000, timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
                 == row["date"], "STAGE3_SOURCE_CLOCK_CHANGED")
         require((row["corrected_mm"] is None) == (row["missing_reason"] is not None),
                 "STAGE3_THERMAL_MISSING_REASON_INVALID")
+        if traced:
+            for key in source_keys:
+                require(type(row[key]) is int and row[key] >= 1, "STAGE3_SOURCE_IDENTITY_INVALID")
+            require(row["source_line_min"] <= row["source_line_max"], "STAGE3_SOURCE_IDENTITY_INVALID")
+            require(previous is None or row["source_line_min"] > previous["source_line_max"],
+                    "STAGE3_SOURCE_IDENTITY_INVALID")
+        equal = previous is not None and row["timestamp_ms"] == previous["timestamp_ms"]
+        require(previous is None or row["timestamp_ms"] > previous["timestamp_ms"] or (traced and equal),
+                "STAGE3_ORDER_INVALID")
+        if traced:
+            require(row["source_hour_occurrence"] == (2 if equal else 1), "STAGE3_SOURCE_OCCURRENCE_INVALID")
+            stamp = datetime.fromisoformat(row["date"])
+            paris = ZoneInfo("Europe/Paris")
+            first = stamp.replace(tzinfo=paris, fold=0)
+            second = stamp.replace(tzinfo=paris, fold=1)
+            fold = (stamp.hour == 2 and stamp.minute == stamp.second == stamp.microsecond == 0 and
+                    first.utcoffset() - second.utcoffset() == timedelta(hours=1) and
+                    all(t.astimezone(timezone.utc).astimezone(paris).replace(tzinfo=None) == stamp
+                        for t in (first, second)))
+            if fold:
+                require(row["corrected_mm"] is None and row["temperature_c"] is None and
+                        row["missing_reason"] == "CLOCK_AMBIGUOUS_OR_NONEXISTENT",
+                        "STAGE3_SOURCE_FOLD_INVALID")
+            if equal:
+                require(fold and previous["source_hour_occurrence"] == 1, "STAGE3_SOURCE_FOLD_INVALID")
+        previous = row
     comparator = value.get("comparator", {})
     counts = comparator.get("counts", {})
     require(set(counts) in ({"source_hours", "raw_hours", "corrected_hours", "temperature_present_hours",

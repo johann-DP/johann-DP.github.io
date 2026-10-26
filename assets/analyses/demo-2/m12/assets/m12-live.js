@@ -5,6 +5,20 @@
   const requireThat = (ok, message) => { if (!ok) throw new Error(message); };
   const finite = value => typeof value === 'number' && Number.isFinite(value);
 
+  function isParisAutumnHour(stamp) {
+    const axis = new Date(stamp).toISOString().slice(0,19).replace('T',' ');
+    if (!axis.endsWith(' 02:00:00')) return false;
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone:'Europe/Paris', hourCycle:'h23', year:'numeric', month:'2-digit', day:'2-digit',
+      hour:'2-digit', minute:'2-digit', second:'2-digit',
+    });
+    const civil = value => {
+      const parts = Object.fromEntries(formatter.formatToParts(new Date(value)).map(p => [p.type,p.value]));
+      return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}:${parts.second}`;
+    };
+    return civil(stamp-7200000) === axis && civil(stamp-3600000) === axis;
+  }
+
   function arrayAssignment(html, name) {
     const match = new RegExp('\\bconst\\s+' + name + '\\s*=\\s*').exec(html);
     requireThat(match, 'Structure du maître de fissure non reconnue.');
@@ -56,20 +70,40 @@
     const raw = payload.thermal_extended.filter(row => row[4] === segment);
     requireThat(raw.length > 0 && raw.length === origin.n, 'Support du segment incomplet.');
     let previous = -Infinity;
+    let previousRow = null;
+    let previousOccurrence = 0;
     const counts = {raw: raw.length, corrected: 0, missing_temperature: 0, out_of_domain: 0, other_missing: 0};
     const series = raw.map(row => {
-      requireThat(row.length === 29 && finite(row[0]) && row[0] > previous && finite(row[5]), 'Valeurs horaires non conformes.');
+      requireThat(row.length === 29 && finite(row[0]) && row[0] % 3600000 === 0 && row[0] >= previous && finite(row[5]), 'Valeurs horaires non conformes.');
       requireThat(typeof row[1] === 'string' && /^\d{4}-\d{2}-\d{2} \d{2}:00:00$/.test(row[1]), 'Heure source non conforme.');
       requireThat(new Date(row[0]).toISOString().slice(0,19).replace('T',' ') === row[1], 'Incohérence de l’axe et de l’heure source.');
+      requireThat(Number.isInteger(row[27]) && Number.isInteger(row[28]) && row[27] > 0 && row[28] >= row[27] && (!previousRow || row[27] > previousRow[28]), 'Identité des lignes source non conforme.');
+      const repeated = row[0] === previous;
+      const occurrence = repeated ? 2 : 1;
+      const ambiguous = isParisAutumnHour(row[0]);
+      if (ambiguous) {
+        requireThat(row[2] === null && row[3] === null && row[8] === null && row[9] === null &&
+          row[10] === null && row[11] === false && row[12] === false &&
+          row[14] === 'CLOCK_AMBIGUOUS_OR_NONEXISTENT', 'Heure ambiguë avec attribution thermique interdite.');
+      }
+      if (repeated) {
+        requireThat(previousOccurrence === 1 && ambiguous &&
+          [previousRow,row].every(item => item[2] === null && item[3] === null &&
+            item[8] === null && item[9] === null && item[10] === null &&
+            item[11] === false && item[12] === false && item[14] === 'CLOCK_AMBIGUOUS_OR_NONEXISTENT'),
+          'Heure répétée sans preuve de changement d’heure.');
+      }
       previous = row[0];
+      previousRow = row;
+      previousOccurrence = occurrence;
       const allowed = row[12] === true && row[11] === true;
       requireThat(!allowed || (finite(row[9]) && finite(row[8])), 'Correction sans composante ou température.');
       if (allowed) counts.corrected += 1;
       else if (row[14] === 'NO_EXACT_OUTDOOR_TEMPERATURE') counts.missing_temperature += 1;
       else if (row[14] === 'OUTSIDE_DOCUMENTED_TEMPERATURE_DOMAIN') counts.out_of_domain += 1;
       else counts.other_missing += 1;
-      const reason = allowed ? null : row[14] === 'NO_EXACT_OUTDOOR_TEMPERATURE' ? 'Température exacte indisponible' : row[14] === 'OUTSIDE_DOCUMENTED_TEMPERATURE_DOMAIN' ? 'Température hors domaine documenté' : 'Correction indisponible selon les contrôles de la source';
-      return {date: row[1].replace(' ','T'), timestamp_ms:row[0], raw_mm:row[5]-origin.center_mm, corrected_mm:allowed ? row[5]-row[9]-origin.center_mm : null, temperature_c:finite(row[8]) ? row[8] : null, missing_reason:reason};
+      const reason = allowed ? null : row[14] === 'NO_EXACT_OUTDOOR_TEMPERATURE' ? 'Température exacte indisponible' : row[14] === 'OUTSIDE_DOCUMENTED_TEMPERATURE_DOMAIN' ? 'Température hors domaine documenté' : row[14] === 'CLOCK_AMBIGUOUS_OR_NONEXISTENT' ? 'Heure ambiguë au changement d’heure : correction thermique non attribuable' : 'Correction indisponible selon les contrôles de la source';
+      return {date: row[1].replace(' ','T'), timestamp_ms:row[0], raw_mm:row[5]-origin.center_mm, corrected_mm:allowed ? row[5]-row[9]-origin.center_mm : null, temperature_c:finite(row[8]) ? row[8] : null, missing_reason:reason, source_line_min:row[27], source_line_max:row[28], source_hour_occurrence:occurrence};
     });
     return {series, segment, center_mm:origin.center_mm, counts, period:{start:series[0].date,end:series.at(-1).date}, continuity_changed:segment !== baseline.segment};
   }
