@@ -20,6 +20,13 @@ from statistics import median
 from typing import Iterable, Mapping
 from zoneinfo import ZoneInfo
 
+from demo2_clock_revision import (
+    DELIVERY_REVISION as CLOCK_DELIVERY_REVISION,
+    SOURCE_CLOCK_REVISION,
+    project_full_payload,
+    project_review_diagnostics,
+)
+
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
 FIGURES = PurePosixPath("assets/figures/demo-2")
@@ -71,6 +78,19 @@ _PATTERN_METADATA_KEYS = frozenset(
 _PATTERN_STATIC_METADATA_KEYS = frozenset(
     {"analysis_id", "axes", "figure_id", "limits", "method", "semantics"}
 )
+_PATTERN_CLOCK_METHOD = {
+    "hypothesis": "H_PARIS",
+    "timezone": "Europe/Paris",
+    "trusted_utc_produced": False,
+    "maximum_transition_elapsed_seconds": 300,
+    "transition_evidence": "ADJACENT_SOURCE_LINES_CALENDAR_CONFIRMED_SINGLE_STEP",
+    "source_timestamps_rewritten": False,
+    "non_dst_reversals": "UNCHANGED_LEGACY_DERIVED_SORT_NOT_CLASSIFIED_AS_DST",
+    "repeated_hour_records": "DISTINCT_SOURCE_LINES_RETAINED_IN_ANALYTICAL_ORDER",
+    "civil_profile_slots": "BOTH_OCCURRENCES_CONTRIBUTE_TO_EXISTING_CIVIL_SLOT",
+    "plateau_across_clock_step": "NEAREST_OBSERVED_TIME_TO_ELAPSED_MIDPOINT_TIE_FIRST",
+}
+_PATTERN_CLOCK_COUNT_KEYS = {"recognized_daylight_saving_steps", "non_dst_backward_source_pairs"}
 PROCESSED_PATCH = "processed-signal-payload-patch.json"
 PROCESSED_PATCH_ROLE = "processed_signal_payload_patch"
 PROCESSED_TARGET = "retaining-wall-sensor-processed-v2.html"
@@ -81,6 +101,11 @@ PROCESSED_BASE_PAYLOAD_SHA256 = (
 )
 PROCESSED_BASE_TEMPLATE_SHA256 = (
     "9d8d4aef184b36804ba8a59f9f8e06cb0e583d28c67f0449af858b00efba848d"
+)
+# Explicitly reviewed presentation; legacy patch.template continues to identify
+# its immutable scientific source, not permission to replace the public shell.
+PROCESSED_CURRENT_TEMPLATE_SHA256 = (
+    "4757bb395ad44010053340028f2bc39b130775425685f01fe828e303b9851064"
 )
 MAX_PROCESSED_PATCH_BYTES = 32 * 1024 * 1024
 MAX_PROCESSED_MASTER_BYTES = 40 * 1024 * 1024
@@ -142,6 +167,20 @@ _PROCESSED_STATIC_THERMAL_EXTENSION_SHA256 = (
 _PROCESSED_STATIC_REVIEW_SHA256 = (
     "9f37256a08a0ea3c8b7c45898fa523db6c37625b2e2267e07efd9a6e4269051f"
 )
+_CLOCK_BASELINE_PROOF = {
+    **_PROCESSED_BASELINE_PROOF,
+    "global_hourly_prefix_without_sg5_sha256": "5f81d08a17eebbebb84f99a7599c9186bb060f6434784e97b430db1099b4993e",
+    "global_hourly_stable_sg5_prefix_sha256": "31105f3be770d2cbb7ed083d5efb7075ecf4f33ada11efc11904ee42084d7ccf",
+    "global_daily_prefix_sha256": "aa75735f475fd101f292ba1a64dac14aa730710a39ea836aa69c6010d07bef92",
+}
+_CLOCK_STATIC_PAYLOAD_HASHES = {
+    **_PROCESSED_STATIC_PAYLOAD_HASHES,
+    "offsets": "d565249433f417b9a9b41bfbf185b5babfe844a47684b7302ca6ff8b66845995",
+    "origin_starts": "a84560e3597c9c30fb71717506179877f7431dc37b0c67b2f299c81d685816ea",
+    "resumptions": "51229fb23aa9dbcd771f04028e78eb908b5eea4ea05822be41a1b54b4aba4f49",
+}
+_CLOCK_STATIC_METADATA_SHA256 = "5a519bf241b24db2dbee7092dc224e7a8178eec36303ac60f9f48e7b6a610a51"
+_CLOCK_STATIC_REVIEW_SHA256 = "f844b04916ea8f02e03607d4f5d2c752f96c901eecf9eb9aca82ea6b11bca48e"
 _PROCESSED_REPLACEMENT_KEYS = frozenset(
     {
         "daily",
@@ -337,6 +376,14 @@ def _html_safe_json(value: object) -> bytes:
 def _value_sha256(value: object) -> str:
     """Hash one canonical JSON value using the producer's newline convention."""
     return hashlib.sha256(_canonical_json(value) + b"\n").hexdigest()
+
+
+def _clock_revision_enabled(value: Mapping[str, object]) -> bool:
+    if "source_clock_revision" not in value:
+        return False
+    if _canonical_json(value["source_clock_revision"]) != _canonical_json(SOURCE_CLOCK_REVISION):
+        raise RefreshError("REFRESH_PROCESSED_CLOCK_REVISION_DIVERGED")
+    return True
 
 
 def _same_number(left: object, right: object, *, tolerance: float = 1e-9) -> bool:
@@ -890,9 +937,13 @@ def _validate_processed_payload(value: object) -> dict[str, object]:
     code = "REFRESH_PROCESSED_SCHEMA_DIVERGED"
     payload = _expect_object(value, _PROCESSED_PAYLOAD_KEYS, code)
     _validate_json_tree(payload, code)
+    if not isinstance(payload["metadata"], dict):
+        raise RefreshError(code)
+    clock_revision = _clock_revision_enabled(payload["metadata"])
     for name, width in _PROCESSED_ROW_WIDTHS.items():
         _rows(payload[name], width, code)
-    for name, expected_hash in _PROCESSED_STATIC_PAYLOAD_HASHES.items():
+    static_hashes = _CLOCK_STATIC_PAYLOAD_HASHES if clock_revision else _PROCESSED_STATIC_PAYLOAD_HASHES
+    for name, expected_hash in static_hashes.items():
         if _value_sha256(payload[name]) != expected_hash:
             raise RefreshError("REFRESH_PROCESSED_STATIC_PAYLOAD_DIVERGED")
     origins = payload["origins"]
@@ -937,12 +988,14 @@ def _validate_processed_payload(value: object) -> dict[str, object]:
         )
     ):
         raise RefreshError(code)
-    metadata = _expect_object(payload["metadata"], _PROCESSED_METADATA_KEYS, code)
+    metadata_keys = _PROCESSED_METADATA_KEYS | ({"source_clock_revision"} if clock_revision else set())
+    metadata = _expect_object(payload["metadata"], metadata_keys, code)
     static_metadata = {
         name: metadata[name]
-        for name in _PROCESSED_METADATA_KEYS - _PROCESSED_DYNAMIC_METADATA_KEYS
+        for name in metadata_keys - _PROCESSED_DYNAMIC_METADATA_KEYS
     }
-    if _value_sha256(static_metadata) != _PROCESSED_STATIC_METADATA_SHA256:
+    metadata_hash = _CLOCK_STATIC_METADATA_SHA256 if clock_revision else _PROCESSED_STATIC_METADATA_SHA256
+    if _value_sha256(static_metadata) != metadata_hash:
         raise RefreshError("REFRESH_PROCESSED_MODEL_DIVERGED")
     counts_keys = {
         "daily", "events", "hourly", "low_cycle_hours", "origin_starts",
@@ -1087,13 +1140,18 @@ def _validate_processed_payload(value: object) -> dict[str, object]:
 
 def _validate_processed_review(value: object) -> dict[str, object]:
     code = "REFRESH_PROCESSED_REVIEW_SCHEMA_DIVERGED"
-    review = _expect_object(value, _PROCESSED_REVIEW_KEYS, code)
+    if not isinstance(value, dict):
+        raise RefreshError(code)
+    clock_revision = _clock_revision_enabled(value)
+    keys = _PROCESSED_REVIEW_KEYS | ({"source_clock_revision"} if clock_revision else set())
+    review = _expect_object(value, keys, code)
     _validate_json_tree(review, code)
     static_review = {
         name: review[name]
-        for name in _PROCESSED_REVIEW_KEYS - _PROCESSED_REVIEW_UPDATE_KEYS
+        for name in keys - _PROCESSED_REVIEW_UPDATE_KEYS
     }
-    if _value_sha256(static_review) != _PROCESSED_STATIC_REVIEW_SHA256:
+    review_hash = _CLOCK_STATIC_REVIEW_SHA256 if clock_revision else _PROCESSED_STATIC_REVIEW_SHA256
+    if _value_sha256(static_review) != review_hash:
         raise RefreshError("REFRESH_PROCESSED_REVIEW_STATIC_DIVERGED")
     for name in ("source_html_sha256", "source_audit_sha256", "sensor_snapshot_sha256"):
         _hash_value(review[name], code)
@@ -1137,6 +1195,8 @@ def _processed_document(
     review = _validate_processed_review(
         _strict_json(review_match.group(2), "REFRESH_PROCESSED_REVIEW_INVALID")
     )
+    if _clock_revision_enabled(payload["metadata"]) != _clock_revision_enabled(review):
+        raise RefreshError("REFRESH_PROCESSED_CLOCK_REVISION_DIVERGED")
     return payload_match, payload, review_match, review
 
 
@@ -1277,6 +1337,9 @@ def _parse_processed_patch(payload: bytes) -> dict[str, object]:
     value = _strict_json(payload, code)
     if _canonical_json(value) + b"\n" != payload:
         raise RefreshError(code)
+    if not isinstance(value, dict) or type(value.get("protocol_version")) is not int:
+        raise RefreshError(code)
+    clock_revision = value["protocol_version"] == 2
     patch = _expect_object(
         value,
         {
@@ -1289,11 +1352,12 @@ def _parse_processed_patch(payload: bytes) -> dict[str, object]:
             "review_diagnostics_update",
             "sensor_source",
             "weather_source",
-        },
+        } | ({"delivery_revision"} if clock_revision else set()),
         code,
     )
     if (
-        patch["protocol_version"] != PROCESSED_PROTOCOL_VERSION
+        patch["protocol_version"] not in {PROCESSED_PROTOCOL_VERSION, 2}
+        or (clock_revision and patch["delivery_revision"] != CLOCK_DELIVERY_REVISION)
         or patch["logical_asset_id"] != PROCESSED_LOGICAL_ASSET_ID
         or patch["base_payload_sha256"] != PROCESSED_BASE_PAYLOAD_SHA256
         or patch["base_template_sha256"] != PROCESSED_BASE_TEMPLATE_SHA256
@@ -1376,8 +1440,12 @@ def _parse_processed_patch(payload: bytes) -> dict[str, object]:
     )
     _validate_json_tree(replacements, code)
     metadata_update = _expect_object(
-        replacements["metadata"], _PROCESSED_DYNAMIC_METADATA_KEYS, code
+        replacements["metadata"],
+        _PROCESSED_DYNAMIC_METADATA_KEYS | ({"source_clock_revision"} if clock_revision else set()),
+        code,
     )
+    if _clock_revision_enabled(metadata_update) != clock_revision:
+        raise RefreshError("REFRESH_PROCESSED_CLOCK_REVISION_DIVERGED")
     thermal_extension_update = _expect_object(
         metadata_update["thermal_extension"],
         _PROCESSED_DYNAMIC_THERMAL_EXTENSION_KEYS,
@@ -1445,11 +1513,14 @@ def _coverage_progressed(active: Mapping[str, object], candidate: Mapping[str, o
 def _merge_processed_metadata(
     active: Mapping[str, object], candidate: Mapping[str, object]
 ) -> dict[str, object]:
+    clock_revision = _clock_revision_enabled(active)
     candidate = _expect_object(
         candidate,
-        _PROCESSED_DYNAMIC_METADATA_KEYS,
+        _PROCESSED_DYNAMIC_METADATA_KEYS | ({"source_clock_revision"} if clock_revision else set()),
         "REFRESH_PROCESSED_SCHEMA_DIVERGED",
     )
+    if _clock_revision_enabled(candidate) != clock_revision:
+        raise RefreshError("REFRESH_PROCESSED_CLOCK_REVISION_DIVERGED")
     active_end = _source_hour(active["coverage_end"], "REFRESH_PROCESSED_HISTORY_DIVERGED")
     candidate_end = _source_hour(
         candidate["coverage_end"], "REFRESH_PROCESSED_HISTORY_DIVERGED"
@@ -1542,7 +1613,7 @@ def _validate_closed_daily_history(
 
 
 def _validate_baseline_proof(payload: Mapping[str, object]) -> None:
-    proof = _PROCESSED_BASELINE_PROOF
+    proof = _CLOCK_BASELINE_PROOF if _clock_revision_enabled(payload["metadata"]) else _PROCESSED_BASELINE_PROOF
     hourly_count = proof["hourly_prefix_count"]
     global_count = proof["global_hourly_prefix_count"]
     sg5_count = proof["global_hourly_stable_sg5_prefix_count"]
@@ -1659,6 +1730,16 @@ def _validate_processed_transition_values(
 ) -> None:
     _validate_baseline_proof(active_payload)
     _validate_baseline_proof(candidate_payload)
+    old_revision = _clock_revision_enabled(active_payload["metadata"])
+    new_revision = _clock_revision_enabled(candidate_payload["metadata"])
+    if old_revision and not new_revision:
+        raise RefreshError("REFRESH_PROCESSED_CLOCK_REVISION_ROLLBACK")
+    if new_revision and not old_revision:
+        active_payload = project_full_payload(dict(active_payload))
+        active_review = project_review_diagnostics(dict(active_review))
+        _validate_processed_payload(active_payload)
+        _validate_processed_review(active_review)
+        _validate_baseline_proof(active_payload)
     for name in {"events", "offsets", "origin_starts", "resumptions", "thermal"}:
         if active_payload[name] != candidate_payload[name]:
             raise RefreshError("REFRESH_PROCESSED_STATIC_PAYLOAD_DIVERGED")
@@ -1725,7 +1806,7 @@ def _validate_processed_transition_values(
             raise RefreshError("REFRESH_PROCESSED_ORIGIN_DIVERGED")
     candidate_metadata_update = {
         name: candidate_payload["metadata"][name]
-        for name in _PROCESSED_DYNAMIC_METADATA_KEYS
+        for name in _PROCESSED_DYNAMIC_METADATA_KEYS | ({"source_clock_revision"} if new_revision else set())
     }
     candidate_metadata_update["thermal_extension"] = {
         name: candidate_payload["metadata"]["thermal_extension"][name]
@@ -1764,7 +1845,7 @@ def validate_processed_transition(active: bytes, candidate: bytes) -> bytes:
     del candidate_match
     if (
         processed_data_only_skeleton(active) != processed_data_only_skeleton(candidate)
-        or processed_template_sha256(active) != PROCESSED_BASE_TEMPLATE_SHA256
+        or processed_template_sha256(active) != PROCESSED_CURRENT_TEMPLATE_SHA256
     ):
         raise RefreshError("REFRESH_PROCESSED_TEMPLATE_DIVERGED")
     _validate_processed_transition_values(
@@ -1784,8 +1865,19 @@ def refresh_processed(active: bytes, patch_payload: bytes) -> bytes:
         hashlib.sha256(payload_match.group(2)).hexdigest()
         == PROCESSED_BASE_PAYLOAD_SHA256
     )
-    if processed_template_sha256(active) != patch["base_template_sha256"]:
+    if processed_template_sha256(active) != PROCESSED_CURRENT_TEMPLATE_SHA256:
         raise RefreshError("REFRESH_PROCESSED_TEMPLATE_DIVERGED")
+    clock_revision = patch["protocol_version"] == 2
+    active_revision = _clock_revision_enabled(active_payload["metadata"])
+    if active_revision and not clock_revision:
+        raise RefreshError("REFRESH_PROCESSED_CLOCK_REVISION_ROLLBACK")
+    if clock_revision and not active_revision:
+        _validate_baseline_proof(active_payload)
+        active_payload = project_full_payload(active_payload)
+        active_review = project_review_diagnostics(active_review)
+        _validate_processed_payload(active_payload)
+        _validate_processed_review(active_review)
+        _validate_baseline_proof(active_payload)
     replacements = patch["replacements"]
     candidate_payload = dict(active_payload)
     for name in _PROCESSED_REPLACEMENT_KEYS - {"metadata", "origins"}:
@@ -1893,6 +1985,7 @@ def pattern_data_only_skeleton(payload: bytes) -> bytes:
     if cards.group(0) != _render_pattern_cards(kind, value):
         raise RefreshError("REFRESH_PATTERN_PUBLIC_CARDS_DIVERGED")
     static_metadata = dict(metadata)
+    static_metadata["method"], _ = _pattern_legacy_method(metadata["method"])
     static_metadata["bootstrap"] = "__PATTERN_BOOTSTRAP__"
     static_metadata["counts"] = "__PATTERN_COUNTS__"
     return _replace_ranges(
@@ -1903,6 +1996,30 @@ def pattern_data_only_skeleton(payload: bytes) -> bytes:
             (cards.start(), cards.end(), b"__PATTERN_CARDS__"),
         ),
     )
+
+
+def _pattern_legacy_method(value: object) -> tuple[dict[str, object], bool]:
+    if not isinstance(value, dict):
+        raise RefreshError("REFRESH_PATTERN_STATIC_METADATA_DIVERGED")
+    method = dict(value)
+    if "elapsed_clock" not in method:
+        return method, False
+    if (
+        _canonical_json(method["elapsed_clock"]) != _canonical_json(_PATTERN_CLOCK_METHOD)
+        or method.get("temporal_ordering") != "DERIVED_SORT_BY_H_PARIS_SOURCE_ELAPSED_THEN_SOURCE_LINE"
+        or method.get("temporal_thinning") != (
+            "KEEP_FIRST_ANALYTICAL_TIME_THEN_ROWS_WHOSE_ELAPSED_DELTA_FROM_"
+            "IMMEDIATELY_PREVIOUS_ANALYTICAL_TIME_IS_AT_LEAST_10_SECONDS"
+        )
+    ):
+        raise RefreshError("REFRESH_PATTERN_CLOCK_METHOD_DIVERGED")
+    method.pop("elapsed_clock")
+    method["temporal_ordering"] = "DERIVED_SORT_BY_PARSED_SOURCE_NAIVE_TIMESTAMP"
+    method["temporal_thinning"] = (
+        "KEEP_FIRST_SORTED_TIMESTAMP_THEN_ROWS_WHOSE_DELTA_FROM_IMMEDIATELY_"
+        "PREVIOUS_SORTED_TIMESTAMP_IS_AT_LEAST_10_SECONDS"
+    )
+    return method, True
 
 
 def _pattern_kind(metadata: Mapping[str, object]) -> str:
@@ -1969,22 +2086,36 @@ def _pattern_metadata_transition(
         "VALIDÉ",
     }:
         raise RefreshError("REFRESH_PATTERN_CANDIDATE_STATUS_INVALID")
-    if any(active[name] != candidate[name] for name in _PATTERN_STATIC_METADATA_KEYS):
+    old_method, old_clock = _pattern_legacy_method(active["method"])
+    new_method, new_clock = _pattern_legacy_method(candidate["method"])
+    if old_clock and not new_clock:
+        raise RefreshError("REFRESH_PATTERN_CLOCK_REVISION_ROLLBACK")
+    if old_method != new_method or any(
+        active[name] != candidate[name]
+        for name in _PATTERN_STATIC_METADATA_KEYS - {"method"}
+    ):
         raise RefreshError("REFRESH_PATTERN_STATIC_METADATA_DIVERGED")
     active_counts = active.get("counts")
     candidate_counts = candidate.get("counts")
     if not isinstance(active_counts, dict) or not isinstance(candidate_counts, dict):
         raise RefreshError("REFRESH_PATTERN_COUNTS_INVALID")
-    if set(active_counts) != set(candidate_counts):
+    added = _PATTERN_CLOCK_COUNT_KEYS if new_clock and not old_clock else set()
+    if (
+        set(candidate_counts) != set(active_counts) | added
+        or bool(_PATTERN_CLOCK_COUNT_KEYS & set(active_counts)) != old_clock
+        or bool(_PATTERN_CLOCK_COUNT_KEYS & set(candidate_counts)) != new_clock
+        or (new_clock and not _PATTERN_CLOCK_COUNT_KEYS <= set(candidate_counts))
+    ):
         raise RefreshError("REFRESH_PATTERN_COUNTS_SCHEMA_DIVERGED")
     _validate_pattern_counts(active_counts)
     _validate_pattern_counts(candidate_counts)
-    for name in (
+    monotonic_counts = (
         "source_record_count",
         "source_naive_day_count_with_finite_retained_records",
         "daily_extrema_accepted_day_count",
         "profile_day_slot_cell_count",
-    ):
+    ) + (tuple(sorted(_PATTERN_CLOCK_COUNT_KEYS)) if old_clock else ())
+    for name in monotonic_counts:
         old = active_counts.get(name)
         new = candidate_counts.get(name)
         if type(old) is not int or type(new) is not int or old < 0 or new < old:
@@ -1992,6 +2123,7 @@ def _pattern_metadata_transition(
     if not isinstance(candidate.get("bootstrap"), dict):
         raise RefreshError("REFRESH_PATTERN_BOOTSTRAP_INVALID")
     merged = dict(active)
+    merged["method"] = candidate["method"]
     merged["bootstrap"] = candidate["bootstrap"]
     merged["counts"] = candidate_counts
     merged["review_status"] = "VALIDÉ"

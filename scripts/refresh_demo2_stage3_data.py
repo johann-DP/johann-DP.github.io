@@ -7,7 +7,7 @@ part of the reviewed protected-site baseline. A ready release supplies data only
 from __future__ import annotations
 
 from copy import deepcopy
-from datetime import date, datetime, timezone
+from datetime import date, datetime, time, timedelta, timezone
 import hashlib
 import json
 import math
@@ -18,6 +18,7 @@ import shutil
 import stat
 import tempfile
 from typing import Mapping
+from zoneinfo import ZoneInfo
 
 
 ROOT = PurePosixPath("assets/analyses/demo-2/m12/data")
@@ -246,9 +247,14 @@ def _validate_forecast(value: dict) -> None:
                 "tie_break": ["MAE", "fixed_model_order"]}, "STAGE3_SELECTION_RULE_CHANGED")
         issued = datetime.fromisoformat(simulation["issued_at"])
         require(issued.tzinfo is not None, "STAGE3_ISSUANCE_CLOCK_INVALID")
-        require(all(_date(r["date"]) > issued.date() for r in targets),
-                "STAGE3_RETRODATED_FORECAST")
+        issued = issued.astimezone(timezone.utc)
         for row in targets:
+            # The target is a Paris civil day, not a UTC date. Compare physical
+            # instants, including the 23/25-hour days at seasonal clock changes.
+            target_date = _date(row["date"])
+            start = datetime.combine(target_date, time.min, ZoneInfo("Europe/Paris")).astimezone(timezone.utc)
+            end = datetime.combine(target_date + timedelta(days=1), time.min, ZoneInfo("Europe/Paris")).astimezone(timezone.utc)
+            require(start > issued, "STAGE3_RETRODATED_FORECAST")
             require(set(row) == {"horizon", "horizon_label", "date", "predicted_mm", "model", "model_label",
                     "calibration_n", "selection_n", "selection_mae_mm", "selection_wis_mm", "selection_score",
                     "selection_reference_model", "selection_reference_mae_mm", "selection_reference_wis_mm",
@@ -263,8 +269,14 @@ def _validate_forecast(value: dict) -> None:
                     row["status"] == "PREVISION_EXPLORATOIRE_NON_VALIDEE", "STAGE3_TARGET_METHOD_INVALID")
             require(row["horizon_label"] == row["horizon"][:-1] + " jours", "STAGE3_HORIZON_LABEL_INVALID")
             leads = row["actual_lead_days"]
-            require(isinstance(leads, list) and len(leads) == 2 and 0 < leads[0] < leads[1],
+            require(isinstance(leads, list) and len(leads) == 2,
                     "STAGE3_TARGET_LEAD_INVALID")
+            for actual, boundary in zip(leads, (start, end), strict=True):
+                _number(actual)
+                expected = (boundary - issued).total_seconds() / 86400
+                require(math.isclose(actual, expected, rel_tol=0.0, abs_tol=1e-9),
+                        "STAGE3_TARGET_LEAD_INVALID")
+            require(0 < leads[0] < leads[1], "STAGE3_TARGET_LEAD_INVALID")
             for key in ("selection_mae_mm", "selection_wis_mm", "selection_score",
                         "selection_reference_mae_mm", "selection_reference_wis_mm"):
                 _number(row[key])
