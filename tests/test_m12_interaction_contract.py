@@ -12,7 +12,7 @@ PAGES = ROOT / "assets/analyses/demo-2/m12/pages"
 
 class M12InteractionContractTests(unittest.TestCase):
     def test_repeated_source_hour_survives_reader_and_renderer(self) -> None:
-        result = subprocess.run(["node", str(ROOT / "tests/test_m12_clock.cjs")],
+        result = subprocess.run(["node", "--test-reporter=tap", str(ROOT / "tests/test_m12_clock.cjs")],
                                 text=True, capture_output=True, timeout=30, check=False)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("# pass 3", result.stdout)
