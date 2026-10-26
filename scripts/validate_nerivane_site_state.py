@@ -160,7 +160,7 @@ DEFAULT_BASELINE: dict[str, Any] = {
     },
     "maintenance_catalogue_fragment_sha256": "24f984b4ce8bfe678b0dc175331337623fd9c9fae2cde36a900dcd78d69d90f1",
     "catalogue_outside_sha256": "4c40877f4776f766025327b8e7dce1973f260bf053b3e8d92c0e884ba82ca0d2",
-    "protected_snapshot_sha256": "8e9dc9b43881bce0fee91c827528f3a82acdffa79016e4473475ba4f69bda87e",
+    "protected_snapshot_sha256": "a03bf91d77ea627cae1747da5daf782b95fbfe8ba1efbd7cc5a13f6f1ea132f4",
     "demo2_rotating_skeletons": {
         "fissure-recente-meme-format.html": "bf48a902b4cc5b9ba18bf790d1e11d8737aa7b38994ebf892e29043afb208350",
         "joint-dilatation-rendu-site.html": "8388bce3bad500c641b27768201f6749337c5d79b29811d4bb578642987a2ea2",

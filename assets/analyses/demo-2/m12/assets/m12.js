@@ -616,6 +616,9 @@
   async function renderPruning(data, chart) {
     const source = asArray(data.comparator_series);
     const rows = source.map(normaliseComparatorRow).filter(Boolean).sort((a, b) => a.time - b.time);
+    const repetitions = new Map();
+    rows.forEach(row => repetitions.set(row.time, (repetitions.get(row.time) || 0) + 1));
+    rows.forEach(row => { row.repeatedHour = repetitions.get(row.time) > 1; });
     if (!rows.length) throw new Error("La série horaire publique du comparateur est absente ou inexploitable.");
     const comparator = object(data.comparator) || {};
     const unit = comparatorUnit(comparator);
@@ -690,7 +693,7 @@
         ? `Correction thermique exploratoire absente (${text(row.missingReason, "motif non publié")}); `
         : `Correction thermique exploratoire ${format(row.corrected)} ${unit}; `;
       return {
-        label: row.date,
+        label: comparatorPointLabel(row),
         detail: `${mode === "raw" ? "" : correctionDetail}mesure traitée, non corrigée ${row.raw === null ? "non publiée" : `${format(row.raw)} ${unit}`}; température ${temperature(row.temperature)}.`,
         curveNumber: useCorrected ? 1 : 0,
         pointNumber: useCorrected ? correctedIndex : rawIndex,
@@ -734,8 +737,17 @@
       raw,
       corrected,
       temperature: number(first(row.temperature_c, row.temperature)),
-      missingReason: text(row.missing_reason, ""),
+      missingReason: row.missing_reason === "CLOCK_AMBIGUOUS_OR_NONEXISTENT"
+        ? "Heure ambiguë au changement d’heure : correction thermique non attribuable"
+        : text(row.missing_reason, ""),
+      occurrence: number(row.source_hour_occurrence),
     };
+  }
+
+  function comparatorPointLabel(row) {
+    return row.repeatedHour && (row.occurrence === 1 || row.occurrence === 2)
+      ? `${row.date} — ${row.occurrence === 1 ? "1re" : "2e"} occurrence (changement d’heure)`
+      : row.date;
   }
 
   function plotSeriesWithGaps(rows, key) {
@@ -745,7 +757,7 @@
     const rowPointIndexes = new Map();
     let previous = null;
     rows.forEach((row) => {
-      if (previous !== null && row.time - previous > HOUR_MS) {
+      if (previous !== null && (row.time - previous > HOUR_MS || row.time <= previous)) {
         x.push(row.x); y.push(null); custom.push(["", "", "", ""]);
       }
       const value = row[key];
@@ -753,7 +765,7 @@
       x.push(row.x);
       y.push(value);
       custom.push([
-        safe(row.date), temperature(row.temperature),
+        safe(comparatorPointLabel(row)), temperature(row.temperature),
         safe(value === null ? text(row.missingReason, "Valeur indisponible") : "Valeur disponible"),
         row.raw === null ? "non publiée" : format(row.raw),
       ]);
