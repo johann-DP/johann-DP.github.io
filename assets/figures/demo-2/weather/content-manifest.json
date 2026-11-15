@@ -21,62 +21,62 @@
     {
       "path": "legacy/meteo_humidity.html",
       "role": "responsive_html_master",
-      "sha256": "6b62d41310c26b27de8b8cee28a46ee56837c2ad5016c6c674c1df76bda0baf3",
-      "size_bytes": 17807905
+      "sha256": "c4039eeb22f3a1cb0a49d35e3ea78aed4ac5d799366c3500e030648e73f606e8",
+      "size_bytes": 17924873
     },
     {
       "path": "legacy/meteo_light_uv.html",
       "role": "responsive_html_master",
-      "sha256": "8cd0d5aa76502361d84edc343a8116b1499502f5c9edae5510d58394ab17b1b2",
-      "size_bytes": 6132610
+      "sha256": "a207dae2aa6ce877f43e5af0aebc6c8cbccf4bdf529f1e81045f0629cc58ee09",
+      "size_bytes": 6172901
     },
     {
       "path": "legacy/meteo_pairplots.html",
       "role": "responsive_html_master",
-      "sha256": "f1af4f630b99fdbe3d26cb8035a4c220cc291fbf204e4084e945436c89a7bdee",
-      "size_bytes": 10795818
+      "sha256": "439ad0d56e9c8548154fee0b204f05c8c4a966aa5d099dff6ae8a99eff597dd1",
+      "size_bytes": 10865437
     },
     {
       "path": "legacy/meteo_precipitation.html",
       "role": "responsive_html_master",
-      "sha256": "0c864b69df3c7a07c0bc5163b94b55fe328c67a9aaa9b0e2869f5a3e27183045",
-      "size_bytes": 1719666
+      "sha256": "d3c68208a778dd5a1185eb74473da30b360f99a5ecacf7dd50b0897b43e3d10c",
+      "size_bytes": 1730802
     },
     {
       "path": "legacy/meteo_temp_minmax.html",
       "role": "responsive_html_master",
-      "sha256": "911688f7b8f8e1e8a0d1bfb2d71c7d225291ff07ecbbdb3251df1f71c756306b",
-      "size_bytes": 7948045
+      "sha256": "b778d751a0a0e207bd8031d156ff41afb7510ace8c4ffceb3b2c64ae1cb02ef9",
+      "size_bytes": 8000291
     },
     {
       "path": "legacy/meteo_temperature.html",
       "role": "responsive_html_master",
-      "sha256": "63043567f4c7f0c0eb671e187c0cbe6ba9a2c7cf58b4b2ef424f7ad05451f6fe",
-      "size_bytes": 3990503
+      "sha256": "3621f6b8d64a03e99bdcdb010152ddc743257309725fce7851c12472e6cd07cf",
+      "size_bytes": 4016679
     },
     {
       "path": "legacy/meteo_wind_dir.html",
       "role": "responsive_html_master",
-      "sha256": "c94644c66ad2db2a842ca5059f0e3d67324e62264c4f052e7f2edea346a36fdb",
-      "size_bytes": 1646969
+      "sha256": "daae8fdc944dbafe3b4b0d214f0abec4a9b297e92c834d9f21ffaa5614a598e8",
+      "size_bytes": 1657303
     },
     {
       "path": "legacy/meteo_wind_speed.html",
       "role": "responsive_html_master",
-      "sha256": "9410c2ecfe89b1f9fc16f8a15d4c3adc0843d1929a61010435c5f33d13449905",
-      "size_bytes": 2076938
+      "sha256": "4b75dc005f347dc72371a0764d6f3356fb98ddda457a8ab25b4d8f18e10ca5a1",
+      "size_bytes": 2090557
     },
     {
       "path": "complements/meteo_explorateur_toutes_mesures.html",
       "role": "responsive_html_master",
-      "sha256": "6765dac9d01be6b27e9b55223f82415ea39fbcf2f129270df45c46f8ce94d2eb",
-      "size_bytes": 5913563
+      "sha256": "76926ce8065ecacdd705dc46e0301c9fab171db1adc2dccea52ac1fc0665d782",
+      "size_bytes": 5951498
     },
     {
       "path": "complements/meteo_qualite_acquisition.html",
       "role": "responsive_html_master",
-      "sha256": "756e21eaead5fa964ba5cffacf75798fc84c9f80ccb6268d46a9e981b49edae6",
-      "size_bytes": 16018
+      "sha256": "fa2e92ae3c418f372251539e9baaef21a8e9f2da1c87c7f842d4917428d9fa20",
+      "size_bytes": 16222
     }
   ],
   "manifest_version": 1,
